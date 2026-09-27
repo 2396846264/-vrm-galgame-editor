@@ -127,6 +127,14 @@ function motionAdvanced(holder, scope) {
   return `<details class="motion-advanced"><summary>高级动作选项</summary><div class="motion-advanced-body">
     <label class="motion-option-row"><span>循环播放</span><select data-motion-options="${escape(scope)}" data-motion-setting="loop">
       <option value="true" ${loop ? 'selected' : ''}>是（默认）</option><option value="false" ${loop ? '' : 'selected'}>否，只播一次</option></select></label>
+    <label class="motion-option-row"><span>动作走位</span><select data-motion-options="${escape(scope)}" data-motion-setting="placement">
+      <option value="bounded" ${settings.placement === 'free' ? '' : 'selected'}>限制大幅走位（默认）</option>
+      <option value="free" ${settings.placement === 'free' ? 'selected' : ''}>完整保留动作走位</option></select></label>
+    <p class="tip">限制走位只约束左右和前后，跳跃、坐下等上下动作照常播放。</p>
+    <label class="motion-option-row"><span>脚掌固定</span><select data-motion-options="${escape(scope)}" data-motion-setting="feet">
+      <option value="auto" ${settings.feet === 'lock' || settings.feet === 'free' ? '' : 'selected'}>自动（待机、说话等）</option>
+      <option value="lock" ${settings.feet === 'lock' ? 'selected' : ''}>开启</option>
+      <option value="free" ${settings.feet === 'free' ? 'selected' : ''}>关闭（允许迈步）</option></select></label>
     <div class="motion-frame-row"><label><span>起始帧</span><input type="number" min="1" step="1" value="${start}"
       data-motion-options="${escape(scope)}" data-motion-setting="startFrame"></label>
       <label><span>结束帧</span><input type="number" min="1" step="1" value="${end}" placeholder="最后一帧"
@@ -1843,6 +1851,8 @@ document.addEventListener('input', event => {
     } else if (key === 'endFrame') {
       holder.motionOptions.endFrame = node.value === '' ? null : Math.max(1, Math.floor(Number(node.value) || 1));
     } else if (key === 'after') holder.motionOptions.after = node.value === 'idle' ? 'idle' : 'hold';
+    else if (key === 'placement') holder.motionOptions.placement = node.value === 'free' ? 'free' : 'bounded';
+    else if (key === 'feet') holder.motionOptions.feet = ['lock', 'free'].includes(node.value) ? node.value : 'auto';
     markDirty();
     if (scope === 'title') showTitleScene(false);
     else updatePreview();
@@ -2093,9 +2103,10 @@ window.__vrmDiagnostics = () => ({
   ,castSlots: act()?.cast || {}
   ,castSettings: act()?.castSettings || {}
   ,visibleActors: [...(stage?.visibleRecords?.entries() || [])].map(([id, record]) => ({
-    id, x: record.vrm.scene.position.x, y: record.vrm.scene.position.y, z: record.vrm.scene.position.z,
-    scale: record.vrm.scene.scale.x,
-    yaw: record.vrm.scene.rotation.y, motionPlaying: record.mixer._actions?.some(action => action.isRunning()) || false,
+    id, x: record.anchor.position.x, y: record.anchor.position.y, z: record.anchor.position.z,
+    scale: record.anchor.scale.x,
+    yaw: record.anchor.rotation.y, motionPlaying: record.mixer._actions?.some(action => action.isRunning()) || false,
+    anchorPosition: record.anchor.position.toArray(), motionRootPosition: record.motionRoot.position.toArray(),
     happy: record.vrm.expressionManager?.getValue('happy') ?? null,
     expressionBlending: Boolean(record.expressionBlend),
     positionBlending: Boolean(record.transformBlend),
@@ -2134,12 +2145,12 @@ window.__vrmDiagnostics = () => ({
   ,renderPixelRatio: stage?.renderer?.getPixelRatio() || 0
   ,keyLightColor: stage?.keyLight?.color?.getHexString() || ''
   ,nextButtons: document.querySelectorAll('[data-action="next"]').length
-  ,currentScale: stage?.vrm?.scene.scale.x || 0
-  ,currentX: stage?.vrm?.scene.position.x || 0
-  ,currentY: stage?.vrm?.scene.position.y || 0
-  ,currentZ: stage?.vrm?.scene.position.z || 0
-  ,currentYaw: stage?.vrm?.scene.rotation.y || 0
-  ,currentPitch: stage?.vrm?.scene.rotation.x || 0
+  ,currentScale: stage?.activeRecord?.anchor.scale.x || 0
+  ,currentX: stage?.activeRecord?.anchor.position.x || 0
+  ,currentY: stage?.activeRecord?.anchor.position.y || 0
+  ,currentZ: stage?.activeRecord?.anchor.position.z || 0
+  ,currentYaw: stage?.activeRecord?.anchor.rotation.y || 0
+  ,currentPitch: stage?.activeRecord?.anchor.rotation.x || 0
   ,cameraY: stage?.camera?.position.y || 0
   ,activePanel
   ,title: project?.title || {}
