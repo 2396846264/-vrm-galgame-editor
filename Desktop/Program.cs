@@ -45,9 +45,11 @@ internal sealed class EditorWindow : Form
     private readonly bool smokeNewActCast;
     private readonly bool smokeEmptyAct;
     private readonly bool smokeTitle;
+    private readonly bool smokeTheme;
     private readonly bool smokeAutoVolume;
     private readonly bool smokeTitleMenus;
     private readonly bool smokeGallery;
+    private readonly bool smokeGalleryLayout;
     private readonly bool smokeGalleryProgress;
     private readonly bool smokeRootMotion;
     private readonly bool smokeMotionOptions;
@@ -102,9 +104,11 @@ internal sealed class EditorWindow : Form
         smokeNewActCast = arguments.Contains("--smoke-new-act-cast");
         smokeEmptyAct = arguments.Contains("--smoke-empty-act");
         smokeTitle = arguments.Contains("--smoke-title");
+        smokeTheme = arguments.Contains("--smoke-theme");
         smokeAutoVolume = arguments.Contains("--smoke-auto-volume");
         smokeTitleMenus = arguments.Contains("--smoke-title-menus");
         smokeGallery = arguments.Contains("--smoke-gallery");
+        smokeGalleryLayout = arguments.Contains("--smoke-gallery-layout");
         smokeGalleryProgress = arguments.Contains("--smoke-gallery-progress");
         smokeRootMotion = arguments.Contains("--smoke-root-motion");
         smokeMotionOptions = arguments.Contains("--smoke-motion-options");
@@ -730,6 +734,20 @@ internal sealed class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".gallery-after.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
             }
+            if (smokeTheme && !playerMode)
+            {
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=toggle-editor-theme]')?.click()");
+                await Task.Delay(200);
+                File.WriteAllText(smokeBase + ".theme.json", await web.CoreWebView2.ExecuteScriptAsync(
+                    "JSON.stringify({theme:document.body.dataset.editorTheme, saved:JSON.parse(localStorage.getItem('vrm-editor-settings') || '{}').theme, background:getComputedStyle(document.querySelector('.editor')).backgroundColor, spinnerDots:document.querySelectorAll('#act-loading .loading-spinner i').length, spinnerText:document.querySelector('#act-loading')?.textContent.trim()})"));
+            }
+            if (smokeGalleryLayout && playerMode)
+            {
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('#player-start [data-action=gallery]')?.click(); document.querySelector('[data-action=gallery-tab][data-tab=characters]')?.click()");
+                await Task.Delay(1800);
+                File.WriteAllText(smokeBase + ".gallery-layout.json", await web.CoreWebView2.ExecuteScriptAsync(
+                    "JSON.stringify({portraitNameCount:document.querySelectorAll('.gallery-character-portrait .gallery-character-name').length,detailName:document.querySelector('.gallery-detail-name')?.textContent,detailFont:getComputedStyle(document.querySelector('.gallery-detail-name')).fontFamily,loaded:document.fonts.check('16px \"HarmonyOS Sans SC\"'),fontCredit:document.querySelector('.font-credit')?.textContent || ''})"));
+            }
             string result = await web.CoreWebView2.ExecuteScriptAsync(
                 "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})");
             File.WriteAllText(smokeBase + ".json", result);
@@ -1004,8 +1022,7 @@ internal sealed class EditorWindow : Form
     {
         string sourceDirectory = Path.Combine(appDirectory, "preset-motions");
         string manifestPath = Path.Combine(sourceDirectory, "manifest.json");
-        // Public builds do not include third-party motion files.
-        if (!File.Exists(manifestPath)) return new List<object>();
+        if (!File.Exists(manifestPath)) throw new Exception("安装包缺少预制动作，请重新解压完整文件夹。");
         var manifest = JsonNode.Parse(File.ReadAllText(manifestPath))?.AsArray()
             ?? throw new Exception("预制动作清单无效。");
         string destination = Path.Combine(directory, "assets", "motion", "预制动作");
@@ -1031,8 +1048,7 @@ internal sealed class EditorWindow : Form
     {
         string sourceDirectory = Path.Combine(appDirectory, "preset-motions");
         string manifestPath = Path.Combine(sourceDirectory, "manifest.json");
-        // Motion packs are optional. Authors can import files they are allowed to use.
-        if (!File.Exists(manifestPath)) return;
+        if (!File.Exists(manifestPath)) throw new Exception("安装包缺少预制动作，请重新解压完整文件夹。");
         var manifest = JsonNode.Parse(File.ReadAllText(manifestPath))?.AsArray()
             ?? throw new Exception("预制动作清单无效。");
         foreach (JsonNode? entry in manifest)
@@ -1357,3 +1373,4 @@ internal sealed class EditorWindow : Form
         return string.IsNullOrWhiteSpace(cleaned) ? "新游戏" : cleaned;
     }
 }
+

@@ -1,10 +1,12 @@
 # 更新记录 / Changelog
 
-## 开发中 / Unreleased
+## 0.0.1 下载包更新 / Download refreshed with local v0.7.7
 
 - 将编辑器站位与角色动作分开，限制大幅动作的默认走位范围，保留完整走位选项。
 - 说话、闲聊等站立动作默认固定脚掌；可以在高级动作选项里手动开关。
-- 这些改动已进入源码；`0.0.1` 下载包仍是先前的发布版本。
+- 编辑器改为白色界面，可切换夜间模式；导出的游戏菜单改用白色主调，默认对白框保持原样。
+- 人物加载时使用转圈动画；人物鉴赏的名字移到“角色详情”，长名字自动换行。
+- 内置 HarmonyOS Sans SC 字体，保留字体授权文件和界面署名。
 
 ## 0.0.1 · 首次公开发布 / First public release
 
@@ -15,3 +17,4 @@
 - 提供中文、英文、日文、韩文说明和功能示意图。
 
 The first public release packages the local v0.7.4 feature set. Third-party characters, motions, and sample-story assets are excluded from the public package.
+

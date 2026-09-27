@@ -445,6 +445,7 @@ function renderEditorSettings() {
         <option value="light" ${editorSettings.theme === 'light' ? 'selected' : ''}>日间 · 白色</option>
         <option value="dark" ${editorSettings.theme === 'dark' ? 'selected' : ''}>夜间 · 深灰色</option>
       </select></label><p>外观设置只影响编辑器；导出的游戏保持白色界面。</p>
+      <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
     </div></div>`);
 }
 function renderWelcome() {
@@ -1297,6 +1298,7 @@ function renderSettingsModal() {
       ${button('应用窗口大小', 'apply-resolution', playerFullscreen ? 'disabled' : '')}
       <div class="settings-line"><span>全屏显示</span>${button(playerFullscreen ? '退出全屏' : '进入全屏', 'toggle-fullscreen')}</div>
       <p>无论窗口大小或显示器比例如何，游戏画面始终保持 16:9。</p>
+      <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
     </div></section>`);
 }
 const galleryTracks = () => byType('audio').filter(item => item.galleryMusic !== false);
@@ -1357,10 +1359,10 @@ function galleryStoryMarkup(item, count, storyIndex = galleryStoryIndex, editorP
   const story = item.stories?.[storyIndex - 1];
   if (!editorPreview && !hasDiscovered('character', item.id)) {
     const content = storyIndex && story?.text?.trim() ? story.text : `${item.title || ''}\n${item.description || ''}`;
-    return `<h3>${storyIndex ? `角色故事 · ${storyIndex}` : '角色详情'}</h3><p class="gallery-character-text">${escape(maskSecret(content || '未解锁'))}</p>`;
+    return `<h3>${storyIndex ? `角色故事 · ${storyIndex}` : '角色详情'}</h3>${storyIndex ? '' : `<strong class="gallery-detail-name">${escape(hiddenName(item.name))}</strong>`}<p class="gallery-character-text">${escape(maskSecret(content || '未解锁'))}</p>`;
   }
   if (!storyIndex || !story?.text?.trim()) {
-    return `<h3>角色详情</h3>${item.title?.trim() ? `<p class="gallery-character-title">${escape(item.title)}</p>` : ''}
+    return `<h3>角色详情</h3><strong class="gallery-detail-name">${escape(item.name)}</strong>${item.title?.trim() ? `<p class="gallery-character-title">${escape(item.title)}</p>` : ''}
       ${item.description?.trim() ? `<p class="gallery-character-text">${escape(item.description)}</p>` : ''}`;
   }
   const required = Math.max(0, Number(story.unlockLines) || 0);
@@ -1418,8 +1420,7 @@ function galleryCharacterMarkup(editorPreview = false) {
   return item ? `<div class="gallery-character-layout"><nav class="gallery-character-picker" aria-label="选择角色">${project.characters.map(entry =>
       `<button type="button" data-action="${characterAction}" data-character-id="${escape(entry.id)}" class="${entry.id === item.id ? 'active' : ''}">${escape(editorPreview || hasDiscovered('character', entry.id) ? entry.name : hiddenName(entry.name))}</button>`).join('')}</nav>
     <div class="gallery-character-portrait ${unlocked ? '' : 'locked'}"><div id="gallery-character-canvas"></div>
-      ${unlocked ? '' : '<div class="gallery-character-seal">未解锁</div>'}
-      <div class="gallery-character-name"><small>角色档案</small><strong>${escape(unlocked ? item.name : hiddenName(item.name))}</strong></div></div>
+      ${unlocked ? '' : '<div class="gallery-character-seal">未解锁</div>'}</div>
       <div id="gallery-character-text" class="gallery-character-content">${galleryStoryMarkup(item, count, storyIndex, editorPreview)}</div>
       <nav class="gallery-story-tabs">${button('角色详情', storyAction, `data-index="0" class="${storyIndex === 0 ? 'active' : ''}"`)}
         ${stories.map((story, index) => story.text?.trim() ? button(`角色故事 · ${index + 1}${count >= Math.max(0, Number(story.unlockLines) || 0) ? '' : ' 🔒'}`,

@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'Release public VRM Galgame Editor 0.0.1'
+    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'Release public VRM Galgame Editor 0.0.1 update v0.7.7'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
@@ -32,15 +32,18 @@ jobs:
         run: |
           $package = 'release/VRMGalgame-0.0.1-win-x64'
           New-Item -ItemType Directory -Force -Path $package | Out-Null
-          Copy-Item -LiteralPath 'publish/VRMGalgame.exe','publish/WebView2Loader.dll','README.md','CHANGELOG.md','RELEASE_NOTES.md' -Destination $package
+          $loader = if (Test-Path 'publish/WebView2Loader.dll') { 'publish/WebView2Loader.dll' } else { 'Desktop/bin/Release/net10.0-windows/win-x64/WebView2Loader.dll' }
+          Copy-Item -LiteralPath 'publish/VRMGalgame.exe',$loader,'README.md','CHANGELOG.md','RELEASE_NOTES.md' -Destination $package
           Copy-Item -Recurse -LiteralPath 'dist' -Destination "$package/web"
           Copy-Item -Recurse -LiteralPath 'docs' -Destination "$package/docs"
           Compress-Archive -LiteralPath $package -DestinationPath 'release/VRMGalgame-0.0.1-win-x64.zip' -CompressionLevel Optimal
-      - name: Publish 0.0.1
+      - name: Update 0.0.1 download and notes
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create v0.0.1 'release/VRMGalgame-0.0.1-win-x64.zip' --title 'VRM Galgame Editor 0.0.1' --notes-file RELEASE_NOTES.md --target '${{ github.sha }}'
+        run: |
+          gh release upload v0.0.1 'release/VRMGalgame-0.0.1-win-x64.zip' --clobber
+          gh release edit v0.0.1 --title 'VRM Galgame Editor 0.0.1' --notes-file RELEASE_NOTES.md
 
   refresh-release-notes:
     if: github.event_name == 'push' && github.event.head_commit.message == 'Add example and effect images'
@@ -51,3 +54,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release edit v0.0.1 --notes-file RELEASE_NOTES.md
+

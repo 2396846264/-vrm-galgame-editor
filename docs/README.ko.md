@@ -1,4 +1,4 @@
-﻿# VRM Galgame 편집기 · 0.0.1
+# VRM Galgame 편집기 · 0.0.1
 
 [简体中文](../README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
@@ -6,7 +6,11 @@
 
 3D VRM 캐릭터로 비주얼 노벨을 만드는 Windows 편집기입니다. 캐릭터, 대사, 동작, 배경, 소리를 배치하고 별도 창에서 시험 실행한 뒤 플레이 가능한 게임으로 내보낼 수 있습니다. 위 그림은 **기능 안내용 그림**이며 실제 화면 캡처는 아닙니다.
 
-**0.0.1은 첫 공개 버전입니다.** 로컬 v0.7.4의 기능을 바탕으로 정리했습니다. 공개판에는 VRM 모델, Mixamo 동작, 예제 이야기의 소재가 들어 있지 않습니다. 사용할 권리가 있는 소재를 가져오세요.
+**0.0.1은 공개 버전 번호입니다.** 다운로드 파일에는 로컬 v0.7.7 기능이 반영되었습니다. VRM 모델, Mixamo 동작, 예제 이야기의 소재는 들어 있지 않습니다. 사용할 권리가 있는 소재를 가져오세요.
+
+이번 업데이트에는 흰색 편집기와 야간 모드, 캐릭터 로딩 회전 애니메이션, 내장 HarmonyOS Sans SC 글꼴이 포함됩니다. 감상 화면의 캐릭터 이름은 초상화 위에서 ‘캐릭터 상세’로 옮겨졌으며 긴 이름도 줄바꿈됩니다. 기본 대화창의 기존 모습은 유지됩니다.
+
+HarmonyOS Sans SC의 저작권은 Huawei Device Co., Ltd.에 있습니다. 전체 라이선스는 소스의 `../public/fonts/HarmonyOS_Sans_SC_LICENSE.txt`와 Windows 다운로드의 `web/fonts/`에서 확인할 수 있습니다.
 
 ## 주요 기능
 
@@ -60,4 +64,5 @@ Copy-Item -Recurse dist publish/web
 `publish/VRMGalgame.exe`를 실행합니다. `WebView2Loader.dll`이 있으면 EXE 옆에 유지하세요. 제삼자 소재는 포함되지 않습니다. 이 저장소는 프로젝트 소스의 재사용 라이선스를 부여하지 않습니다.
 
 제작자 Bilibili: [尸工U5十三世](https://b23.tv/krcyQ8I).
+
 

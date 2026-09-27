@@ -1,4 +1,23 @@
 /* A separate, reversible color layer. Project artwork and scene layout stay in the original styles. */
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('/fonts/HarmonyOS_Sans_SC_Regular.ttf') format('truetype');
+  font-style: normal; font-weight: 400; font-display: swap;
+}
+@font-face {
+  font-family: 'HarmonyOS Sans SC';
+  src: url('/fonts/HarmonyOS_Sans_SC_Bold.ttf') format('truetype');
+  font-style: normal; font-weight: 700; font-display: swap;
+}
+:root { font-family: 'HarmonyOS Sans SC', 'Microsoft YaHei UI', sans-serif; }
+.title-logo-fallback strong { font-family: 'HarmonyOS Sans SC', 'Microsoft YaHei UI', sans-serif; }
+.font-credit { font-size: 11px; opacity: .72; }
+.gallery-box-character .gallery-detail-name {
+  display: block; max-width: 100%; margin: -4px 0 12px;
+  color: #26302e; font-size: clamp(17px, 2vw, 27px); line-height: 1.25;
+  overflow-wrap: anywhere; word-break: break-word;
+}
+.character-preview-box .gallery-detail-name { font-size: 15px; margin: -3px 0 5px; }
 body {
   --ui-bg: #f5f5f7;
   --ui-surface: #ffffff;
