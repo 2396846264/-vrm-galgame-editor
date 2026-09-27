@@ -1,4 +1,4 @@
-# VRM Galgame 编辑器 · 0.0.1
+# VRM Galgame 编辑器 · 0.0.2
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
@@ -6,7 +6,7 @@
 
 用 VRM 3D 角色制作视觉小说的 Windows 编辑器。你可以安排人物、对白、动作、背景和音乐，在独立窗口试玩，再把作品导出成可游玩的游戏。上图是**功能示意图**，不是程序截图。
 
-> **0.0.1 是本项目的公开版本号。**下载包现已更新到本地版 v0.7.7 的功能。公开版没有附带 VRM 人物、Mixamo 动作和示例故事素材；请导入你有权使用的素材。
+> **0.0.2 是最新公开版，包含本地 v0.7.7 的功能。**旧版 0.0.1 继续保留下载。公开版没有附带 VRM 人物、Mixamo 动作和示例故事素材；请导入你有权使用的素材。
 
 本次更新：编辑器改为白色界面并可切换夜间模式；人物加载时显示转圈动画；人物鉴赏页把角色名字放进“角色详情”，长名字不会挡住人物；内置 HarmonyOS Sans SC 字体。默认对白框保留原样。
 
@@ -41,7 +41,7 @@
 
 ## 下载与开始
 
-1. 到 [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases) 下载 `VRMGalgame-0.0.1-win-x64.zip`。
+1. 到 [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases) 下载 `VRMGalgame-0.0.2-win-x64.zip`。
 2. **解压整个压缩包**，双击里面的 `VRMGalgame.exe`。
 3. 点击“新建”创建工程，或打开已有的 `.vrmg` 文件。
 4. 在“素材”中导入你自己的 VRM、动作、图片和声音，再到“角色”和“剧情”里使用。

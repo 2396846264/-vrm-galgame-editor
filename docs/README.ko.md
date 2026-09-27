@@ -1,4 +1,4 @@
-# VRM Galgame 편집기 · 0.0.1
+# VRM Galgame 편집기 · 0.0.2
 
 [简体中文](../README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
@@ -6,7 +6,7 @@
 
 3D VRM 캐릭터로 비주얼 노벨을 만드는 Windows 편집기입니다. 캐릭터, 대사, 동작, 배경, 소리를 배치하고 별도 창에서 시험 실행한 뒤 플레이 가능한 게임으로 내보낼 수 있습니다. 위 그림은 **기능 안내용 그림**이며 실제 화면 캡처는 아닙니다.
 
-**0.0.1은 공개 버전 번호입니다.** 다운로드 파일에는 로컬 v0.7.7 기능이 반영되었습니다. VRM 모델, Mixamo 동작, 예제 이야기의 소재는 들어 있지 않습니다. 사용할 권리가 있는 소재를 가져오세요.
+**0.0.2는 최신 공개 버전입니다.** 로컬 v0.7.7 기능을 포함하며 이전 0.0.1 다운로드도 유지됩니다. VRM 모델, Mixamo 동작, 예제 이야기의 소재는 들어 있지 않습니다. 사용할 권리가 있는 소재를 가져오세요.
 
 이번 업데이트에는 흰색 편집기와 야간 모드, 캐릭터 로딩 회전 애니메이션, 내장 HarmonyOS Sans SC 글꼴이 포함됩니다. 감상 화면의 캐릭터 이름은 초상화 위에서 ‘캐릭터 상세’로 옮겨졌으며 긴 이름도 줄바꿈됩니다. 기본 대화창의 기존 모습은 유지됩니다.
 
@@ -41,7 +41,7 @@ HarmonyOS Sans SC의 저작권은 Huawei Device Co., Ltd.에 있습니다. 전�
 
 ## 다운로드와 시작
 
-1. [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases)에서 `VRMGalgame-0.0.1-win-x64.zip`을 다운로드합니다.
+1. [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases)에서 `VRMGalgame-0.0.2-win-x64.zip`을 다운로드합니다.
 2. ZIP **전체를 압축 해제**하고 `VRMGalgame.exe`를 실행합니다.
 3. 새 프로젝트를 만들거나 기존 `.vrmg` 파일을 엽니다.
 4. 자신의 소재를 가져와 캐릭터와 이야기를 편집하고, 시험 실행으로 확인한 뒤 게임을 내보냅니다.
