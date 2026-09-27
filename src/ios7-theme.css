@@ -1,0 +1,303 @@
+/* A separate, reversible color layer. Project artwork and scene layout stay in the original styles. */
+body {
+  --ui-bg: #f5f5f7;
+  --ui-surface: #ffffff;
+  --ui-surface-soft: #fafafa;
+  --ui-raised: #f0f1f2;
+  --ui-border: #d8dbde;
+  --ui-text: #25292c;
+  --ui-muted: #687078;
+  --ui-accent: #168b70;
+  --ui-accent-soft: #e1f3ed;
+  --ui-shadow: #18201918;
+}
+body[data-editor-theme="dark"] {
+  --ui-bg: #17191b;
+  --ui-surface: #242729;
+  --ui-surface-soft: #2b2e30;
+  --ui-raised: #34383a;
+  --ui-border: #484d50;
+  --ui-text: #f2f3f2;
+  --ui-muted: #b2bab7;
+  --ui-accent: #75d5b3;
+  --ui-accent-soft: #24453b;
+  --ui-shadow: #0000005c;
+}
+body[data-editor-theme] { background: var(--ui-bg); color: var(--ui-text); }
+
+/* The editor uses light surfaces and hairline dividers, like early iOS. */
+body[data-editor-theme] .editor,
+body[data-editor-theme] .welcome,
+body[data-editor-theme] .fatal { color: var(--ui-text); background: var(--ui-bg); }
+body[data-editor-theme] .editor .topbar,
+body[data-editor-theme] .editor .sidebar,
+body[data-editor-theme] .editor .inspector,
+body[data-editor-theme] .editor .tabs,
+body[data-editor-theme] .editor .inspector-heading,
+body[data-editor-theme] .editor .status { background: var(--ui-surface); border-color: var(--ui-border); }
+body[data-editor-theme] .editor .topbar {
+  box-shadow: 0 1px 10px var(--ui-shadow);
+  backdrop-filter: blur(16px);
+}
+body[data-editor-theme] .editor .center { background: var(--ui-bg); }
+body[data-editor-theme] .editor .stage-frame {
+  border-color: var(--ui-border);
+  box-shadow: 0 12px 32px var(--ui-shadow);
+}
+body[data-editor-theme] .editor .brand,
+body[data-editor-theme] .editor .brand b,
+body[data-editor-theme] .editor .brand span,
+body[data-editor-theme] .editor .section-heading,
+body[data-editor-theme] .editor .inspector-content h2,
+body[data-editor-theme] .editor .inspector-heading,
+body[data-editor-theme] .editor .list-row b { color: var(--ui-text); }
+body[data-editor-theme] .editor .brand b { font-weight: 590; }
+body[data-editor-theme] .editor .brand { color: var(--ui-accent); }
+body[data-editor-theme] .editor .project-title span,
+body[data-editor-theme] .editor .status,
+body[data-editor-theme] .editor .stage-toolbar,
+body[data-editor-theme] .editor .stage-hint,
+body[data-editor-theme] .editor .sidebar-note,
+body[data-editor-theme] .editor .tip,
+body[data-editor-theme] .editor .empty,
+body[data-editor-theme] .editor .list-row small,
+body[data-editor-theme] .editor .field > span { color: var(--ui-muted); }
+body[data-editor-theme] .editor .sidebar-note { border-color: var(--ui-border); }
+body[data-editor-theme] .editor .tabs button { color: var(--ui-muted); border-radius: 0; }
+body[data-editor-theme] .editor .tabs button.active {
+  color: var(--ui-accent); background: transparent;
+  box-shadow: inset 0 -2px var(--ui-accent);
+}
+body[data-editor-theme] .editor .tabs button:not(.active):hover { color: var(--ui-text); background: var(--ui-raised); }
+body[data-editor-theme] .editor .list-row { color: var(--ui-text); border-radius: 8px; }
+body[data-editor-theme] .editor .list-row:hover { background: var(--ui-raised); }
+body[data-editor-theme] .editor .list-row.selected {
+  background: var(--ui-accent-soft); border-color: var(--ui-accent);
+}
+body[data-editor-theme] .editor .number,
+body[data-editor-theme] .editor .cast-editor summary,
+body[data-editor-theme] .editor .list-row.selected .number,
+body[data-editor-theme] .editor .adjustment output,
+body[data-editor-theme] .editor .expression-slider output { color: var(--ui-accent); }
+body[data-editor-theme] .editor .drag-grip { color: var(--ui-muted); }
+body[data-editor-theme] .editor .sortable-row:hover .drag-grip { color: var(--ui-accent); }
+body[data-editor-theme] .editor .sortable-row.drop-before { box-shadow: inset 0 3px var(--ui-accent); }
+body[data-editor-theme] .editor .sortable-row.drop-after { box-shadow: inset 0 -3px var(--ui-accent); }
+body[data-editor-theme] .editor .asset-folder,
+body[data-editor-theme] .editor .cast-editor,
+body[data-editor-theme] .editor .expression-controls,
+body[data-editor-theme] .editor .motion-advanced,
+body[data-editor-theme] .editor .render-advanced,
+body[data-editor-theme] .editor .step-cast-positions,
+body[data-editor-theme] .editor .gallery-audio-editor,
+body[data-editor-theme] .editor .character-story-editor,
+body[data-editor-theme] .editor .gallery-image-check,
+body[data-editor-theme] .editor .image-import-option {
+  color: var(--ui-text); background: var(--ui-surface-soft); border-color: var(--ui-border);
+}
+body[data-editor-theme] .editor .asset-folder > summary,
+body[data-editor-theme] .editor .asset-folder > summary small,
+body[data-editor-theme] .editor .asset-folder > summary .folder-icon,
+body[data-editor-theme] .editor .motion-advanced summary,
+body[data-editor-theme] .editor .render-advanced summary,
+body[data-editor-theme] .editor .motion-option-row,
+body[data-editor-theme] .editor .motion-frame-row label,
+body[data-editor-theme] .editor .step-cast-positions > span,
+body[data-editor-theme] .editor .step-cast-positions label,
+body[data-editor-theme] .editor .step-cast-positions small,
+body[data-editor-theme] .editor .character-story-editor h3 { color: var(--ui-text); }
+body[data-editor-theme] .editor .asset-folder .asset-row,
+body[data-editor-theme] .editor .asset-row { color: var(--ui-text); background: var(--ui-raised); }
+body[data-editor-theme] .editor input,
+body[data-editor-theme] .editor select,
+body[data-editor-theme] .editor textarea {
+  color: var(--ui-text); background: var(--ui-surface); border-color: var(--ui-border);
+  border-radius: 8px;
+}
+body[data-editor-theme] .editor input:focus,
+body[data-editor-theme] .editor select:focus,
+body[data-editor-theme] .editor textarea:focus {
+  border-color: var(--ui-accent); box-shadow: 0 0 0 3px var(--ui-accent-soft);
+}
+body[data-editor-theme] .editor .project-title input { background: transparent; }
+body[data-editor-theme] .editor .adjustment,
+body[data-editor-theme] .editor .expression-slider { color: var(--ui-text); }
+body[data-editor-theme] .editor .adjustment input[type="range"],
+body[data-editor-theme] .editor .expression-slider input[type="range"] { accent-color: var(--ui-accent); }
+body[data-editor-theme] .editor button:not(.list-row):not([data-panel]):not([data-action="choose"]) {
+  color: var(--ui-text); background: var(--ui-surface); border: 1px solid var(--ui-border);
+  box-shadow: none; border-radius: 8px;
+}
+body[data-editor-theme] .editor button:not(.list-row):not([data-panel]):hover {
+  color: var(--ui-accent); background: var(--ui-accent-soft); border-color: var(--ui-accent);
+}
+body[data-editor-theme] .editor button.primary:not(.list-row) {
+  color: #fff; background: #168b70; border-color: #168b70;
+}
+body[data-editor-theme] .editor button.primary:not(.list-row):hover { background: #08775e; color: #fff; }
+body[data-editor-theme] .editor .theme-toggle {
+  min-width: 35px; padding-inline: 7px; font-size: 20px; line-height: 1;
+}
+body[data-editor-theme] .editor .topbar nav { gap: 5px; }
+body[data-editor-theme] .editor .topbar nav button { padding: 7px 9px; }
+body[data-editor-theme] .editor .topbar nav .theme-toggle { padding: 5px 8px; }
+body[data-editor-theme] .editor .stage-toolbar span:last-child { color: var(--ui-muted); }
+
+/* Welcome page and editor settings use the same palette. */
+body[data-editor-theme] .welcome-card,
+body[data-editor-theme] .editor-settings-card {
+  color: var(--ui-text); background: var(--ui-surface); border: 1px solid var(--ui-border);
+  box-shadow: 0 20px 55px var(--ui-shadow);
+}
+body[data-editor-theme] .welcome h1,
+body[data-editor-theme] .welcome .eyebrow,
+body[data-editor-theme] .recent-projects h2,
+body[data-editor-theme] .editor-settings-card h2 { color: var(--ui-text); }
+body[data-editor-theme] .welcome p,
+body[data-editor-theme] .welcome small,
+body[data-editor-theme] .editor-settings-card p,
+body[data-editor-theme] .recent-project small { color: var(--ui-muted); }
+body[data-editor-theme] .welcome input,
+body[data-editor-theme] .editor-settings-card select {
+  color: var(--ui-text); background: var(--ui-surface-soft); border-color: var(--ui-border);
+}
+body[data-editor-theme] .welcome button,
+body[data-editor-theme] .editor-settings-card button {
+  color: var(--ui-text); background: var(--ui-surface-soft); border-color: var(--ui-border);
+}
+body[data-editor-theme] .welcome button.primary { color: white; background: #168b70; border-color: #168b70; }
+body[data-editor-theme] .editor-settings-backdrop { background: #161c2080; backdrop-filter: blur(5px); }
+body[data-editor-theme] .recent-projects { border-color: var(--ui-border); }
+
+/* The game itself always uses white interface chrome, including exports. */
+.player { color: #26302e; background: #edf0ee; }
+.stage-frame.title-mode { background: #f3f5f2; }
+.stage-frame.title-mode #scene-bg {
+  background-image: radial-gradient(ellipse at 68% 38%, #e3eee6 0%, transparent 40%),
+    linear-gradient(115deg, #fafbf9 0%, #e9f0e9 100%);
+}
+.stage-frame.title-mode #scene-bg::after { background: linear-gradient(90deg, #ffffff85, transparent 48%, #ffffff22); }
+.title-composition::before { background: linear-gradient(90deg, #ffffff35, transparent 58%, #ffffff20); }
+.title-logo-fallback {
+  padding: clamp(10px, 2vw, 28px); border: 1px solid #ffffffa8; border-radius: 12px;
+  background: #ffffffe0; box-shadow: 0 10px 35px #17221b28; backdrop-filter: blur(14px);
+}
+.title-logo-fallback small { color: #168b70; }
+.title-logo-fallback strong { color: #29312c; text-shadow: none; }
+.title-logo-region { filter: none; }
+.title-bottom-menu > * { color: #26302e; text-shadow: none; }
+.title-bottom-menu > span,
+.player #player-start .title-bottom-menu button,
+.player #player-start .title-bottom-menu button.primary {
+  color: #26302e; background: #ffffffe8; border: 1px solid #ffffffc7;
+  border-radius: 9px; box-shadow: 0 4px 18px #17221b27;
+  backdrop-filter: blur(12px); text-shadow: none;
+}
+.player #player-start .title-bottom-menu button:hover,
+.player #player-start .title-bottom-menu button:focus-visible {
+  color: #08775e; background: #fff; box-shadow: 0 5px 22px #17221b40;
+}
+.player #player-start .title-bottom-menu button:disabled { color: #939b96; text-shadow: none; }
+.player #player-start { background: transparent; }
+.player .scene-icon-button,
+.player .scene-quick-actions button,
+.auto-play-button,
+.editor #play-controls button {
+  color: #26302e; background: #ffffffe0; border: 1px solid #ffffffb8;
+  border-radius: 9px; text-shadow: none; -webkit-text-stroke: 0;
+  box-shadow: 0 4px 17px #17221b2b; backdrop-filter: blur(12px);
+}
+.player .scene-icon-button:hover,
+.player .scene-quick-actions button:hover,
+.auto-play-button:hover { color: #168b70; background: #fff; }
+.auto-play-button.active,
+.player .scene-quick-actions .auto-play-button.active { color: #08775e; background: #e1f3ed; border-color: #168b70; }
+#choice-list button, .player #choice-list button {
+  color: #26302e; background: #ffffffe8; border-color: #ffffffc7;
+  text-shadow: none; box-shadow: 0 7px 22px #17221b30;
+}
+#choice-list button:hover { color: #08775e; background: #fff; }
+.player-modal { background: #f6f8f2b5; }
+.modal-box, .gallery-box, .gallery-box-character {
+  color: #26302e; border: 1px solid #dbe3dd;
+  background: #fffffff5; box-shadow: 0 22px 65px #17221b30;
+}
+.modal-box header small, .modal-box h2, .settings-box h3,
+.progress-box h3, .gallery-character-content h3,
+.gallery-box-character .gallery-character-content h3 { color: #26302e; }
+.player-modal button { color: #26302e; background: #f6f8f6; border-color: #dbe3dd; }
+.player-modal button:hover { color: #08775e; background: #e1f3ed; border-color: #168b70; }
+.player-modal .modal-tabs button.active,
+.gallery-main-tabs button.active, .gallery-pagination button.active,
+.gallery-character-picker button.active, .gallery-story-tabs button.active,
+.gallery-track-list button.active, .gallery-music-controls button.active {
+  color: #08775e; background: #e1f3ed; border-color: #168b70;
+}
+.player-modal .save-slot,
+.player-modal .save-slot.auto-save-slot { color: #26302e; background: #f7f9f7; border-color: #dbe3dd; }
+.player-modal .save-details strong,
+.player-modal .save-details span,
+.player-modal .save-details small,
+.player-modal .modal-box footer,
+.settings-box p,
+.volume-line, .volume-line output { color: #4d5852; }
+.player-modal .save-thumb { color: #168b70; background-color: #e9eee9; }
+.player-modal .save-thumb b { color: #26302e; }
+.player-modal input, .player-modal select { color: #26302e; background: #fff; border-color: #dbe3dd; }
+.gallery-empty, .gallery-character-title, .gallery-character-text,
+.gallery-progress-note, .gallery-story-locked,
+.gallery-story-locked small, .gallery-track-list button small,
+.gallery-music-player > small { color: #68736d; }
+.gallery-image-tile { border-color: #fff !important; background: #f5f7f5 !important; box-shadow: 0 2px 14px #17221b27; }
+.gallery-image-tile:hover { box-shadow: 0 4px 19px #17221b38; }
+.gallery-track-list { border-color: #dbe3dd; }
+.gallery-record {
+  color: #168b70; border-color: #d7e9df;
+  background: repeating-radial-gradient(circle, #e7eee9 0 2px, #f6faf7 3px 4px);
+  box-shadow: inset 0 0 0 24px #ffffff75, 0 8px 24px #17221b23;
+}
+.gallery-character-portrait,
+.gallery-character-portrait.locked { background: linear-gradient(#f1f5f1, #e5ebe5); }
+.gallery-box-character::before { display: none; }
+.gallery-box-character .gallery-character-picker button,
+.gallery-box-character .gallery-story-tabs button { color: #26302e; background: #f3f6f3; }
+.gallery-box-character .gallery-character-picker button.active,
+.gallery-box-character .gallery-story-tabs button.active { color: #08775e; background: #e1f3ed; border-color: #168b70; }
+.gallery-box-character .gallery-character-name small,
+.gallery-box-character .gallery-character-title,
+.gallery-box-character .gallery-character-text,
+.gallery-box-character .gallery-progress-note { color: #26302e; }
+.gallery-box-character .gallery-character-name { color: #26302e; text-shadow: 0 1px 8px #ffffffb8; }
+.gallery-box-character .gallery-story-tabs::before,
+.gallery-box-character .gallery-character-content h3::after { background: #8dc7aa; }
+.gallery-box-character .gallery-story-tabs button::before { border-color: #168b70; background: #fff; }
+.gallery-box-character .gallery-story-tabs button.active::before { background: #168b70; box-shadow: none; }
+.author-note-text, .progress-overall span,
+.progress-character-row b, .progress-character-row small,
+.progress-act-row, .progress-act-row small { color: #4d5852; }
+.progress-overall { background: #f1f7f2; border-color: #dbe3dd; }
+.progress-overall strong { color: #168b70; }
+.progress-overall small { color: #68736d; }
+.progress-character-row, .progress-act-row, .progress-summary { border-color: #dbe3dd; }
+.gallery-character-portrait::after { background: linear-gradient(transparent, #ffffff66); }
+.character-editor-preview { background: #fff; }
+.act-loading { background: #fffffff0; color: #168b70; backdrop-filter: blur(12px); }
+#stage-placeholder { color: #68736d; }
+
+/* Six chasing dots replace loading words in the title, story and editor preview. */
+.loading-spinner { position: relative; display: inline-block; width: 52px; height: 52px; }
+.loading-spinner i {
+  position: absolute; top: 5px; left: 23px; width: 6px; height: 6px;
+  border-radius: 50%; background: #168b70; transform-origin: 3px 21px;
+  animation: loading-orbit 1.35s ease-in-out infinite;
+}
+.loading-spinner i:nth-child(2) { animation-delay: -.11s; opacity: .82; }
+.loading-spinner i:nth-child(3) { animation-delay: -.22s; opacity: .68; }
+.loading-spinner i:nth-child(4) { animation-delay: -.33s; opacity: .54; }
+.loading-spinner i:nth-child(5) { animation-delay: -.44s; opacity: .42; }
+.loading-spinner i:nth-child(6) { animation-delay: -.55s; opacity: .3; }
+@keyframes loading-orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner i { animation-duration: 3s; }
+}
+
