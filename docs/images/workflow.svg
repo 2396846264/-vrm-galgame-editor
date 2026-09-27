@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 280" role="img" aria-labelledby="title desc">
+  <title id="title">从素材到可游玩游戏</title><desc id="desc">导入素材、编辑剧情、试玩检查、导出游戏的四个步骤。</desc>
+  <defs><linearGradient id="b" x2="1" y2="1"><stop stop-color="#172445"/><stop offset="1" stop-color="#283362"/></linearGradient></defs>
+  <rect width="1200" height="280" rx="24" fill="url(#b)"/>
+  <text x="46" y="52" fill="#f1f5ff" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="26" font-weight="700">从想法到游戏</text>
+  <g font-family="Segoe UI,Noto Sans CJK SC,sans-serif" text-anchor="middle">
+    <rect x="40" y="81" width="245" height="152" rx="18" fill="#3b477c"/><text x="162" y="142" fill="white" font-size="37">◇</text><text x="162" y="184" fill="white" font-size="22" font-weight="700">1  导入素材</text><text x="162" y="210" fill="#c8d3f7" font-size="14">VRM · 图片 · 声音</text>
+    <rect x="330" y="81" width="245" height="152" rx="18" fill="#445082"/><text x="452" y="142" fill="white" font-size="37">✎</text><text x="452" y="184" fill="white" font-size="22" font-weight="700">2  编辑剧情</text><text x="452" y="210" fill="#c8d3f7" font-size="14">人物 · 对白 · 动作</text>
+    <rect x="620" y="81" width="245" height="152" rx="18" fill="#4e598e"/><text x="742" y="142" fill="white" font-size="37">▶</text><text x="742" y="184" fill="white" font-size="22" font-weight="700">3  试玩检查</text><text x="742" y="210" fill="#c8d3f7" font-size="14">预览 · 修改 · 保存</text>
+    <rect x="910" y="81" width="245" height="152" rx="18" fill="#665fa5"/><text x="1032" y="142" fill="white" font-size="37">▣</text><text x="1032" y="184" fill="white" font-size="22" font-weight="700">4  导出游戏</text><text x="1032" y="210" fill="#e2defe" font-size="14">分享可游玩的作品</text>
+  </g>
+  <g fill="#c5c5ff"><path d="M293 157h28l-9-9 8-8 23 17-23 17-8-8 9-9z"/><path d="M583 157h28l-9-9 8-8 23 17-23 17-8-8 9-9z"/><path d="M873 157h28l-9-9 8-8 23 17-23 17-8-8 9-9z"/></g>
+</svg>

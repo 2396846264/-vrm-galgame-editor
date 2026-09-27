@@ -1,0 +1,173 @@
+/* The editor preview and the exported game use the same 16:9 picture. */
+.center {
+  overflow: auto;
+  align-items: stretch;
+}
+.center .stage-frame {
+  flex: none;
+  align-self: center;
+  width: min(100%, calc((100vh - 170px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+.center .dialogue {
+  min-height: 0;
+  height: 28%;
+  padding: 2% 4%;
+}
+.center .dialogue .speaker { margin-bottom: 2px; }
+.center #choice-list { bottom: 32%; }
+.heading-actions { display: flex; align-items: center; gap: 5px; }
+.adjustment, .expression-slider {
+  display: grid;
+  grid-template-columns: 75px minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: #d7e1ed;
+  font-size: 12px;
+}
+.adjustment output, .expression-slider output { text-align: right; color: #f4d49e; font-size: 11px; }
+.adjustment input[type="range"], .expression-slider input[type="range"] {
+  width: 100%;
+  height: 20px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  accent-color: #d5a861;
+  cursor: pointer;
+}
+.expression-controls { padding: 7px 9px; border: 1px solid #3b4d63; border-radius: 7px; background: #1d2e44; }
+.expression-controls .tip { margin: 4px 0; }
+
+.player {
+  display: grid;
+  place-items: center;
+  background: #070b13;
+}
+.player .stage-frame {
+  flex: none;
+  width: min(100vw, calc(100vh * 16 / 9));
+  height: auto;
+  aspect-ratio: 16 / 9;
+  max-height: 100vh;
+  border: 0;
+  border-radius: 0;
+}
+.player .dialogue {
+  min-height: 0;
+  height: 25%;
+  padding: 2.2% 3.5%;
+}
+.player #choice-list { bottom: 33%; }
+.player #play-controls { z-index: 4; left: 4%; right: auto; }
+.act-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #0a1524eb;
+  color: #ffe0a6;
+  font-size: 17px;
+  letter-spacing: .04em;
+  text-align: center;
+}
+
+.player-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 3%;
+  background: #091221df;
+  backdrop-filter: blur(5px);
+}
+.modal-box {
+  display: flex;
+  flex-direction: column;
+  width: min(920px, 100%);
+  max-height: 100%;
+  overflow: hidden;
+  padding: 18px 22px 12px;
+  border: 1px solid #c59d61;
+  border-radius: 13px;
+  background: linear-gradient(150deg, #1b2d44, #121d30);
+  box-shadow: 0 18px 60px #000b;
+}
+.modal-box header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex: none;
+}
+.modal-box header small { color: #c9a66c; letter-spacing: .18em; font-size: 10px; }
+.modal-box h2 { margin: 1px 0 10px; color: #ffdfab; font-size: 23px; }
+.modal-tabs { display: flex; gap: 8px; margin-bottom: 10px; flex: none; }
+.modal-tabs button.active { background: #b78a4d; color: #102039; font-weight: 700; }
+.modal-tabs button:disabled { opacity: .45; cursor: default; }
+.save-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 2px 6px 2px 2px;
+}
+.save-slot {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  min-width: 0;
+  min-height: 83px;
+  padding: 7px;
+  text-align: left;
+  background: #25384f;
+  border: 1px solid #49627c;
+}
+.save-slot:hover { border-color: #dfb678; }
+.save-slot:disabled { opacity: .65; cursor: default; }
+.save-thumb {
+  position: relative;
+  flex: 0 0 110px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  background: #152237 center / cover no-repeat;
+  color: #e9bb73;
+  font-size: 23px;
+}
+.save-thumb b { text-shadow: 0 2px 8px #000; }
+.save-details { display: flex; flex-direction: column; min-width: 0; gap: 3px; }
+.save-details strong, .save-details span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.save-details strong { color: #ffe1ac; font-size: 13px; }
+.save-details small { color: #aac0d7; font-size: 11px; }
+.save-details span { color: #e3e8f0; font-size: 12px; }
+.modal-box footer { flex: none; padding-top: 9px; color: #aebdd0; font-size: 11px; }
+.settings-box { width: min(480px, 100%); gap: 10px; }
+.settings-box .field { margin: 5px 0 0; }
+.settings-box .settings-line { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.settings-box p { color: #aebdd0; font-size: 12px; line-height: 1.5; }
+
+@media (max-width: 900px) {
+  .modal-box { padding: 10px 12px; }
+  .modal-box h2 { font-size: 18px; margin-bottom: 5px; }
+  .save-slot { min-height: 68px; gap: 7px; }
+  .save-thumb { flex-basis: 72px; }
+  .save-details span { display: none; }
+}
+
+.cast-editor { margin: 8px 0; border: 1px solid #3b4f68; border-radius: 8px; background: #203149; }
+.cast-editor summary { cursor: pointer; padding: 10px 12px; color: #ffdc9e; font-size: 13px; font-weight: 700; }
+.cast-editor-body { padding: 2px 10px 12px; }
+.cast-editor .field { margin: 8px 0 12px; }
+.cast-editor .expression-controls { max-height: 240px; overflow: auto; }

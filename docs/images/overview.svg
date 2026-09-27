@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">VRM Galgame 编辑器功能示意图</title>
+  <desc id="desc">左侧是工程、角色与素材，中央是三维人物舞台，右侧是角色属性，下方是对白时间线。</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#111827"/><stop offset="1" stop-color="#202a52"/></linearGradient>
+    <linearGradient id="stage" x2="0" y2="1"><stop stop-color="#365b88"/><stop offset="1" stop-color="#9885a2"/></linearGradient>
+    <linearGradient id="coat" x2="1" y2="1"><stop stop-color="#6f6bd8"/><stop offset="1" stop-color="#332f75"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-opacity=".28"/></filter>
+  </defs>
+  <rect width="1200" height="680" rx="28" fill="url(#bg)"/>
+  <circle cx="1060" cy="60" r="190" fill="#7583ee" opacity=".09"/>
+  <text x="46" y="57" fill="#f8fafc" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-weight="700" font-size="29">VRM Galgame Editor</text>
+  <text x="47" y="87" fill="#b6c5dc" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="16">角色 · 剧情 · 声画 · 导出</text>
+  <rect x="40" y="112" width="1120" height="520" rx="19" fill="#121b32" stroke="#61749c" filter="url(#shadow)"/>
+  <path d="M59 112h1082a19 19 0 0 1 19 19v40H40v-40a19 19 0 0 1 19-19z" fill="#253451"/>
+  <circle cx="69" cy="142" r="7" fill="#fb7185"/><circle cx="91" cy="142" r="7" fill="#fbbf24"/><circle cx="113" cy="142" r="7" fill="#34d399"/>
+  <text x="151" y="148" fill="#edf2ff" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="17">我的 VRM 故事</text>
+  <rect x="982" y="126" width="150" height="31" rx="15" fill="#907dff"/>
+  <text x="1057" y="147" text-anchor="middle" fill="white" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="15">▶ 试玩 / 导出</text>
+  <rect x="56" y="188" width="206" height="298" rx="13" fill="#1d2a44"/>
+  <text x="74" y="221" fill="#dde8ff" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="18" font-weight="700">工程</text>
+  <g font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="17" fill="#bac9df">
+    <text x="76" y="265">▸ 第一幕 · 相遇</text><text x="76" y="305">▸ 第二幕 · 选择</text><text x="76" y="345">▸ 角色</text><text x="76" y="385">▸ 背景与音频</text><text x="76" y="425">▸ 动作与表情</text>
+  </g>
+  <rect x="278" y="188" width="609" height="298" rx="13" fill="url(#stage)"/>
+  <circle cx="679" cy="265" r="73" fill="#f5d6c5" opacity=".18"/>
+  <path d="M279 425q170-98 306-25t302-49v135H278z" fill="#1e335a" opacity=".7"/>
+  <path d="M486 330c-24-28-39-63-29-85 6-17 23-29 47-35 27-25 72-20 88 12 18 25 6 61-19 89l-24 37z" fill="#25324d"/>
+  <ellipse cx="526" cy="286" rx="48" ry="61" fill="#ebc9b9"/>
+  <path d="M478 268q23-58 96-45 21 22 9 46-27-19-45-22-26 29-60 21z" fill="#25324d"/>
+  <path d="M500 343q-76 19-97 143h249q-21-123-95-143z" fill="url(#coat)"/>
+  <path d="M525 344l-21 76 23 34 26-34-20-76z" fill="#f3d7db"/>
+  <ellipse cx="527" cy="475" rx="117" ry="12" fill="#071327" opacity=".35"/>
+  <rect x="307" y="385" width="551" height="78" rx="13" fill="#14203c" opacity=".88" stroke="#b9b5ff"/>
+  <text x="325" y="413" fill="#d9d0ff" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="16" font-weight="700">角色名称</text>
+  <text x="325" y="442" fill="#ffffff" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="18">今天，故事从这里开始……</text>
+  <rect x="903" y="188" width="241" height="298" rx="13" fill="#1d2a44"/>
+  <text x="922" y="221" fill="#dde8ff" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="18" font-weight="700">人物与画面</text>
+  <g font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="15" fill="#b7c5d9">
+    <text x="922" y="264">位置   左右 / 前后</text><text x="922" y="319">表情   微笑</text><text x="922" y="374">动作   待机</text><text x="922" y="429">阴影   可选</text>
+  </g>
+  <g fill="#53668c"><rect x="921" y="279" width="192" height="6" rx="3"/><rect x="921" y="334" width="192" height="6" rx="3"/><rect x="921" y="389" width="192" height="6" rx="3"/><rect x="921" y="444" width="192" height="6" rx="3"/></g>
+  <g fill="#a69bff"><circle cx="1014" cy="282" r="7"/><circle cx="1064" cy="337" r="7"/><circle cx="987" cy="392" r="7"/><circle cx="965" cy="447" r="7"/></g>
+  <rect x="56" y="501" width="1088" height="113" rx="13" fill="#1d2a44"/>
+  <text x="76" y="531" fill="#dde8ff" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="17" font-weight="700">剧情时间线</text>
+  <line x1="95" y1="564" x2="1119" y2="564" stroke="#647797" stroke-width="3"/>
+  <g fill="#a39afe"><circle cx="178" cy="564" r="10"/><circle cx="433" cy="564" r="10"/><circle cx="688" cy="564" r="10"/><circle cx="955" cy="564" r="10"/></g>
+  <g font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="14" fill="#b9c7df"><text x="138" y="594">背景</text><text x="392" y="594">人物登场</text><text x="655" y="594">对白</text><text x="922" y="594">音乐</text></g>
+  <text x="1145" y="657" text-anchor="end" fill="#94a4c5" font-family="Segoe UI,Noto Sans CJK SC,sans-serif" font-size="13">功能示意图 / feature illustration</text>
+</svg>

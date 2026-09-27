@@ -1,0 +1,21 @@
+.dialogue {
+  background-image: url('/skin/dialogue.png');
+  border: 0;
+  box-shadow: none;
+  color: #2e2930;
+  padding: 17px 32px 30px;
+  min-height: 145px;
+}
+.dialogue .speaker {
+  color: #673e31;
+  background: #fcebd8b8;
+}
+.dialogue #dialogue-text { text-shadow: none; }
+#choice-list button {
+  background: url('/skin/choice.png') center / 100% 100% no-repeat;
+  border: none;
+  min-height: 58px;
+  color: #fff;
+  text-shadow: 0 1px 3px #123;
+}
+.player .dialogue { min-height: 175px; }

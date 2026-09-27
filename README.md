@@ -1,4 +1,4 @@
-# VRM Galgame 编辑器 · 0.0.1
+﻿# VRM Galgame 编辑器 · 0.0.1
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
@@ -61,5 +61,4 @@ Copy-Item -Recurse dist publish/web
 这个仓库公开的是编辑器源码和说明。第三方依赖各自遵循原作者的许可；仓库没有附带第三方人物与动作，也没有在此提供项目源码的再授权许可。
 
 作者 B 站：[尸工U5十三世的个人空间](https://b23.tv/krcyQ8I)
-
 

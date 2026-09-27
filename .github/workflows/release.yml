@@ -1,0 +1,43 @@
+name: Build Windows release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'Release public VRM Galgame Editor 0.0.1'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build web interface
+        run: |
+          npm ci
+          npm run build
+      - name: Build Windows editor
+        run: dotnet publish Desktop/Desktop.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+      - name: Assemble portable ZIP
+        shell: pwsh
+        run: |
+          $package = 'release/VRMGalgame-0.0.1-win-x64'
+          New-Item -ItemType Directory -Force -Path $package | Out-Null
+          Copy-Item -LiteralPath 'publish/VRMGalgame.exe','publish/WebView2Loader.dll','README.md','CHANGELOG.md','RELEASE_NOTES.md' -Destination $package
+          Copy-Item -Recurse -LiteralPath 'dist' -Destination "$package/web"
+          Copy-Item -Recurse -LiteralPath 'docs' -Destination "$package/docs"
+          Compress-Archive -LiteralPath $package -DestinationPath 'release/VRMGalgame-0.0.1-win-x64.zip' -CompressionLevel Optimal
+      - name: Publish 0.0.1
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create v0.0.1 'release/VRMGalgame-0.0.1-win-x64.zip' --title 'VRM Galgame Editor 0.0.1' --notes-file RELEASE_NOTES.md --target '${{ github.sha }}'

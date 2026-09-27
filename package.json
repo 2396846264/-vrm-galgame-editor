@@ -1,0 +1,18 @@
+{
+  "name": "vrm-galgame-editor",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@pixiv/three-vrm": "^3.5.4",
+    "@pixiv/three-vrm-animation": "^3.5.4",
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.0"
+  }
+}
