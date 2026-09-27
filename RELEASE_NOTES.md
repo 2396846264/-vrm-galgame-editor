@@ -8,5 +8,21 @@
 
 **한국어** · 첫 공개 버전입니다. 로컬 v0.7.4 기능을 바탕으로 VRM 캐릭터, 막, 대사, 동작, 소재, 시험 실행, Windows 게임 내보내기를 지원합니다. ZIP 전체를 압축 해제하고 `VRMGalgame.exe`를 실행하세요. 제삼자 소재는 포함되지 않습니다. [한국어 안내](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/README.ko.md)
 
+## 示例和效果图 / Examples and visual previews
+
+图中的示例人物与背景素材不包含在公开下载包中。The example characters and backgrounds shown below are not included in the public download.
+
+**剧情编辑示例 / Story editor**
+
+![剧情编辑示例和效果图](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/editor-story.png)
+
+**标题画面效果图 / Title screen**
+
+![标题画面示例和效果图](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/title-screen.png)
+
+**游玩画面效果图 / Gameplay**
+
+![游玩画面示例和效果图](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/gameplay.png)
+
 作者 / Creator / 作者 / 제작자 Bilibili: [尸工U5十三世](https://b23.tv/krcyQ8I)
 

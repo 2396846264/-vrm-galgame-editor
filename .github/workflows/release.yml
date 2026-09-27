@@ -41,3 +41,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release create v0.0.1 'release/VRMGalgame-0.0.1-win-x64.zip' --title 'VRM Galgame Editor 0.0.1' --notes-file RELEASE_NOTES.md --target '${{ github.sha }}'
+
+  refresh-release-notes:
+    if: github.event_name == 'push' && github.event.head_commit.message == 'Add example and effect images'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Add examples to release page
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit v0.0.1 --notes-file RELEASE_NOTES.md

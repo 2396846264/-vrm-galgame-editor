@@ -17,6 +17,22 @@ A Windows editor for creating visual novels with 3D VRM characters. Arrange char
 - Provide player saves, autosaves, reading progress, and unlockable galleries.
 - Adjust rendering options, including optional shared character shadows.
 
+## Examples and visual previews
+
+These examples and visual previews show the editor, title screen, and gameplay. The characters, background, and other example assets shown here are **not included** in the public download.
+
+**Story editing example:** arrange acts, dialogue, characters, and backgrounds.
+
+![Story editor example and visual preview](images/editor-story.png)
+
+**Title screen preview:** a sample menu with a VRM character.
+
+![Title screen example and visual preview](images/title-screen.png)
+
+**Gameplay preview:** characters, background, and dialogue together.
+
+![Gameplay example and visual preview](images/gameplay.png)
+
 ![Asset-to-game workflow](images/workflow.svg)
 
 ## Download and start
