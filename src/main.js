@@ -2,6 +2,7 @@ import './style.css';
 import './skin.css';
 import './layout.css';
 import './vn-theme.css';
+import './ios7-theme.css';
 import { VRMStage, assetUrl, motionFrameInfo } from './renderer.js';
 
 const app = document.querySelector('#app');
@@ -25,10 +26,11 @@ let preparedAct = -1;
 let transitioning = false;
 let playRequest = 0;
 let previewRequest = 0;
+let titleRequest = 0;
 let dirty = false;
 let changeRevision = 0;
 let saveInFlight = null;
-let editorSettings = { autoSaveMinutes: 5 };
+let editorSettings = { autoSaveMinutes: 5, theme: 'light' };
 let editorAutoSaveTimer = null;
 let music = new Audio();
 let voice = new Audio();
@@ -98,6 +100,12 @@ const input = (key, value, placeholder = '') => `<input data-field="${key}" valu
 const textarea = (key, value, placeholder = '') => `<textarea data-field="${key}" placeholder="${escape(placeholder)}">${escape(value)}</textarea>`;
 const select = (key, items, value, empty) => `<select data-field="${key}">${options(items, value, empty)}</select>`;
 const button = (label, action, extra = '') => `<button type="button" data-action="${action}" ${extra}>${label}</button>`;
+const loadingSpinner = '<span class="loading-spinner" role="status" aria-label="人物加载中"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+function setStagePlaceholder(node, message, loading = false) {
+  if (!node) return;
+  if (loading) node.innerHTML = loadingSpinner;
+  else node.textContent = message;
+}
 const defaultSize = 1.15;
 const expressionLabels = {
   happy:'开心', angry:'生气', sad:'难过', relaxed:'放松', surprised:'惊讶',
@@ -258,6 +266,7 @@ function titleMarkup(interactive) {
   return `<div class="title-logo-region">${logoMarkup}</div><nav class="title-bottom-menu">${menu}</nav>`;
 }
 async function showTitleScene(interactive = false) {
+  const request = ++titleRequest;
   const frame = document.querySelector('.stage-frame');
   frame?.classList.add('title-mode');
   showBackground(asset(project.title.backgroundId));
@@ -272,9 +281,15 @@ async function showTitleScene(interactive = false) {
   }
   const placeholder = document.querySelector('#stage-placeholder');
   if (placeholder) placeholder.style.display = 'none';
+  const loading = document.querySelector('#act-loading');
+  if (project.title.modelId) loading?.classList.remove('hidden');
   await stage.show(asset(project.title.modelId), asset(project.title.motionId),
     project.title.expressionWeights || {}, 'center', transformOf(project.title), `title:${project.title.modelId || 'empty'}`,
     motionOptionsOf(project.title), 'title');
+  if (request === titleRequest && !playing) {
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    if (request === titleRequest && !playing) loading?.classList.add('hidden');
+  }
   if (interactive && project.title.modelId)
     for (const item of project.characters.filter(item => item.modelId === project.title.modelId))
       rememberDiscovery('character', item.id);
@@ -394,8 +409,23 @@ function loadEditorSettings() {
     const saved = JSON.parse(localStorage.getItem('vrm-editor-settings') || 'null');
     if ([5, 10, 30, 60].includes(Number(saved?.autoSaveMinutes)))
       editorSettings.autoSaveMinutes = Number(saved.autoSaveMinutes);
+    editorSettings.theme = saved?.theme === 'dark' ? 'dark' : 'light';
   } catch { /* Keep the default interval. */ }
+  applyEditorTheme();
   restartEditorAutoSave();
+}
+function applyEditorTheme() {
+  document.body.dataset.editorTheme = editorSettings.theme;
+  const toggle = document.querySelector('[data-action="toggle-editor-theme"]');
+  if (toggle) {
+    toggle.textContent = editorSettings.theme === 'dark' ? '☀' : '☾';
+    toggle.title = editorSettings.theme === 'dark' ? '切换到日间模式' : '切换到夜间模式';
+    toggle.setAttribute('aria-label', toggle.title);
+    toggle.setAttribute('aria-pressed', String(editorSettings.theme === 'dark'));
+  }
+}
+function saveEditorSettings() {
+  localStorage.setItem('vrm-editor-settings', JSON.stringify(editorSettings));
 }
 function restartEditorAutoSave() {
   clearInterval(editorAutoSaveTimer);
@@ -411,7 +441,10 @@ function renderEditorSettings() {
       <label class="field"><span>自动保存间隔</span><select id="editor-auto-save-minutes">
         ${[[5, '每 5 分钟'], [10, '每 10 分钟'], [30, '每 30 分钟'], [60, '每 1 小时']].map(([value, label]) =>
           `<option value="${value}" ${editorSettings.autoSaveMinutes === value ? 'selected' : ''}>${label}</option>`).join('')}
-      </select></label><p>此设置适用于所有工程。有未保存的修改时，程序会按选定间隔保存；也可以随时点“保存”。</p>
+      </select></label><label class="field"><span>界面外观</span><select id="editor-theme">
+        <option value="light" ${editorSettings.theme === 'light' ? 'selected' : ''}>日间 · 白色</option>
+        <option value="dark" ${editorSettings.theme === 'dark' ? 'selected' : ''}>夜间 · 深灰色</option>
+      </select></label><p>外观设置只影响编辑器；导出的游戏保持白色界面。</p>
     </div></div>`);
 }
 function renderWelcome() {
@@ -440,7 +473,7 @@ function renderEditor() {
   app.innerHTML = `<div class="editor">
     <header class="topbar"><div class="brand">✦ <b>VRM Galgame</b><span>编辑器</span></div>
       <div class="project-title"><input id="project-name" value="${escape(project.name)}" aria-label="游戏名称"><span id="save-state">✓ 已保存</span></div>
-      <nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('导入旧工程', 'import-folder-project')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('设置', 'editor-settings')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}</nav>
+      <nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('导入旧工程', 'import-folder-project')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}</nav>
     </header>
     <div class="workspace">
       <aside class="sidebar"><div class="tabs">
@@ -454,7 +487,7 @@ function renderEditor() {
           <button type="button" id="auto-play-button" class="auto-play-button hidden" data-action="auto-toggle" aria-pressed="false">▶ 自动播放</button>
           <div id="choice-list"></div>
           <div id="play-controls">${button('退出试玩', 'stop-play')}</div>
-          <div id="act-loading" class="act-loading hidden">正在准备本幕的人物和动作…</div>
+          <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
         </div>
         <div class="stage-hint">选中左侧对白即可预览。试玩时点击画面空白处，或按空格 / Enter 继续。</div>
       </main>
@@ -473,6 +506,7 @@ function renderEditor() {
     toast(message, true);
   });
   stage.setRenderSettings(project.render);
+  applyEditorTheme();
   renderSidebar();
   renderInspector();
   updatePreview();
@@ -808,7 +842,7 @@ async function updatePreview() {
   stage.setBackgroundLighting(bgAsset);
   document.querySelector('#stage-caption').textContent = currentAct?.name || '没有幕';
   const placeholder = document.querySelector('#stage-placeholder');
-  placeholder.textContent = modelAsset ? '正在加载人物…' : current ? '此句没有 VRM 角色' : '这一幕还没有人物';
+  setStagePlaceholder(placeholder, current ? '此句没有 VRM 角色' : '这一幕还没有人物', Boolean(modelAsset));
   placeholder.style.display = 'grid';
   showDialogue(current?.speaker || character(current?.characterId)?.name || '旁白', current?.text || '', false);
   if (!current) document.querySelector('#dialogue')?.classList.remove('visible');
@@ -817,7 +851,7 @@ async function updatePreview() {
   if (stage.visibleRecords.size)
     placeholder.style.display = 'none';
   else if (modelAsset && !stageError)
-    placeholder.textContent = '正在加载人物…';
+    setStagePlaceholder(placeholder, '', true);
   renderExpressionControls();
   renderCastExpressionControls();
 }
@@ -921,7 +955,7 @@ async function showPlayStep() {
     const caption = document.querySelector('#stage-caption');
     if (caption) caption.textContent = currentAct.name;
     const placeholder = document.querySelector('#stage-placeholder');
-    placeholder.textContent = modelAsset ? '正在准备人物…' : '此句没有 VRM 角色';
+    setStagePlaceholder(placeholder, '此句没有 VRM 角色', Boolean(modelAsset));
     placeholder.style.display = 'grid';
     stageError = '';
     document.querySelector('.stage-frame')?.classList.remove('title-mode');
@@ -971,6 +1005,7 @@ function startPlay() {
   const firstAct = mode === 'player' || activePanel === 'title' ? 0 : selectedAct;
   if (!project.acts[firstAct]?.steps.length) { toast('先写一句对白再试玩', true); return; }
   playing = true; playAct = firstAct; playStep = 0; preparedAct = -1;
+  titleRequest++;
   playViewedStepIds = new Set();
   playCharacterLineCounts = {};
   restartPlayerAutoSave();
@@ -1532,7 +1567,7 @@ function renderPlayer() {
       </div>
     </div>
     <div id="player-start" class="title-composition"></div>
-    <div id="act-loading" class="act-loading hidden">正在准备本幕的人物和动作…</div>
+    <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
   </div></div>`;
   stageError = '';
   stage = new VRMStage(document.querySelector('#stage-canvas'), message => {
@@ -1611,6 +1646,12 @@ document.addEventListener('click', async event => {
       window.location.reload();
     }
     else if (action === 'editor-settings') renderEditorSettings();
+    else if (action === 'toggle-editor-theme') {
+      editorSettings.theme = editorSettings.theme === 'dark' ? 'light' : 'dark';
+      saveEditorSettings(); applyEditorTheme();
+      const select = document.querySelector('#editor-theme');
+      if (select) select.value = editorSettings.theme;
+    }
     else if (action === 'close-editor-settings') document.querySelector('#editor-settings-modal')?.remove();
     else if (action === 'export') {
       await save();
@@ -1862,9 +1903,14 @@ document.addEventListener('input', event => {
     const minutes = Number(node.value);
     if (![5, 10, 30, 60].includes(minutes)) return;
     editorSettings.autoSaveMinutes = minutes;
-    localStorage.setItem('vrm-editor-settings', JSON.stringify(editorSettings));
+    saveEditorSettings();
     restartEditorAutoSave();
     toast(`已设置每 ${minutes} 分钟自动保存`);
+    return;
+  }
+  if (node.id === 'editor-theme') {
+    editorSettings.theme = node.value === 'dark' ? 'dark' : 'light';
+    saveEditorSettings(); applyEditorTheme();
     return;
   }
   if (node.dataset.galleryMusic && project) {
@@ -2211,3 +2257,4 @@ window.__vrmDiagnostics = () => ({
   ,playStep
 });
 init();
+
