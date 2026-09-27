@@ -13,6 +13,12 @@ const boneNames = {
   RightUpLeg:'rightUpperLeg',RightLeg:'rightLowerLeg',RightFoot:'rightFoot',RightToeBase:'rightToes'
 };
 const isIdleMotion = asset => !asset || /idle|待机|静立|原地站立|呼吸/i.test(`${asset.id || ''} ${asset.name || ''} ${asset.path || ''}`);
+const isPlantedMotion = asset => {
+  if (isIdleMotion(asset)) return true;
+  const name = `${asset?.name || ''} ${asset?.path || ''}`;
+  return !/坐姿|坐着|坐下|起身|躺|爬行|翻滚/i.test(name) &&
+    /说话|说笑|闲聊|交谈|低头发消息|\btalk(?:ing)?\b|\bchat(?:ting)?\b|\bconversation\b/i.test(name);
+};
 export function motionFrameInfo(clip) {
   if (!clip) return { fps: 30, frames: 0 };
   const intervals = [];
@@ -34,8 +40,16 @@ function playbackSettings(value = {}) {
     loop: value?.loop !== false,
     startFrame: Math.max(1, Math.floor(Number(value?.startFrame) || 1)),
     endFrame: Number(value?.endFrame) > 0 ? Math.floor(Number(value.endFrame)) : null,
-    after: value?.after === 'idle' ? 'idle' : 'hold'
+    after: value?.after === 'idle' ? 'idle' : 'hold',
+    placement: value?.placement === 'free' ? 'free' : 'bounded',
+    feet: value?.feet === 'lock' || value?.feet === 'free' ? value.feet : 'auto'
   };
+}
+export function boundedMotionOffset(x, z, radius = 0.45) {
+  const distance = Math.hypot(x, z);
+  if (!Number.isFinite(distance) || distance <= radius) return [0, 0];
+  const correction = 1 - radius / distance;
+  return [-x * correction, -z * correction];
 }
 function motionSegment(clip, settings, cache) {
   const { fps, frames } = motionFrameInfo(clip);
@@ -170,6 +184,7 @@ export class VRMStage {
     if (!record?.currentAction) return;
     record.mixer.setTime(Math.max(0, Number(seconds) || 0));
     record.mixer.timeScale = 0;
+    this.applyMotionPlacement(record);
     record.vrm.update(0);
   }
   animate() {
@@ -183,6 +198,7 @@ export class VRMStage {
       this.restoreFootPose(record);
       record.mixer.update(delta);
       this.updateTransitions(record, delta);
+      this.applyMotionPlacement(record);
       this.applyFootLock(record);
       record.vrm.update(delta);
     }
@@ -221,7 +237,17 @@ export class VRMStage {
       const fittedBounds = new THREE.Box3().setFromObject(vrm.scene);
       vrm.scene.position.y -= fittedBounds.min.y;
       vrm.scene.visible = false;
-      this.scene.add(vrm.scene);
+      const anchor = new THREE.Object3D();
+      anchor.name = 'CharacterAnchor';
+      const motionRoot = new THREE.Object3D();
+      motionRoot.name = 'MotionRoot';
+      this.scene.add(anchor);
+      anchor.add(motionRoot);
+      motionRoot.add(vrm.scene);
+      anchor.updateMatrixWorld(true);
+      const hips = vrm.humanoid.getNormalizedBoneNode('hips');
+      const referenceHips = hips
+        ? motionRoot.worldToLocal(hips.getWorldPosition(new THREE.Vector3())) : new THREE.Vector3();
       const materials = new Map();
       vrm.scene.traverse(object => {
         if (!object.isMesh) return;
@@ -234,7 +260,7 @@ export class VRMStage {
       this.applyShadowCasting(vrm.scene);
       const idleClip = this.createIdleClip(vrm);
       const record = {
-        vrm, mixer: new THREE.AnimationMixer(vrm.scene),
+        vrm, anchor, motionRoot, referenceHips, mixer: new THREE.AnimationMixer(vrm.scene),
         fitScale: vrm.scene.scale.clone(), fitPosition: vrm.scene.position.clone(), materials,
         currentMotionId: undefined, idleClip, currentAction: null, fadeOutActions: [], footLock: null,
         segmentClips: new Map(), currentMotionToken: '', currentMotionOptions: null
@@ -329,6 +355,7 @@ export class VRMStage {
         record.returnMotionClip = null;
         this.poseRecord(record, clip, motionAsset, false, motionOptions, playbackKey);
         this.transformRecord(record, position, transform);
+        this.applyMotionPlacement(record);
         this.expressRecord(record, expressionWeights);
         this.dimRecord(record, 1);
         record.vrm.update(0);
@@ -381,6 +408,7 @@ export class VRMStage {
           this.expressRecord(record, speaker.expressionWeights || {}, smooth);
         } else this.expressRecord(record, entry.expressionWeights || {}, smooth);
         this.transformRecord(record, entry.position, speaking ? speaker.transform : entry.transform, smooth);
+        this.applyMotionPlacement(record);
         this.dimRecord(record, speakingRecord ? (speaking ? 1 : 0.65) : 1);
         record.vrm.update(0);
         record.vrm.scene.visible = true;
@@ -419,12 +447,13 @@ export class VRMStage {
     const settings = playbackSettings(options);
     const source = clip || record.idleClip;
     const segment = motionAsset ? motionSegment(source, settings, record.segmentClips) : { clip: source };
-    const token = JSON.stringify([motionId, settings.loop, segment.start, segment.end, settings.after,
+    const token = JSON.stringify([motionId, settings.loop, segment.start, segment.end, settings.after, settings.placement, settings.feet,
       settings.loop ? '' : playbackKey]);
     if (record.currentMotionToken === token && record.vrm.scene.visible) return;
     const previousLock = record.footLock;
     this.restoreFootPose(record);
-    record.footLock = isIdleMotion(motionAsset) ? previousLock || {
+    const lockFeet = settings.feet === 'lock' || (settings.feet === 'auto' && isPlantedMotion(motionAsset));
+    record.footLock = lockFeet ? previousLock || {
       left: this.footChain(record.vrm, 'left'), right: this.footChain(record.vrm, 'right'), prePose: null
     } : null;
     if (record.footLock) record.footLock.preserveDuringFade = Boolean(previousLock);
@@ -448,6 +477,21 @@ export class VRMStage {
     record.currentMotionId = motionId;
     record.currentMotionToken = token;
     record.currentMotionOptions = settings;
+  }
+  applyMotionPlacement(record) {
+    const root = record.motionRoot;
+    if (record.currentMotionOptions?.placement === 'free') {
+      root.position.set(0, 0, 0);
+      return;
+    }
+    const hips = record.vrm.humanoid.getNormalizedBoneNode('hips');
+    if (!hips) return;
+    record.anchor.updateMatrixWorld(true);
+    const local = root.worldToLocal(hips.getWorldPosition(new THREE.Vector3()));
+    const [x, z] = boundedMotionOffset(local.x - record.referenceHips.x,
+      local.z - record.referenceHips.z);
+    root.position.set(x, 0, z);
+    root.updateMatrixWorld(true);
   }
   onMotionFinished(record, action) {
     if (action !== record.currentAction || record.currentMotionOptions?.loop) return;
@@ -541,25 +585,22 @@ export class VRMStage {
     const pitch = Math.max(-60, Math.min(60, Number(transform?.pitch) || 0));
     const multiple = this.visibleRecords.size > 1;
     const baseX = position === 'left' ? (multiple ? -1.22 : -0.7) : position === 'right' ? (multiple ? 1.22 : 0.7) : 0;
-    const targetScale = record.fitScale.clone().multiplyScalar(size);
-    const targetPosition = record.fitPosition.clone().multiplyScalar(size);
-    targetPosition.x += baseX + offsetX;
-    targetPosition.y += offsetY;
-    targetPosition.z += offsetZ;
+    const targetScale = new THREE.Vector3(size, size, size);
+    const targetPosition = new THREE.Vector3(baseX + offsetX, offsetY, offsetZ);
     const targetYaw = THREE.MathUtils.degToRad(yaw);
     const targetPitch = THREE.MathUtils.degToRad(pitch);
     const oldTarget = record.transformTarget;
     if (smooth && record.vrm.scene.visible &&
       (!oldTarget || !oldTarget.position.equals(targetPosition) || !oldTarget.scale.equals(targetScale) || oldTarget.yaw !== targetYaw || oldTarget.pitch !== targetPitch)) {
       record.transformBlend = { elapsed: 0, duration: 0.3,
-        fromPosition: record.vrm.scene.position.clone(), fromScale: record.vrm.scene.scale.clone(), fromYaw: record.vrm.scene.rotation.y, fromPitch: record.vrm.scene.rotation.x,
+        fromPosition: record.anchor.position.clone(), fromScale: record.anchor.scale.clone(), fromYaw: record.anchor.rotation.y, fromPitch: record.anchor.rotation.x,
         toPosition: targetPosition, toScale: targetScale, toYaw: targetYaw, toPitch: targetPitch };
     } else if (!smooth || !record.vrm.scene.visible) {
       record.transformBlend = null;
-      record.vrm.scene.position.copy(targetPosition);
-      record.vrm.scene.scale.copy(targetScale);
-      record.vrm.scene.rotation.y = targetYaw;
-      record.vrm.scene.rotation.x = targetPitch;
+      record.anchor.position.copy(targetPosition);
+      record.anchor.scale.copy(targetScale);
+      record.anchor.rotation.y = targetYaw;
+      record.anchor.rotation.x = targetPitch;
     }
     record.transformTarget = { position: targetPosition, scale: targetScale, yaw: targetYaw, pitch: targetPitch };
     if (record.footLock && (!oldTarget || !oldTarget.position.equals(targetPosition) || !oldTarget.scale.equals(targetScale) || oldTarget.yaw !== targetYaw || oldTarget.pitch !== targetPitch))
@@ -599,10 +640,10 @@ export class VRMStage {
       blend.elapsed += delta;
       const t = Math.min(1, blend.elapsed / blend.duration);
       const eased = t * t * (3 - 2 * t);
-      record.vrm.scene.position.copy(blend.fromPosition).lerp(blend.toPosition, eased);
-      record.vrm.scene.scale.copy(blend.fromScale).lerp(blend.toScale, eased);
-      record.vrm.scene.rotation.y = THREE.MathUtils.lerp(blend.fromYaw, blend.toYaw, eased);
-      record.vrm.scene.rotation.x = THREE.MathUtils.lerp(blend.fromPitch, blend.toPitch, eased);
+      record.anchor.position.copy(blend.fromPosition).lerp(blend.toPosition, eased);
+      record.anchor.scale.copy(blend.fromScale).lerp(blend.toScale, eased);
+      record.anchor.rotation.y = THREE.MathUtils.lerp(blend.fromYaw, blend.toYaw, eased);
+      record.anchor.rotation.x = THREE.MathUtils.lerp(blend.fromPitch, blend.toPitch, eased);
       if (t >= 1) record.transformBlend = null;
     }
     record.fadeOutActions = record.fadeOutActions.filter(item => {
@@ -788,7 +829,7 @@ export class VRMStage {
     this.visibleRecords.clear();
     for (const task of this.modelCache.values()) task.then(record => {
       if (record) {
-        this.scene.remove(record.vrm.scene);
+        this.scene.remove(record.anchor);
         VRMUtils.deepDispose(record.vrm.scene);
       }
     }).catch(() => {});
