@@ -1,7 +1,7 @@
 {
   "name": "vrm-galgame-editor",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.7.11",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
@@ -16,4 +16,3 @@
     "vite": "^7.3.0"
   }
 }
-

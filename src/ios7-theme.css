@@ -319,4 +319,3 @@ body[data-editor-theme] .recent-projects { border-color: var(--ui-border); }
 @media (prefers-reduced-motion: reduce) {
   .loading-spinner i { animation-duration: 3s; }
 }
-

@@ -4,6 +4,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
 import { VRMAnimationLoaderPlugin, createVRMAnimationClip } from '@pixiv/three-vrm-animation';
 import { OutlineEffect } from 'three/addons/effects/OutlineEffect.js';
+import { createOilPaintComposer } from './oil-paint-effect.js';
 
 const boneNames = {
   Hips:'hips',Spine:'spine',Spine1:'chest',Spine2:'upperChest',Neck:'neck',Head:'head',
@@ -98,6 +99,70 @@ for (const side of ['Left','Right']) {
 
 export const assetUrl = asset => asset ? `https://project.galgame/${asset.path.split('/').map(encodeURIComponent).join('/')}` : '';
 
+// Render a separate, transparent bust portrait without moving the stage actor.
+export async function captureVrmPortrait(modelAsset, motionAsset = null, poseSeconds = 0) {
+  const loader = new GLTFLoader();
+  loader.register(parser => new VRMLoaderPlugin(parser));
+  loader.register(parser => new VRMAnimationLoaderPlugin(parser));
+  const gltf = await loader.loadAsync(assetUrl(modelAsset));
+  const vrm = gltf.userData.vrm;
+  if (!vrm) { VRMUtils.deepDispose(gltf.scene); throw new Error('文件里没有找到 VRM 角色'); }
+  let renderer;
+  let motionScene;
+  try {
+    const scene = new THREE.Scene();
+    scene.add(vrm.scene);
+    const bounds = new THREE.Box3().setFromObject(vrm.scene);
+    const size = bounds.getSize(new THREE.Vector3());
+    if (size.y > 0) vrm.scene.scale.multiplyScalar(1.8 / size.y);
+    vrm.scene.updateMatrixWorld(true);
+    vrm.scene.position.y -= new THREE.Box3().setFromObject(vrm.scene).min.y;
+    vrm.scene.updateMatrixWorld(true);
+    if (motionAsset) {
+      let clip;
+      if (motionAsset.path.toLowerCase().endsWith('.vrma')) {
+        const motion = await loader.loadAsync(assetUrl(motionAsset));
+        motionScene = motion.scene;
+        const animation = motion.userData.vrmAnimations?.[0];
+        if (!animation) throw new Error('VRMA 文件里没有动作');
+        clip = createVRMAnimationClip(animation, vrm);
+      } else {
+        motionScene = await new FBXLoader().loadAsync(assetUrl(motionAsset));
+        clip = VRMStage.loadMixamo(motionScene, vrm);
+      }
+      vrm.humanoid.resetNormalizedPose();
+      const mixer = new THREE.AnimationMixer(vrm.scene);
+      mixer.clipAction(clip).setLoop(THREE.LoopRepeat, Infinity).play();
+      mixer.setTime(Math.max(0, Number(poseSeconds) || 0));
+    } else {
+      const leftArm = vrm.humanoid.getNormalizedBoneNode('leftUpperArm');
+      const rightArm = vrm.humanoid.getNormalizedBoneNode('rightUpperArm');
+      if (leftArm) leftArm.rotation.z = -1.05;
+      if (rightArm) rightArm.rotation.z = 1.05;
+    }
+    vrm.update(0);
+    const head = vrm.humanoid.getNormalizedBoneNode('head');
+    const target = head?.getWorldPosition(new THREE.Vector3()) || new THREE.Vector3(0, 1.55, 0);
+    const camera = new THREE.OrthographicCamera(-0.20, 0.20, 0.20, -0.20, 0.01, 20);
+    camera.position.set(target.x - 0.85, target.y + 0.05, target.z + 1.7);
+    camera.lookAt(target.x, target.y + 0.03, target.z);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8497b0, 2));
+    const key = new THREE.DirectionalLight(0xffffff, 2.1);
+    key.position.set(-2, 4, 5);
+    scene.add(key);
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true });
+    renderer.setSize(512, 512, false);
+    renderer.setPixelRatio(1);
+    renderer.setClearColor(0x000000, 0);
+    renderer.render(scene, camera);
+    return renderer.domElement.toDataURL('image/png');
+  } finally {
+    renderer?.dispose();
+    if (motionScene) VRMUtils.deepDispose(motionScene);
+    VRMUtils.deepDispose(gltf.scene);
+  }
+}
+
 export class VRMStage {
   constructor(element, onError = () => {}) {
     this.element = element;
@@ -121,10 +186,13 @@ export class VRMStage {
     this.shadowLight.shadow.normalBias = 0.02;
     this.shadowLight.shadow.radius = 3;
     this.scene.add(this.shadowLight, this.shadowLight.target);
-    this.shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(18, 18),
+    const shadowGround = new THREE.PlaneGeometry(18, 18, 72, 72);
+    shadowGround.rotateX(-Math.PI / 2);
+    this.shadowPlane = new THREE.Mesh(shadowGround,
       new THREE.ShadowMaterial({ color: 0x101820, opacity: 0.45, depthWrite: false }));
-    this.shadowPlane.rotation.x = -Math.PI / 2;
-    this.shadowPlane.position.y = -0.025;
+    this.shadowGroundPoints = [];
+    this.shadowGroundKey = '';
+    this.shadowPlane.frustumCulled = false;
     this.shadowPlane.receiveShadow = true;
     this.shadowPlane.renderOrder = -1;
     this.shadowPlane.visible = false;
@@ -134,8 +202,16 @@ export class VRMStage {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.outlineEffect = new OutlineEffect(this.renderer);
     this.originalMaterialSettings = new WeakMap();
+    this.paintComposer = null;
+    this.paintPass = null;
+    this.paintPixelRatio = 1;
+    this.paintBackgroundAsset = null;
+    this.paintBackgroundVideo = null;
+    this.paintBackgroundTexture = null;
+    this.paintBackgroundRequest = 0;
+    this.paintEnabled = false;
     this.renderSettings = { antialias: 'standard', style: 'original', outline: 0, autoLight: true, lightStrength: 0.6,
-      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45 };
+      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, paintEffect: 'none', paintStrength: 0.65 };
     this.setRenderSettings(this.renderSettings);
     this.element.appendChild(this.renderer.domElement);
     this.loader = new GLTFLoader();
@@ -143,6 +219,7 @@ export class VRMStage {
     this.loader.register(parser => new VRMAnimationLoaderPlugin(parser));
     this.fbxLoader = new FBXLoader();
     this.clock = new THREE.Clock();
+    this.averageFrameMs = 0;
     this.vrm = null;
     this.mixer = null;
     this.activeRecord = null;
@@ -167,6 +244,14 @@ export class VRMStage {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height, false);
+    if (this.paintComposer) {
+      this.paintComposer.setPixelRatio(this.paintPixelRatio);
+      this.paintComposer.setSize(width, height);
+      this.paintPass.uniforms.resolution.value.set(
+        Math.max(1, Math.round(width * this.paintPixelRatio)),
+        Math.max(1, Math.round(height * this.paintPixelRatio)));
+    }
+    this.updatePaintBackgroundCrop();
   }
   setCameraAngle(degrees = 0) {
     const angle = THREE.MathUtils.degToRad(Math.max(0, Math.min(65, Number(degrees) || 0)));
@@ -191,6 +276,7 @@ export class VRMStage {
     if (!this.running) return;
     this.frame = requestAnimationFrame(() => this.animate());
     const delta = Math.min(this.clock.getDelta(), 0.1);
+    this.averageFrameMs = this.averageFrameMs ? this.averageFrameMs * 0.94 + delta * 1000 * 0.06 : delta * 1000;
     const updated = new Set();
     for (const record of this.visibleRecords.values()) {
       if (updated.has(record)) continue;
@@ -202,7 +288,9 @@ export class VRMStage {
       this.applyFootLock(record);
       record.vrm.update(delta);
     }
-    if (this.outlineEffect.enabled) this.outlineEffect.render(this.scene, this.camera);
+    this.updateShadowGround();
+    if (this.paintEnabled && this.paintComposer) this.paintComposer.render(delta);
+    else if (this.outlineEffect.enabled) this.outlineEffect.render(this.scene, this.camera);
     else this.renderer.render(this.scene, this.camera);
   }
   destroy() {
@@ -212,6 +300,8 @@ export class VRMStage {
     this.clear();
     this.shadowPlane.geometry.dispose();
     this.shadowPlane.material.dispose();
+    this.releasePaintBackground();
+    this.paintComposer?.dispose();
     this.renderer.dispose();
   }
   loadModel(modelAsset, actorKey = modelAsset?.id) {
@@ -309,7 +399,7 @@ export class VRMStage {
       if (generation !== this.cacheGeneration || !record || !source) return null;
       return source.kind === 'vrma'
         ? createVRMAnimationClip(source.animation, record.vrm)
-        : this.loadMixamo(source.fbx, record.vrm);
+        : VRMStage.loadMixamo(source.fbx, record.vrm);
     }).catch(error => {
       if (this.clipCache.get(key) === task) this.clipCache.delete(key);
       throw error;
@@ -674,6 +764,9 @@ export class VRMStage {
       this.renderer.aaMode = quality;
       this.renderer.outputColorSpace = THREE.SRGBColorSpace;
       this.element.replaceChild(this.renderer.domElement, previous.domElement);
+      this.paintComposer?.dispose();
+      this.paintComposer = null;
+      this.paintPass = null;
       previous.dispose();
       this.outlineEffect = new OutlineEffect(this.renderer);
     }
@@ -683,12 +776,83 @@ export class VRMStage {
     this.renderer.toneMapping = style === 'cinematic' ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
     this.renderer.toneMappingExposure = style === 'cinematic' ? 1.18 : 1;
     this.outlineEffect.enabled = Number(this.renderSettings.outline) > 0;
+    this.applyPaintSettings();
     this.applyShadowSettings();
     for (const task of this.modelCache?.values() || []) task.then(record => {
       if (record) { this.applyMaterialStyle(record.vrm.scene); this.applyOutline(record.vrm.scene); this.applyShadowCasting(record.vrm.scene); }
     }).catch(() => {});
     this.applyLighting(this.currentLightProfile);
     this.resize();
+  }
+  applyPaintSettings() {
+    const enabled = this.renderSettings.paintEffect === 'oil' && Number(this.renderSettings.paintStrength) > 0;
+    if (enabled && !this.paintComposer) {
+      const { composer, paintPass } = createOilPaintComposer(this);
+      this.paintComposer = composer;
+      this.paintPass = paintPass;
+      this.paintPixelRatio = Math.min(this.renderer.getPixelRatio(), 1.5) * 0.7;
+    }
+    if (this.paintPass)
+      this.paintPass.uniforms.strength.value = Math.max(0, Math.min(1, Number(this.renderSettings.paintStrength) || 0));
+    if (enabled !== this.paintEnabled) {
+      this.paintEnabled = enabled;
+      if (enabled) this.setPaintBackground(this.paintBackgroundAsset, this.paintBackgroundVideo);
+      else this.releasePaintBackground();
+    }
+    if (!enabled && this.paintComposer) {
+      this.paintComposer.dispose();
+      this.paintComposer = null;
+      this.paintPass = null;
+    }
+  }
+  releasePaintBackground() {
+    this.paintBackgroundRequest++;
+    this.scene.background = null;
+    this.paintBackgroundTexture?.dispose();
+    this.paintBackgroundTexture = null;
+  }
+  setPaintBackground(backgroundAsset, video = null) {
+    this.paintBackgroundAsset = backgroundAsset || null;
+    this.paintBackgroundVideo = video;
+    this.releasePaintBackground();
+    if (!this.paintEnabled || !backgroundAsset) return;
+    const request = this.paintBackgroundRequest;
+    if (backgroundAsset.type === 'video' && video) {
+      const texture = new THREE.VideoTexture(video);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      this.paintBackgroundTexture = texture;
+      const activate = () => {
+        if (request !== this.paintBackgroundRequest || video.readyState < 2) return;
+        this.scene.background = texture;
+        this.updatePaintBackgroundCrop();
+      };
+      video.addEventListener('loadeddata', activate, { once: true });
+      video.addEventListener('loadedmetadata', () => {
+        if (request === this.paintBackgroundRequest) this.updatePaintBackgroundCrop();
+      }, { once: true });
+      activate();
+    } else if (backgroundAsset.type === 'image') {
+      new THREE.TextureLoader().loadAsync(assetUrl(backgroundAsset)).then(texture => {
+        if (request !== this.paintBackgroundRequest) { texture.dispose(); return; }
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.needsUpdate = true;
+        this.paintBackgroundTexture = texture;
+        this.scene.background = texture;
+        this.updatePaintBackgroundCrop();
+      }).catch(() => {});
+    }
+  }
+  updatePaintBackgroundCrop() {
+    const texture = this.paintBackgroundTexture;
+    const image = texture?.image;
+    const width = image?.videoWidth || image?.width;
+    const height = image?.videoHeight || image?.height;
+    const bounds = this.element.getBoundingClientRect();
+    if (!width || !height || !bounds.width || !bounds.height) return;
+    const aspect = (width / height) / (bounds.width / bounds.height);
+    texture.offset.set(aspect > 1 ? (1 - 1 / aspect) / 2 : 0,
+      aspect > 1 ? 0 : (1 - aspect) / 2);
+    texture.repeat.set(aspect > 1 ? 1 / aspect : 1, aspect > 1 ? 1 : aspect);
   }
   applyShadowSettings() {
     const enabled = this.renderSettings.shadowEnabled === true && Number(this.renderSettings.shadowOpacity) > 0;
@@ -702,6 +866,34 @@ export class VRMStage {
     this.shadowLight.position.set(-Math.sin(angle) * 4, 5, -Math.cos(angle) * 4);
     this.shadowLight.target.position.set(0, 0, 0);
     this.shadowLight.target.updateMatrixWorld();
+  }
+  shadowGroundHeightAt(x, z) {
+    if (!this.shadowGroundPoints.length) return -0.025;
+    let weightedHeight = 0;
+    let totalWeight = 0;
+    for (const point of this.shadowGroundPoints) {
+      const distanceSquared = (x - point.x) ** 2 + (z - point.z) ** 2;
+      if (distanceSquared < 0.000001) return point.y;
+      const weight = 1 / (distanceSquared ** 2);
+      weightedHeight += point.y * weight;
+      totalWeight += weight;
+    }
+    return weightedHeight / totalWeight;
+  }
+  updateShadowGround() {
+    if (!this.shadowPlane.visible) return;
+    const points = [...this.visibleRecords.values()]
+      .filter(record => record.vrm.scene.visible)
+      .map(record => ({ x: record.anchor.position.x, z: record.anchor.position.z,
+        y: record.anchor.position.y - 0.02 }));
+    const key = points.map(point => `${point.x.toFixed(4)},${point.y.toFixed(4)},${point.z.toFixed(4)}`).join(';');
+    if (key === this.shadowGroundKey) return;
+    this.shadowGroundKey = key;
+    this.shadowGroundPoints = points;
+    const positions = this.shadowPlane.geometry.attributes.position;
+    for (let index = 0; index < positions.count; index++)
+      positions.setY(index, this.shadowGroundHeightAt(positions.getX(index), positions.getZ(index)));
+    positions.needsUpdate = true;
   }
   applyShadowCasting(scene) {
     const enabled = this.renderSettings.shadowEnabled === true && Number(this.renderSettings.shadowOpacity) > 0;
@@ -845,7 +1037,7 @@ export class VRMStage {
     this.currentModelId = null;
     this.currentMotionId = undefined;
   }
-  loadMixamo(asset, vrm) {
+  static loadMixamo(asset, vrm) {
     const clip = asset.animations[0];
     if (!clip) throw new Error('FBX 文件里没有动作');
     asset.updateMatrixWorld(true);

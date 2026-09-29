@@ -3,7 +3,7 @@ import './skin.css';
 import './layout.css';
 import './vn-theme.css';
 import './ios7-theme.css';
-import { VRMStage, assetUrl, motionFrameInfo } from './renderer.js';
+import { VRMStage, assetUrl, motionFrameInfo, captureVrmPortrait } from './renderer.js';
 
 const app = document.querySelector('#app');
 const pending = new Map();
@@ -52,6 +52,8 @@ let galleryRepeatOne = false;
 const galleryMusic = new Audio();
 let galleryMusicInterruptedBgm = false;
 let stageError = '';
+const portraitJobs = new Map();
+const temporaryPortraits = new Map();
 let saveModalMode = '';
 let playerResolution = '1280x720';
 let availableResolutions = [];
@@ -188,12 +190,6 @@ async function refreshMotionHints() {
 }
 function castAssignments(currentAct, speakingStep) {
   const slots = { ...currentAct?.cast };
-  const speakerId = speakingStep?.characterId;
-  if (speakerId && !Object.values(slots).includes(speakerId)) {
-    const preferred = castSlots.includes(speakingStep.position) ? speakingStep.position : 'center';
-    const free = !slots[preferred] ? preferred : castSlots.find(slot => !slots[slot]);
-    slots[free || preferred] = speakerId;
-  }
   const seen = new Set();
   const actors = castSlots.flatMap(baseSlot => {
     const actorKey = slots[baseSlot];
@@ -230,7 +226,7 @@ async function displayActStep(currentAct, current) {
     const speakingEntry = cast.find(entry => entry.actorKey === current?.characterId);
     const base = speakingEntry?.transform || transformOf(null);
     const moment = transformOf(current);
-    await stage.showCast(cast, current?.characterId ? {
+    await stage.showCast(cast, speakingEntry ? {
       actorKey: current.characterId, modelAsset: modelForStep(current),
       motionAsset: asset(current.motionId) || speakingEntry?.motionAsset,
       motionOptions: current.motionId ? motionOptionsOf(current) : speakingEntry?.motionOptions,
@@ -242,8 +238,7 @@ async function displayActStep(currentAct, current) {
         yaw: base.yaw + moment.yaw }
     } : null, playing);
   } else {
-    await stage.show(modelForStep(current), asset(current?.motionId), expressionWeightsOf(current), current?.position || 'center', transformOf(current), current?.characterId || modelForStep(current)?.id,
-      motionOptionsOf(current), `step:${current?.id || ''}`);
+    await stage.show(null, null, {}, 'center', transformOf(null), '', {}, '');
   }
 }
 const adjustmentSlider = (key, label, value, min, max, stepSize, display) =>
@@ -304,7 +299,7 @@ function defaultProject(name) {
     title: { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
       size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12 },
     render: { antialias: 'standard', style: 'anime', outline: 1, autoLight: true, lightStrength: 0.6,
-      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45 },
+      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, paintEffect: 'none', paintStrength: 0.65 },
     assets: [], assetFolders: [], characters: [],
     acts: [{ id: uid(), name: '第一幕', backgroundId: '', bgmId: '', steps: [
       { id: uid(), characterId: '', speaker: '', text: '在这里写第一句对白。', expressionWeights: {}, motionId: '', position: 'center', size: defaultSize, offsetX: 0, offsetY: 0, voiceId: '', choices: [] }
@@ -316,6 +311,9 @@ function normalize() {
   project.assetFolders ||= [];
   project.characters ||= [];
   for (const item of project.characters) {
+    item.portraitId ||= '';
+    item.portraitSource ||= item.portraitId
+      ? asset(item.portraitId)?.name === '自动头像.png' ? 'auto' : 'manual' : '';
     item.title ||= '';
     item.description ||= '';
     item.galleryMotionId ||= '';
@@ -331,14 +329,15 @@ function normalize() {
     size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12, ...project.title };
   project.title.expressionWeights ||= {};
   project.render = { antialias: 'standard', style: 'original', outline: 0, autoLight: true, lightStrength: 0.6,
-    shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, ...project.render };
+    shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45,
+    paintEffect: 'none', paintStrength: 0.65, ...project.render };
   for (const item of project.acts) {
     item.steps ||= [];
     item.castSettings ||= {};
     if (!item.cast) {
       const distinct = [...new Set(item.steps.map(entry => entry.characterId).filter(Boolean))];
       item.cast = { left: '', center: '', right: '' };
-      if (distinct.length > 1) for (const id of distinct.slice(0, 3)) {
+      for (const id of distinct.slice(0, 3)) {
         const preferred = item.steps.find(entry => entry.characterId === id)?.position || 'center';
         const slot = castSlots.includes(preferred) && !item.cast[preferred] ? preferred : castSlots.find(key => !item.cast[key]);
         if (slot) item.cast[slot] = id;
@@ -365,6 +364,7 @@ async function init() {
     if (mode === 'player') renderPlayer();
     else if (project) renderEditor();
     else renderWelcome();
+    if (project && mode === 'editor') queueMissingPortraits();
   } catch (error) {
     app.innerHTML = `<div class="fatal">${escape(error.message)}</div>`;
   }
@@ -484,6 +484,7 @@ function renderEditor() {
         <div class="stage-frame"><div id="scene-bg"></div><div id="stage-canvas"></div><div id="title-preview" class="title-composition hidden"></div>
           <div id="character-preview" class="character-editor-preview hidden"></div>
           <div id="stage-placeholder">导入 VRM 角色后，这里会显示 3D 人物</div>
+          <div id="speaker-portrait" class="speaker-portrait hidden"><img alt="说话角色头像"></div>
           <div id="dialogue" class="dialogue"><div class="speaker" id="dialogue-speaker"></div><div id="dialogue-text"></div></div>
           <button type="button" id="auto-play-button" class="auto-play-button hidden" data-action="auto-toggle" aria-pressed="false">▶ 自动播放</button>
           <div id="choice-list"></div>
@@ -624,7 +625,7 @@ function castEditor(currentAct, slot) {
     `<label class="adjustment"><span>${label}</span><input type="range" data-cast-adjust="${slot}.${key}" min="${min}" max="${max}" step="${stepSize}" value="${value}"><output data-cast-output="${slot}.${key}">${value}${unit}</output></label>`;
   return `<details class="cast-editor"><summary>${castSlotLabels[slot]} · ${escape(character(actorId)?.name || '未选择')}</summary>
     <div class="cast-editor-body">
-      ${field('角色', `<select data-cast-slot="${slot}">${options(project.characters, actorId, '此位置无人')}</select>`)}
+      ${field('角色', `<select data-cast-slot="${slot}">${options(project.characters.filter(item => item.modelId || item.id === actorId), actorId, '此位置无人')}</select>`)}
       ${actorId ? `${field('本幕动作', `<select data-cast-motion="${slot}">${options(byType('motion'), settings.motionId, '保持站立')}</select>`)}
         ${motionAdvanced(settings, `cast:${slot}`)}
         ${slider('size', '大小', Math.round((settings.size ?? defaultSize) * 100), 50, 250, 5, '%')}
@@ -642,6 +643,9 @@ function renderInspector() {
     body.innerHTML = item ? `<div class="inspector-content"><h2>角色设置</h2>
       ${field('角色名字', input('character.name', item.name))}
       ${field('VRM 模型', select('character.modelId', byType('vrm'), item.modelId, '请选择模型'))}
+      <div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}
+        <div class="inline-actions">${button('上传头像', 'upload-character-portrait')}${item.modelId ? button('重新拍摄 VRM', 'capture-character-portrait') : ''}</div>
+        <p class="tip">没有模型也能上传头像说话。VRM 自动头像会采用下方选中的动作和定格时间；松开时间滑块后会重拍。手动上传的头像不会被覆盖。</p></div>
       ${field('鉴赏姿势 / 动作', select('character.galleryMotionId', byType('motion'), item.galleryMotionId, '保持站立'))}
       <label class="adjustment"><span>鉴赏转身角度</span><input type="range" data-gallery-adjust="galleryYaw" min="-90" max="90" step="5" value="${item.galleryYaw}"><output data-gallery-output="galleryYaw">${item.galleryYaw}°</output></label>
       <label class="adjustment"><span>动作定格时间</span><input type="range" data-gallery-adjust="galleryPoseTime" min="0" max="5" step="0.1" value="${item.galleryPoseTime}"><output data-gallery-output="galleryPoseTime">${item.galleryPoseTime.toFixed(1)} 秒</output></label>
@@ -705,6 +709,9 @@ function renderInspector() {
       ${field('人物描边', `<select data-render="outline"><option value="0" ${Number(settings.outline) === 0 ? 'selected' : ''}>关闭</option><option value="1" ${Number(settings.outline) === 1 ? 'selected' : ''}>细</option><option value="2" ${Number(settings.outline) === 2 ? 'selected' : ''}>中</option><option value="3" ${Number(settings.outline) === 3 ? 'selected' : ''}>粗</option></select>`)}
       ${field('根据背景自动配光', `<select data-render="autoLight"><option value="true" ${settings.autoLight ? 'selected' : ''}>开启</option><option value="false" ${!settings.autoLight ? 'selected' : ''}>关闭</option></select>`)}
       ${field('背景配光强度', `<input type="range" data-render="lightStrength" min="0" max="100" step="5" value="${Math.round(settings.lightStrength * 100)}"><output id="light-strength-value">${Math.round(settings.lightStrength * 100)}%</output>`)}
+      ${field('画面效果', `<select data-render="paintEffect"><option value="none" ${settings.paintEffect !== 'oil' ? 'selected' : ''}>关闭</option><option value="oil" ${settings.paintEffect === 'oil' ? 'selected' : ''}>油画笔触（人物与背景）</option></select>`)}
+      ${field('油画笔触强度', `<input type="range" data-render="paintStrength" min="0" max="100" step="5" value="${Math.round((Number(settings.paintStrength) || 0) * 100)}"><output data-render-output="paintStrength">${Math.round((Number(settings.paintStrength) || 0) * 100)}%</output>`)}
+      <p class="tip">油画笔触会一起处理背景和人物；对白、菜单保持清晰。开启后会多用一些显卡性能，旧工程默认关闭。</p>
       <details class="render-advanced"><summary>高级渲染 · 角色阴影</summary><div class="render-advanced-body">
         <label class="render-shadow-toggle"><input type="checkbox" data-render="shadowEnabled" ${settings.shadowEnabled ? 'checked' : ''}><span>显示角色阴影</span></label>
         <label class="adjustment"><span>影子方向</span><input type="range" data-render="shadowAngle" min="-180" max="180" step="5" value="${Number(settings.shadowAngle) || 0}"><output data-render-output="shadowAngle">${Number(settings.shadowAngle) || 0}°</output></label>
@@ -723,7 +730,7 @@ function renderInspector() {
     ${field('背景音乐', select('act.bgmId', byType('audio'), currentAct.bgmId, '无音乐'))}
     <hr><h2>本幕登场人物（初始位置）</h2>
     ${castSlots.map(slot => castEditor(currentAct, slot)).join('')}
-    <p class="tip">这里确定本幕登场的角色。每句对白还可以交换他们的站位；说话的人会变亮，其余角色稍暗。</p>
+    <p class="tip">这里选本幕舞台上的人物。没有站在舞台上的角色，也能用头像、名字和对白说话。</p>
     <div class="inline-actions">${button('删除本幕', 'delete-act', 'class="danger"')}</div>
     <hr><h2>第 ${selectedStep + 1} 句对白</h2>
     ${current ? `
@@ -845,11 +852,11 @@ async function updatePreview() {
   const placeholder = document.querySelector('#stage-placeholder');
   setStagePlaceholder(placeholder, current ? '此句没有 VRM 角色' : '这一幕还没有人物', Boolean(modelAsset));
   placeholder.style.display = 'grid';
-  showDialogue(current?.speaker || character(current?.characterId)?.name || '旁白', current?.text || '', false);
+  showDialogue(current?.speaker || character(current?.characterId)?.name || '旁白', current?.text || '', false, current?.characterId);
   if (!current) document.querySelector('#dialogue')?.classList.remove('visible');
   await displayActStep(currentAct, current);
   if (request !== previewRequest || playing) return;
-  if (stage.visibleRecords.size)
+  if (stage.visibleRecords.size || (current && !stageError))
     placeholder.style.display = 'none';
   else if (modelAsset && !stageError)
     setStagePlaceholder(placeholder, '', true);
@@ -860,26 +867,87 @@ function showBackground(bgAsset) {
   const node = document.querySelector('#scene-bg');
   node.replaceChildren();
   node.style.backgroundImage = '';
+  stage?.setPaintBackground(bgAsset);
   if (!bgAsset) return;
   if (bgAsset.type === 'image') rememberDiscovery('image', bgAsset.id);
   if (bgAsset.type === 'video') {
     const video = document.createElement('video');
+    video.crossOrigin = 'anonymous';
     video.src = assetUrl(bgAsset);
     video.autoplay = true; video.muted = true; video.loop = true; video.playsInline = true;
     node.appendChild(video);
+    stage?.setPaintBackground(bgAsset, video);
   } else {
     node.style.backgroundImage = `url("${assetUrl(bgAsset)}")`;
     return;
   }
   node.style.backgroundImage = '';
 }
-function showDialogue(speaker, text, visible = true) {
+async function ensureCharacterPortrait(item, force = false) {
+  const modelAsset = asset(item?.modelId);
+  if (!item || !modelAsset || (!force && asset(item.portraitId))) return;
+  const motionId = item.galleryMotionId || '';
+  const motionAsset = asset(motionId);
+  const poseTime = Math.max(0, Number(item.galleryPoseTime) || 0);
+  const poseKey = `portrait-v2:${item.modelId}:${motionId}:${poseTime}`;
+  const jobKey = `${project.id}:${item.id}:${item.modelId}:${motionId}:${poseTime}`;
+  if (portraitJobs.has(jobKey)) return portraitJobs.get(jobKey);
+  const modelId = item.modelId;
+  const task = (async () => {
+    const dataUrl = await captureVrmPortrait(modelAsset, motionAsset, poseTime);
+    if (project.characters.find(entry => entry.id === item.id) !== item || item.modelId !== modelId ||
+      item.galleryMotionId !== motionId || Number(item.galleryPoseTime) !== poseTime || (!force && asset(item.portraitId))) return;
+    if (mode === 'player') temporaryPortraits.set(item.id, dataUrl);
+    else {
+      const saved = await bridge('saveGeneratedPortrait', { dataUrl });
+      if (project.characters.find(entry => entry.id === item.id) !== item || item.modelId !== modelId ||
+        item.galleryMotionId !== motionId || Number(item.galleryPoseTime) !== poseTime || (!force && asset(item.portraitId))) return;
+      saved.galleryImage = false;
+      project.assets.push(saved);
+      item.portraitId = saved.id;
+      item.portraitSource = 'auto';
+      item.portraitPoseKey = poseKey;
+      markDirty();
+      if (activePanel === 'characters' && project.characters[selectedCharacter] === item) {
+        const inspector = document.querySelector('.inspector');
+        const scroll = inspector?.scrollTop || 0;
+        renderInspector();
+        if (inspector) inspector.scrollTop = scroll;
+      }
+    }
+    if (step()?.characterId === item.id || (playing && project.acts[playAct]?.steps[playStep]?.characterId === item.id))
+      updateSpeakerPortrait(item.id, true);
+  })().catch(error => toast(`头像生成失败：${error.message}`, true)).finally(() => portraitJobs.delete(jobKey));
+  portraitJobs.set(jobKey, task);
+  return task;
+}
+function portraitIsAutomatic(item) {
+  return !asset(item?.portraitId) || item.portraitSource === 'auto';
+}
+function queueMissingPortraits() {
+  const items = project.characters.filter(item => item.modelId && portraitIsAutomatic(item) &&
+    (!asset(item.portraitId) || item.portraitPoseKey !==
+      `portrait-v2:${item.modelId}:${item.galleryMotionId || ''}:${Math.max(0, Number(item.galleryPoseTime) || 0)}`));
+  (async () => { for (const item of items) await ensureCharacterPortrait(item, Boolean(asset(item.portraitId))); })();
+}
+function updateSpeakerPortrait(characterId, visible) {
+  const node = document.querySelector('#speaker-portrait');
+  const image = node?.querySelector('img');
+  if (!node || !image) return;
+  const item = characterId ? character(characterId) : null;
+  const portraitAsset = asset(item?.portraitId);
+  const url = portraitAsset ? assetUrl(portraitAsset) : temporaryPortraits.get(item?.id) || '';
+  image.src = visible && url ? url : '';
+  node.classList.toggle('hidden', !visible || !url);
+}
+function showDialogue(speaker, text, visible = true, characterId = '') {
   const node = document.querySelector('#dialogue');
   if (!node) return;
   node.classList.toggle('visible', visible || mode === 'editor');
   node.classList.toggle('custom-dialogue', Boolean(project.ui.dialogueImageId));
   document.querySelector('#dialogue-speaker').textContent = speaker;
   document.querySelector('#dialogue-text').textContent = text;
+  updateSpeakerPortrait(characterId, visible || mode === 'editor');
   node.style.backgroundImage = project.ui.dialogueImageId ? `url("${assetUrl(asset(project.ui.dialogueImageId))}")` : '';
   if (visible && project.ui.dialogueImageId) rememberDiscovery('image', project.ui.dialogueImageId);
 }
@@ -944,7 +1012,8 @@ async function showPlayStep() {
   try {
     if (preparedAct !== playAct) {
       loading?.classList.remove('hidden');
-      const entries = currentAct.steps.map(entry => ({ actorKey: entry.characterId || modelForStep(entry)?.id,
+      const castIds = new Set(Object.values(currentAct.cast || {}));
+      const entries = currentAct.steps.filter(entry => castIds.has(entry.characterId)).map(entry => ({ actorKey: entry.characterId,
         modelAsset: modelForStep(entry), motionAsset: asset(entry.motionId) }));
       for (const castEntry of castForAct(currentAct, current))
         entries.push({ actorKey: castEntry.actorKey, modelAsset: castEntry.modelAsset, motionAsset: castEntry.motionAsset });
@@ -968,8 +1037,11 @@ async function showPlayStep() {
     if (request !== playRequest || !playing) return;
     if (mode === 'player') for (const id of stage.visibleRecords.keys())
       if (character(id)) rememberDiscovery('character', id);
+    if (mode === 'player' && character(current.characterId)) rememberDiscovery('character', current.characterId);
     showBackground(asset(currentAct.backgroundId));
-    showDialogue(current.speaker || character(current.characterId)?.name || '旁白', current.text, true);
+    await ensureCharacterPortrait(character(current.characterId));
+    if (request !== playRequest || !playing) return;
+    showDialogue(current.speaker || character(current.characterId)?.name || '旁白', current.text, true, current.characterId);
     recordViewedDialogue(current);
     setMusic(currentAct.bgmId);
     voice.pause();
@@ -983,7 +1055,7 @@ async function showPlayStep() {
     const choiceList = document.querySelector('#choice-list');
     choiceList.innerHTML = current.choices.map((choice,index) =>
       `<button data-action="choose" data-index="${index}">${escape(choice.text || '继续')}</button>`).join('');
-    if (stage.visibleRecords.size)
+    if (stage.visibleRecords.size || !stageError)
       placeholder.style.display = 'none';
     else if (modelAsset && stageError)
       placeholder.textContent = stageError;
@@ -1443,6 +1515,7 @@ async function showCharacterEditorPreview() {
   if (!overlay || !frame || !stage) return;
   const item = project.characters[selectedCharacter];
   if (stage.element.parentElement !== frame) frame.insertBefore(stage.element, overlay);
+  stage.setPaintBackground(null);
   overlay.innerHTML = `<div class="gallery-box gallery-box-character character-preview-box">
     <header><div><small>EXTRAS</small><h2>附加鉴赏</h2></div></header>
     <div class="gallery-main-tabs"><button type="button" disabled>图像鉴赏</button><button type="button" disabled>乐曲鉴赏</button><button type="button" class="active">人物鉴赏</button></div>
@@ -1452,7 +1525,13 @@ async function showCharacterEditorPreview() {
   document.querySelector('#stage-caption').textContent = '人物鉴赏预览';
   document.querySelector('#stage-placeholder').style.display = 'none';
   document.querySelector('#dialogue')?.classList.remove('visible');
-  if (!item?.modelId) { await stage.show(null, null); return; }
+  updateSpeakerPortrait('', false);
+  if (!item?.modelId) {
+    const portraitAsset = asset(item?.portraitId);
+    const target = overlay.querySelector('#gallery-character-canvas');
+    if (target && portraitAsset) target.innerHTML = `<img class="gallery-flat-portrait" src="${assetUrl(portraitAsset)}" alt="${escape(item.name)}">`;
+    await stage.show(null, null); return;
+  }
   const portrait = overlay.querySelector('#gallery-character-canvas');
   if (!portrait) return;
   portrait.appendChild(stage.element);
@@ -1483,6 +1562,8 @@ function renderGalleryModal() {
   if (galleryTab === 'characters') {
     const target = document.querySelector('#gallery-character-canvas');
     const item = galleryCharacterData().item;
+    if (target && item && !item.modelId && hasDiscovered('character', item.id) && asset(item.portraitId))
+      target.innerHTML = `<img class="gallery-flat-portrait" src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}">`;
     if (target && item?.modelId && hasDiscovered('character', item.id)) {
       galleryStage = new VRMStage(target, message => toast(message, true));
       galleryStage.setRenderSettings(project.render);
@@ -1553,6 +1634,7 @@ function renderPlayer() {
   if (!project) { app.innerHTML = '<div class="fatal">游戏工程文件不完整</div>'; return; }
   app.innerHTML = `<div class="player"><div class="stage-frame">
     <div id="scene-bg"></div><div id="stage-canvas"></div><div id="stage-placeholder"></div>
+    <div id="speaker-portrait" class="speaker-portrait hidden"><img alt="说话角色头像"></div>
     <div id="dialogue" class="dialogue"><div class="speaker" id="dialogue-speaker"></div><div id="dialogue-text"></div></div>
     <div id="choice-list"></div><div id="play-controls" class="hidden">
       <div class="scene-top-actions">
@@ -1699,7 +1781,7 @@ document.addEventListener('click', async event => {
       [act().steps[selectedStep],act().steps[target]] = [act().steps[target],act().steps[selectedStep]];
       selectedStep = target; markDirty(); renderSidebar(); renderInspector();
     } else if (action === 'add-character') {
-      project.characters.push({ id:uid(), name:`角色${project.characters.length + 1}`, modelId:'', title:'', description:'',
+      project.characters.push({ id:uid(), name:`角色${project.characters.length + 1}`, modelId:'', portraitId:'', title:'', description:'',
         galleryMotionId: project.assets.some(item => item.id === 'preset-mixamo-029') ? 'preset-mixamo-029' : '',
         galleryYaw: 0, galleryPoseTime: 0,
         stories: Array.from({ length: 3 }, () => ({ text:'', unlockLines:0 })) });
@@ -1727,6 +1809,17 @@ document.addEventListener('click', async event => {
     } else if (action === 'import') {
       if (node.dataset.type === 'image') renderImageImportModal(node.dataset.folderId || '', node.dataset.titleImport || '');
       else await importAssets(node.dataset.type, node.dataset.folderId || '', node.dataset.titleImport || '');
+    } else if (action === 'upload-character-portrait') {
+      const item = project.characters[selectedCharacter];
+      const imported = await bridge('importAsset', { type:'image', single:true });
+      if (item && imported?.length) {
+        imported[0].galleryImage = false;
+        project.assets.push(imported[0]); item.portraitId = imported[0].id; item.portraitSource = 'manual'; item.portraitPoseKey = '';
+        markDirty(); renderSidebar(); renderInspector(); updatePreview();
+      }
+    } else if (action === 'capture-character-portrait') {
+      const item = project.characters[selectedCharacter];
+      if (item?.modelId) await ensureCharacterPortrait(item, true);
     } else if (action === 'cancel-image-import') {
       document.querySelector('#image-import-modal')?.remove();
     } else if (action === 'confirm-image-import') {
@@ -2030,7 +2123,7 @@ document.addEventListener('input', event => {
     project.render[key] = key === 'autoLight' ? node.value === 'true'
       : key === 'shadowEnabled' ? node.checked
       : ['outline', 'shadowAngle'].includes(key) ? Number(node.value)
-      : ['lightStrength', 'shadowOpacity'].includes(key) ? Number(node.value) / 100 : node.value;
+      : ['lightStrength', 'shadowOpacity', 'paintStrength'].includes(key) ? Number(node.value) / 100 : node.value;
     if (key === 'lightStrength') document.querySelector('#light-strength-value').textContent = `${node.value}%`;
     const output = document.querySelector(`[data-render-output="${key}"]`);
     if (output) output.textContent = key === 'shadowAngle' ? `${node.value}°` : `${node.value}%`;
@@ -2083,10 +2176,19 @@ document.addEventListener('input', event => {
     if (path === 'step.characterId' && !step().speaker) {
       document.querySelector('[data-field="step.speaker"]')?.setAttribute('placeholder', character(node.value)?.name || '留空时用角色名字');
     }
+    if (path === 'character.modelId') {
+      target.portraitId = '';
+      target.portraitSource = '';
+      target.portraitPoseKey = '';
+      temporaryPortraits.delete(target.id);
+      if (target.modelId) ensureCharacterPortrait(target);
+      renderInspector();
+    }
     renderSidebar(); renderExpressionControls(); updatePreview();
   } else if (path === 'step.text' || path === 'step.speaker') {
     document.querySelector('#dialogue-text').textContent = step().text;
     document.querySelector('#dialogue-speaker').textContent = step().speaker || character(step().characterId)?.name || '旁白';
+    updateSpeakerPortrait(step().characterId, true);
     renderSidebar();
   } else if (path.startsWith('character.')) {
     if (path === 'character.name') renderSidebar();
@@ -2094,6 +2196,12 @@ document.addEventListener('input', event => {
   } else if (path === 'act.name') {
     renderSidebar();
   }
+});
+document.addEventListener('change', event => {
+  const node = event.target;
+  if (node.dataset.galleryAdjust !== 'galleryPoseTime' && node.dataset.field !== 'character.galleryMotionId') return;
+  const item = project?.characters[selectedCharacter];
+  if (item?.modelId && portraitIsAutomatic(item)) ensureCharacterPortrait(item, true);
 });
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && document.querySelector('#gallery-lightbox')) {
@@ -2119,6 +2227,12 @@ window.__vrmDiagnostics = () => ({
   stageError,
   expressions: stage?.expressions() || [],
   dialogue: document.querySelector('#dialogue-text')?.textContent || '',
+  speakerPortraitVisible: Boolean(document.querySelector('#speaker-portrait:not(.hidden)')),
+  speakerPortraitSrc: document.querySelector('#speaker-portrait img')?.getAttribute('src') || '',
+  characterPortraitIds: project?.characters.map(item => ({ id:item.id, modelId:item.modelId,
+    portraitId:item.portraitId, portraitSource:item.portraitSource, portraitPoseKey:item.portraitPoseKey,
+    galleryMotionId:item.galleryMotionId, galleryPoseTime:item.galleryPoseTime })) || [],
+  visibleActorIds: [...(stage?.visibleRecords.keys() || [])],
   assets: project?.assets.length || 0
   ,playing
   ,playerStartClass: document.querySelector('#player-start')?.className || ''
@@ -2151,6 +2265,7 @@ window.__vrmDiagnostics = () => ({
   ,castSettings: act()?.castSettings || {}
   ,visibleActors: [...(stage?.visibleRecords?.entries() || [])].map(([id, record]) => ({
     id, x: record.anchor.position.x, y: record.anchor.position.y, z: record.anchor.position.z,
+    shadowGroundY: stage?.shadowGroundHeightAt(record.anchor.position.x, record.anchor.position.z) ?? null,
     scale: record.anchor.scale.x,
     yaw: record.anchor.rotation.y, motionPlaying: record.mixer._actions?.some(action => action.isRunning()) || false,
     anchorPosition: record.anchor.position.toArray(), motionRootPosition: record.motionRoot.position.toArray(),
@@ -2183,6 +2298,10 @@ window.__vrmDiagnostics = () => ({
   ,motionAdvancedClosed: [...document.querySelectorAll('.motion-advanced')].every(node => !node.open)
   ,dialogueBottom: document.querySelector('#dialogue') ? getComputedStyle(document.querySelector('#dialogue')).bottom : ''
   ,renderSettings: project?.render || {}
+  ,paintEffectActive: Boolean(stage?.paintEnabled && stage?.paintComposer)
+  ,paintBackgroundReady: Boolean(stage?.paintBackgroundTexture)
+  ,paintPixelRatio: stage?.paintPixelRatio ?? null
+  ,averageFrameMs: stage?.averageFrameMs ?? null
   ,shadowPlaneVisible: Boolean(stage?.shadowPlane?.visible)
   ,shadowMapEnabled: Boolean(stage?.renderer?.shadowMap?.enabled)
   ,shadowPlaneOpacity: stage?.shadowPlane?.material?.opacity ?? null
@@ -2258,4 +2377,3 @@ window.__vrmDiagnostics = () => ({
   ,playStep
 });
 init();
-

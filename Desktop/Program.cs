@@ -59,11 +59,14 @@ internal sealed class EditorWindow : Form
     private readonly bool smokeRecent;
     private readonly bool smokeImageImport;
     private readonly bool smokeDepthShadow;
+    private readonly bool smokePortraits;
+    private readonly bool smokePortraitPose;
     private readonly string? smokeFileOpsParent;
     private readonly string? smokeArchiveParent;
     private readonly bool smokeNewArchive;
     private readonly bool smokeSaveTwice;
     private readonly string? smokeImportFolderPath;
+    private readonly string? smokeAvatarFile;
     private bool smokeStarted;
     private bool fullscreen;
     private Size windowedClientSize;
@@ -118,6 +121,8 @@ internal sealed class EditorWindow : Form
         smokeRecent = arguments.Contains("--smoke-recent");
         smokeImageImport = arguments.Contains("--smoke-image-import");
         smokeDepthShadow = arguments.Contains("--smoke-depth-shadow");
+        smokePortraits = arguments.Contains("--smoke-portraits");
+        smokePortraitPose = arguments.Contains("--smoke-portrait-pose");
         smokeNewArchive = arguments.Contains("--smoke-new-archive");
         smokeSaveTwice = arguments.Contains("--smoke-save-twice");
         int smokeFileOpsIndex = Array.IndexOf(arguments, "--smoke-file-ops");
@@ -129,6 +134,9 @@ internal sealed class EditorWindow : Form
         int smokeImportIndex = Array.IndexOf(arguments, "--smoke-import-folder");
         if (smokeImportIndex >= 0 && smokeImportIndex + 1 < arguments.Length)
             smokeImportFolderPath = Path.GetFullPath(arguments[smokeImportIndex + 1]);
+        int smokeAvatarIndex = Array.IndexOf(arguments, "--smoke-avatar");
+        if (smokeAvatarIndex >= 0 && smokeAvatarIndex + 1 < arguments.Length)
+            smokeAvatarFile = Path.GetFullPath(arguments[smokeAvatarIndex + 1]);
         if (smokeIndex >= 0 && smokeIndex + 2 < arguments.Length)
         {
             if (!playerMode && arguments[smokeIndex + 1] != "-")
@@ -253,6 +261,40 @@ internal sealed class EditorWindow : Form
                     await Task.Delay(8500);
                     File.WriteAllText(smokeBase + ".recent-open.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
+                if (smokeAvatarFile != null && !playerMode)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=characters]')?.click(); document.querySelector('[data-action=add-character]')?.click(); document.querySelector('[data-action=upload-character-portrait]')?.click()");
+                    await Task.Delay(2500);
+                    File.WriteAllText(smokeBase + ".avatar-upload.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                    await Task.Delay(1500);
+                }
+                if (smokePortraitPose && !playerMode)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=characters]')?.click(); document.querySelector('[data-action=select-character][data-index=\"0\"]')?.click(); const motion=document.querySelector('[data-field=\"character.galleryMotionId\"]'); motion.value='preset-mixamo-017'; motion.dispatchEvent(new Event('input',{bubbles:true})); motion.dispatchEvent(new Event('change',{bubbles:true}))");
+                    string baseline = await web.CoreWebView2.ExecuteScriptAsync("window.__vrmDiagnostics().characterPortraitIds[0].portraitId");
+                    for (int attempt = 0; attempt < 45; attempt++)
+                    {
+                        await Task.Delay(1000);
+                        string current = await web.CoreWebView2.ExecuteScriptAsync("window.__vrmDiagnostics().characterPortraitIds[0].portraitId");
+                        if (current != baseline && current != "\"\"") break;
+                    }
+                    File.WriteAllText(smokeBase + ".pose-before.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    string beforeId = await web.CoreWebView2.ExecuteScriptAsync("window.__vrmDiagnostics().characterPortraitIds[0].portraitId");
+                    await web.CoreWebView2.ExecuteScriptAsync("const pose=document.querySelector('[data-gallery-adjust=galleryPoseTime]'); pose.value='2.4'; pose.dispatchEvent(new Event('input',{bubbles:true})); pose.dispatchEvent(new Event('change',{bubbles:true}))");
+                    for (int attempt = 0; attempt < 45; attempt++)
+                    {
+                        await Task.Delay(1000);
+                        string current = await web.CoreWebView2.ExecuteScriptAsync("window.__vrmDiagnostics().characterPortraitIds[0].portraitId");
+                        if (current != beforeId && current != "\"\"") break;
+                    }
+                    File.WriteAllText(smokeBase + ".pose-after.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using var poseStream = File.Create(smokeBase + ".pose-after.png");
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, poseStream);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                    await Task.Delay(1500);
+                }
                 if (smokePlay || smokeFastPlay || smokeSaveSlots || smokeAutoVolume)
                 {
                     await web.CoreWebView2.ExecuteScriptAsync(
@@ -266,6 +308,19 @@ internal sealed class EditorWindow : Form
                             "document.querySelector('[data-action=save-game]')?.click(); document.querySelector('[data-action=save-slot][data-index=\"1\"]')?.click(); document.querySelector('[data-action=close-modal]')?.click(); document.querySelector('.stage-frame')?.click(); document.querySelector('[data-action=save-game]')?.click(); document.querySelector('[data-action=save-slot][data-index=\"2\"]')?.click(); document.querySelector('[data-action=close-modal]')?.click(); document.querySelector('[data-action=stop-play]')?.click(); document.querySelector('[data-action=load-game]')?.click(); document.querySelector('[data-action=load-slot][data-index=\"2\"]')?.click(); document.querySelector('[data-action=load-game]')?.click()");
                         await Task.Delay(2000);
                     }
+                }
+                if (smokePortraits && playerMode)
+                {
+                    for (int stepIndex = 1; stepIndex <= 6; stepIndex++)
+                    {
+                        await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('.stage-frame')?.click()");
+                        await Task.Delay(2600);
+                        if (stepIndex >= 5)
+                            File.WriteAllText(smokeBase + $".player-step-{stepIndex}.json", await web.CoreWebView2.ExecuteScriptAsync(
+                                "JSON.stringify(window.__vrmDiagnostics())"));
+                    }
+                    using var playerPortraitStream = File.Create(smokeBase + ".player-portrait.png");
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, playerPortraitStream);
                 }
                 if (smokeControls)
                 {
@@ -748,6 +803,31 @@ internal sealed class EditorWindow : Form
                 File.WriteAllText(smokeBase + ".gallery-layout.json", await web.CoreWebView2.ExecuteScriptAsync(
                     "JSON.stringify({portraitNameCount:document.querySelectorAll('.gallery-character-portrait .gallery-character-name').length,detailName:document.querySelector('.gallery-detail-name')?.textContent,detailFont:getComputedStyle(document.querySelector('.gallery-detail-name')).fontFamily,loaded:document.fonts.check('16px \"HarmonyOS Sans SC\"'),fontCredit:document.querySelector('.font-credit')?.textContent || ''})"));
             }
+            if (smokePortraits && !playerMode)
+            {
+                for (int attempt = 0; attempt < 45; attempt++)
+                {
+                    string ready = await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics()?.characterPortraitIds?.every(x=>!x.modelId||(x.portraitId&&x.portraitPoseKey)))");
+                    if (ready.Contains("true")) break;
+                    await Task.Delay(2000);
+                }
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                await Task.Delay(2500);
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=story]')?.click(); document.querySelector('[data-action=select-step][data-index=\"1\"]')?.click()");
+                await Task.Delay(5000);
+                File.WriteAllText(smokeBase + ".portrait-story.json", await web.CoreWebView2.ExecuteScriptAsync(
+                    "JSON.stringify(window.__vrmDiagnostics())"));
+                using var portraitStream = File.Create(smokeBase + ".portrait-story.png");
+                await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, portraitStream);
+                for (int stepIndex = 5; stepIndex <= 6; stepIndex++)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync($"document.querySelector('[data-action=select-step][data-index=\"{stepIndex}\"]')?.click()");
+                    await Task.Delay(2500);
+                    File.WriteAllText(smokeBase + $".portrait-step-{stepIndex}.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics())"));
+                }
+            }
             string result = await web.CoreWebView2.ExecuteScriptAsync(
                 "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})");
             File.WriteAllText(smokeBase + ".json", result);
@@ -803,7 +883,8 @@ internal sealed class EditorWindow : Form
                 "saveProject" when !playerMode => SaveProject(payload?["project"]),
                 "saveProjectAs" when !playerMode => SaveProjectAs(payload?["project"], payload?["name"]?.GetValue<string>() ?? ""),
                 "previewGame" when !playerMode => await PreviewGameAsync(payload?["project"]),
-                "importAsset" when !playerMode => ImportAssets(payload?["type"]?.GetValue<string>() ?? ""),
+                "importAsset" when !playerMode => ImportAssets(payload?["type"]?.GetValue<string>() ?? "", payload?["single"]?.GetValue<bool>() ?? false),
+                "saveGeneratedPortrait" when !playerMode => SaveGeneratedPortrait(payload?["dataUrl"]?.GetValue<string>() ?? ""),
                 "deleteAsset" when !playerMode => DeleteAsset(payload?["path"]?.GetValue<string>() ?? ""),
                 "exportGame" when !playerMode => ExportGame(payload?["folderName"]?.GetValue<string>() ?? ""),
                 "setWindowResolution" when playerMode => SetWindowResolution(payload?["value"]?.GetValue<string>() ?? ""),
@@ -1223,7 +1304,7 @@ internal sealed class EditorWindow : Form
         return new { directory = destination };
     }
 
-    private object? ImportAssets(string type)
+    private object? ImportAssets(string type, bool single = false)
     {
         if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
         var extensions = new Dictionary<string, string[]>(StringComparer.Ordinal)
@@ -1235,17 +1316,23 @@ internal sealed class EditorWindow : Form
             ["video"] = [".mp4", ".webm"]
         };
         if (!extensions.TryGetValue(type, out var allowed)) throw new Exception("不支持的素材类型。");
-        using var dialog = new OpenFileDialog
+        string[] sources;
+        if (type == "image" && single && smokeAvatarFile != null) sources = [smokeAvatarFile];
+        else
         {
-            Title = "选择要导入的素材",
-            Filter = $"支持的文件|{string.Join(';', allowed.Select(x => "*" + x))}|所有文件|*.*",
-            Multiselect = true
-        };
-        if (dialog.ShowDialog(this) != DialogResult.OK) return null;
+            using var dialog = new OpenFileDialog
+            {
+                Title = "选择要导入的素材",
+                Filter = $"支持的文件|{string.Join(';', allowed.Select(x => "*" + x))}|所有文件|*.*",
+                Multiselect = !single
+            };
+            if (dialog.ShowDialog(this) != DialogResult.OK) return null;
+            sources = dialog.FileNames;
+        }
         string targetDirectory = Path.Combine(projectDirectory, "assets", type);
         Directory.CreateDirectory(targetDirectory);
         var results = new List<object>();
-        foreach (string source in dialog.FileNames)
+        foreach (string source in sources)
         {
             string extension = Path.GetExtension(source).ToLowerInvariant();
             if (!allowed.Contains(extension)) throw new Exception($"不支持 {extension} 文件。");
@@ -1256,6 +1343,21 @@ internal sealed class EditorWindow : Form
             results.Add(new { id, type, name = Path.GetFileName(source), path = $"assets/{type}/{filename}" });
         }
         return results;
+    }
+
+    private object SaveGeneratedPortrait(string dataUrl)
+    {
+        if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
+        const string prefix = "data:image/png;base64,";
+        if (!dataUrl.StartsWith(prefix, StringComparison.Ordinal)) throw new Exception("头像图片格式不正确。");
+        byte[] bytes = Convert.FromBase64String(dataUrl[prefix.Length..]);
+        if (bytes.Length < 32 || bytes.Length > 12_000_000 || !bytes.AsSpan(0, 8).SequenceEqual(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }))
+            throw new Exception("头像图片无效或太大。");
+        string id = Guid.NewGuid().ToString("N");
+        string folder = Path.Combine(projectDirectory, "assets", "image");
+        Directory.CreateDirectory(folder);
+        File.WriteAllBytes(Path.Combine(folder, id + ".png"), bytes);
+        return new { id, type = "image", name = "自动头像.png", path = $"assets/image/{id}.png" };
     }
 
     private object? ExportGame(string requestedName)
@@ -1373,4 +1475,3 @@ internal sealed class EditorWindow : Form
         return string.IsNullOrWhiteSpace(cleaned) ? "新游戏" : cleaned;
     }
 }
-
