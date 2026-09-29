@@ -22,6 +22,7 @@ internal static class Program
 internal sealed class EditorWindow : Form
 {
     private readonly WebView2 web = new() { Dock = DockStyle.Fill };
+    private readonly Dictionary<string, (FileStream Stream, string Id, string Type, string Name, string Path)> droppedImports = new();
     private string? projectDirectory;
     private string? projectArchivePath;
     private string? temporaryProjectDirectory;
@@ -890,6 +891,7 @@ internal sealed class EditorWindow : Form
                 "saveProjectAs" when !playerMode => SaveProjectAs(payload?["project"], payload?["name"]?.GetValue<string>() ?? ""),
                 "previewGame" when !playerMode => await PreviewGameAsync(payload?["project"]),
                 "importAsset" when !playerMode => ImportAssets(payload?["type"]?.GetValue<string>() ?? "", payload?["single"]?.GetValue<bool>() ?? false),
+                "importAssetChunk" when !playerMode => ImportAssetChunk(payload),
                 "saveGeneratedPortrait" when !playerMode => SaveGeneratedPortrait(payload?["dataUrl"]?.GetValue<string>() ?? ""),
                 "deleteAsset" when !playerMode => DeleteAsset(payload?["path"]?.GetValue<string>() ?? ""),
                 "exportGame" when !playerMode => ExportGame(payload?["folderName"]?.GetValue<string>() ?? ""),
@@ -1351,6 +1353,58 @@ internal sealed class EditorWindow : Form
         return results;
     }
 
+    private object? ImportAssetChunk(JsonNode? payload)
+    {
+        if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
+        string transferId = payload?["transferId"]?.GetValue<string>() ?? "";
+        string type = payload?["type"]?.GetValue<string>() ?? "";
+        string name = Path.GetFileName(payload?["name"]?.GetValue<string>() ?? "");
+        string command = payload?["command"]?.GetValue<string>() ?? "";
+        if (transferId.Length is < 1 or > 80) throw new Exception("拖入文件标识无效。");
+        if (command == "abort")
+        {
+            if (droppedImports.Remove(transferId, out var aborted))
+            {
+                aborted.Stream.Dispose();
+                File.Delete(Path.Combine(projectDirectory, aborted.Path.Replace('/', Path.DirectorySeparatorChar)));
+            }
+            return null;
+        }
+        if (command == "start")
+        {
+            var extensions = new Dictionary<string, string[]>(StringComparer.Ordinal)
+            {
+                ["vrm"] = [".vrm"], ["motion"] = [".vrma", ".fbx"],
+                ["image"] = [".png", ".jpg", ".jpeg", ".webp"],
+                ["audio"] = [".mp3", ".wav", ".ogg"], ["video"] = [".mp4", ".webm"]
+            };
+            if (!extensions.TryGetValue(type, out var allowed) || !allowed.Contains(Path.GetExtension(name).ToLowerInvariant()))
+                throw new Exception($"“{name}”不是当前标签支持的素材。");
+            if (droppedImports.ContainsKey(transferId)) throw new Exception("文件正在导入。");
+            string id = Guid.NewGuid().ToString("N");
+            string relative = $"assets/{type}/{id}{Path.GetExtension(name).ToLowerInvariant()}";
+            string target = Path.Combine(projectDirectory, relative.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+            droppedImports.Add(transferId, (new FileStream(target, FileMode.CreateNew, FileAccess.Write), id, type, name, relative));
+            return null;
+        }
+        if (!droppedImports.TryGetValue(transferId, out var current)) throw new Exception("拖入文件已经中断，请重新拖入。");
+        if (command == "append")
+        {
+            byte[] chunk = Convert.FromBase64String(payload?["base64"]?.GetValue<string>() ?? "");
+            if (chunk.Length > 512 * 1024) throw new Exception("文件片段太大。");
+            current.Stream.Write(chunk);
+            return null;
+        }
+        if (command == "finish")
+        {
+            current.Stream.Dispose();
+            droppedImports.Remove(transferId);
+            return new { id = current.Id, type = current.Type, name = current.Name, path = current.Path };
+        }
+        throw new Exception("不支持的文件导入操作。");
+    }
+
     private object SaveGeneratedPortrait(string dataUrl)
     {
         if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
@@ -1481,3 +1535,4 @@ internal sealed class EditorWindow : Form
         return string.IsNullOrWhiteSpace(cleaned) ? "新游戏" : cleaned;
     }
 }
+

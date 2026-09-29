@@ -1,4 +1,4 @@
-# VRM Galgame Editor · 0.0.4
+# VRM Galgame Editor · 0.0.6
 
 [简体中文](../README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
@@ -6,9 +6,9 @@
 
 A Windows editor for creating visual novels with 3D VRM characters. Arrange characters, dialogue, motion, backgrounds, and audio; preview the scene in a separate window; then export a playable game. The image above is a **feature illustration**, not a screenshot.
 
-**0.0.4 is the latest public release** and includes the local v0.7.12 features. The previous 0.0.3 download remains available. This public edition does not bundle VRM models, Mixamo motions, or the sample story's assets. Import assets you have permission to use.
+**0.0.6 is the latest public release** and includes the local v0.7.15 features. The previous 0.0.3 download remains available. This public edition does not bundle VRM models, Mixamo motions, or the sample story's assets. Import assets you have permission to use.
 
-This release adds one height slider for all character shadows and frame-by-frame pose selection with direct frame number entry. Existing time-based poses migrate to frames. Manual portraits remain untouched. Earlier features include oil-paint rendering, portrait-only characters, off-stage dialogue, white editor, and night mode.
+This release adds a five-tab asset library below the preview (Image, VRM, Motion, Audio, and Video), image thumbnails, clickable folders, double-click import, and file or folder drag-and-drop import. The earlier shadow-height slider and frame-by-frame pose selection remain available. Existing time-based poses migrate to frames. Manual portraits remain untouched. Earlier features include oil-paint rendering, portrait-only characters, off-stage dialogue, white editor, and night mode.
 
 HarmonyOS Sans SC is used under its included license; the full license is at `../public/fonts/HarmonyOS_Sans_SC_LICENSE.txt` in the source and `web/fonts/` in the Windows download. Copyright © Huawei Device Co., Ltd.
 
@@ -27,7 +27,7 @@ These examples and visual previews show the editor, title screen, and gameplay. 
 
 **Story editing example:** arrange acts, dialogue, characters, and backgrounds.
 
-![Story editor example and visual preview](images/editor-story.png)
+![Asset library editor example and visual preview](images/editor-story.png)
 
 **Title screen preview:** a sample menu with a VRM character.
 
@@ -41,7 +41,7 @@ These examples and visual previews show the editor, title screen, and gameplay. 
 
 ## Download and start
 
-1. Download `VRMGalgame-0.0.4-win-x64.zip` from [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases).
+1. Download `VRMGalgame-0.0.6-win-x64.zip` from [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases).
 2. Extract the **whole archive** and run `VRMGalgame.exe`.
 3. Create a project or open an existing `.vrmg` file.
 4. Import your own VRM, motion, image, and audio files; edit the cast and story; select **Preview** and then **Export Game**.
@@ -73,4 +73,4 @@ Creator on Bilibili: [尸工U5十三世](https://b23.tv/krcyQ8I).
 [Step-by-step Chinese guide with asset rules](新手说明书.md)
 
 
-![Shadow height and frame selection illustration](images/shadow-frame-controls.svg)
+![Progress example and visual preview](images/progress.png)

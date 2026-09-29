@@ -1,4 +1,4 @@
-# VRM Galgame 편집기 · 0.0.4
+# VRM Galgame 편집기 · 0.0.6
 
 [简体中文](../README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
@@ -6,9 +6,9 @@
 
 3D VRM 캐릭터로 비주얼 노벨을 만드는 Windows 편집기입니다. 캐릭터, 대사, 동작, 배경, 소리를 배치하고 별도 창에서 시험 실행한 뒤 플레이 가능한 게임으로 내보낼 수 있습니다. 위 그림은 **기능 안내용 그림**이며 실제 화면 캡처는 아닙니다.
 
-**0.0.4는 최신 공개 버전입니다.** 로컬 v0.7.12 기능을 포함하며 이전 0.0.3 다운로드도 유지됩니다. VRM 모델, Mixamo 동작, 예제 이야기의 소재는 들어 있지 않습니다. 사용할 권리가 있는 소재를 가져오세요.
+**0.0.6는 최신 공개 버전입니다.** 로컬 v0.7.15 기능을 포함하며 이전 0.0.3 다운로드도 유지됩니다. VRM 모델, Mixamo 동작, 예제 이야기의 소재는 들어 있지 않습니다. 사용할 권리가 있는 소재를 가져오세요.
 
-이번 버전은 모든 캐릭터 그림자의 높이를 함께 조절하고, 프레임 번호를 직접 입력해 자세를 고르는 기능을 추가했습니다. 이전의 초 단위 설정은 프레임으로 바뀌며 직접 올린 초상화는 유지됩니다. 유화 효과, 초상화만 있는 캐릭터, 화면 밖 대사, 흰색 편집기와 야간 모드도 계속 사용할 수 있습니다.
+이번 버전은 미리보기 아래 소재 라이브러리를 이미지, VRM, 동작, 소리, 동영상 다섯 탭으로 정리했습니다. 이미지 썸네일, 폴더 이동, 더블클릭 가져오기, 파일 및 폴더 드래그 앤 드롭을 지원하며 그림자 높이와 프레임 번호 포즈 선택도 계속 사용할 수 있습니다. 이전의 초 단위 설정은 프레임으로 바뀌며 직접 올린 초상화는 유지됩니다. 유화 효과, 초상화만 있는 캐릭터, 화면 밖 대사, 흰색 편집기와 야간 모드도 계속 사용할 수 있습니다.
 
 HarmonyOS Sans SC의 저작권은 Huawei Device Co., Ltd.에 있습니다. 전체 라이선스는 소스의 `../public/fonts/HarmonyOS_Sans_SC_LICENSE.txt`와 Windows 다운로드의 `web/fonts/`에서 확인할 수 있습니다.
 
@@ -41,7 +41,7 @@ HarmonyOS Sans SC의 저작권은 Huawei Device Co., Ltd.에 있습니다. 전�
 
 ## 다운로드와 시작
 
-1. [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases)에서 `VRMGalgame-0.0.4-win-x64.zip`을 다운로드합니다.
+1. [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases)에서 `VRMGalgame-0.0.6-win-x64.zip`을 다운로드합니다.
 2. ZIP **전체를 압축 해제**하고 `VRMGalgame.exe`를 실행합니다.
 3. 새 프로젝트를 만들거나 기존 `.vrmg` 파일을 엽니다.
 4. 자신의 소재를 가져와 캐릭터와 이야기를 편집하고, 시험 실행으로 확인한 뒤 게임을 내보냅니다.
@@ -73,4 +73,4 @@ Copy-Item -Recurse dist publish/web
 [Step-by-step Chinese guide with asset rules](新手说明书.md)
 
 
-![Shadow height and frame selection illustration](images/shadow-frame-controls.svg)
+![진행 상황 예시 및 효과 이미지](images/progress.png)

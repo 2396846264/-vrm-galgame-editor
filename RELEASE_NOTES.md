@@ -1,19 +1,13 @@
-# VRM Galgame Editor 0.0.5
+# VRM Galgame Editor 0.0.6
 
-**简体中文** · 素材库现在常驻在预览画面下方，图片有缩略图，内容多时可在素材区滚动。游戏按钮有点击声，剧情对白可配场景音效；玩家能调音效音量和文字逐字出现的速度。完整解压 ZIP 后运行 `VRMGalgame.exe`。[图文说明书](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/%E6%96%B0%E6%89%8B%E8%AF%B4%E6%98%8E%E4%B9%A6.md)。
+**简体中文** · 本版基于本地 v0.7.15。素材库改成图像、VRM、动作、声音、视频五个标签；图片显示缩略图，文件夹可点击进入；双击空白处可导入，也可以把文件或文件夹拖进来，程序会自动分类。素材统一放在预览画面下方，左侧不再显示素材列表。
 
-**English** · The asset library now stays below the preview, scrolls independently, and shows image thumbnails. Game buttons play a click sound; dialogue lines can trigger sound effects. Players can adjust effects volume and typewriter text speed. Extract the ZIP fully, then run `VRMGalgame.exe`. [Guide](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/README.en.md).
+**English** · Based on local v0.7.15. The asset library now has Image, VRM, Motion, Audio, and Video tabs, image thumbnails, clickable folders, double-click import, and drag-and-drop import for files or folders. The library stays below the preview; the old left asset list is removed.
 
-**日本語** · 素材一覧をプレビューの下に常設し、画像のサムネイルと一覧内スクロールに対応しました。ゲームのボタンにクリック音、台詞に効果音を設定できます。プレイヤーは効果音の音量と文字送り速度を調整できます。ZIP をすべて展開して `VRMGalgame.exe` を起動してください。[案内](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/README.ja.md)。
+**日本語** · ローカル v0.7.15 を収録しました。素材ライブラリを画像、VRM、モーション、音声、動画の5タブに整理し、画像サムネイル、フォルダー移動、ダブルクリックの読み込み、ファイルやフォルダーのドラッグ＆ドロップに対応しました。素材一覧はプレビューの下に常設されます。
 
-**한국어** · 미리보기 아래에 소재 목록을 항상 표시하고, 이미지 미리보기와 목록 스크롤을 지원합니다. 게임 버튼에 클릭 소리를 넣고 대사마다 효과음을 지정할 수 있습니다. 플레이어는 효과음 음량과 글자 표시 속도를 조절할 수 있습니다. ZIP 전체를 압축 해제한 뒤 `VRMGalgame.exe`를 실행하세요. [안내](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/README.ko.md).
+**한국어** · 로컬 v0.7.15 기능을 포함합니다. 소재 라이브러리를 이미지, VRM, 동작, 소리, 동영상 다섯 탭으로 정리하고 이미지 썸네일, 폴더 이동, 빈 곳 더블클릭 가져오기, 파일 및 폴더 드래그 앤 드롭을 지원합니다. 소재 목록은 미리보기 아래에 표시됩니다.
 
-> 下列画面是示例与效果图。公开包不附带用户提供的 64 个图片与声音素材；含完整素材的示例工程仅在本地交付。 / The images below are previews. User-supplied sample assets are not included in this public release.
+> 下列画面是示例与效果图。公开包不附带用户提供的完整示例素材；请只使用自己有权使用的模型、图片、声音和动作。
 
-![剧情编辑示例与效果图](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/editor-story.png)
-
-![新版角色页面示例与效果图](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/character-gallery-v0711.png)
-
-![游玩画面示例与效果图](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/gameplay.png)
-
-作者 / Creator / 作者 / 제작자：[尸工U5十三世的 B 站空间](https://b23.tv/krcyQ8I)。字体授权：[HarmonyOS Sans SC](https://github.com/2396846264/-vrm-galgame-editor/blob/main/public/fonts/HarmonyOS_Sans_SC_LICENSE.txt)。
+作者 B 站：[尸工U5十三世](https://b23.tv/krcyQ8I)。

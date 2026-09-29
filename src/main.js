@@ -19,6 +19,8 @@ let selectedCharacter = 0;
 let activePanel = 'story';
 const openAssetFolders = new Set(['unfiled:vrm', 'unfiled:motion', 'unfiled:image', 'unfiled:audio', 'unfiled:video']);
 let dockInitializedProjectId = '';
+let activeAssetType = 'image';
+const currentAssetFolder = { image: '', vrm: '', motion: '', audio: '', video: '' };
 let draggingStory = null;
 let playing = false;
 let playAct = 0;
@@ -482,6 +484,7 @@ function renderRecentProjectsModal() {
 }
 function renderEditor() {
   stage?.destroy();
+  if (activePanel === 'assets') activePanel = 'story';
   app.innerHTML = `<div class="editor">
     <header class="topbar"><div class="brand">✦ <b>VRM Galgame</b><span>编辑器</span></div>
       <div class="project-title"><input id="project-name" value="${escape(project.name)}" aria-label="游戏名称"><span id="save-state">✓ 已保存</span></div>
@@ -489,7 +492,7 @@ function renderEditor() {
     </header>
     <div class="workspace">
       <aside class="sidebar"><div class="tabs">
-        <button data-panel="story" class="active">剧情</button><button data-panel="characters">角色</button><button data-panel="assets">素材</button><button data-panel="title">标题</button><button data-panel="render">渲染</button>
+        <button data-panel="story" class="active">剧情</button><button data-panel="characters">角色</button><button data-panel="title">标题</button><button data-panel="render">渲染</button>
       </div><div id="sidebar-body"></div></aside>
       <main class="center"><div class="stage-toolbar"><span id="stage-caption"></span><span>预览画面</span></div>
         <div class="stage-frame"><div id="scene-bg"></div><div id="stage-canvas"></div><div id="title-preview" class="title-composition hidden"></div>
@@ -503,7 +506,7 @@ function renderEditor() {
           <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
         </div>
         <div class="stage-hint">选中左侧对白即可预览。试玩时点击画面空白处，或按空格 / Enter 继续。</div>
-        <section class="asset-dock" aria-label="常驻素材库"><div class="asset-dock-heading"><strong>素材库</strong><small>图片直接显示缩略图；在这里导入、分类、删除素材</small></div><div id="asset-dock-body" class="asset-dock-body"></div></section>
+        <section class="asset-dock" aria-label="常驻素材库"><div class="asset-dock-heading"><strong>素材库</strong><small>图片直接显示缩略图；在这里导入、分类、删除素材</small></div><div id="asset-dock-tabs" class="asset-dock-tabs" role="tablist" aria-label="素材类型"></div><div id="asset-dock-body" class="asset-dock-body"></div></section>
       </main>
       <aside class="inspector"><div class="inspector-heading">属性</div><div id="inspector-body"></div></aside>
     </div>
@@ -554,16 +557,6 @@ function renderSidebar() {
         ${button('导入标题动作', 'import', 'data-type="motion" data-title-import="motionId"')}
         ${button('导入背景', 'import', 'data-type="image" data-title-import="backgroundId"')}
       </div><div class="sidebar-note">标题布局固定：Logo 在左侧，人物在中间偏右，菜单排在底部。导入后到右侧调整位置和角度。</div>`;
-  } else {
-    const groups = [['vrm','VRM 角色'],['motion','动作 VRMA / Mixamo FBX'],['image','图片'],['audio','声音'],['video','视频']];
-    body.innerHTML = groups.map(([type,label]) => {
-      const folders = project.assetFolders.filter(folder => folder.type === type);
-      const unfiled = byType(type).filter(item => !folders.some(folder => folder.id === item.folderId));
-      return `<div class="section-heading">${label}<span class="heading-actions">
-        ${button('＋ 文件夹', 'add-asset-folder', `data-type="${type}"`)}${button('＋ 导入', 'import', `data-type="${type}"`)}</span></div>
-        <div class="asset-folder-list">${folders.map(folder => renderAssetFolder(type, folder, byType(type).filter(item => item.folderId === folder.id))).join('')}
-        ${renderAssetFolder(type, null, unfiled)}</div>`;
-    }).join('') + '<div class="sidebar-note">新素材可直接导入指定文件夹；已有素材可用右侧下拉框移动。</div>';
   }
   renderAssetDock();
 }
@@ -572,31 +565,52 @@ function renderAssetDock() {
   if (!body || !project) return;
   if (dockInitializedProjectId !== project.id) {
     for (const folder of project.assetFolders) openAssetFolders.add(folder.id);
+    for (const type of Object.keys(currentAssetFolder)) currentAssetFolder[type] = '';
     dockInitializedProjectId = project.id;
   }
+  const type = activeAssetType;
+  const folders = project.assetFolders.filter(folder => folder.type === type);
+  if (currentAssetFolder[type] && !folders.some(folder => folder.id === currentAssetFolder[type])) currentAssetFolder[type] = '';
+  const folderId = currentAssetFolder[type];
+  const selectedFolder = folders.find(folder => folder.id === folderId);
   const scroll = body.scrollTop;
-  const groups = [['vrm', 'VRM 角色'], ['motion', '动作'], ['image', '图片'], ['audio', '声音'], ['video', '视频']];
-  body.innerHTML = groups.map(([type, label]) => {
-    const folders = project.assetFolders.filter(folder => folder.type === type);
-    const unfiled = byType(type).filter(item => !folders.some(folder => folder.id === item.folderId));
-    return `<div class="asset-dock-group"><div class="section-heading">${label}<span class="heading-actions">${button('＋ 文件夹', 'add-asset-folder', `data-type="${type}"`)}${button('＋ 导入', 'import', `data-type="${type}"`)}</span></div>
-      <div class="asset-folder-list">${folders.map(folder => renderAssetFolder(type, folder, byType(type).filter(item => item.folderId === folder.id))).join('')}${renderAssetFolder(type, null, unfiled)}</div></div>`;
-  }).join('');
+  const settingsOpen = body.querySelector('.asset-dock-settings')?.open || false;
+  const tabs = [['image', '图像'], ['vrm', 'VRM'], ['motion', '动作'], ['audio', '声音'], ['video', '视频']];
+  document.querySelector('#asset-dock-tabs').innerHTML = tabs.map(([key, label]) =>
+    `<button type="button" role="tab" aria-selected="${type === key}" class="${type === key ? 'active' : ''}" data-action="asset-tab" data-type="${key}">${label}<small>${byType(key).length}</small></button>`).join('');
+  const visible = byType(type).filter(item => folderId ? item.folderId === folderId : !folders.some(folder => folder.id === item.folderId));
+  body.innerHTML = `<div class="asset-browser-toolbar">
+      <div class="asset-browser-location">${folderId ? button('← 返回', 'asset-folder-back') : '<strong>全部文件夹</strong>'}<span>${escape(selectedFolder?.name || (folderId ? '文件夹' : '未分类素材'))}</span></div>
+      <div class="asset-browser-actions">${folderId ? button('改名', 'rename-asset-folder', `data-folder-id="${escape(folderId)}"`) : button('＋ 文件夹', 'add-asset-folder', `data-type="${type}"`)}${button('＋ 导入', 'import', `data-type="${type}" data-folder-id="${escape(folderId)}"`)}</div>
+    </div><div class="asset-file-area" data-asset-dropzone="${type}" aria-label="${escape(type)} 素材文件区">
+      <div class="asset-tile-grid">${!folderId ? folders.map(folder => renderAssetFolderTile(folder)).join('') : ''}${visible.map(item => renderAssetTile(item, folders)).join('')}</div>
+      <div class="asset-drop-hint">双击空白处上传素材，或将文件、文件夹拖到这里</div>
+    </div><details class="asset-dock-settings" ${settingsOpen ? 'open' : ''}><summary>游戏界面与鉴赏设置</summary><div class="asset-dock-settings-body">
+    ${field('对话框图片', select('project.ui.dialogueImageId', byType('image'), project.ui.dialogueImageId, '使用内置样式'))}
+    <p class="tip">可换成自己的 PNG 或 WebP 图片。建议使用横向、带透明通道的图片。</p>
+    <h3>图片鉴赏</h3><p class="tip">勾选后，玩家在游戏里见过的图片可进入图像鉴赏。</p>
+    ${byType('image').length ? byType('image').map(item => `<label class="gallery-audio-check gallery-image-check"><input type="checkbox" data-gallery-image="${escape(item.id)}" ${item.galleryImage === false ? '' : 'checked'}><span>${escape(item.name)}</span></label>`).join('') : '<p class="tip">还没有导入图片。</p>'}
+    <h3>音乐鉴赏</h3><p class="tip">勾选要收录的音乐；语音和音效可以取消勾选。</p>
+    ${byType('audio').length ? byType('audio').map(item => `<div class="gallery-audio-editor"><label class="gallery-audio-check"><input type="checkbox" data-gallery-music="${escape(item.id)}" ${item.galleryMusic === false ? '' : 'checked'}><span>${escape(item.name)}</span></label>
+      <input data-audio-title="${escape(item.id)}" value="${escape(item.galleryTitle || '')}" placeholder="歌名：${escape(item.name.replace(/\.[^.]+$/, ''))}"></div>`).join('') : '<p class="tip">还没有导入音频。</p>'}
+    <p class="tip">支持 VRM 人物、VRMA / Mixamo FBX 动作、PNG / JPG / WebP 图片、MP3 / WAV / OGG 声音和 MP4 / WebM 视频。</p>
+  </div></details>`;
   body.scrollTop = scroll;
 }
-function renderAssetFolder(type, folder, items) {
-  const key = folder?.id || `unfiled:${type}`;
-  const folders = project.assetFolders.filter(item => item.type === type);
-  return `<details class="asset-folder" data-folder-key="${escape(key)}" ${openAssetFolders.has(key) ? 'open' : ''}>
-    <summary><span class="folder-icon">▸</span><span class="folder-name">${escape(folder?.name || '未分类')}</span><small>${items.length}</small></summary>
-    <div class="asset-folder-body">
-      ${folder ? `<div class="asset-folder-actions">${button('改名', 'rename-asset-folder', `data-folder-id="${escape(folder.id)}"`)}${button('导入这里', 'import', `data-type="${type}" data-folder-id="${escape(folder.id)}"`)}</div>` : ''}
-       ${items.map(item => `<div class="asset-row" title="${escape(item.path)}">${type === 'image' ? `<img class="asset-thumbnail" loading="lazy" src="${escape(assetUrl(item))}" alt="${escape(item.name)}的缩略图">` : ''}<span>${escape(item.name)}</span>
-        <select data-asset-folder="${escape(item.id)}" aria-label="把 ${escape(item.name)} 移动到文件夹" title="移动到文件夹">
-          <option value="" ${!item.folderId ? 'selected' : ''}>未分类</option>
-          ${folders.map(target => `<option value="${escape(target.id)}" ${item.folderId === target.id ? 'selected' : ''}>${escape(target.name)}</option>`).join('')}
-        </select>${button('删除', 'delete-asset', `data-asset-id="${escape(item.id)}" class="asset-delete"`)}</div>`).join('') || '<div class="empty">这里还没有素材</div>'}
-    </div></details>`;
+function renderAssetFolderTile(folder) {
+  const count = byType(folder.type).filter(item => item.folderId === folder.id).length;
+  return `<button type="button" class="asset-tile asset-folder-tile" data-action="asset-open-folder" data-folder-id="${escape(folder.id)}" title="打开 ${escape(folder.name)}">
+    <span class="asset-folder-picture" aria-hidden="true">📁</span><span class="asset-tile-name">${escape(folder.name)}</span><small>${count} 个素材</small></button>`;
+}
+function renderAssetTile(item, folders) {
+  const icons = { vrm: '♟', motion: '▶', audio: '♫', video: '▣' };
+  const preview = item.type === 'image'
+    ? `<img class="asset-tile-preview" loading="lazy" src="${escape(assetUrl(item))}" alt="${escape(item.name)}的缩略图">`
+    : `<span class="asset-tile-icon asset-tile-icon-${item.type}" aria-hidden="true">${icons[item.type] || '▣'}</span>`;
+  return `<div class="asset-tile asset-file-tile" title="${escape(item.name)}"><div class="asset-tile-picture">${preview}</div><span class="asset-tile-name">${escape(item.name)}</span>
+    <div class="asset-tile-tools"><select data-asset-folder="${escape(item.id)}" aria-label="把 ${escape(item.name)} 移动到文件夹" title="移动到文件夹">
+      <option value="" ${!item.folderId ? 'selected' : ''}>未分类</option>${folders.map(folder => `<option value="${escape(folder.id)}" ${item.folderId === folder.id ? 'selected' : ''}>${escape(folder.name)}</option>`).join('')}
+    </select>${button('删除', 'delete-asset', `data-asset-id="${escape(item.id)}" class="asset-delete"`)}</div></div>`;
 }
 function reorderStory(kind, source, target, after) {
   const items = kind === 'act' ? project.acts : act()?.steps;
@@ -642,6 +656,103 @@ document.addEventListener('drop', event => {
   clearStoryDrag();
 });
 document.addEventListener('dragend', () => { draggingStory = null; clearStoryDrag(); });
+document.addEventListener('dblclick', event => {
+  const area = event.target.closest?.('.asset-file-area');
+  if (!area || event.target.closest('.asset-tile, button, select, input')) return;
+  if (activeAssetType === 'image') renderImageImportModal(currentAssetFolder.image);
+  else importAssets(activeAssetType, currentAssetFolder[activeAssetType]).catch(error => toast(error.message, true));
+});
+document.addEventListener('dragover', event => {
+  const area = event.target.closest?.('.asset-file-area');
+  if (!area || !event.dataTransfer?.types.includes('Files')) return;
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'copy';
+  area.classList.add('drag-over');
+});
+document.addEventListener('dragleave', event => {
+  const area = event.target.closest?.('.asset-file-area');
+  if (area && !area.contains(event.relatedTarget)) area.classList.remove('drag-over');
+});
+document.addEventListener('drop', async event => {
+  const area = event.target.closest?.('.asset-file-area');
+  if (!area || !event.dataTransfer?.types.includes('Files')) return;
+  event.preventDefault();
+  area.classList.remove('drag-over');
+  try { await importDroppedEntries(event.dataTransfer); }
+  catch (error) { toast(error.message, true); }
+});
+const droppedAssetTypes = {
+  vrm: ['.vrm'], motion: ['.vrma', '.fbx'], image: ['.png', '.jpg', '.jpeg', '.webp'],
+  audio: ['.mp3', '.wav', '.ogg'], video: ['.mp4', '.webm']
+};
+function droppedAssetType(name) {
+  const extension = name.slice(name.lastIndexOf('.')).toLowerCase();
+  return Object.keys(droppedAssetTypes).find(type => droppedAssetTypes[type].includes(extension));
+}
+async function readDroppedEntry(entry, folderName, result) {
+  if (entry.isFile) {
+    const file = await new Promise((resolve, reject) => entry.file(resolve, reject));
+    result.push({ file, folderName });
+  } else if (entry.isDirectory) {
+    const reader = entry.createReader();
+    for (;;) {
+      const batch = await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
+      if (!batch.length) break;
+      for (const child of batch) await readDroppedEntry(child, folderName || entry.name, result);
+    }
+  }
+}
+async function importDroppedEntries(transfer) {
+  const entries = [];
+  const items = [...transfer.items].filter(item => item.kind === 'file')
+    .map(item => ({ entry: item.webkitGetAsEntry?.(), file: item.getAsFile() }));
+  const fallbackFiles = [...transfer.files];
+  for (const item of items) {
+    if (item.entry) await readDroppedEntry(item.entry, item.entry.isDirectory ? item.entry.name : '', entries);
+    else if (item.file) entries.push({ file: item.file, folderName: '' });
+  }
+  if (!items.length) for (const file of fallbackFiles) entries.push({ file, folderName: '' });
+  let imported = 0;
+  let skipped = 0;
+  const folderCache = new Map();
+  for (const { file, folderName } of entries) {
+    const type = droppedAssetType(file.name);
+    if (!type) { skipped++; continue; }
+    let folderId = type === activeAssetType ? currentAssetFolder[type] : '';
+    if (folderName) {
+      const key = `${type}:${folderName.toLowerCase()}`;
+      if (!folderCache.has(key)) {
+        let folder = project.assetFolders.find(item => item.type === type && item.name.toLowerCase() === folderName.toLowerCase());
+        if (!folder) {
+          folder = { id: uid(), type, name: folderName.slice(0, 64) };
+          project.assetFolders.push(folder);
+        }
+        folderCache.set(key, folder.id);
+      }
+      folderId = folderCache.get(key);
+    }
+    const transferId = uid();
+    try {
+      await bridge('importAssetChunk', { command: 'start', transferId, type, name: file.name });
+      for (let offset = 0; offset < file.size; offset += 256 * 1024) {
+        const bytes = new Uint8Array(await file.slice(offset, offset + 256 * 1024).arrayBuffer());
+        let binary = '';
+        for (let pos = 0; pos < bytes.length; pos += 16384) binary += String.fromCharCode(...bytes.subarray(pos, pos + 16384));
+        await bridge('importAssetChunk', { command: 'append', transferId, base64: btoa(binary) });
+      }
+      const assetItem = await bridge('importAssetChunk', { command: 'finish', transferId });
+      assetItem.folderId = folderId;
+      if (type === 'image') assetItem.galleryImage = false;
+      project.assets.push(assetItem);
+      imported++;
+    } catch (error) {
+      await bridge('importAssetChunk', { command: 'abort', transferId }).catch(() => {});
+      throw error;
+    }
+  }
+  if (imported || folderCache.size) { markDirty(); renderAssetDock(); renderInspector(); }
+  toast(`已导入 ${imported} 个素材${skipped ? `，跳过 ${skipped} 个不支持的文件` : ''}`);
+}
 document.addEventListener('toggle', event => {
   const details = event.target;
   if (!details.matches?.('.asset-folder')) return;
@@ -692,20 +803,6 @@ function renderInspector() {
       <div class="inline-actions">${button('导入 VRM', 'import', 'data-type="vrm"')}${button('删除角色', 'delete-character', 'class="danger"')}</div>
       <p class="tip">选中角色后，预览里会显示它。表情名称取决于模型本身。</p></div>` : '<div class="inspector-content empty">先新增角色</div>';
     if (item) updatePreview();
-    return;
-  }
-  if (activePanel === 'assets') {
-    body.innerHTML = `<div class="inspector-content"><h2>游戏界面</h2>
-      ${field('对话框图片', select('project.ui.dialogueImageId', byType('image'), project.ui.dialogueImageId, '使用内置样式'))}
-      <p class="tip">可换成自己的 PNG 或 WebP 图片。建议做成横向、带透明通道的对话框。</p>
-      <hr><h2>图片鉴赏</h2><p class="tip">只有勾选的图片才会出现在游戏的图像鉴赏中。新导入的图片默认不加入，旧工程的图片保持原样。</p>
-      ${byType('image').length ? byType('image').map(item => `<label class="gallery-audio-check gallery-image-check"><input type="checkbox" data-gallery-image="${escape(item.id)}" ${item.galleryImage === false ? '' : 'checked'}><span>${escape(item.name)}</span></label>`).join('') : '<p class="tip">还没有导入图片。</p>'}
-      <hr><h2>音乐鉴赏</h2><p class="tip">勾选要放进音乐鉴赏的歌曲；语音和音效可以取消勾选。歌名可以单独修改。</p>
-      ${byType('audio').length ? byType('audio').map(item => `<div class="gallery-audio-editor">
-        <label class="gallery-audio-check"><input type="checkbox" data-gallery-music="${escape(item.id)}" ${item.galleryMusic === false ? '' : 'checked'}><span>${escape(item.name)}</span></label>
-        <input data-audio-title="${escape(item.id)}" value="${escape(item.galleryTitle || '')}" placeholder="歌名：${escape(item.name.replace(/\.[^.]+$/, ''))}">
-      </div>`).join('') : '<p class="tip">还没有导入音频。</p>'}
-      <h2>支持格式</h2><p class="tip">模型 .vrm<br>动作 .vrma / Mixamo .fbx<br>图片 .png / .jpg / .webp<br>声音 .mp3 / .wav / .ogg<br>视频 .mp4 / .webm</p></div>`;
     return;
   }
   if (activePanel === 'title') {
@@ -1821,7 +1918,19 @@ document.addEventListener('click', async event => {
   const action = node.dataset.action;
   if (new URLSearchParams(location.search).has('smoke')) window.__lastClickAction = action;
   try {
-    if (action === 'new-project') {
+    if (action === 'asset-tab') {
+      activeAssetType = node.dataset.type;
+      document.querySelector('#asset-dock-body').scrollTop = 0;
+      renderAssetDock();
+    } else if (action === 'asset-open-folder') {
+      currentAssetFolder[activeAssetType] = node.dataset.folderId;
+      document.querySelector('#asset-dock-body').scrollTop = 0;
+      renderAssetDock();
+    } else if (action === 'asset-folder-back') {
+      currentAssetFolder[activeAssetType] = '';
+      document.querySelector('#asset-dock-body').scrollTop = 0;
+      renderAssetDock();
+    } else if (action === 'new-project') {
       if (dirty) await save();
       const name = document.querySelector('#new-name')?.value || '新游戏';
       const info = await bridge('newProject', { name });
@@ -1975,7 +2084,7 @@ document.addEventListener('click', async event => {
       }
       const folder = { id: uid(), type, name: name.slice(0, 64) };
       project.assetFolders.push(folder);
-      openAssetFolders.add(folder.id);
+      currentAssetFolder[type] = folder.id;
       markDirty(); renderSidebar();
     } else if (action === 'rename-asset-folder') {
       const folder = project.assetFolders.find(item => item.id === node.dataset.folderId);

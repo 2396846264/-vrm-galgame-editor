@@ -11,9 +11,8 @@
   height: auto;
 }
 .asset-dock {
-  flex: none;
-  height: 280px;
-  min-height: 220px;
+  flex: 1 1 240px;
+  min-height: 240px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -31,7 +30,33 @@
   color: var(--ui-text, #e9eef8);
 }
 .asset-dock-heading small { color: var(--ui-muted, #aebbd0); font-size: 11px; }
-.asset-dock-body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; padding: 3px 9px 12px; }
+.asset-dock-body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; padding: 3px 9px 12px; display: flex; flex-direction: column; }
+.asset-dock-tabs { display: flex; flex: none; gap: 3px; padding: 7px 9px 0; border-bottom: 1px solid var(--ui-border, #546175); overflow-x: auto; }
+.asset-dock-tabs button { border-radius: 8px 8px 0 0; border-bottom: 0; padding: 7px 13px; white-space: nowrap; background: var(--ui-surface-soft, #213045); color: var(--ui-text, #e9eef8); }
+.asset-dock-tabs button.active { background: var(--ui-raised, #30435a); font-weight: 700; box-shadow: inset 0 3px 0 #0b9b83; }
+.asset-dock-tabs small { margin-left: 5px; opacity: .65; font-size: 10px; }
+.asset-browser-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 5px; }
+.asset-browser-location { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 12px; color: var(--ui-text, #e9eef8); }
+.asset-browser-location span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.asset-browser-actions { display: flex; gap: 5px; flex: none; }
+.asset-browser-toolbar button { font-size: 11px; padding: 5px 8px; }
+.asset-file-area { flex: 1 0 260px; border: 1px solid var(--ui-border, #546175); border-radius: 8px; background: var(--ui-surface-soft, #213045); padding: 12px; }
+.asset-file-area.drag-over { outline: 2px dashed #0b9b83; outline-offset: -5px; }
+.asset-tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); gap: 12px; align-content: start; }
+.asset-tile { min-width: 0; min-height: 142px; padding: 8px; border: 1px solid var(--ui-border, #546175); border-radius: 9px; background: var(--ui-surface, #1b293d); color: var(--ui-text, #e9eef8); text-align: center; }
+.asset-tile:hover { border-color: #0b9b83; }
+.asset-folder-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.asset-folder-picture { font-size: 58px; line-height: 1.1; }
+.asset-tile-name { display: block; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+.asset-tile small { font-size: 10px; opacity: .7; }
+.asset-file-tile { display: flex; flex-direction: column; gap: 5px; }
+.asset-tile-picture { flex: 1; min-height: 70px; display: grid; place-items: center; overflow: hidden; }
+.asset-tile-preview { max-width: 100%; width: 100%; height: 78px; object-fit: contain; }
+.asset-tile-icon { font-size: 49px; line-height: 1; color: #0b9b83; }
+.asset-tile-tools { display: flex; gap: 3px; }
+.asset-tile-tools select { flex: 1; min-width: 0; width: auto; padding: 3px 1px; font-size: 10px; }
+.asset-tile-tools button { flex: none; padding: 3px 4px; font-size: 10px; }
+.asset-drop-hint { min-height: 85px; display: grid; place-items: center; color: var(--ui-muted, #aebbd0); font-size: 12px; text-align: center; user-select: none; }
 .asset-dock-group .section-heading { padding: 10px 5px 6px; }
 .asset-dock .asset-folder-list { padding: 0; }
 .asset-dock .asset-folder-body { display: grid; grid-template-columns: repeat(auto-fill, minmax(245px, 1fr)); gap: 3px 8px; }
@@ -39,6 +64,11 @@
 .asset-dock .asset-row { min-width: 0; }
 .asset-thumbnail { flex: none; width: 54px; height: 42px; border-radius: 5px; object-fit: cover; background: #ddd; }
 .sidebar .asset-thumbnail { width: 32px; height: 30px; }
+.asset-dock-settings { margin: 12px 0 2px; border: 1px solid var(--ui-border, #546175); border-radius: 8px; background: var(--ui-surface-soft, #213045); }
+.asset-dock-settings > summary { padding: 11px 13px; cursor: pointer; color: var(--ui-text, #e9eef8); font-weight: 700; }
+.asset-dock-settings-body { padding: 12px 14px 18px; }
+.asset-dock-settings-body h3 { margin: 16px 0 7px; font-size: 13px; }
+.asset-dock-settings-body .gallery-image-check, .asset-dock-settings-body .gallery-audio-editor { max-width: 620px; }
 .center .dialogue {
   min-height: 0;
   height: 28%;
