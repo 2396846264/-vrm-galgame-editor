@@ -299,7 +299,8 @@ function defaultProject(name) {
     title: { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
       size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12 },
     render: { antialias: 'standard', style: 'anime', outline: 1, autoLight: true, lightStrength: 0.6,
-      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, paintEffect: 'none', paintStrength: 0.65 },
+      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, shadowHeight: 0,
+      paintEffect: 'none', paintStrength: 0.65 },
     assets: [], assetFolders: [], characters: [],
     acts: [{ id: uid(), name: '第一幕', backgroundId: '', bgmId: '', steps: [
       { id: uid(), characterId: '', speaker: '', text: '在这里写第一句对白。', expressionWeights: {}, motionId: '', position: 'center', size: defaultSize, offsetX: 0, offsetY: 0, voiceId: '', choices: [] }
@@ -318,7 +319,9 @@ function normalize() {
     item.description ||= '';
     item.galleryMotionId ||= '';
     item.galleryYaw = Number.isFinite(Number(item.galleryYaw)) ? Number(item.galleryYaw) : 0;
-    item.galleryPoseTime = Number.isFinite(Number(item.galleryPoseTime)) ? Number(item.galleryPoseTime) : 0;
+    item.galleryPoseFrame = Number.isFinite(Number(item.galleryPoseFrame)) && Number(item.galleryPoseFrame) >= 1
+      ? Math.floor(Number(item.galleryPoseFrame))
+      : Math.max(1, Math.round((Number(item.galleryPoseTime) || 0) * 30) + 1);
     item.stories = Array.from({ length: 3 }, (_, index) => ({
       text: '', unlockLines: 0, ...(item.stories?.[index] || {})
     }));
@@ -329,7 +332,7 @@ function normalize() {
     size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12, ...project.title };
   project.title.expressionWeights ||= {};
   project.render = { antialias: 'standard', style: 'original', outline: 0, autoLight: true, lightStrength: 0.6,
-    shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45,
+    shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, shadowHeight: 0,
     paintEffect: 'none', paintStrength: 0.65, ...project.render };
   for (const item of project.acts) {
     item.steps ||= [];
@@ -645,10 +648,11 @@ function renderInspector() {
       ${field('VRM 模型', select('character.modelId', byType('vrm'), item.modelId, '请选择模型'))}
       <div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}
         <div class="inline-actions">${button('上传头像', 'upload-character-portrait')}${item.modelId ? button('重新拍摄 VRM', 'capture-character-portrait') : ''}</div>
-        <p class="tip">没有模型也能上传头像说话。VRM 自动头像会采用下方选中的动作和定格时间；松开时间滑块后会重拍。手动上传的头像不会被覆盖。</p></div>
+        <p class="tip">没有模型也能上传头像说话。VRM 自动头像会采用下方选中的动作和定格帧；选好帧后会重拍。手动上传的头像不会被覆盖。</p></div>
       ${field('鉴赏姿势 / 动作', select('character.galleryMotionId', byType('motion'), item.galleryMotionId, '保持站立'))}
       <label class="adjustment"><span>鉴赏转身角度</span><input type="range" data-gallery-adjust="galleryYaw" min="-90" max="90" step="5" value="${item.galleryYaw}"><output data-gallery-output="galleryYaw">${item.galleryYaw}°</output></label>
-      <label class="adjustment"><span>动作定格时间</span><input type="range" data-gallery-adjust="galleryPoseTime" min="0" max="5" step="0.1" value="${item.galleryPoseTime}"><output data-gallery-output="galleryPoseTime">${item.galleryPoseTime.toFixed(1)} 秒</output></label>
+      <label class="adjustment gallery-frame-adjustment"><span>动作定格帧</span><input type="range" data-gallery-adjust="galleryPoseFrame" min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled><output data-gallery-output="galleryPoseFrame">${item.galleryMotionId ? '读取中…' : '先选择动作'}</output></label>
+      <label class="gallery-frame-number"><span>输入帧号</span><input type="number" data-gallery-frame-number min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled></label>
       ${field('身份 / 称号', input('character.title', item.title, '例如：旅行者、学生'))}
       ${field('角色简介', textarea('character.description', item.description, '玩家在角色鉴赏里看到的介绍'))}
       <hr><h2>角色故事（最多三段）</h2>
@@ -716,7 +720,8 @@ function renderInspector() {
         <label class="render-shadow-toggle"><input type="checkbox" data-render="shadowEnabled" ${settings.shadowEnabled ? 'checked' : ''}><span>显示角色阴影</span></label>
         <label class="adjustment"><span>影子方向</span><input type="range" data-render="shadowAngle" min="-180" max="180" step="5" value="${Number(settings.shadowAngle) || 0}"><output data-render-output="shadowAngle">${Number(settings.shadowAngle) || 0}°</output></label>
         <label class="adjustment"><span>影子深浅</span><input type="range" data-render="shadowOpacity" min="0" max="100" step="5" value="${Math.round((Number(settings.shadowOpacity) || 0) * 100)}"><output data-render-output="shadowOpacity">${Math.round((Number(settings.shadowOpacity) || 0) * 100)}%</output></label>
-        <p class="tip">一套设置控制画面中的全部角色。0° 表示影子朝画面下方；默认关闭。</p>
+        <label class="adjustment shadow-height-adjustment"><span>阴影水平高度</span><input type="range" data-render="shadowHeight" min="-40" max="40" step="1" value="${Math.round((Number(settings.shadowHeight) || 0) * 100)}"><output data-render-output="shadowHeight">${Math.round((Number(settings.shadowHeight) || 0) * 100) > 0 ? '+' : ''}${Math.round((Number(settings.shadowHeight) || 0) * 100)} 厘米</output></label>
+        <p class="tip">一套设置控制画面中的全部角色。脚掌看着浮起时，把阴影高度往右调；影子盖住鞋子时往左调。0° 表示影子朝画面下方；默认关闭。</p>
       </div></details>
       <p class="tip">“三渲二”会增强动画式明暗、减少塑料般的高光。描边选“细”通常更自然。背景配光会从图片估计亮处和颜色；视频背景使用默认灯光。</p></div>`;
     return;
@@ -888,31 +893,36 @@ async function ensureCharacterPortrait(item, force = false) {
   if (!item || !modelAsset || (!force && asset(item.portraitId))) return;
   const motionId = item.galleryMotionId || '';
   const motionAsset = asset(motionId);
-  const poseTime = Math.max(0, Number(item.galleryPoseTime) || 0);
-  const poseKey = `portrait-v2:${item.modelId}:${motionId}:${poseTime}`;
-  const jobKey = `${project.id}:${item.id}:${item.modelId}:${motionId}:${poseTime}`;
+  const poseFrame = Math.max(1, Math.floor(Number(item.galleryPoseFrame) || 1));
+  const legacySeconds = Number.isFinite(Number(item.galleryPoseTime)) ? Number(item.galleryPoseTime) : null;
+  const jobKey = `${project.id}:${item.id}:${item.modelId}:${motionId}:${poseFrame}`;
   if (portraitJobs.has(jobKey)) return portraitJobs.get(jobKey);
   const modelId = item.modelId;
   const task = (async () => {
-    const dataUrl = await captureVrmPortrait(modelAsset, motionAsset, poseTime);
+    const { dataUrl, frame } = await captureVrmPortrait(modelAsset, motionAsset, poseFrame, legacySeconds);
     if (project.characters.find(entry => entry.id === item.id) !== item || item.modelId !== modelId ||
-      item.galleryMotionId !== motionId || Number(item.galleryPoseTime) !== poseTime || (!force && asset(item.portraitId))) return;
+      item.galleryMotionId !== motionId ||
+      !(Number(item.galleryPoseFrame) === poseFrame || (legacySeconds !== null && Number(item.galleryPoseFrame) === frame)) ||
+      (!force && asset(item.portraitId))) return;
+    item.galleryPoseFrame = frame;
+    delete item.galleryPoseTime;
     if (mode === 'player') temporaryPortraits.set(item.id, dataUrl);
     else {
       const saved = await bridge('saveGeneratedPortrait', { dataUrl });
       if (project.characters.find(entry => entry.id === item.id) !== item || item.modelId !== modelId ||
-        item.galleryMotionId !== motionId || Number(item.galleryPoseTime) !== poseTime || (!force && asset(item.portraitId))) return;
+        item.galleryMotionId !== motionId || Number(item.galleryPoseFrame) !== frame || (!force && asset(item.portraitId))) return;
       saved.galleryImage = false;
       project.assets.push(saved);
       item.portraitId = saved.id;
       item.portraitSource = 'auto';
-      item.portraitPoseKey = poseKey;
+      item.portraitPoseKey = `portrait-v3:${item.modelId}:${motionId}:${frame}`;
       markDirty();
       if (activePanel === 'characters' && project.characters[selectedCharacter] === item) {
         const inspector = document.querySelector('.inspector');
         const scroll = inspector?.scrollTop || 0;
         renderInspector();
         if (inspector) inspector.scrollTop = scroll;
+        refreshGalleryFrameControl(item);
       }
     }
     if (step()?.characterId === item.id || (playing && project.acts[playAct]?.steps[playStep]?.characterId === item.id))
@@ -927,7 +937,7 @@ function portraitIsAutomatic(item) {
 function queueMissingPortraits() {
   const items = project.characters.filter(item => item.modelId && portraitIsAutomatic(item) &&
     (!asset(item.portraitId) || item.portraitPoseKey !==
-      `portrait-v2:${item.modelId}:${item.galleryMotionId || ''}:${Math.max(0, Number(item.galleryPoseTime) || 0)}`));
+      `portrait-v3:${item.modelId}:${item.galleryMotionId || ''}:${Math.max(1, Math.floor(Number(item.galleryPoseFrame) || 1))}`));
   (async () => { for (const item of items) await ensureCharacterPortrait(item, Boolean(asset(item.portraitId))); })();
 }
 function updateSpeakerPortrait(characterId, visible) {
@@ -1509,6 +1519,33 @@ function hideCharacterEditorPreview() {
   overlay.replaceChildren();
   stage?.resize();
 }
+function refreshGalleryFrameControl(item) {
+  const input = document.querySelector('[data-gallery-adjust="galleryPoseFrame"]');
+  const number = document.querySelector('[data-gallery-frame-number]');
+  const output = document.querySelector('[data-gallery-output="galleryPoseFrame"]');
+  if (!input || !output) return;
+  const clip = stage?.activeRecord?.currentAction?.getClip();
+  if (!item?.galleryMotionId || stage?.currentMotionId !== item.galleryMotionId || !clip) {
+    input.disabled = true;
+    if (number) number.disabled = true;
+    output.textContent = item?.galleryMotionId ? '读取中…' : '先选择动作';
+    return;
+  }
+  const { fps, frames } = motionFrameInfo(clip);
+  const legacySeconds = Number.isFinite(Number(item.galleryPoseTime)) ? Number(item.galleryPoseTime) : null;
+  const requested = legacySeconds === null ? item.galleryPoseFrame : Math.round(legacySeconds * fps) + 1;
+  const frame = Math.max(1, Math.min(frames, Math.floor(Number(requested) || 1)));
+  if (frame !== item.galleryPoseFrame || legacySeconds !== null) {
+    item.galleryPoseFrame = frame;
+    delete item.galleryPoseTime;
+    markDirty();
+  }
+  input.max = frames;
+  input.value = frame;
+  input.disabled = false;
+  if (number) { number.max = frames; number.value = frame; number.disabled = false; }
+  output.textContent = `第 ${frame} / ${frames} 帧`;
+}
 async function showCharacterEditorPreview() {
   const overlay = document.querySelector('#character-preview');
   const frame = document.querySelector('.editor .stage-frame');
@@ -1540,8 +1577,10 @@ async function showCharacterEditorPreview() {
   stage.setPortraitCamera();
   await stage.show(asset(item.modelId), asset(item.galleryMotionId), {}, 'center',
     { size: 1.23, yaw: item.galleryYaw || 0 }, `gallery:${item.id}`);
-  if (activePanel === 'characters' && project.characters[selectedCharacter]?.id === item.id && item.galleryMotionId)
-    stage.setMotionPoseAt(item.galleryPoseTime ?? 0);
+  if (activePanel === 'characters' && project.characters[selectedCharacter]?.id === item.id) {
+    refreshGalleryFrameControl(item);
+    if (item.galleryMotionId) stage.setMotionPoseFrame(item.galleryPoseFrame);
+  }
 }
 function renderGalleryModal() {
   clearAutoAdvance();
@@ -1570,7 +1609,7 @@ function renderGalleryModal() {
       galleryStage.setPortraitCamera();
       const portrait = galleryStage;
       portrait.show(asset(item.modelId), asset(item.galleryMotionId), {}, 'center', { size: 1.23, yaw: item.galleryYaw || 0 }, `gallery:${item.id}`)
-        .then(() => { if (galleryStage === portrait && item.galleryMotionId) portrait.setMotionPoseAt(item.galleryPoseTime ?? 0); });
+        .then(() => { if (galleryStage === portrait && item.galleryMotionId) portrait.setMotionPoseFrame(item.galleryPoseFrame); });
     }
   }
 }
@@ -1783,7 +1822,7 @@ document.addEventListener('click', async event => {
     } else if (action === 'add-character') {
       project.characters.push({ id:uid(), name:`角色${project.characters.length + 1}`, modelId:'', portraitId:'', title:'', description:'',
         galleryMotionId: project.assets.some(item => item.id === 'preset-mixamo-029') ? 'preset-mixamo-029' : '',
-        galleryYaw: 0, galleryPoseTime: 0,
+        galleryYaw: 0, galleryPoseFrame: 1,
         stories: Array.from({ length: 3 }, () => ({ text:'', unlockLines:0 })) });
       selectedCharacter = project.characters.length - 1; editorGalleryStoryIndex = 0;
       markDirty(); renderSidebar(); renderInspector();
@@ -2123,10 +2162,11 @@ document.addEventListener('input', event => {
     project.render[key] = key === 'autoLight' ? node.value === 'true'
       : key === 'shadowEnabled' ? node.checked
       : ['outline', 'shadowAngle'].includes(key) ? Number(node.value)
-      : ['lightStrength', 'shadowOpacity', 'paintStrength'].includes(key) ? Number(node.value) / 100 : node.value;
+      : ['lightStrength', 'shadowOpacity', 'paintStrength', 'shadowHeight'].includes(key) ? Number(node.value) / 100 : node.value;
     if (key === 'lightStrength') document.querySelector('#light-strength-value').textContent = `${node.value}%`;
     const output = document.querySelector(`[data-render-output="${key}"]`);
-    if (output) output.textContent = key === 'shadowAngle' ? `${node.value}°` : `${node.value}%`;
+    if (output) output.textContent = key === 'shadowAngle' ? `${node.value}°`
+      : key === 'shadowHeight' ? `${Number(node.value) > 0 ? '+' : ''}${node.value} 厘米` : `${node.value}%`;
     markDirty();
     stage?.setRenderSettings(project.render);
     stage?.setBackgroundLighting(asset(act()?.backgroundId));
@@ -2137,9 +2177,26 @@ document.addEventListener('input', event => {
     if (!item) return;
     const key = node.dataset.galleryAdjust;
     item[key] = Number(node.value);
+    if (key === 'galleryPoseFrame') delete item.galleryPoseTime;
+    if (key === 'galleryPoseFrame') {
+      const number = document.querySelector('[data-gallery-frame-number]');
+      if (number) number.value = node.value;
+    }
     document.querySelector(`[data-gallery-output="${key}"]`).textContent = key === 'galleryYaw'
-      ? `${node.value}°` : `${Number(node.value).toFixed(1)} 秒`;
+      ? `${node.value}°` : `第 ${node.value} / ${node.max} 帧`;
     markDirty(); if (activePanel === 'characters') updatePreview(); return;
+  }
+  if (node.hasAttribute('data-gallery-frame-number') && project) {
+    const item = project.characters[selectedCharacter];
+    const slider = document.querySelector('[data-gallery-adjust="galleryPoseFrame"]');
+    if (!item || !slider) return;
+    const frame = Math.max(1, Math.min(Number(slider.max), Math.floor(Number(node.value) || 1)));
+    node.value = frame;
+    slider.value = frame;
+    item.galleryPoseFrame = frame;
+    delete item.galleryPoseTime;
+    document.querySelector('[data-gallery-output="galleryPoseFrame"]').textContent = `第 ${frame} / ${slider.max} 帧`;
+    markDirty(); updatePreview(); return;
   }
   if (node.dataset.adjust && step()) {
     const key = node.dataset.adjust;
@@ -2199,7 +2256,8 @@ document.addEventListener('input', event => {
 });
 document.addEventListener('change', event => {
   const node = event.target;
-  if (node.dataset.galleryAdjust !== 'galleryPoseTime' && node.dataset.field !== 'character.galleryMotionId') return;
+  if (node.dataset.galleryAdjust !== 'galleryPoseFrame' &&
+      !node.hasAttribute('data-gallery-frame-number') && node.dataset.field !== 'character.galleryMotionId') return;
   const item = project?.characters[selectedCharacter];
   if (item?.modelId && portraitIsAutomatic(item)) ensureCharacterPortrait(item, true);
 });
@@ -2231,7 +2289,11 @@ window.__vrmDiagnostics = () => ({
   speakerPortraitSrc: document.querySelector('#speaker-portrait img')?.getAttribute('src') || '',
   characterPortraitIds: project?.characters.map(item => ({ id:item.id, modelId:item.modelId,
     portraitId:item.portraitId, portraitSource:item.portraitSource, portraitPoseKey:item.portraitPoseKey,
-    galleryMotionId:item.galleryMotionId, galleryPoseTime:item.galleryPoseTime })) || [],
+    galleryMotionId:item.galleryMotionId, galleryPoseFrame:item.galleryPoseFrame })) || [],
+  galleryFrameControl: (() => { const slider = document.querySelector('[data-gallery-adjust="galleryPoseFrame"]');
+    return slider ? { frame: Number(slider.value), max: Number(slider.max), disabled: slider.disabled,
+      number: Number(document.querySelector('[data-gallery-frame-number]')?.value),
+      label: document.querySelector('[data-gallery-output="galleryPoseFrame"]')?.textContent } : null; })(),
   visibleActorIds: [...(stage?.visibleRecords.keys() || [])],
   assets: project?.assets.length || 0
   ,playing

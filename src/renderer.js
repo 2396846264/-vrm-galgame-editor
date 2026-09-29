@@ -100,7 +100,7 @@ for (const side of ['Left','Right']) {
 export const assetUrl = asset => asset ? `https://project.galgame/${asset.path.split('/').map(encodeURIComponent).join('/')}` : '';
 
 // Render a separate, transparent bust portrait without moving the stage actor.
-export async function captureVrmPortrait(modelAsset, motionAsset = null, poseSeconds = 0) {
+export async function captureVrmPortrait(modelAsset, motionAsset = null, poseFrame = 1, legacySeconds = null) {
   const loader = new GLTFLoader();
   loader.register(parser => new VRMLoaderPlugin(parser));
   loader.register(parser => new VRMAnimationLoaderPlugin(parser));
@@ -109,6 +109,7 @@ export async function captureVrmPortrait(modelAsset, motionAsset = null, poseSec
   if (!vrm) { VRMUtils.deepDispose(gltf.scene); throw new Error('文件里没有找到 VRM 角色'); }
   let renderer;
   let motionScene;
+  let actualFrame = 1;
   try {
     const scene = new THREE.Scene();
     scene.add(vrm.scene);
@@ -133,7 +134,10 @@ export async function captureVrmPortrait(modelAsset, motionAsset = null, poseSec
       vrm.humanoid.resetNormalizedPose();
       const mixer = new THREE.AnimationMixer(vrm.scene);
       mixer.clipAction(clip).setLoop(THREE.LoopRepeat, Infinity).play();
-      mixer.setTime(Math.max(0, Number(poseSeconds) || 0));
+      const { fps, frames } = motionFrameInfo(clip);
+      const requestedFrame = legacySeconds === null ? poseFrame : Math.round(legacySeconds * fps) + 1;
+      actualFrame = Math.max(1, Math.min(frames, Math.floor(Number(requestedFrame) || 1)));
+      mixer.setTime(Math.max(0, Math.min(clip.duration - 0.00001, (actualFrame - 1) / fps)));
     } else {
       const leftArm = vrm.humanoid.getNormalizedBoneNode('leftUpperArm');
       const rightArm = vrm.humanoid.getNormalizedBoneNode('rightUpperArm');
@@ -155,7 +159,7 @@ export async function captureVrmPortrait(modelAsset, motionAsset = null, poseSec
     renderer.setPixelRatio(1);
     renderer.setClearColor(0x000000, 0);
     renderer.render(scene, camera);
-    return renderer.domElement.toDataURL('image/png');
+    return { dataUrl: renderer.domElement.toDataURL('image/png'), frame: actualFrame };
   } finally {
     renderer?.dispose();
     if (motionScene) VRMUtils.deepDispose(motionScene);
@@ -211,7 +215,8 @@ export class VRMStage {
     this.paintBackgroundRequest = 0;
     this.paintEnabled = false;
     this.renderSettings = { antialias: 'standard', style: 'original', outline: 0, autoLight: true, lightStrength: 0.6,
-      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, paintEffect: 'none', paintStrength: 0.65 };
+      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, shadowHeight: 0,
+      paintEffect: 'none', paintStrength: 0.65 };
     this.setRenderSettings(this.renderSettings);
     this.element.appendChild(this.renderer.domElement);
     this.loader = new GLTFLoader();
@@ -264,10 +269,13 @@ export class VRMStage {
     this.camera.lookAt(0, 1.7, 0);
     this.camera.updateProjectionMatrix();
   }
-  setMotionPoseAt(seconds = 0) {
+  setMotionPoseFrame(frame = 1) {
     const record = this.activeRecord;
     if (!record?.currentAction) return;
-    record.mixer.setTime(Math.max(0, Number(seconds) || 0));
+    const clip = record.currentAction.getClip();
+    const { fps, frames } = motionFrameInfo(clip);
+    const selected = Math.max(1, Math.min(frames, Math.floor(Number(frame) || 1)));
+    record.mixer.setTime(Math.max(0, Math.min(clip.duration - 0.00001, (selected - 1) / fps)));
     record.mixer.timeScale = 0;
     this.applyMotionPlacement(record);
     record.vrm.update(0);
@@ -540,6 +548,7 @@ export class VRMStage {
     const token = JSON.stringify([motionId, settings.loop, segment.start, segment.end, settings.after, settings.placement, settings.feet,
       settings.loop ? '' : playbackKey]);
     if (record.currentMotionToken === token && record.vrm.scene.visible) return;
+    record.mixer.timeScale = 1;
     const previousLock = record.footLock;
     this.restoreFootPose(record);
     const lockFeet = settings.feet === 'lock' || (settings.feet === 'auto' && isPlantedMotion(motionAsset));
@@ -868,7 +877,7 @@ export class VRMStage {
     this.shadowLight.target.updateMatrixWorld();
   }
   shadowGroundHeightAt(x, z) {
-    if (!this.shadowGroundPoints.length) return -0.025;
+    if (!this.shadowGroundPoints.length) return -0.02 + (Number(this.renderSettings.shadowHeight) || 0);
     let weightedHeight = 0;
     let totalWeight = 0;
     for (const point of this.shadowGroundPoints) {
@@ -882,10 +891,11 @@ export class VRMStage {
   }
   updateShadowGround() {
     if (!this.shadowPlane.visible) return;
+    const heightOffset = Math.max(-0.4, Math.min(0.4, Number(this.renderSettings.shadowHeight) || 0));
     const points = [...this.visibleRecords.values()]
       .filter(record => record.vrm.scene.visible)
       .map(record => ({ x: record.anchor.position.x, z: record.anchor.position.z,
-        y: record.anchor.position.y - 0.02 }));
+        y: record.anchor.position.y - 0.02 + heightOffset }));
     const key = points.map(point => `${point.x.toFixed(4)},${point.y.toFixed(4)},${point.z.toFixed(4)}`).join(';');
     if (key === this.shadowGroundKey) return;
     this.shadowGroundKey = key;

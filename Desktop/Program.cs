@@ -282,7 +282,7 @@ internal sealed class EditorWindow : Form
                     }
                     File.WriteAllText(smokeBase + ".pose-before.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                     string beforeId = await web.CoreWebView2.ExecuteScriptAsync("window.__vrmDiagnostics().characterPortraitIds[0].portraitId");
-                    await web.CoreWebView2.ExecuteScriptAsync("const pose=document.querySelector('[data-gallery-adjust=galleryPoseTime]'); pose.value='2.4'; pose.dispatchEvent(new Event('input',{bubbles:true})); pose.dispatchEvent(new Event('change',{bubbles:true}))");
+                    await web.CoreWebView2.ExecuteScriptAsync("const pose=document.querySelector('[data-gallery-adjust=galleryPoseFrame]'); pose.value=String(Math.min(40, Number(pose.max))); pose.dispatchEvent(new Event('input',{bubbles:true})); pose.dispatchEvent(new Event('change',{bubbles:true}))");
                     for (int attempt = 0; attempt < 45; attempt++)
                     {
                         await Task.Delay(1000);
@@ -367,6 +367,12 @@ internal sealed class EditorWindow : Form
                     await Task.Delay(2500);
                     File.WriteAllText(smokeBase + ".shadow-after.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                     using (var image = File.Create(smokeBase + ".shadow-after.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("(()=>{const height=document.querySelector('[data-render=shadowHeight]');height.value='13';height.dispatchEvent(new Event('input',{bubbles:true}));})()");
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-render=shadowHeight]')?.scrollIntoView({block:'center'})");
+                    await Task.Delay(600);
+                    File.WriteAllText(smokeBase + ".shadow-raised.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using (var image = File.Create(smokeBase + ".shadow-raised.png"))
                         await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
                     await web.CoreWebView2.ExecuteScriptAsync("document.head.insertAdjacentHTML('beforeend','<style>.stage-frame::after{display:none!important}</style>')");
                     using (var image = File.Create(smokeBase + ".shadow-no-fade.png"))
