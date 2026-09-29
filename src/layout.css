@@ -6,10 +6,39 @@
 .center .stage-frame {
   flex: none;
   align-self: center;
-  width: min(100%, calc((100vh - 170px) * 16 / 9));
+  width: min(100%, calc((100vh - 370px) * 16 / 9));
   aspect-ratio: 16 / 9;
   height: auto;
 }
+.asset-dock {
+  flex: none;
+  height: 280px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--ui-border, #546175);
+  border-radius: 11px;
+  background: var(--ui-surface, #1b293d);
+}
+.asset-dock-heading {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--ui-border, #546175);
+  color: var(--ui-text, #e9eef8);
+}
+.asset-dock-heading small { color: var(--ui-muted, #aebbd0); font-size: 11px; }
+.asset-dock-body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; padding: 3px 9px 12px; }
+.asset-dock-group .section-heading { padding: 10px 5px 6px; }
+.asset-dock .asset-folder-list { padding: 0; }
+.asset-dock .asset-folder-body { display: grid; grid-template-columns: repeat(auto-fill, minmax(245px, 1fr)); gap: 3px 8px; }
+.asset-dock .asset-folder-actions { grid-column: 1 / -1; }
+.asset-dock .asset-row { min-width: 0; }
+.asset-thumbnail { flex: none; width: 54px; height: 42px; border-radius: 5px; object-fit: cover; background: #ddd; }
+.sidebar .asset-thumbnail { width: 32px; height: 30px; }
 .center .dialogue {
   min-height: 0;
   height: 28%;
@@ -175,3 +204,4 @@
 .cast-editor-body { padding: 2px 10px 12px; }
 .cast-editor .field { margin: 8px 0 12px; }
 .cast-editor .expression-controls { max-height: 240px; overflow: auto; }
+

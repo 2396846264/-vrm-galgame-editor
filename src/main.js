@@ -18,6 +18,7 @@ let selectedStep = 0;
 let selectedCharacter = 0;
 let activePanel = 'story';
 const openAssetFolders = new Set(['unfiled:vrm', 'unfiled:motion', 'unfiled:image', 'unfiled:audio', 'unfiled:video']);
+let dockInitializedProjectId = '';
 let draggingStory = null;
 let playing = false;
 let playAct = 0;
@@ -34,7 +35,13 @@ let editorSettings = { autoSaveMinutes: 5, theme: 'light' };
 let editorAutoSaveTimer = null;
 let music = new Audio();
 let voice = new Audio();
-let audioSettings = { master: 1, music: 0.8, voice: 1 };
+let audioSettings = { master: 1, music: 0.8, voice: 1, effects: 0.8 };
+let textSpeed = 35;
+let typingTimer = null;
+let typingCharacters = [];
+let typingIndex = 0;
+const activeEffects = new Set();
+let clickAudioContext = null;
 let autoPlay = false;
 let autoTimer = null;
 let playViewedStepIds = new Set();
@@ -295,7 +302,7 @@ async function showTitleScene(interactive = false) {
 
 function defaultProject(name) {
   return {
-    version: 1, id: uid(), name: name || '我的 VRM 故事', ui: { dialogueImageId: '' },
+    version: 1, id: uid(), name: name || '我的 VRM 故事', ui: { dialogueImageId: '', clickSoundId: '' },
     title: { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
       size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12 },
     render: { antialias: 'standard', style: 'anime', outline: 1, autoLight: true, lightStrength: 0.6,
@@ -327,7 +334,8 @@ function normalize() {
     }));
   }
   project.acts ||= [];
-  project.ui ||= { dialogueImageId: '' };
+  project.ui ||= { dialogueImageId: '', clickSoundId: '' };
+  project.ui.clickSoundId ||= '';
   project.title = { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
     size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12, ...project.title };
   project.title.expressionWeights ||= {};
@@ -495,6 +503,7 @@ function renderEditor() {
           <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
         </div>
         <div class="stage-hint">选中左侧对白即可预览。试玩时点击画面空白处，或按空格 / Enter 继续。</div>
+        <section class="asset-dock" aria-label="常驻素材库"><div class="asset-dock-heading"><strong>素材库</strong><small>图片直接显示缩略图；在这里导入、分类、删除素材</small></div><div id="asset-dock-body" class="asset-dock-body"></div></section>
       </main>
       <aside class="inspector"><div class="inspector-heading">属性</div><div id="inspector-body"></div></aside>
     </div>
@@ -556,6 +565,24 @@ function renderSidebar() {
         ${renderAssetFolder(type, null, unfiled)}</div>`;
     }).join('') + '<div class="sidebar-note">新素材可直接导入指定文件夹；已有素材可用右侧下拉框移动。</div>';
   }
+  renderAssetDock();
+}
+function renderAssetDock() {
+  const body = document.querySelector('#asset-dock-body');
+  if (!body || !project) return;
+  if (dockInitializedProjectId !== project.id) {
+    for (const folder of project.assetFolders) openAssetFolders.add(folder.id);
+    dockInitializedProjectId = project.id;
+  }
+  const scroll = body.scrollTop;
+  const groups = [['vrm', 'VRM 角色'], ['motion', '动作'], ['image', '图片'], ['audio', '声音'], ['video', '视频']];
+  body.innerHTML = groups.map(([type, label]) => {
+    const folders = project.assetFolders.filter(folder => folder.type === type);
+    const unfiled = byType(type).filter(item => !folders.some(folder => folder.id === item.folderId));
+    return `<div class="asset-dock-group"><div class="section-heading">${label}<span class="heading-actions">${button('＋ 文件夹', 'add-asset-folder', `data-type="${type}"`)}${button('＋ 导入', 'import', `data-type="${type}"`)}</span></div>
+      <div class="asset-folder-list">${folders.map(folder => renderAssetFolder(type, folder, byType(type).filter(item => item.folderId === folder.id))).join('')}${renderAssetFolder(type, null, unfiled)}</div></div>`;
+  }).join('');
+  body.scrollTop = scroll;
 }
 function renderAssetFolder(type, folder, items) {
   const key = folder?.id || `unfiled:${type}`;
@@ -564,7 +591,7 @@ function renderAssetFolder(type, folder, items) {
     <summary><span class="folder-icon">▸</span><span class="folder-name">${escape(folder?.name || '未分类')}</span><small>${items.length}</small></summary>
     <div class="asset-folder-body">
       ${folder ? `<div class="asset-folder-actions">${button('改名', 'rename-asset-folder', `data-folder-id="${escape(folder.id)}"`)}${button('导入这里', 'import', `data-type="${type}" data-folder-id="${escape(folder.id)}"`)}</div>` : ''}
-      ${items.map(item => `<div class="asset-row" title="${escape(item.path)}"><span>${escape(item.name)}</span>
+       ${items.map(item => `<div class="asset-row" title="${escape(item.path)}">${type === 'image' ? `<img class="asset-thumbnail" loading="lazy" src="${escape(assetUrl(item))}" alt="${escape(item.name)}的缩略图">` : ''}<span>${escape(item.name)}</span>
         <select data-asset-folder="${escape(item.id)}" aria-label="把 ${escape(item.name)} 移动到文件夹" title="移动到文件夹">
           <option value="" ${!item.folderId ? 'selected' : ''}>未分类</option>
           ${folders.map(target => `<option value="${escape(target.id)}" ${item.folderId === target.id ? 'selected' : ''}>${escape(target.name)}</option>`).join('')}
@@ -690,6 +717,7 @@ function renderInspector() {
       ${field('标题人物动作', `<select data-title-field="motionId">${options(byType('motion'), title.motionId, '保持站立')}</select>`)}
       ${motionAdvanced(title, 'title')}
       ${field('标题音乐', `<select data-title-field="bgmId">${options(byType('audio'), title.bgmId, '无音乐')}</select>`)}
+      ${field('按钮点击音效', `<select data-ui-field="clickSoundId">${options(byType('audio'), project.ui.clickSoundId, '使用内置轻提示音')}</select>`)}
       <p class="tip">Logo 固定在左侧，按钮固定在底部。人物的位置和角度可以调整。</p>
       <hr><h2>标题人物</h2>
       ${titleSlider('size', '大小', Math.round(title.size * 100), 50, 500, 5, `${Math.round(title.size * 100)}%`)}
@@ -758,6 +786,7 @@ function renderInspector() {
         ${adjustmentSlider('yaw', '转身微调', Number(current.yaw) || 0, -90, 90, 5, `${Number(current.yaw) || 0}°`)}
         <p class="tip">左右：负数向左，正数向右。上下：正数向上。前后：正数靠近镜头，负数远离镜头。转身角度可以让人物侧身。</p></div>
       ${field('语音', select('step.voiceId', byType('audio'), current.voiceId, '无语音'))}
+      ${field('本句音效', select('step.seId', byType('audio'), current.seId, '无音效'))}
       <div class="inline-actions">${button('复制本句', 'duplicate-step')}${button('上移', 'move-up')}${button('下移', 'move-down')}${button('删除', 'delete-step', 'class="danger"')}</div>
       <hr><div class="section-heading">选择分支 ${button('＋ 选项', 'add-choice')}</div>
       ${current.choices.map((choice,index) => `<div class="choice-editor">
@@ -956,10 +985,72 @@ function showDialogue(speaker, text, visible = true, characterId = '') {
   node.classList.toggle('visible', visible || mode === 'editor');
   node.classList.toggle('custom-dialogue', Boolean(project.ui.dialogueImageId));
   document.querySelector('#dialogue-speaker').textContent = speaker;
-  document.querySelector('#dialogue-text').textContent = text;
+  if (mode === 'player' && playing && visible) startTyping(text);
+  else { clearTyping(); document.querySelector('#dialogue-text').textContent = text; }
   updateSpeakerPortrait(characterId, visible || mode === 'editor');
   node.style.backgroundImage = project.ui.dialogueImageId ? `url("${assetUrl(asset(project.ui.dialogueImageId))}")` : '';
   if (visible && project.ui.dialogueImageId) rememberDiscovery('image', project.ui.dialogueImageId);
+}
+function clearTyping() {
+  clearInterval(typingTimer);
+  typingTimer = null;
+  typingCharacters = [];
+  typingIndex = 0;
+}
+function finishTyping() {
+  if (!typingTimer) return false;
+  const full = typingCharacters.join('');
+  clearTyping();
+  const node = document.querySelector('#dialogue-text');
+  if (node) node.textContent = full;
+  if (playing && autoPlay) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+  return true;
+}
+function startTyping(value) {
+  clearTyping();
+  const node = document.querySelector('#dialogue-text');
+  if (!node) return;
+  typingCharacters = Array.from(String(value || ''));
+  node.textContent = '';
+  if (!typingCharacters.length) return;
+  typingTimer = setInterval(() => {
+    if (!node.isConnected) { clearTyping(); return; }
+    const end = Math.min(typingCharacters.length, typingIndex + 1);
+    node.textContent += typingCharacters.slice(typingIndex, end).join('');
+    typingIndex = end;
+    if (typingIndex >= typingCharacters.length) {
+      clearTyping();
+      if (playing && autoPlay) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+    }
+  }, 1000 / textSpeed);
+}
+function playEffect(id) {
+  const item = asset(id);
+  if (!item) return false;
+  const sound = new Audio(assetUrl(item));
+  sound.volume = audioSettings.master * audioSettings.effects;
+  activeEffects.add(sound);
+  const remove = () => activeEffects.delete(sound);
+  sound.addEventListener('ended', remove, { once: true });
+  sound.addEventListener('error', remove, { once: true });
+  sound.play().catch(remove);
+  return true;
+}
+function playButtonClick() {
+  if (playEffect(project?.ui?.clickSoundId)) return;
+  try {
+    clickAudioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+    const tone = clickAudioContext.createOscillator();
+    const gain = clickAudioContext.createGain();
+    const now = clickAudioContext.currentTime;
+    tone.type = 'sine';
+    tone.frequency.setValueAtTime(680, now);
+    tone.frequency.exponentialRampToValueAtTime(430, now + 0.06);
+    gain.gain.setValueAtTime(Math.max(0.0001, audioSettings.master * audioSettings.effects * 0.07), now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+    tone.connect(gain).connect(clickAudioContext.destination);
+    tone.start(now); tone.stop(now + 0.08);
+  } catch { /* Audio may be unavailable before the first user gesture. */ }
 }
 function setMusic(id) {
   const next = asset(id);
@@ -977,13 +1068,16 @@ function applyAudioSettings() {
   music.volume = audioSettings.master * audioSettings.music;
   voice.volume = audioSettings.master * audioSettings.voice;
   galleryMusic.volume = audioSettings.master * audioSettings.music;
+  for (const sound of activeEffects) sound.volume = audioSettings.master * audioSettings.effects;
 }
 function loadAudioSettings() {
   try {
     const saved = JSON.parse(localStorage.getItem(audioKey()) || 'null');
-    if (saved) for (const key of ['master', 'music', 'voice'])
+    if (saved) for (const key of ['master', 'music', 'voice', 'effects'])
       if (Number.isFinite(Number(saved[key]))) audioSettings[key] = Math.max(0, Math.min(1, Number(saved[key])));
   } catch { /* Use the default volumes if old settings are invalid. */ }
+  const savedSpeed = Number(localStorage.getItem(`vrm-text-speed-${project.id || project.name}`));
+  textSpeed = Number.isFinite(savedSpeed) && savedSpeed >= 5 && savedSpeed <= 100 ? savedSpeed : 35;
   applyAudioSettings();
 }
 function clearAutoAdvance() {
@@ -994,7 +1088,7 @@ function clearAutoAdvance() {
 }
 function scheduleAutoAdvance(current) {
   clearAutoAdvance();
-  if (!autoPlay || !playing || !current || current.choices?.length || saveModalMode) return;
+  if (!autoPlay || !playing || !current || current.choices?.length || saveModalMode || typingTimer) return;
   const wait = Math.max(1800, Math.min(7000, 1100 + (current.text?.length || 0) * 95));
   const advance = () => { autoTimer = setTimeout(() => next(), wait); };
   if (current.voiceId && !voice.paused && !voice.ended) {
@@ -1013,6 +1107,7 @@ function updateAutoButton() {
 async function showPlayStep() {
   const request = ++playRequest;
   clearAutoAdvance();
+  clearTyping();
   const currentAct = project.acts[playAct];
   const current = currentAct?.steps[playStep];
   if (!current) { stopPlay(); toast('故事播放完毕'); return; }
@@ -1054,6 +1149,7 @@ async function showPlayStep() {
     showDialogue(current.speaker || character(current.characterId)?.name || '旁白', current.text, true, current.characterId);
     recordViewedDialogue(current);
     setMusic(currentAct.bgmId);
+    if (current.seId) playEffect(current.seId);
     voice.pause();
     const voiceAsset = asset(current.voiceId);
     if (voiceAsset) {
@@ -1101,6 +1197,7 @@ function stopPlay() {
   playerAutoSaveTimer = null;
   autoPlay = false;
   clearAutoAdvance();
+  clearTyping();
   playRequest++;
   transitioning = false;
   preparedAct = -1;
@@ -1120,6 +1217,7 @@ function stopPlay() {
 }
 function next() {
   if (!playing || transitioning || saveModalMode) return;
+  if (finishTyping()) return;
   clearAutoAdvance();
   const currentAct = project.acts[playAct];
   if (currentAct.steps[playStep]?.choices.length) return;
@@ -1374,7 +1472,8 @@ function renderSettingsModal() {
   const volume = (key, label) => `<label class="volume-line"><span>${label}</span><input type="range" data-volume="${key}" min="0" max="100" value="${Math.round(audioSettings[key] * 100)}"><output data-volume-output="${key}">${Math.round(audioSettings[key] * 100)}%</output></label>`;
   document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal" role="dialog" aria-modal="true" aria-label="游戏设置">
     <div class="modal-box settings-box"><header><div><small>GAME MENU</small><h2>游戏设置</h2></div>${button('关闭 ×', 'close-modal')}</header>
-      <h3>音量</h3>${volume('master', '总音量')}${volume('music', '背景音乐')}${volume('voice', '角色语音')}
+      <h3>音量</h3>${volume('master', '总音量')}${volume('music', '背景音乐')}${volume('voice', '角色语音')}${volume('effects', '按钮与场景音效')}
+      <h3>对白</h3><label class="volume-line"><span>文字出现速度</span><input type="range" data-text-speed min="5" max="100" value="${textSpeed}"><output data-text-speed-output>${textSpeed} 字/秒</output></label>
       <h3>画面</h3>
       <label class="field"><span>窗口大小（全部为 16:9）</span><select id="window-resolution" ${playerFullscreen ? 'disabled' : ''}>${resolutions.map(value => `<option value="${value}" ${value === playerResolution ? 'selected' : ''}>${value.replace('x', ' × ')}</option>`).join('')}</select></label>
       ${button('应用窗口大小', 'apply-resolution', playerFullscreen ? 'disabled' : '')}
@@ -1706,6 +1805,8 @@ function renderPlayer() {
 }
 
 document.addEventListener('click', async event => {
+  const clickedButton = event.target.closest?.('button');
+  if (mode === 'player' && clickedButton && !clickedButton.disabled) playButtonClick();
   const panel = event.target.closest('[data-panel]');
   if (panel && project) {
     activePanel = panel.dataset.panel;
@@ -2079,6 +2180,11 @@ document.addEventListener('input', event => {
     if (node.dataset.titleField !== 'authorNote') updatePreview();
     return;
   }
+  if (node.dataset.uiField && project) {
+    project.ui[node.dataset.uiField] = node.value;
+    markDirty();
+    return;
+  }
   if (node.dataset.titleAdjust && project) {
     const key = node.dataset.titleAdjust;
     project.title[key] = key === 'size' ? Number(node.value) / 100 : Number(node.value);
@@ -2100,6 +2206,21 @@ document.addEventListener('input', event => {
     applyAudioSettings();
     localStorage.setItem(audioKey(), JSON.stringify(audioSettings));
     document.querySelector(`[data-volume-output="${node.dataset.volume}"]`).textContent = `${node.value}%`;
+    return;
+  }
+  if (node.hasAttribute('data-text-speed') && project) {
+    textSpeed = Math.max(5, Math.min(100, Number(node.value) || 35));
+    localStorage.setItem(`vrm-text-speed-${project.id || project.name}`, String(textSpeed));
+    document.querySelector('[data-text-speed-output]').textContent = `${textSpeed} 字/秒`;
+    if (typingTimer) {
+      const remaining = typingCharacters.slice(typingIndex).join('');
+      const shown = document.querySelector('#dialogue-text')?.textContent || '';
+      startTyping(remaining);
+      typingCharacters = Array.from(shown + remaining);
+      typingIndex = Array.from(shown).length;
+      const dialogue = document.querySelector('#dialogue-text');
+      if (dialogue) dialogue.textContent = shown;
+    }
     return;
   }
   if (node.dataset.assetFolder && project) {
@@ -2285,6 +2406,12 @@ window.__vrmDiagnostics = () => ({
   stageError,
   expressions: stage?.expressions() || [],
   dialogue: document.querySelector('#dialogue-text')?.textContent || '',
+  typing: Boolean(typingTimer),
+  textSpeed,
+  assetDockVisible: Boolean(document.querySelector('.asset-dock')?.getBoundingClientRect().height),
+  assetDockScrollHeight: document.querySelector('#asset-dock-body')?.scrollHeight || 0,
+  assetDockHeight: document.querySelector('#asset-dock-body')?.clientHeight || 0,
+  assetThumbnails: document.querySelectorAll('.asset-dock .asset-thumbnail').length,
   speakerPortraitVisible: Boolean(document.querySelector('#speaker-portrait:not(.hidden)')),
   speakerPortraitSrc: document.querySelector('#speaker-portrait img')?.getAttribute('src') || '',
   characterPortraitIds: project?.characters.map(item => ({ id:item.id, modelId:item.modelId,
@@ -2439,3 +2566,4 @@ window.__vrmDiagnostics = () => ({
   ,playStep
 });
 init();
+
