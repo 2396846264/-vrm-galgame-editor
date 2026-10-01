@@ -162,6 +162,8 @@ internal sealed partial class EditorWindow : Form
             startupProjectPath = null;
         }
         Text = playerMode ? "VRM Galgame" : "VRM Galgame 编辑器";
+        using (var iconStream = typeof(EditorWindow).Assembly.GetManifestResourceStream("VRMGalgame.app.ico"))
+            if (iconStream != null) Icon = new System.Drawing.Icon(iconStream, SystemInformation.IconSize);
         if (playerMode)
         {
             FormBorderStyle = FormBorderStyle.FixedSingle;
