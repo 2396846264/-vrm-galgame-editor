@@ -1,0 +1,40 @@
+name: Build and test public source
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build web interface
+        run: |
+          npm ci
+          npm run build
+      - name: Generate developer identity
+        shell: pwsh
+        run: dotnet run --project BuildIdentity/BuildIdentity.csproj -- generate "$env:LOCALAPPDATA\VRMGalgame\DeveloperIdentity" Desktop/obj/ProtectedBuildConstants.g.cs 565407768
+      - name: Build editor and Agent
+        run: |
+          dotnet build Desktop/Desktop.csproj -c Release
+          dotnet build AgentHost/AgentHost.csproj -c Release
+      - name: Run source tests
+        run: |
+          node scripts/test-story-draft.mjs
+          node scripts/test-editor-history.mjs
+          node scripts/test-dialogue-voices.mjs
+          node scripts/test-talking-mouth.mjs

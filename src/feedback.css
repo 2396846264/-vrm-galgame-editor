@@ -1,0 +1,4 @@
+.editor .topbar nav { flex: 1 1 auto; }
+.editor-feedback { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: none; white-space: nowrap; padding: 6px 10px; border: 1px solid var(--ui-border); border-radius: 8px; font-size: 12px; color: var(--ui-text); background: var(--ui-surface-soft); }
+.editor-feedback strong { font-size: 14px; letter-spacing: .035em; color: var(--ui-text); }
+@media (max-width: 1100px) { .editor-feedback { padding: 6px 8px; gap: 5px; } }

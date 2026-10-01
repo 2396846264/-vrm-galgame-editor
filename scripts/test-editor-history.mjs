@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import { createEditorHistory } from '../src/editor-history.js';
+let project = { id: 'fixture', name: 'old', acts: [{ id: 'a', steps: [{ text: 'before' }] }], assets: [{ path: 'assets/a.png' }] };
+let view = { act: 0 }, time = 0;
+const history = createEditorHistory({ project: () => project, selection: () => view, now: () => time, limit: 3 });
+const restore = direction => { const entry = history.peek(direction); assert(entry); project = entry.project; view = entry.view; history.accept(entry.target); };
+history.reset(); assert.equal(history.status().canUndo, false);
+history.begin(); project.acts[0].steps[0].text = 'first'; history.commit({ key: 'text' });
+time += 200; project.acts[0].steps[0].text = 'second'; history.commit({ key: 'text' });
+assert.equal(history.status().undoCount, 1); restore(-1); assert.equal(project.acts[0].steps[0].text, 'before');
+restore(1); assert.equal(project.acts[0].steps[0].text, 'second');
+history.seal(); history.begin(); project.acts.splice(0); history.commit({ label: 'delete act' });
+restore(-1); assert.equal(project.acts[0].steps[0].text, 'second');
+project.acts[0].steps[0].text = 'branch'; history.commit(); assert.equal(history.status().canRedo, false);
+history.begin(); project.assets = []; history.commit(); assert(history.retainedAssetPaths().includes('assets/a.png'));
+for (let i = 0; i < 10; i++) { project.name = String(i); history.seal(); history.commit(); }
+assert.equal(history.status().undoCount, 3);
+history.reset(); project.name = 'slider1'; history.commit({ key: 'slider', continuous: true });
+time += 5000; project.name = 'slider2'; history.commit({ key: 'slider', continuous: true });
+assert.equal(history.status().undoCount, 1);
+project.derived = { portrait: 'new' }; history.commit({ derived: true }); assert.equal(history.status().undoCount, 1);
+restore(-1); assert.equal(project.derived, undefined); restore(1); assert.equal(project.derived.portrait, 'new');
+assert.equal(history.commit(), false);
+history.reset(); assert.equal(history.status().canRedo, false);
+console.log('PASS: typing merge, long slider drag, deep restore, branch invalidation, deleted asset retention, history limit, derived portraits, no-op and project reset');

@@ -1,0 +1,8 @@
+.editor-history-controls { display: flex; align-items: center; gap: 4px; flex: none; }
+.editor-history-controls button { white-space: nowrap; padding: 6px 9px; font-size: 12px; }
+.editor .topbar { flex-wrap: wrap; row-gap: 6px; min-height: 64px; height: auto; }
+.editor .topbar .project-title { flex: 1 1 220px; min-width: 170px; }
+.editor .topbar .project-title input { min-width: 0; }
+.editor .topbar nav { flex-wrap: wrap; }
+.editor.history-busy { pointer-events: none; cursor: progress; }
+.editor.history-busy .editor-history-controls { opacity: .5; }

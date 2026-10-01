@@ -1,0 +1,9 @@
+.weather-atmosphere { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.weather-atmosphere[hidden] { display: none; }
+.weather-editor { margin: 16px 0; padding: 13px; border: 1px solid #cbd8d4; border-radius: 10px; }
+.weather-editor h3 { margin: 0 0 12px; font-size: 14px; }
+.weather-editor .field { margin-bottom: 12px; }
+.weather-editor output { font-size: 12px; }
+.weather-editor .weather-toggle { display: flex; gap: 8px; align-items: center; margin: 10px 0; font-size: 12px; }
+.weather-editor .weather-toggle input { width: auto; }
+.weather-editor .tip { margin-bottom: 0; }

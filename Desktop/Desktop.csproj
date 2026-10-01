@@ -7,6 +7,15 @@
     <Nullable>enable</Nullable>
     <AssemblyName>VRMGalgame</AssemblyName>
     <ApplicationTitle>VRM Galgame 编辑器</ApplicationTitle>
+    <ProtectedConstantsFile Condition="'$(ProtectedConstantsFile)' == ''">$(MSBuildProjectDirectory)/obj/ProtectedBuildConstants.g.cs</ProtectedConstantsFile>
   </PropertyGroup>
   <ItemGroup><PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" /></ItemGroup>
+  <ItemGroup><PackageReference Include="SharpZipLib" Version="1.4.2" /></ItemGroup>
+  <ItemGroup>
+    <Compile Remove="ProtectedBuildConstants.cs" />
+    <Compile Include="$(ProtectedConstantsFile)" />
+  </ItemGroup>
+  <Target Name="RequireBuildIdentity" BeforeTargets="CoreCompile" Condition="!Exists('$(ProtectedConstantsFile)')">
+    <Error Text="Run scripts/build-windows.ps1 first to generate your own developer build identity. Official private credentials are not included in source." />
+  </Target>
 </Project>

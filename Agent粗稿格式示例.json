@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "title": "港口急报",
+  "characters": [
+    {"name": "绯音", "description": "港口的引路人。", "modelId": ""},
+    {"name": "澄夏", "description": "拿着一封神秘来信的旅人。", "modelId": ""}
+  ],
+  "acts": [
+    {
+      "name": "第一幕 · 雨中的港口",
+      "backgroundId": "",
+      "bgmId": "",
+      "weather": {"type": "rain", "intensity": 0.65},
+      "cast": ["绯音", "澄夏"],
+      "steps": [
+        {"speaker": "旁白", "text": "雨越下越大，电台传来了远方的急报。"},
+        {"speaker": "绯音", "text": "我们必须马上离开！", "emotion": "surprised", "motionId": ""},
+        {"speaker": "澄夏", "text": "等一下，我还没有看完信。", "emotion": "sad"}
+      ]
+    },
+    {
+      "kind": "event",
+      "name": "远方的新闻",
+      "event": {"type": "news", "title": "边境局势突变", "body": "港口电台播发了新的消息：远方的边境已经封锁，船只不得继续驶向北方。", "imageId": "", "bgmId": ""}
+    }
+  ],
+  "notes": ["请先给绯音、澄夏绑定作者提供的 VRM 模型。", "请在粗稿中使用当前工程里的真实背景、音乐和动作素材 ID。"]
+}

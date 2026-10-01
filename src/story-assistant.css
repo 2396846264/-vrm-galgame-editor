@@ -1,0 +1,16 @@
+.story-assistant-backdrop {position:fixed;inset:0;z-index:1200;background:#18232d66;display:flex;align-items:center;justify-content:center;padding:20px}
+.story-assistant-card {width:min(1120px,96vw);max-height:92vh;background:var(--panel,#fff);color:var(--text,#142b3b);border:1px solid #ccd4dd;border-radius:16px;box-shadow:0 18px 65px #0004;display:flex;flex-direction:column;overflow:hidden}
+.story-assistant-card>header {display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid #d9dfe5}
+.story-assistant-card h2,.story-assistant-card h3 {margin:0 0 10px}.story-assistant-card header h2 {margin:0}
+.story-assistant-body {overflow:auto;padding:20px 24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px}
+.story-assistant-card section {min-width:0}.story-assistant-card textarea {width:100%;min-height:115px;resize:vertical}.story-assistant-card input,.story-assistant-card select {max-width:100%}
+.story-assistant-card .assistant-actions {display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.story-assistant-card small,.story-assistant-card .assistant-help {font-size:12px;line-height:1.7}
+.assistant-preview {background:#829bad0a;border:1px solid #d5dce4;border-radius:10px;padding:14px;max-height:300px;overflow:auto}
+.assistant-preview article {padding:8px 0;border-bottom:1px solid #d5dce4}.assistant-preview p {margin:5px 0;font-size:13px;white-space:pre-wrap}
+.assistant-sources {padding:0;list-style:none}.assistant-sources li {display:flex;justify-content:space-between;gap:10px;padding:6px 0}
+.assistant-status {padding:10px;border-radius:8px;background:#118e7914;white-space:pre-wrap;overflow-wrap:anywhere;min-height:36px}
+.assistant-status.error {background:#c3262114;color:#ac2119}.assistant-tags {max-height:220px;overflow:auto}.assistant-tags label {display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;margin:8px 0}.assistant-tags label span {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+.assistant-config {white-space:pre-wrap;overflow:auto;font-size:11px;background:#829bad0d;padding:10px;max-height:110px}
+body[data-editor-theme=dark] .story-assistant-card {background:#222830;color:#f2f5f7;border-color:#46505b}
+body[data-editor-theme=dark] .story-assistant-card input,body[data-editor-theme=dark] .story-assistant-card textarea,body[data-editor-theme=dark] .story-assistant-card select {background:#151b23;color:#fff;border-color:#46505b}
+@media(max-width:800px) {.story-assistant-body{grid-template-columns:1fr}.story-assistant-backdrop{padding:8px}}

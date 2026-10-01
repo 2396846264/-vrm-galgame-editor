@@ -1,85 +1,5 @@
-# VRM Galgame Editor Â· 0.0.7
-
-[ç®€ä½“ä¸­æ–‡](../README.md) Â· [English](README.en.md) Â· [æ—¥æœ¬èª](README.ja.md) Â· [í•œêµ­ì–´](README.ko.md)
-
-![Illustrated editor overview](images/overview.svg)
-
-A Windows editor for creating visual novels with 3D VRM characters. Arrange characters, dialogue, motion, backgrounds, and audio; preview the scene in a separate window; then export a playable game. The image above is a **feature illustration**, not a screenshot.
-
-**0.0.7 is the latest public release** and includes the local v0.7.22 features. The previous 0.0.3 download remains available. This public edition does not bundle VRM models, Mixamo motions, or the sample story's assets. Import assets you have permission to use.
-
-This release adds a five-tab asset library below the preview (Image, VRM, Motion, Audio, and Video), image thumbnails, clickable folders, double-click import, and file or folder drag-and-drop import. The earlier shadow-height slider and frame-by-frame pose selection remain available. Existing time-based poses migrate to frames. Manual portraits remain untouched. Earlier features include oil-paint rendering, portrait-only characters, off-stage dialogue, white editor, and night mode.
-
-HarmonyOS Sans SC is used under its included license; the full license is at `../public/fonts/HarmonyOS_Sans_SC_LICENSE.txt` in the source and `web/fonts/` in the Windows download. Copyright Â© Huawei Device Co., Ltd.
-
-## Features
-
-- Organize dialogue and scenes into acts; control VRM expressions, motion, camera position, and depth.
-- Import images, video backgrounds, music, and sound effects.
-- Preview and test your game, then export a playable Windows build.
-- Save a project as one portable `.vrmg` file.
-- Provide player saves, autosaves, reading progress, and unlockable galleries.
-- Adjust rendering options, including optional shared character shadows.
-
-## Examples and visual previews
-
-These examples and visual previews show the editor, title screen, and gameplay. The characters, background, and other example assets shown here are **not included** in the public download.
-
-**Story editing example:** arrange acts, dialogue, characters, and backgrounds.
-
-![Asset library editor example and visual preview](images/editor-story.png)
-
-**Title screen preview:** a sample menu with a VRM character.
-
-![Title screen example and visual preview](images/title-screen.png)
-
-**Gameplay preview:** characters, background, and dialogue together.
-
-![Gameplay example and visual preview](images/gameplay.png)
-
-![Asset-to-game workflow](images/workflow.svg)
-
-## Download and start
-
-1. Download `VRMGalgame-0.0.7-win-x64.zip` from [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases).
-2. Extract the **whole archive** and run `VRMGalgame.exe`.
-3. Create a project or open an existing `.vrmg` file.
-4. Import your own VRM, motion, image, and audio files; edit the cast and story; select **Preview** and then **Export Game**.
-
-Requires Windows 10/11 x64 and Microsoft Edge WebView2 Runtime. The portable package includes the .NET runtime.
-
-Supported imports: `.vrm` characters; `.vrma` and Mixamo `.fbx` motions; `.png`, `.jpg`, `.jpeg`, and `.webp` images; `.mp3`, `.wav`, and `.ogg` audio; `.mp4` and `.webm` video backgrounds.
-
-## Build from source
-
-On Windows, install Node.js, npm, and the .NET 10 SDK. From the repository root:
-
-```powershell
-npm ci
-npm run build
-dotnet publish Desktop/Desktop.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
-Copy-Item -Recurse dist publish/web
-```
-
-Run `publish/VRMGalgame.exe`; retain `WebView2Loader.dll` beside it if present. Third-party character, motion, and story assets are not included. No reuse license for this project's source is granted by this repository.
-
-Creator on Bilibili: [å°¸å·¥U5åä¸‰ä¸–](https://b23.tv/krcyQ8I).
-
-
-
-
-![Current character page example and visual preview](images/character-gallery-v0711.png)
-
-[Step-by-step Chinese guide with asset rules](æ–°æ‰‹è¯´æ˜ä¹¦.md)
-
-
-![Progress example and visual preview](images/progress.png)
-
-
-## 0.0.7
-
-Story-wide find and replace with undo; game naming moves to Title settings. PDF knowledge library with chapter-completion unlocking, grayscale locked covers, and a red locked ribbon. Offline two-page reading includes paper and spine shadows, animated page turns, keyboard/swipe navigation, zoom, and remembered reading position. Per-chapter rendering, color grading, cover selection, and replay cards. Milky translucent glass menus with black text, clear title buttons that frost on hover, and borderless white dialogue with black shadows. Fixes the blank, unclickable book entry, settings scrolling, title music, startup conflicts, and duplicate automatic portraits.
-
-[Illustrated guide / å›³è§£ / ê·¸ë¦¼ ì„¤ëª…](æ–°åŠŸèƒ½è¯´æ˜_0.0.7.md)
-
-![PDF library preview](images/library-shelf-v0722.png)
+YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×¾üN‹Z–‹­¦ëeŠw¬ÔŒYI4…±…µ”‘¥Ñ½Èƒ
+Ü€À¸À¸Ü4(4)oº’öO’â·šZt ¸¸½I5¹µ¤ƒ
+Üm¹±¥Í¡t¡I5¹•¸¹µ¤ƒ
+Üoš^—šr³¢ªyt¡I5¹©„¹µ¤ƒ
+Üo¶VsªÖ·²ZÑt¡I5¹­¼¹µ¤4(4(…m%±±ÕÍÑÉ…Ñ••‘¥Ñ½È½Ù•ÉÙ¥•İt¡¥µ…•Ì½½Ù•ÉÙ¥•Ü¹ÍÙœ¤4(4)]¥¹‘½İÌ•‘¥Ñ½È™½ÈÉ•…Ñ¥¹œÙ¥ÍÕ…°¹½Ù•±Ìİ¥Ñ €ÍYI4¡…É…Ñ•ÉÌ¸ÉÉ…¹”¡…É…Ñ•ÉÌ°‘¥…±½Õ”°µ½Ñ¥½¸°‰…­É½Õ¹‘Ì°…¹…Õ‘¥¼ìÁÉ•Ù¥•ÜÑ¡”Í•¹”¥¸„Í•Á…É…Ñ”İ¥¹‘½ÜìÑ¡•¸•áÁ½ÉĞ„Á±…å…‰±”…µ”¸Q¡”¥µ…”…‰½Ù”¥Ì„€¨©™•…ÑÕÉ”¥±±ÕÍÑÉ…Ñ¥½¸¨¨°¹½Ğ„ÍÉ••¹Í¡½Ğ¸(4(¨¨À¸À¸à¥ÌÑ¡”±…Ñ•ÍĞÁÕ‰±¥ŒÉ•±•…Í”¨¨…¹¥¹±Õ‘•ÌÑ¡”±½…°ØÀ¸Ü¸Èä™•…ÑÕÉ•Ì¸Q¡”ÁÉ•Ù¥½ÕÌÁÕ‰±¥Œ‘½İ¹±½…‘ÌÉ•µ…¥¸…Ù…¥±…‰±”¸Q¡¥ÌÁÕ‰±¥Œ•‘¥Ñ¥½¸‘½•Ì¹½Ğ‰Õ¹‘±”YI4µ½‘•±Ì°5¥á…µ¼µ½Ñ¥½¹Ì°½ÈÑ¡”Í…µÁ±”ÍÑ½ÉäÌ…ÍÍ•ÑÌ¸%µÁ½ÉĞ…ÍÍ•ÑÌå½Ô¡…Ù”Á•Éµ¥ÍÍ¥½¸Ñ¼ÕÍ”¸()Q¡”¹•ÜMÑ½ÉäÍÍ¥ÍÑ…¹Ğ…¸É•…QaP°5…É­‘½İ¸°…¹=`Í½ÕÉ”µ…Ñ•É¥…°Ñ¡É½Õ „½¹¹•Ñ•5@½È1$•¹Ğ°Ñ¡•¸ÁÉ½Á½Í”¡…É…Ñ•ÉÌ°…ÑÌ°‘¥…±½Õ”°…ÍÍ•ÑÌ°µ½Ñ¥½¸°µÕÍ¥Œ°İ•…Ñ¡•È°…¹¹•İÌ•Ù•¹ÑÌ™½ÈÉ•Ù¥•Ü¸%Ğ¹•Ù•ÈÍ¥±•¹Ñ±ä¡…¹•ÌÑ¡”ÁÉ½©•ĞèÁÉ½Á½Í…±Ì…É”ÁÉ•Ù¥•İ•™¥ÉÍĞ…¹…¸‰”Õ¹‘½¹”…Ì½¹”‰…Ñ ¸Q¡”Á…­…”…±Í¼¥¹±Õ‘•ÌYI5…±…µ”¹•¹Ğ¹•á•€¸(4)Q¡¥ÌÉ•±•…Í”…‘‘Ì„™¥Ù”µÑ…ˆ…ÍÍ•Ğ±¥‰É…Éä‰•±½ÜÑ¡”ÁÉ•Ù¥•Ü€¡%µ…”°YI4°5½Ñ¥½¸°Õ‘¥¼°…¹Y¥‘•¼¤°¥µ…”Ñ¡Õµ‰¹…¥±Ì°±¥­…‰±”™½±‘•ÉÌ°‘½Õ‰±”µ±¥¬¥µÁ½ÉĞ°…¹™¥±”½È™½±‘•È‘É…œµ…¹µ‘É½À¥µÁ½ÉĞ¸Q¡”•…É±¥•ÈÍ¡…‘½Üµ¡•¥¡ĞÍ±¥‘•È…¹™É…µ”µ‰äµ™É…µ”Á½Í”Í•±•Ñ¥½¸É•µ…¥¸…Ù…¥±…‰±”¸á¥ÍÑ¥¹œÑ¥µ”µ‰…Í•Á½Í•Ìµ¥É…Ñ”Ñ¼™É…µ•Ì¸5…¹Õ…°Á½ÉÑÉ…¥ÑÌÉ•µ…¥¸Õ¹Ñ½Õ¡•¸…É±¥•È™•…ÑÕÉ•Ì¥¹±Õ‘”½¥°µÁ…¥¹Ó¾ü¶‰ËkºwµçPÁÕ‰±¥Í •Í­Ñ½À½•Í­Ñ½À¹ÍÁÉ½¨€µŒI•±•…Í”€µÈİ¥¸µàØĞ€´µÍ•±˜µ½¹Ñ…¥¹•ÑÉÕ”€µÀéAÕ‰±¥Í¡M¥¹±•¥±”õÑÉÕ”€µ¼ÁÕ‰±¥Í 4)½Áäµ%Ñ•´€µI•ÕÉÍ”‘¥ÍĞÁÕ‰±¥Í ½İ•ˆ4)€4(4)IÕ¸ÁÕ‰±¥Í ½YI5…±…µ”¹•á•€ìÉ•Ñ…¥¸]•‰Y¥•ÜÉ1½…‘•È¹‘±±€‰•Í¥‘”¥Ğ¥˜ÁÉ•Í•¹Ğ¸Q¡¥ÉµÁ…ÉÑä¡…É…Ñ•È°µ½Ñ¥½¸°…¹ÍÑ½Éä…ÍÍ•ÑÌ…É”¹½Ğ¥¹±Õ‘•¸9¼É•ÕÍ”±¥•¹Í”™½ÈÑ¡¥ÌÁÉ½©•ĞÌÍ½ÕÉ”¥ÌÉ…¹Ñ•‰äÑ¡¥ÌÉ•Á½Í¥Ñ½Éä¸4(4)É•…Ñ½È½¸	¥±¥‰¥±¤èo–Âã–Ş•T×–6’â'’âYt¡¡ÑÑÁÌè¼½ˆÈÌ¹ÑØ½­ÉåDá$¤¸4(4(4(4(4(…mÕÉÉ•¹Ğ¡…É…Ñ•ÈÁ…”•á…µÁ±”…¹Ù¥ÍÕ…°ÁÉ•Ù¥•İt¡¥µ…•Ì½¡…É…Ñ•Èµ…±±•ÉäµØÀÜÄÄ¹Á¹œ¤4(4)mMÑ•Àµ‰äµÍÑ•À¡¥¹•Í”Õ¥‘”İ¥Ñ …ÍÍ•ĞÉÕ±•Ít£šZÃš&/¢¾Óšb;’æ˜¹µ¤4(4(4(…mAÉ½É•ÍÌ•á…µÁ±”…¹Ù¥ÍÕ…°ÁÉ•Ù¥•İt¡¥µ…•Ì½ÁÉ½É•ÍÌ¹Á¹œ¤4(4(4(ŒŒ€À¸À¸Ü4(4)MÑ½Éäµİ¥‘”™¥¹…¹É•Á±…”İ¥Ñ Õ¹‘¼ì…µ”¹…µ¥¹œµ½Ù•ÌÑ¼Q¥Ñ±”Í•ÑÑ¥¹Ì¸A­¹½İ±•‘”±¥‰É…Éäİ¥Ñ ¡…ÁÑ•Èµ½µÁ±•Ñ¥½¸Õ¹±½­¥¹œ°É…åÍ…±”±½­•½Ù•ÉÌ°…¹„É•±½­•É¥‰‰½¸¸=™™±¥¹”Ñİ¼µÁ…”É•…‘¥¹œ¥¹±Õ‘•ÌÁ…Á•È…¹ÍÁ¥¹”Í¡…‘½İÌ°…¹¥µ…Ñ•Á…”ÑÕÉ¹Ì°­•å‰½…É½Íİ¥Á”¹…Ù¥…Ñ¥½¸°é½½´°…¹É•µ•µ‰•É•É•…‘¥¹œÁ½Í¥Ñ¥½¸¸A•Èµ¡…ÁÑ•ÈÉ•¹‘•É¥¹œ°½±½ÈÉ…‘¥¹œ°½Ù•ÈÍ•±•Ñ¥½¸°…¹É•Á±…ä…É‘Ì¸5¥±­äÑÉ…¹Í±Õ•¹Ğ±…ÍÌµ•¹ÕÌİ¥Ñ ‰±…¬Ñ•áĞ°±•…ÈÑ¥Ñ±”‰ÕÑÑ½¹ÌÑ¡…Ğ™É½ÍĞ½¸¡½Ù•È°…¹‰½É‘•É±•ÍÌİ¡¥Ñ”‘¥…±½Õ”İ¥Ñ ‰±…¬Í¡…‘½İÌ¸¥á•ÌÑ¡”‰±…¹¬°Õ¹±¥­…‰±”‰½½¬•¹ÑÉä°Í•ÑÑ¥¹ÌÍÉ½±±¥¹œ°Ñ¥Ñ±”µÕÍ¥Œ°ÍÑ…ÉÑÕÀ½¹™±¥ÑÌ°…¹‘ÕÁ±¥…Ñ”…ÕÑ½µ…Ñ¥ŒÁ½ÉÑÉ…¥ÑÌ¸4(4)m%±±ÕÍÑÉ…Ñ•Õ¥‘”€¼ƒ–nÏ¢Œ€¼ƒªŞã®šğƒ²“®ªt£šZÃ–*¢÷¢¾Óšb9|À¸À¸Ü¹µ¤4(4(…mA±¥‰É…ÉäÁÉ•Ù¥•İt¡¥µ…•Ì½±¥‰É…ÉäµÍ¡•±˜µØÀÜÈÈ¹Á¹œ¤4(

@@ -20,3 +20,12 @@ Desktop/obj/
 *.ogg
 *.mp4
 *.webm
+AgentHost/bin/
+AgentHost/obj/
+BuildIdentity/bin/
+BuildIdentity/obj/
+release/
+work/
+Desktop/ProtectedBuildConstants.cs
+*.pem
+archive-password.txt

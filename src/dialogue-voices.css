@@ -1,0 +1,6 @@
+.asset-voice-tile .asset-tile-name { white-space: pre-wrap; overflow-wrap: anywhere; overflow: visible; text-overflow: clip; }
+.asset-voice-tile .asset-tile-tools { justify-content: center; flex-wrap: wrap; }
+.voice-library-note { color: var(--ui-muted); font-size: 12px; padding: 8px 5px; line-height: 1.65; }
+.dialogue-voice-tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.dialogue-voice-tools button { font-size: 12px; padding: 6px 8px; }
+.dialogue-voice-field.voice-upload-target { outline: 2px solid var(--ui-accent, #168b70); outline-offset: 6px; border-radius: 5px; }
