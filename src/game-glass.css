@@ -1,0 +1,130 @@
+/* Only the playable game receives this skin. Editor and its preview retain their UI. */
+.player {
+  --glass-ink: #000;
+  --glass-muted: #000;
+  --glass-line: #ffffff99;
+  --glass-accent: #696960;
+  --glass-fill: linear-gradient(145deg, #fffef570 0%, #f5f4ed42 48%, #eeede352 100%);
+  --glass-shadow: inset 0 1px 1px #fffffff0, inset 0 -1px 1px #ffffff70, 0 8px 24px #28282025;
+  color: var(--glass-ink); background: #292923;
+}
+.player .stage-frame::after, .player .stage-frame.shadows-on::after {
+  background: linear-gradient(transparent 52%, #24241f08 64%, #24241f38 82%, #20201c90 100%);
+}
+.player .stage-frame.title-mode::after { background: linear-gradient(transparent 72%, #eeede526 89%, #fffef542); }
+.player .stage-frame.title-mode #scene-bg::after { background: none; }
+.player .title-composition::before { background: linear-gradient(90deg,#22221e25,transparent 52%); }
+.player .title-logo-fallback { padding: 0; border: 0; background: none; backdrop-filter: none; box-shadow: none; }
+.player .title-logo-fallback strong { color: white; text-shadow: 0 3px 18px #22221ecc; }
+.player .title-logo-fallback small { color: #fff; text-shadow: 0 2px 5px #22221e; }
+.player .title-logo-region { filter: drop-shadow(0 3px 9px #22221e44); }
+.player #player-start .title-bottom-menu {
+  left: 2.5%; right: 2.5%; bottom: 3.4%; padding: clamp(7px,1vw,14px);
+  gap: 1.3%; border: 1px solid #ffffff85; border-radius: 999px;
+  background: linear-gradient(110deg,#fffef512,#f5f4ed08,#fffef512);
+  box-shadow: var(--glass-shadow); backdrop-filter: none;
+}
+.player #player-start .title-bottom-menu button,
+.player #player-start .title-bottom-menu button[data-action="play"] {
+  padding: clamp(9px,1vw,15px) 4px; border: 1px solid #ffffffaa; border-radius: 999px;
+  color: var(--glass-ink); background: #fffef50a; box-shadow: inset 0 1px 1px #ffffff80, 0 3px 12px #00000015;
+  backdrop-filter: blur(0px) saturate(100%); text-shadow: 0 1px 2px #ffffffc0;
+  transition: transform .22s, background .22s, box-shadow .22s, backdrop-filter .22s;
+}
+.player #player-start .title-bottom-menu button:hover,
+.player #player-start .title-bottom-menu button:focus-visible {
+  color: #000; background: var(--glass-fill); transform: translateY(-2px);
+  backdrop-filter: blur(18px) saturate(75%);
+  box-shadow: inset 0 1px 2px white, 0 5px 20px #28282035;
+}
+.player #player-start .title-bottom-menu button:disabled { color: #000; opacity: 1; border-style: dashed; cursor: not-allowed; }
+.player .scene-top-actions, .player .scene-quick-actions {
+  padding: 5px; border: 1px solid #ffffff99; border-radius: 999px;
+  background: #fffef536; box-shadow: var(--glass-shadow);
+  backdrop-filter: none; gap: 4px;
+}
+.player .scene-quick-actions { right: auto; left: 50%; transform: translateX(-50%); bottom: 2.4%; white-space: nowrap; }
+.player .scene-top-actions .scene-icon-button,
+.player .scene-quick-actions button,
+.player .scene-quick-actions .auto-play-button {
+  border: 1px solid #ffffff99; border-radius: 999px; background: var(--glass-fill);
+  color: var(--glass-ink); box-shadow: inset 0 1px #ffffffbb; backdrop-filter: blur(18px) saturate(75%);
+  text-shadow: 0 1px 1px #ffffff99; -webkit-text-stroke: 0;
+  transition: background .22s, box-shadow .22s, backdrop-filter .22s;
+}
+.player .scene-quick-actions button { padding: 7px 15px; font-size: clamp(12px,1.35vw,18px); font-weight: 500; }
+.player .scene-top-actions .scene-icon-button:hover,
+.player .scene-quick-actions button:hover { background: #fffef530; color: #000; backdrop-filter: blur(0px) saturate(100%); text-decoration: none; transform: none; }
+.player .scene-quick-actions .auto-play-button.active { color: #000; border-color: white; box-shadow: inset 0 0 0 1px #77776b66; }
+.player .dialogue:not(.custom-dialogue) { left: 18%; right: 7%; bottom: 18%; max-height: 32%; border: 0; box-shadow: none; backdrop-filter: none; }
+.player .dialogue:not(.custom-dialogue) #dialogue-text { font-weight: 500; line-height: 1.65; }
+.player .dialogue #dialogue-text, .player .dialogue .speaker {
+  color: #fff; -webkit-text-stroke: .35px #000;
+  text-shadow: 0 2px 2px #000, 0 4px 7px #000c, 1px 0 1px #0009, -1px 0 1px #0009;
+}
+.player #choice-list button { background: var(--glass-fill); border: 1px solid #ffffffa8; border-radius: 999px; color: var(--glass-ink); box-shadow: var(--glass-shadow); backdrop-filter: blur(18px); transition: background .22s, backdrop-filter .22s; }
+.player #choice-list button:hover { background: #fffef530; backdrop-filter: blur(0px); }
+.player .player-modal { background: #24241f30; backdrop-filter: blur(5px); color: var(--glass-ink); }
+.player .player-modal > .modal-box {
+  background: linear-gradient(135deg,#fffef57a,#f5f4ee60 45%,#eeede46b);
+  border: 1px solid #ffffffb0; border-radius: 26px;
+  box-shadow: inset 0 1px 2px #ffffffe0, inset 0 -1px 1px #ffffff88, 0 24px 70px #24241f50;
+  backdrop-filter: blur(26px) saturate(75%); color: var(--glass-ink);
+}
+.player .player-modal :is(h2,h3,.gallery-detail-name,.gallery-character-name,.gallery-character-content h3) { color: var(--glass-ink); }
+.player .player-modal :is(header small,.settings-box p,.volume-line,.volume-line output,.modal-box footer,
+ .save-details span,.save-details small,.gallery-empty,.gallery-character-title,.gallery-character-text,
+ .gallery-progress-note,.gallery-story-locked,.gallery-story-locked small,.gallery-track-list button small,
+ .gallery-music-player > small,.author-note-text,.progress-character-row b,.progress-character-row small) { color: var(--glass-muted); }
+.player .player-modal :is(button,.save-slot,.save-slot.auto-save-slot) {
+  color: var(--glass-ink); background: var(--glass-fill); border: 1px solid #ffffff99;
+  border-radius: 14px; box-shadow: inset 0 1px #ffffffaa, 0 3px 9px #24241f15;
+  text-shadow: none; backdrop-filter: blur(12px) saturate(75%);
+  transition: background .22s, backdrop-filter .22s, border-color .22s;
+}
+.player .player-modal button:hover { color: #000; border-color: white; background: #fffef526; backdrop-filter: blur(0px) saturate(100%); }
+.player .player-modal :is(button.active,.modal-tabs button.active,.gallery-story-tabs button.active,
+ .gallery-character-picker button.active,.gallery-main-tabs button.active) { color: #000; border-color: #8b8b7d; box-shadow: inset 0 0 0 1px #8b8b7d55; }
+.player .player-modal :is(input,select) { color: var(--glass-ink); border-color: #93938970; background: #fffef540; border-radius: 12px; accent-color: #7b7b6f; }
+.player .player-modal select option { color: #000; background: #f5f4ed; }
+.player .player-modal input[type="range"] { background: transparent; }
+.player .settings-body { scrollbar-color: #88887c8c #44443b15; }
+.player .player-modal .field > span { color: var(--glass-muted); }
+.player .settings-box :is(.volume-line,.field > span,p,footer) { font-weight: 500; }
+.player .player-modal .font-credit { opacity: 1; }
+.player .player-modal :is(.save-details strong,.save-thumb b) { color: var(--glass-ink); }
+.player .player-modal .save-thumb { color: #000; background-color: #d6d5c926; border-radius: 10px; }
+.player .player-modal :is(.save-slot:disabled,.save-slot.auto-save-slot:disabled,.gallery-track-list button.locked) { opacity: 1; }
+.player .player-modal .save-slot:disabled:hover { background: var(--glass-fill); border-color: #ffffff99; }
+.player .player-modal .gallery-image-tile { background: #fffef530 !important; border-color: #ffffff99 !important; box-shadow: 0 4px 15px #24241f30; }
+.player .player-modal :is(.gallery-character-portrait,.gallery-character-portrait.locked) { background: linear-gradient(#fffef508,#deddd326); }
+.player .player-modal .gallery-character-portrait::after { background: linear-gradient(transparent,#d6d5ca1a); }
+.player .player-modal .gallery-character-name { text-shadow: none; }
+.player .player-modal .gallery-track-list { border-color: #90908540; }
+.player .player-modal .gallery-record { color: #000; border-color: #92928660; background: repeating-radial-gradient(circle,#85857899 0 2px,#d6d5c666 3px 4px); box-shadow: inset 0 0 0 24px #fffef538,0 8px 25px #24241f34; }
+.player .player-modal :is(.gallery-story-tabs::before,.gallery-character-content h3::after) { background: #92928670; }
+.player .player-modal .gallery-story-tabs button::before { border-color: #858578; background: #fffef5; }
+.player .player-modal .gallery-story-tabs button.active::before { background: #858578; }
+.player .player-modal .chapter-card { background: var(--glass-fill); color: var(--glass-ink); border-color: #ffffff99; border-radius: 20px; box-shadow: var(--glass-shadow); }
+.player .chapter-card-caption { background: linear-gradient(145deg,#fffef53d,#ecebdf26); }
+.player .chapter-card-caption :is(h3,span) { color: var(--glass-ink); }
+.player :is(.chapter-total strong,.chapter-caption-heading b,.chapter-card-caption small) { color: #000; }
+.player :is(.chapter-total small,.chapter-total span,.chapter-toolbar p) { color: var(--glass-muted); }
+.player .chapter-progress > div { background: #89897b35; }
+.player .chapter-progress i { background: linear-gradient(90deg,#858578,#b6b6a8); box-shadow: none; }
+.player .locked .chapter-art img { opacity: .4; }
+.player .chapter-rail { scrollbar-color: #88887c80 transparent; }
+.player .chapter-card:not(:disabled):hover { border-color: white; }
+.player .chapter-character-stats .progress-character-row { border-color: #90908535; }
+.player .act-loading { color: #000; background: #fffef5b0; backdrop-filter: blur(14px); }
+.player .loading-spinner i { background: #696960; }
+.player button:focus-visible, .player .chapter-rail:focus-visible { outline: 2px solid #77776b; outline-offset: 3px; }
+@media (max-width: 650px) {
+  .player #player-start .title-bottom-menu { padding: 6px; gap: 5px; border-radius: 24px; }
+  .player .scene-quick-actions button { padding: 6px 10px; }
+  .player .player-modal > .modal-box { border-radius: 20px; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .player .player-modal > .modal-box { background: #f5f4edf5; backdrop-filter: none; }
+  .player .scene-top-actions, .player .scene-quick-actions { background: #f5f4edee; backdrop-filter: none; }
+}

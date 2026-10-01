@@ -181,8 +181,20 @@ internal sealed class EditorWindow : Form
             if (!File.Exists(Path.Combine(webDirectory, "index.html")))
                 throw new Exception("程序文件不完整：找不到 web/index.html。请重新解压完整安装包。");
             var environment = await CoreWebView2Environment.CreateAsync(
-                userDataFolder: Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VRMGalgame", "WebView2"));
+                userDataFolder: Environment.GetCommandLineArgs().Contains("--smoke-fresh-audio")
+                    ? Path.Combine(Path.GetTempPath(), "VRMGalgame", "AudioSmoke", Guid.NewGuid().ToString("N"))
+                    : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VRMGalgame", "WebView2"));
             await web.EnsureCoreWebView2Async(environment);
+            await web.CoreWebView2.Profile.SetPermissionStateAsync(CoreWebView2PermissionKind.Autoplay,
+                $"https://{AppHost}", CoreWebView2PermissionState.Allow);
+            await web.CoreWebView2.Profile.SetPermissionStateAsync(CoreWebView2PermissionKind.Autoplay,
+                $"https://{ProjectHost}", CoreWebView2PermissionState.Allow);
+            web.CoreWebView2.PermissionRequested += (_, request) =>
+            {
+                if (request.PermissionKind == CoreWebView2PermissionKind.Autoplay &&
+                    (request.Uri.StartsWith("https://app.galgame/") || request.Uri.StartsWith("https://project.galgame/")))
+                    request.State = CoreWebView2PermissionState.Allow;
+            };
             web.CoreWebView2.Settings.AreDevToolsEnabled = !playerMode;
             web.CoreWebView2.Settings.IsStatusBarEnabled = false;
             web.CoreWebView2.SetVirtualHostNameToFolderMapping(AppHost, webDirectory, CoreWebView2HostResourceAccessKind.DenyCors);
@@ -262,7 +274,7 @@ internal sealed class EditorWindow : Form
                     await Task.Delay(8500);
                     File.WriteAllText(smokeBase + ".recent-open.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
-                if (smokeAvatarFile != null && !playerMode)
+                if (smokeAvatarFile != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters"))
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=characters]')?.click(); document.querySelector('[data-action=add-character]')?.click(); document.querySelector('[data-action=upload-character-portrait]')?.click()");
                     await Task.Delay(2500);
@@ -471,7 +483,7 @@ internal sealed class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".character-preview.json",
                         await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
-                if (smokeFileOpsParent != null && !playerMode)
+                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters"))
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=editor-settings]').click(); const interval=document.querySelector('#editor-auto-save-minutes'); interval.value='10'; interval.dispatchEvent(new Event('input',{bubbles:true})); document.querySelector('[data-action=close-editor-settings]').click(); window.prompt=()=> '测试副本'; document.querySelector('[data-action=save-as]').click()");
                     await Task.Delay(2600);
@@ -835,6 +847,63 @@ internal sealed class EditorWindow : Form
                         "JSON.stringify(window.__vrmDiagnostics())"));
                 }
             }
+            if (Environment.GetCommandLineArgs().Contains("--smoke-menu-polish"))
+            {
+                ClientSize = new Size(960, 540);
+                var menuPhases = new List<string> { "audio", "settings", "gallery" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-glass")) menuPhases.AddRange(new[] { "music", "characters", "chapters", "saves", "story" });
+                if (Environment.GetCommandLineArgs().Contains("--smoke-library")) menuPhases.AddRange(new[] { "library-search", "library-editor", "library-shelf", "library-reader", "library-turn" });
+                foreach (string phase in menuPhases)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__polishResult=null; window.__vrmSmokeMenuPolish(" + JsonSerializer.Serialize(phase) + ").then(r=>window.__polishResult=r).catch(e=>window.__polishResult={error:e.message})");
+                    string polishResult = "null";
+                    for (int attempt = 0; attempt < 100 && polishResult == "null"; attempt++)
+                    {
+                        await Task.Delay(100);
+                        polishResult = await web.CoreWebView2.ExecuteScriptAsync("window.__polishResult");
+                    }
+                    File.WriteAllText(smokeBase + ".menu-" + phase + ".json", polishResult);
+                    using var polishImage = File.Create(smokeBase + ".menu-" + phase + ".png");
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, polishImage);
+                    if (polishResult == "null" || polishResult.Contains("\"error\"")) throw new Exception(polishResult);
+                }
+                if (Environment.GetCommandLineArgs().Contains("--smoke-library"))
+                {
+                    var bookProject = ReadProject() ?? throw new Exception("PDF 测试工程缺失");
+                    if (Environment.GetCommandLineArgs().Contains("--smoke-pdf"))
+                    {
+                        var importedBooks = JsonSerializer.SerializeToNode(ImportAssets("pdf", true))?.AsArray();
+                        foreach (var importedBook in importedBooks ?? new JsonArray()) bookProject["assets"]!.AsArray().Add(importedBook?.DeepClone());
+                        SaveProject(bookProject);
+                    }
+                    BuildGame(smokeBase + ".export", bookProject);
+                }
+            }
+            if (Environment.GetCommandLineArgs().Contains("--smoke-chapters"))
+            {
+                var chapterPhases = new List<string> { "editor", "render", "player", "replay" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-portrait-reuse")) chapterPhases.Add("portraits");
+                foreach (string phase in chapterPhases)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__chapterResult=null; window.__vrmSmokeChapters(" + JsonSerializer.Serialize(phase) + "," + (smokeAvatarFile != null ? "true" : "false") + ").then(r=>window.__chapterResult=r).catch(e=>window.__chapterResult={error:e.message})");
+                    string phaseResult = "null";
+                    for (int attempt = 0; attempt < 100 && phaseResult == "null"; attempt++)
+                    {
+                        await Task.Delay(100);
+                        phaseResult = await web.CoreWebView2.ExecuteScriptAsync("window.__chapterResult");
+                    }
+                    File.WriteAllText(smokeBase + ".chapters-" + phase + ".json", phaseResult);
+                    using var chapterImage = File.Create(smokeBase + ".chapters-" + phase + ".png");
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, chapterImage);
+                    if (phaseResult.Contains("\"error\"")) throw new Exception(phaseResult);
+                    if (phase == "editor")
+                    {
+                        var savedChapter = ReadProject()?["acts"]?[0];
+                        if (savedChapter?["render"]?["brightness"]?.GetValue<int>() != 135) throw new Exception("Chapter settings not saved");
+                        if (smokeFileOpsParent != null) ExportGame("章节功能验证游戏");
+                    }
+                }
+            }
             string result = await web.CoreWebView2.ExecuteScriptAsync(
                 "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})");
             File.WriteAllText(smokeBase + ".json", result);
@@ -887,12 +956,13 @@ internal sealed class EditorWindow : Form
                 "openProject" when !playerMode => OpenProject(),
                 "openRecentProject" when !playerMode => OpenRecentProject(payload?["path"]?.GetValue<string>() ?? ""),
                 "importFolderProject" when !playerMode => ImportFolderProject(),
-                "saveProject" when !playerMode => SaveProject(payload?["project"]),
+                "saveProject" when !playerMode => SaveProject(payload?["project"], payload?["obsoletePortraitPaths"]?.AsArray().Select(node => node?.GetValue<string>() ?? "")),
                 "saveProjectAs" when !playerMode => SaveProjectAs(payload?["project"], payload?["name"]?.GetValue<string>() ?? ""),
                 "previewGame" when !playerMode => await PreviewGameAsync(payload?["project"]),
                 "importAsset" when !playerMode => ImportAssets(payload?["type"]?.GetValue<string>() ?? "", payload?["single"]?.GetValue<bool>() ?? false),
                 "importAssetChunk" when !playerMode => ImportAssetChunk(payload),
-                "saveGeneratedPortrait" when !playerMode => SaveGeneratedPortrait(payload?["dataUrl"]?.GetValue<string>() ?? ""),
+                "saveGeneratedPortrait" when !playerMode => SaveGeneratedPortrait(payload?["dataUrl"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "角色"),
+                "organizeGeneratedPortrait" when !playerMode => OrganizeGeneratedPortrait(payload?["path"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "角色"),
                 "deleteAsset" when !playerMode => DeleteAsset(payload?["path"]?.GetValue<string>() ?? ""),
                 "exportGame" when !playerMode => ExportGame(payload?["folderName"]?.GetValue<string>() ?? ""),
                 "setWindowResolution" when playerMode => SetWindowResolution(payload?["value"]?.GetValue<string>() ?? ""),
@@ -1263,7 +1333,7 @@ internal sealed class EditorWindow : Form
         return GetProjectInfo();
     }
 
-    private object SaveProject(JsonNode? project)
+    private object SaveProject(JsonNode? project, IEnumerable<string>? obsoletePortraitPaths = null)
     {
         if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
         if (project is not JsonObject) throw new Exception("工程内容无效。");
@@ -1274,6 +1344,12 @@ internal sealed class EditorWindow : Form
         File.WriteAllText(temp, project.ToJsonString(JsonOptions));
         if (File.Exists(file)) File.Replace(temp, file, backup);
         else File.Move(temp, file);
+        if (obsoletePortraitPaths != null)
+        {
+            var usedPaths = project["assets"]?.AsArray().Select(node => node?["path"]?.GetValue<string>() ?? "").ToHashSet(StringComparer.OrdinalIgnoreCase) ?? new HashSet<string>();
+            foreach (string obsolete in obsoletePortraitPaths)
+                if (!usedPaths.Contains(obsolete)) DeleteAsset(obsolete);
+        }
         if (projectArchivePath != null)
         {
             WriteArchive(projectDirectory, projectArchivePath);
@@ -1321,11 +1397,15 @@ internal sealed class EditorWindow : Form
             ["motion"] = [".vrma", ".fbx"],
             ["image"] = [".png", ".jpg", ".jpeg", ".webp"],
             ["audio"] = [".mp3", ".wav", ".ogg"],
-            ["video"] = [".mp4", ".webm"]
+            ["video"] = [".mp4", ".webm"],
+            ["pdf"] = [".pdf"]
         };
         if (!extensions.TryGetValue(type, out var allowed)) throw new Exception("不支持的素材类型。");
         string[] sources;
-        if (type == "image" && single && smokeAvatarFile != null) sources = [smokeAvatarFile];
+        int smokePdfIndex = Array.IndexOf(Environment.GetCommandLineArgs(), "--smoke-pdf");
+        if (type == "pdf" && smokePdfIndex >= 0 && smokePdfIndex + 1 < Environment.GetCommandLineArgs().Length)
+            sources = [Path.GetFullPath(Environment.GetCommandLineArgs()[smokePdfIndex + 1])];
+        else if (type == "image" && single && smokeAvatarFile != null) sources = [smokeAvatarFile];
         else
         {
             using var dialog = new OpenFileDialog
@@ -1405,7 +1485,16 @@ internal sealed class EditorWindow : Form
         throw new Exception("不支持的文件导入操作。");
     }
 
-    private object SaveGeneratedPortrait(string dataUrl)
+    private object OrganizeGeneratedPortrait(string relative, string characterId, string name)
+    {
+        if (projectDirectory == null) throw new Exception("请先打开工程。");
+        string root = Path.GetFullPath(Path.Combine(projectDirectory, "assets")) + Path.DirectorySeparatorChar;
+        string source = Path.GetFullPath(Path.Combine(projectDirectory, relative.Replace('/', Path.DirectorySeparatorChar)));
+        if (!source.StartsWith(root, StringComparison.OrdinalIgnoreCase)) throw new Exception("只能整理工程里的头像。");
+        return SaveGeneratedPortrait("data:image/png;base64," + Convert.ToBase64String(File.ReadAllBytes(source)), characterId, name);
+    }
+
+    private object SaveGeneratedPortrait(string dataUrl, string characterId, string name)
     {
         if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
         const string prefix = "data:image/png;base64,";
@@ -1413,11 +1502,16 @@ internal sealed class EditorWindow : Form
         byte[] bytes = Convert.FromBase64String(dataUrl[prefix.Length..]);
         if (bytes.Length < 32 || bytes.Length > 12_000_000 || !bytes.AsSpan(0, 8).SequenceEqual(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }))
             throw new Exception("头像图片无效或太大。");
-        string id = Guid.NewGuid().ToString("N");
-        string folder = Path.Combine(projectDirectory, "assets", "image");
+        if (string.IsNullOrWhiteSpace(characterId)) throw new Exception("头像缺少角色编号。");
+        string key = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(characterId))).ToLowerInvariant()[..32];
+        string id = "auto-portrait-" + key;
+        string folder = Path.Combine(projectDirectory, "assets", "image", "自动角色头像");
         Directory.CreateDirectory(folder);
-        File.WriteAllBytes(Path.Combine(folder, id + ".png"), bytes);
-        return new { id, type = "image", name = "自动头像.png", path = $"assets/image/{id}.png" };
+        string target = Path.Combine(folder, key + ".png");
+        string temporary = target + ".tmp";
+        File.WriteAllBytes(temporary, bytes);
+        File.Move(temporary, target, true);
+        return new { id, type = "image", name = SafeName(name) + "_头像.png", path = $"assets/image/自动角色头像/{key}.png", generatedPortrait = true, characterId, revision = Guid.NewGuid().ToString("N") };
     }
 
     private object? ExportGame(string requestedName)
@@ -1535,4 +1629,3 @@ internal sealed class EditorWindow : Form
         return string.IsNullOrWhiteSpace(cleaned) ? "新游戏" : cleaned;
     }
 }
-

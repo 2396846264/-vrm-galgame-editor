@@ -1,0 +1,51 @@
+.editor .topbar { height: auto; min-height: 62px; flex-wrap: wrap; padding-block: 8px; }
+.topbar .project-title { min-width: 250px; }
+.topbar .project-title #text-search { flex: 1; width: auto; max-width: none; }
+.topbar .project-title .search-open-button { flex: none; padding: 6px 9px; }
+.sidebar .tabs { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 0; padding-inline: 5px; }
+.sidebar .tabs button { min-width: 0; padding-inline: 1px; font-size: 12px; }
+.search-box { background: var(--ui-surface,#fff); color: var(--ui-text,#111); border-radius: 20px; padding: 24px; width: min(850px,94vw); height: min(650px,88vh); display: flex; flex-direction: column; gap: 12px; box-shadow: 0 20px 70px #0004; }
+.search-box header,.search-fields { display: flex; gap: 12px; align-items: center; justify-content: space-between; }
+.search-box h2,.search-box p { margin: 0; }
+.search-fields { flex-wrap: wrap; justify-content: flex-start; }
+.search-fields label { display: grid; gap: 5px; flex: 1; min-width: 180px; }
+.search-results { overflow: auto; min-height: 0; flex: 1; }
+.search-results article { border-bottom: 1px solid #8884; padding: 12px 0; }
+.search-results p { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 6px; }
+.player #player-start .knowledge-title-button { position: absolute; z-index: 5; top: 4%; left: 3%; width: 50px; height: 50px; padding: 10px; display: grid; place-items: center; pointer-events: auto; color: #000; background: #fff2; backdrop-filter: blur(14px); border: 1px solid #fffa; border-radius: 50%; box-shadow: var(--glass-shadow); }
+.player #player-start .knowledge-title-button svg { display: block; width: 28px; height: 28px; flex: none; pointer-events: none; }
+.player #player-start .knowledge-title-button:hover { background: #fff6; }
+.player .book-library { width: min(1150px,96%); height: 90%; display: flex; flex-direction: column; }
+.player .book-shelf { display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 32px 22px; overflow-y: auto; align-content: start; padding: 14px; min-height: 0; }
+.player .book-shelf .book-card { border: 0; border-radius: 0; box-shadow: none; background: transparent; backdrop-filter: none; padding: 0; text-align: left; display: flex; flex-direction: column; gap: 7px; }
+.book-card b,.book-card small { color: #000; }
+.book-cover { width: 100%; aspect-ratio: 2 / 3; position: relative; border-radius: 3px 7px 7px 3px; overflow: hidden; box-shadow: 2px 7px 13px #0004; background: #f8f4e8; }
+.book-cover::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg,#0003,transparent 4%,#fff5 6%,transparent 10%); box-shadow: inset -2px 0 3px #0003; }
+.book-cover img,.book-cover canvas { width: 100%; height: 100%; object-fit: contain; }
+.book-cover-placeholder { display: grid; place-items: center; height: 100%; font-size: 24px; color: #000; }
+.book-locked .book-cover :is(img,canvas,.book-cover-placeholder) { filter: grayscale(1); }
+.book-locked .book-cover { background: #eee; }
+.book-seal { position: absolute; z-index: 2; left: -10%; right: -10%; top: 44%; text-align: center; transform: rotate(-12deg); color: #fff; background: #ba2525; padding: 9px; border-block: 1px solid #ffe0; box-shadow: 0 3px 7px #0004; }
+.book-reader { position: fixed; z-index: 2000; inset: 0; background: radial-gradient(ellipse at center,#d9d3c7,#89877e); color: #000; display: flex; flex-direction: column; animation: menu-backdrop-in .3s both; font-family: 'HarmonyOS Sans SC',sans-serif; }
+.book-reader header,.book-reader footer { display: flex; align-items: center; justify-content: space-between; padding: 12px 3%; gap: 10px; background: #fff3; backdrop-filter: blur(15px); }
+.book-reader button { color: #000; border: 1px solid #fffa; border-radius: 999px; background: #fff5; padding: 9px 16px; cursor: pointer; }
+.book-reader button:disabled { cursor: default; border-style: dashed; }
+.book-reader header b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.book-scroll { flex: 1; min-height: 0; overflow: auto; display: block; padding: 20px 35px; }
+.book-spread { --book-zoom: 1; position: relative; display: flex; width: calc(min(100%,calc((100vh - 160px) * 1.4)) * var(--book-zoom)); height: calc(100% * var(--book-zoom)); min-height: 0; margin: auto; perspective: 1800px; filter: drop-shadow(0 15px 16px #0006); }
+.book-paper { width: 50%; height: 100%; min-height: 0; min-width: 0; overflow: hidden; display: grid; place-items: center; background: #fffdf5; border: 1px solid #d5d0c3; border-radius: 4px; box-shadow: 0 3px 0 #bcb8ab,0 5px 0 #fff9e8,0 7px 0 #bcb8ab; }
+.book-paper canvas { width: 100%; height: 100%; object-fit: contain; }
+.book-left { background: linear-gradient(90deg,#fffdf7 85%,#e6e0d0); }
+.book-right { background: linear-gradient(90deg,#e6e0d0,#fffdf7 15%); }
+.book-spine { position: absolute; pointer-events: none; left: calc(50% - 18px); width: 36px; top: 0; bottom: 0; background: linear-gradient(90deg,transparent,#0002 35%,#0005 50%,#fff4 58%,transparent); }
+.book-turn { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 3; background: #fffdf5; backface-visibility: visible; box-shadow: 0 8px 25px #0005; }
+.book-turn canvas { width: 100%; height: 100%; object-fit: contain; backface-visibility: hidden; }
+.book-turn { transform-style: preserve-3d; }
+.book-turn canvas { position: absolute; inset: 0; background: #fffdf5; }
+.book-turn .book-turn-back { transform: rotateY(180deg); }
+.book-turn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,#0003,transparent 25%,#fff2 60%,#0002); }
+.turn-next { left: 50%; transform-origin: left center; animation: book-next .65s ease-in-out both; }
+.turn-prev { left: 0; transform-origin: right center; animation: book-prev .65s ease-in-out both; }
+@keyframes book-next { 0% { transform: rotateY(0deg); } 50% { transform: rotateY(-85deg) rotateZ(-1deg); } 100% { transform: rotateY(-180deg); } }
+@keyframes book-prev { 0% { transform: rotateY(0deg); } 50% { transform: rotateY(85deg) rotateZ(1deg); } 100% { transform: rotateY(180deg); } }
+@media (prefers-reduced-motion: reduce) { .book-turn,.book-reader { animation: none; } }

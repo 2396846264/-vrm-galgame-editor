@@ -1,19 +1,20 @@
-{
-  "name": "vrm-galgame-editor",
-  "private": true,
-  "version": "0.7.15",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "vite build"
-  },
-  "dependencies": {
-    "@pixiv/three-vrm": "^3.5.4",
-    "@pixiv/three-vrm-animation": "^3.5.4",
-    "three": "^0.180.0"
-  },
-  "devDependencies": {
-    "vite": "^7.3.0"
-  }
+﻿{
+    "name":  "vrm-galgame-editor",
+    "private":  true,
+    "version":  "0.0.7",
+    "type":  "module",
+    "scripts":  {
+                    "dev":  "vite --host 127.0.0.1",
+                    "build":  "vite build",
+                    "postbuild":  "node scripts/copy-pdf-resources.mjs"
+                },
+    "dependencies":  {
+                         "@pixiv/three-vrm":  "^3.5.4",
+                         "@pixiv/three-vrm-animation":  "^3.5.4",
+                         "pdfjs-dist":  "^6.3.289",
+                         "three":  "^0.180.0"
+                     },
+    "devDependencies":  {
+                            "vite":  "^7.3.0"
+                        }
 }
-

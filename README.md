@@ -1,16 +1,32 @@
-# VRM Galgame 编辑器 · 公开版 0.0.6
+# VRM Galgame 编辑器 · 公开版 0.0.7
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.6** 包含本地 **v0.7.15** 的功能。
+把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.7** 包含本地 **v0.7.22** 的功能。
 
 **第一次使用？先看 [图文说明书](docs/新手说明书.md)。** 它从下载、准备素材到导出游戏一步一步讲清楚。
 
 ## 下载
 
-到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.6-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
+到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.7-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
 
 > 公开包不附带示例人物、背景、Mixamo 动作或故事工程。下列图片是**示例与效果图**，展示做出来可以是什么样子；请使用自己有权使用的素材。
+
+## 本版新增
+
+- 顶部查找与替换，批量改对白、人物名字和介绍；游戏名称在“标题”页修改。
+- PDF 知识库：大封面书库、完成指定幕后解锁、离线双页翻书阅读。
+- 每幕独立封面、渲染和调色；封面卡片章节重玩。
+- 乳白透明玻璃菜单、清晰黑字、透明按钮悬停变毛玻璃；无框对白增加黑色阴影。
+- 自动头像覆盖旧图、设置可滚动、首次标题音乐和书本入口修复。
+
+详细步骤见 [本版图文说明](docs/新功能说明_0.0.7.md)。
+
+![查找替换示例与效果图](docs/images/text-search-v0722.png)
+
+![PDF 书库示例与效果图](docs/images/library-shelf-v0722.png)
+
+![PDF 双页阅读示例与效果图](docs/images/library-reader-v0722.png)
 
 ## 示例与效果图
 
@@ -50,7 +66,7 @@
 - “渲染”里增加油画笔触，可同时处理人物和背景；不需要时可以关掉。
 - 可以建立只有头像、没有 VRM 模型的角色。场外人物说话时只显示头像、名字和台词。
 - 有 VRM 的角色可以自动拍透明的头肩头像；头像会跟随角色鉴赏选定的动作及**动作定格帧**更新，手动上传的头像不会被覆盖。
-- 保留白色界面、夜间模式、人物加载转圈、内置 HarmonyOS Sans SC，以及原来的默认对白框。
+- 保留白色编辑器、夜间模式、人物加载转圈、内置 HarmonyOS Sans SC；游戏采用透明玻璃菜单与无框对白。
 
 完整变化见 [更新记录](CHANGELOG.md)。
 
@@ -63,6 +79,7 @@
 | 背景、头像等图片 | `.png`、`.jpg`、`.jpeg`、`.webp` |
 | 音乐、音效 | `.mp3`、`.wav`、`.ogg` |
 | 视频背景 | `.mp4`、`.webm` |
+| 知识库书本 | `.pdf`（在知识库页导入） |
 | 编辑器工程 | `.vrmg`（由编辑器创建和保存） |
 
 推荐尺寸、命名方法、注意事项和常见问题都在 [图文说明书](docs/新手说明书.md)。

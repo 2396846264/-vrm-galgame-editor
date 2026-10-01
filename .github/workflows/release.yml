@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'Release public VRM Galgame Editor 0.0.6 based on v0.7.15'
+    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'Release public VRM Galgame Editor 0.0.7 based on v0.7.22'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
@@ -30,16 +30,16 @@ jobs:
       - name: Assemble portable ZIP
         shell: pwsh
         run: |
-          $package = 'release/VRMGalgame-0.0.6-win-x64'
+          $package = 'release/VRMGalgame-0.0.7-win-x64'
           New-Item -ItemType Directory -Force -Path $package | Out-Null
           $loader = if (Test-Path 'publish/WebView2Loader.dll') { 'publish/WebView2Loader.dll' } else { 'Desktop/bin/Release/net10.0-windows/win-x64/WebView2Loader.dll' }
           Copy-Item -LiteralPath 'publish/VRMGalgame.exe',$loader,'README.md','CHANGELOG.md','RELEASE_NOTES.md' -Destination $package
           Copy-Item -Recurse -LiteralPath 'dist' -Destination "$package/web"
           Copy-Item -Recurse -LiteralPath 'docs' -Destination "$package/docs"
-          Compress-Archive -LiteralPath $package -DestinationPath 'release/VRMGalgame-0.0.6-win-x64.zip' -CompressionLevel Optimal
-      - name: Publish 0.0.6
+          Compress-Archive -LiteralPath $package -DestinationPath 'release/VRMGalgame-0.0.7-win-x64.zip' -CompressionLevel Optimal
+      - name: Publish 0.0.7
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v0.0.6 'release/VRMGalgame-0.0.6-win-x64.zip' --title 'VRM Galgame Editor 0.0.6' --notes-file RELEASE_NOTES.md --target '${{ github.sha }}'
+          gh release create v0.0.7 'release/VRMGalgame-0.0.7-win-x64.zip' --title 'VRM Galgame Editor 0.0.7' --notes-file RELEASE_NOTES.md --target '${{ github.sha }}'

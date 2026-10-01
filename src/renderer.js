@@ -97,7 +97,7 @@ for (const side of ['Left','Right']) {
   }
 }
 
-export const assetUrl = asset => asset ? `https://project.galgame/${asset.path.split('/').map(encodeURIComponent).join('/')}` : '';
+export const assetUrl = asset => asset ? `https://project.galgame/${asset.path.split('/').map(encodeURIComponent).join('/')}${asset.revision ? `?v=${encodeURIComponent(asset.revision)}` : ''}` : '';
 
 // Render a separate, transparent bust portrait without moving the stage actor.
 export async function captureVrmPortrait(modelAsset, motionAsset = null, poseFrame = 1, legacySeconds = null) {

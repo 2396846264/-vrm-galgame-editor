@@ -1,4 +1,4 @@
-# VRM Galgame Editor · 0.0.6
+# VRM Galgame Editor · 0.0.7
 
 [简体中文](../README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
@@ -6,7 +6,7 @@
 
 A Windows editor for creating visual novels with 3D VRM characters. Arrange characters, dialogue, motion, backgrounds, and audio; preview the scene in a separate window; then export a playable game. The image above is a **feature illustration**, not a screenshot.
 
-**0.0.6 is the latest public release** and includes the local v0.7.15 features. The previous 0.0.3 download remains available. This public edition does not bundle VRM models, Mixamo motions, or the sample story's assets. Import assets you have permission to use.
+**0.0.7 is the latest public release** and includes the local v0.7.22 features. The previous 0.0.3 download remains available. This public edition does not bundle VRM models, Mixamo motions, or the sample story's assets. Import assets you have permission to use.
 
 This release adds a five-tab asset library below the preview (Image, VRM, Motion, Audio, and Video), image thumbnails, clickable folders, double-click import, and file or folder drag-and-drop import. The earlier shadow-height slider and frame-by-frame pose selection remain available. Existing time-based poses migrate to frames. Manual portraits remain untouched. Earlier features include oil-paint rendering, portrait-only characters, off-stage dialogue, white editor, and night mode.
 
@@ -41,7 +41,7 @@ These examples and visual previews show the editor, title screen, and gameplay. 
 
 ## Download and start
 
-1. Download `VRMGalgame-0.0.6-win-x64.zip` from [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases).
+1. Download `VRMGalgame-0.0.7-win-x64.zip` from [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases).
 2. Extract the **whole archive** and run `VRMGalgame.exe`.
 3. Create a project or open an existing `.vrmg` file.
 4. Import your own VRM, motion, image, and audio files; edit the cast and story; select **Preview** and then **Export Game**.
@@ -74,3 +74,12 @@ Creator on Bilibili: [尸工U5十三世](https://b23.tv/krcyQ8I).
 
 
 ![Progress example and visual preview](images/progress.png)
+
+
+## 0.0.7
+
+Story-wide find and replace with undo; game naming moves to Title settings. PDF knowledge library with chapter-completion unlocking, grayscale locked covers, and a red locked ribbon. Offline two-page reading includes paper and spine shadows, animated page turns, keyboard/swipe navigation, zoom, and remembered reading position. Per-chapter rendering, color grading, cover selection, and replay cards. Milky translucent glass menus with black text, clear title buttons that frost on hover, and borderless white dialogue with black shadows. Fixes the blank, unclickable book entry, settings scrolling, title music, startup conflicts, and duplicate automatic portraits.
+
+[Illustrated guide / 図解 / 그림 설명](新功能说明_0.0.7.md)
+
+![PDF library preview](images/library-shelf-v0722.png)

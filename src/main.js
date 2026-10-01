@@ -3,7 +3,12 @@ import './skin.css';
 import './layout.css';
 import './vn-theme.css';
 import './ios7-theme.css';
+import './chapters.css';
+import './menu-motion.css';
+import './game-glass.css';
+import { colorDefaults, chapterRender, colorFilter, chapterUnlocked } from './chapters.js';
 import { VRMStage, assetUrl, motionFrameInfo, captureVrmPortrait } from './renderer.js';
+import { createLibrary } from './library.js';
 
 const app = document.querySelector('#app');
 const pending = new Map();
@@ -63,6 +68,7 @@ let galleryMusicInterruptedBgm = false;
 let stageError = '';
 const portraitJobs = new Map();
 const temporaryPortraits = new Map();
+const pendingPortraitDeletes = new Set();
 let saveModalMode = '';
 let playerResolution = '1280x720';
 let availableResolutions = [];
@@ -99,6 +105,9 @@ const uid = () => crypto.randomUUID().replaceAll('-', '');
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char =>
   ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[char]);
 const asset = id => project?.assets.find(item => item.id === id);
+const library = createLibrary({ project: () => project, escape, assetUrl, bridge, markDirty, toast,
+  progress: () => lifetimeProgress, refresh: () => { renderSidebar(); renderInspector(); updatePreview(); },
+  openModal: view => { closePlayerModal(); document.querySelector('#player-modal')?.remove(); saveModalMode = view; } });
 const act = () => project.acts[selectedAct];
 const step = () => act()?.steps[selectedStep];
 const character = id => project.characters.find(item => item.id === id);
@@ -267,9 +276,10 @@ function titleMarkup(interactive) {
   const menu = items.map(([label, action]) => interactive
     ? `<button type="button" data-action="${action}" ${action === 'continue-game' && !hasSave ? 'disabled' : ''}>${label}</button>`
     : `<span>${label}</span>`).join('');
-  return `<div class="title-logo-region">${logoMarkup}</div><nav class="title-bottom-menu">${menu}</nav>`;
+  return `${interactive ? '<button class="knowledge-title-button" data-action="knowledge-open" title="知识库" aria-label="打开知识库"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5C8 2 3 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-3-2-7-1-10 1Z"/><path d="M12 5v15"/></svg></button>' : ''}<div class="title-logo-region">${logoMarkup}</div><nav class="title-bottom-menu">${menu}</nav>`;
 }
 async function showTitleScene(interactive = false) {
+  applySceneColor(colorDefaults);
   const request = ++titleRequest;
   const frame = document.querySelector('.stage-frame');
   frame?.classList.add('title-mode');
@@ -283,6 +293,7 @@ async function showTitleScene(interactive = false) {
     overlay.innerHTML = titleMarkup(interactive);
     overlay.classList.remove('hidden');
   }
+  if (interactive) setMusic(project.title.bgmId);
   const placeholder = document.querySelector('#stage-placeholder');
   if (placeholder) placeholder.style.display = 'none';
   const loading = document.querySelector('#act-loading');
@@ -299,7 +310,6 @@ async function showTitleScene(interactive = false) {
       rememberDiscovery('character', item.id);
   if (!interactive && activePanel === 'title') refreshMotionHints();
   if (!interactive && activePanel === 'title') renderTitleExpressionControls();
-  if (interactive) setMusic(project.title.bgmId);
 }
 
 function defaultProject(name) {
@@ -317,6 +327,8 @@ function defaultProject(name) {
   };
 }
 function normalize() {
+  library.reset();
+  project.knowledgeBooks ||= [];
   project.assets ||= [];
   project.assetFolders ||= [];
   project.characters ||= [];
@@ -345,6 +357,8 @@ function normalize() {
     shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, shadowHeight: 0,
     paintEffect: 'none', paintStrength: 0.65, ...project.render };
   for (const item of project.acts) {
+    item.coverImageId ||= '';
+    item.render = chapterRender(item, project.render);
     item.steps ||= [];
     item.castSettings ||= {};
     if (!item.cast) {
@@ -404,10 +418,12 @@ async function save() {
   if (!project || mode !== 'editor') return;
   if (saveInFlight) await saveInFlight;
   const revision = changeRevision;
-  const task = bridge('saveProject', { project: structuredClone(project) });
+  const obsoletePortraitPaths = [...pendingPortraitDeletes];
+  const task = bridge('saveProject', { project: structuredClone(project), obsoletePortraitPaths });
   saveInFlight = task;
   try {
     await task;
+    obsoletePortraitPaths.forEach(path => pendingPortraitDeletes.delete(path));
     if (revision === changeRevision) {
       dirty = false;
       const marker = document.querySelector('#save-state');
@@ -487,12 +503,12 @@ function renderEditor() {
   if (activePanel === 'assets') activePanel = 'story';
   app.innerHTML = `<div class="editor">
     <header class="topbar"><div class="brand">✦ <b>VRM Galgame</b><span>编辑器</span></div>
-      <div class="project-title"><input id="project-name" value="${escape(project.name)}" aria-label="游戏名称"><span id="save-state">✓ 已保存</span></div>
+      <div class="project-title"><input id="text-search" placeholder="查找与替换剧情、角色名称…" aria-label="查找剧情文本，按回车打开替换工具"><button class="search-open-button" data-action="search-open" title="查找与替换">⌕</button><span id="save-state">✓ 已保存</span></div>
       <nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('导入旧工程', 'import-folder-project')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}</nav>
     </header>
     <div class="workspace">
       <aside class="sidebar"><div class="tabs">
-        <button data-panel="story" class="active">剧情</button><button data-panel="characters">角色</button><button data-panel="title">标题</button><button data-panel="render">渲染</button>
+        <button data-panel="story" class="active">剧情</button><button data-panel="characters">角色</button><button data-panel="title">标题</button><button data-panel="render">渲染</button><button data-panel="knowledge">知识库</button>
       </div><div id="sidebar-body"></div></aside>
       <main class="center"><div class="stage-toolbar"><span id="stage-caption"></span><span>预览画面</span></div>
         <div class="stage-frame"><div id="scene-bg"></div><div id="stage-canvas"></div><div id="title-preview" class="title-composition hidden"></div>
@@ -531,15 +547,14 @@ function renderEditor() {
 function renderSidebar() {
   document.querySelectorAll('[data-panel]').forEach(node => node.classList.toggle('active', node.dataset.panel === activePanel));
   const body = document.querySelector('#sidebar-body');
+  if (activePanel === 'knowledge') { library.editor(); renderAssetDock(); return; }
   if (activePanel === 'story') {
     body.innerHTML = `<div class="section-heading">幕 ${button('＋ 新增', 'add-act')}</div>
-      <div class="list" data-order-list="act">${project.acts.map((item, index) =>
-        `<button class="list-row sortable-row ${index === selectedAct ? 'selected' : ''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}">
-          <span class="number">${String(index + 1).padStart(2, '0')}</span><span>${escape(item.name)}</span><small>${item.steps.length} 句</small><span class="drag-grip" aria-hidden="true">⋮⋮</span></button>`).join('')}</div>
-      <div class="section-heading">对白 <span class="heading-actions">${button('复制选中', 'duplicate-step', act()?.steps.length ? '' : 'disabled')}${button('＋ 新增', 'add-step')}</span></div>
-      <div class="list step-list" data-order-list="step">${(act()?.steps || []).map((item, index) =>
-        `<button class="list-row sortable-row ${index === selectedStep ? 'selected' : ''}" draggable="true" data-order-kind="step" data-order-index="${index}" data-action="select-step" data-index="${index}">
-          <span class="number">${index + 1}</span><span><b>${escape(item.speaker || character(item.characterId)?.name || '旁白')}</b><small>${escape(item.text || '空对白')}</small></span><span class="drag-grip" aria-hidden="true">⋮⋮</span></button>`).join('')}</div>
+      <div class="list act-accordion" data-order-list="act">${project.acts.map((item, index) =>
+        `<section class="act-group ${index === selectedAct ? 'expanded' : ''}"><button class="list-row sortable-row ${index === selectedAct ? 'selected' : ''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" aria-expanded="${index === selectedAct}">
+          <span class="number">${index === selectedAct ? '▾' : '▸'} ${String(index + 1).padStart(2, '0')}</span><span>${escape(item.name)}</span><small>${item.steps.length} 句</small><span class="drag-grip" aria-hidden="true">⋮⋮</span></button>
+          ${index === selectedAct ? `<div class="act-dialogues"><div class="section-heading">本幕对白 <span class="heading-actions">${button('复制', 'duplicate-step', item.steps.length ? '' : 'disabled')}${button('＋ 新增', 'add-step')}</span></div>
+          <div class="list step-list" data-order-list="step">${item.steps.map((line, stepIndex) => `<button class="list-row sortable-row ${stepIndex === selectedStep ? 'selected' : ''}" draggable="true" data-order-kind="step" data-order-index="${stepIndex}" data-action="select-step" data-index="${stepIndex}"><span class="number">${stepIndex + 1}</span><span><b>${escape(line.speaker || character(line.characterId)?.name || '旁白')}</b><small>${escape(line.text || '空对白')}</small></span><span class="drag-grip" aria-hidden="true">⋮⋮</span></button>`).join('') || '<p class="tip">点击“新增”写第一句对白。</p>'}</div></div>` : ''}</section>`).join('')}</div>
       <div class="sidebar-note">按住幕或对白，拖到想放的位置即可调整顺序。</div>`;
   } else if (activePanel === 'characters') {
     body.innerHTML = `<div class="section-heading">角色 ${button('＋ 新增', 'add-character')}</div>
@@ -548,7 +563,7 @@ function renderSidebar() {
           <span class="number">✦</span><span>${escape(item.name)}</span><small>${item.modelId ? 'VRM' : '未设模型'}</small></button>`).join('')}</div>
       <div class="sidebar-note">角色只需设置一次。对白选中角色后就能调用它的模型。</div>`;
   } else if (activePanel === 'render') {
-    body.innerHTML = '<div class="section-heading">画面效果</div><div class="sidebar-note">在右侧设置抗锯齿、画风、描边和背景配光。这里的设置会跟随工程一起导出。</div>';
+    body.innerHTML = `<div class="section-heading">选择要调节的幕</div><div class="list">${project.acts.map((item, index) => `<button class="list-row ${index === selectedAct ? 'selected' : ''}" data-action="select-act" data-index="${index}"><span class="number">${index + 1}</span><span>${escape(item.name)}</span></button>`).join('')}</div><div class="sidebar-note">右侧的画风、阴影和调色只影响选中的这一幕。标题画面保留原来的效果。</div>`;
   } else if (activePanel === 'title') {
     body.innerHTML = `<div class="section-heading">标题画面</div>
       <div class="title-sidebar-actions">
@@ -778,6 +793,7 @@ function castEditor(currentAct, slot) {
     </div></details>`;
 }
 function renderInspector() {
+  if (activePanel === 'knowledge') { library.editor(); return; }
   const body = document.querySelector('#inspector-body');
   if (activePanel === 'characters') {
     const item = project.characters[selectedCharacter];
@@ -808,6 +824,7 @@ function renderInspector() {
   if (activePanel === 'title') {
     const title = project.title;
     body.innerHTML = `<div class="inspector-content"><h2>标题画面</h2>
+      ${field('游戏名称', `<input id="project-name" value="${escape(project.name)}" aria-label="游戏名称">`)}
       ${field('Logo 图片', `<select data-title-field="logoImageId">${options(byType('image'), title.logoImageId, '使用游戏名称')}</select>`)}
       ${field('标题背景', `<select data-title-field="backgroundId">${options(byType('image'), title.backgroundId, '使用默认深蓝背景')}</select>`)}
       ${field('标题 VRM 人物', `<select data-title-field="modelId">${options(byType('vrm'), title.modelId, '不显示人物')}</select>`)}
@@ -831,8 +848,12 @@ function renderInspector() {
     return;
   }
   if (activePanel === 'render') {
-    const settings = project.render;
-    body.innerHTML = `<div class="inspector-content"><h2>画面渲染</h2>
+    if (!act()) { body.innerHTML = '<div class="inspector-content">先新增一幕</div>'; return; }
+    const settings = act().render;
+    body.innerHTML = `<div class="inspector-content"><h2>本幕渲染 · ${escape(act().name)}</h2><p class="tip">这里只改变这一幕。背景自动配光默认开启，下面的调色也会一起作用于人物和背景。</p>
+      <h3>本幕调色</h3>
+      ${[['brightness','亮度',0,200,'%'],['contrast','对比度',0,200,'%'],['saturation','饱和度',0,200,'%'],['temperature','色温（左冷右暖）',-100,100,''],['hue','色差（色相偏移）',-180,180,'°']].map(([key,label,min,max,unit]) => field(label, `<input type="range" data-render="${key}" min="${min}" max="${max}" step="1" value="${settings[key]}"><output data-render-output="${key}">${settings[key]}${unit}</output>`)).join('')}
+      ${button('恢复默认调色与自动配光', 'reset-act-color')}<hr>
       ${field('抗锯齿', `<select data-render="antialias"><option value="off" ${settings.antialias === 'off' ? 'selected' : ''}>关闭</option><option value="standard" ${settings.antialias === 'standard' ? 'selected' : ''}>标准</option><option value="high" ${settings.antialias === 'high' ? 'selected' : ''}>高清</option></select>`)}
       ${field('人物画风', `<select data-render="style"><option value="original" ${settings.style === 'original' ? 'selected' : ''}>模型原版</option><option value="anime" ${settings.style === 'anime' ? 'selected' : ''}>三渲二（推荐）</option><option value="soft" ${settings.style === 'soft' ? 'selected' : ''}>柔和动漫</option><option value="cinematic" ${settings.style === 'cinematic' ? 'selected' : ''}>电影色调</option></select>`)}
       ${field('人物描边', `<select data-render="outline"><option value="0" ${Number(settings.outline) === 0 ? 'selected' : ''}>关闭</option><option value="1" ${Number(settings.outline) === 1 ? 'selected' : ''}>细</option><option value="2" ${Number(settings.outline) === 2 ? 'selected' : ''}>中</option><option value="3" ${Number(settings.outline) === 3 ? 'selected' : ''}>粗</option></select>`)}
@@ -856,6 +877,9 @@ function renderInspector() {
   if (!currentAct) { body.innerHTML = '<div class="inspector-content empty">先新增一幕</div>'; return; }
   body.innerHTML = `<div class="inspector-content"><h2>${escape(currentAct.name)}</h2>
     ${field('幕名称', input('act.name', currentAct.name))}
+    ${field('章节封面', select('act.coverImageId', byType('image'), currentAct.coverImageId, '默认使用背景图'))}
+    ${asset(currentAct.coverImageId || currentAct.backgroundId)?.type === 'image' ? `<img class="act-cover-preview" src="${escape(assetUrl(asset(currentAct.coverImageId || currentAct.backgroundId)))}" alt="本幕封面">` : '<p class="tip">还没有封面。建议上传竖图，人物放在图片中央。</p>'}
+    <div class="inline-actions">${button('上传本幕封面', 'upload-act-cover')}${button('本幕渲染与调色', 'edit-act-render')}</div>
     ${field('背景图片 / 视频', select('act.backgroundId', [...byType('image'),...byType('video')], currentAct.backgroundId, '无背景'))}
     ${field('背景音乐', select('act.bgmId', byType('audio'), currentAct.bgmId, '无音乐'))}
     <hr><h2>本幕登场人物（初始位置）</h2>
@@ -977,7 +1001,8 @@ async function updatePreview() {
   const motionAsset = asset(current?.motionId);
   const bgAsset = asset(currentAct?.backgroundId);
   showBackground(bgAsset);
-  stage.setRenderSettings(project.render);
+  stage.setRenderSettings(chapterRender(currentAct, project.render));
+  applySceneColor(chapterRender(currentAct, project.render));
   stage.setBackgroundLighting(bgAsset);
   document.querySelector('#stage-caption').textContent = currentAct?.name || '没有幕';
   const placeholder = document.querySelector('#stage-placeholder');
@@ -993,6 +1018,24 @@ async function updatePreview() {
     setStagePlaceholder(placeholder, '', true);
   renderExpressionControls();
   renderCastExpressionControls();
+}
+function applySceneColor(settings) {
+  let svg = document.querySelector('#scene-color-defs');
+  if (!svg) {
+    document.body.insertAdjacentHTML('beforeend', '<svg id="scene-color-defs" width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><filter id="scene-temperature" color-interpolation-filters="sRGB"><feColorMatrix type="matrix"/></filter></defs></svg>');
+    svg = document.querySelector('#scene-color-defs');
+  }
+  const result = colorFilter(settings);
+  svg.querySelector('feColorMatrix').setAttribute('values', result.matrix);
+  for (const node of document.querySelectorAll('#scene-bg, #stage-canvas')) node.style.filter = result.filter;
+}
+async function uploadActCover() {
+  const target = act();
+  const imported = await bridge('importAsset', { type: 'image', single: true });
+  if (!target || !imported?.length) return;
+  imported.forEach(item => { item.galleryImage = false; });
+  project.assets.push(...imported); target.coverImageId = imported[0].id;
+  markDirty(); renderSidebar(); renderInspector();
 }
 function showBackground(bgAsset) {
   const node = document.querySelector('#scene-bg');
@@ -1034,12 +1077,10 @@ async function ensureCharacterPortrait(item, force = false) {
     delete item.galleryPoseTime;
     if (mode === 'player') temporaryPortraits.set(item.id, dataUrl);
     else {
-      const saved = await bridge('saveGeneratedPortrait', { dataUrl });
+      const saved = await bridge('saveGeneratedPortrait', { dataUrl, characterId: item.id, name: item.name });
       if (project.characters.find(entry => entry.id === item.id) !== item || item.modelId !== modelId ||
         item.galleryMotionId !== motionId || Number(item.galleryPoseFrame) !== frame || (!force && asset(item.portraitId))) return;
-      saved.galleryImage = false;
-      project.assets.push(saved);
-      item.portraitId = saved.id;
+      await replaceAutoPortrait(item, saved);
       item.portraitSource = 'auto';
       item.portraitPoseKey = `portrait-v3:${item.modelId}:${motionId}:${frame}`;
       markDirty();
@@ -1060,7 +1101,49 @@ async function ensureCharacterPortrait(item, force = false) {
 function portraitIsAutomatic(item) {
   return !asset(item?.portraitId) || item.portraitSource === 'auto';
 }
-function queueMissingPortraits() {
+const autoPortraitFolderId = 'auto-character-portraits';
+function assetIsReferenced(id) {
+  const scan = value => typeof value === 'string' ? value === id : value && typeof value === 'object' ? Object.values(value).some(scan) : false;
+  return scan({ ...project, assets: undefined, assetFolders: undefined });
+}
+async function removeUnusedAutoPortraits() {
+  for (const old of [...project.assets]) {
+    if (old.type !== 'image' || !(old.generatedPortrait || old.name === '自动头像.png') || assetIsReferenced(old.id)) continue;
+    // Another asset can still use the same physical file.
+    if (!project.assets.some(other => other.id !== old.id && other.path === old.path))
+      pendingPortraitDeletes.add(old.path);
+    project.assets = project.assets.filter(other => other !== old);
+    markDirty();
+  }
+}
+async function replaceAutoPortrait(item, saved) {
+  if (!project.assetFolders.some(folder => folder.id === autoPortraitFolderId))
+    project.assetFolders.push({ id: autoPortraitFolderId, name: '自动角色头像', type: 'image' });
+  saved.galleryImage = false; saved.folderId = autoPortraitFolderId;
+  const existing = asset(saved.id);
+  if (existing) Object.assign(existing, saved);
+  else project.assets.push(saved);
+  item.portraitId = saved.id;
+  item.portraitSource = 'auto';
+  markDirty();
+  await removeUnusedAutoPortraits();
+  renderAssetDock();
+}
+async function queueMissingPortraits() {
+  const currentProject = project;
+  try {
+    for (const item of project.characters) {
+      const old = asset(item.portraitId);
+      if (item.portraitSource !== 'auto' || !old || old.generatedPortrait) continue;
+      const saved = await bridge('organizeGeneratedPortrait', { path: old.path, characterId: item.id, name: item.name });
+      if (project !== currentProject) return;
+      await replaceAutoPortrait(item, saved);
+      if (activePanel === 'characters') renderInspector();
+      updateSpeakerPortrait(step()?.characterId, true);
+    }
+    await removeUnusedAutoPortraits();
+    renderAssetDock();
+  } catch (error) { toast(`自动头像整理失败：${error.message}`, true); }
   const items = project.characters.filter(item => item.modelId && portraitIsAutomatic(item) &&
     (!asset(item.portraitId) || item.portraitPoseKey !==
       `portrait-v3:${item.modelId}:${item.galleryMotionId || ''}:${Math.max(1, Math.floor(Number(item.galleryPoseFrame) || 1))}`));
@@ -1233,7 +1316,8 @@ async function showPlayStep() {
     document.querySelector('.stage-frame')?.classList.remove('title-mode');
     document.querySelector('#title-preview')?.classList.add('hidden');
     stage.setCameraAngle(0);
-    stage.setRenderSettings(project.render);
+    stage.setRenderSettings(chapterRender(currentAct, project.render));
+    applySceneColor(chapterRender(currentAct, project.render));
     stage.setBackgroundLighting(asset(currentAct.backgroundId));
     await displayActStep(currentAct, current);
     if (request !== playRequest || !playing) return;
@@ -1332,11 +1416,11 @@ const lifetimeKey = () => `vrm-lifetime-progress-${project.id || project.name}`;
 function loadLifetimeProgress() {
   if (lifetimeProgress) return lifetimeProgress;
   const fresh = { version: 2, viewedDialogueIds: [], viewedDialogueText: {}, characterLineCounts: {},
-    seenCharacterIds: [], seenImageIds: [], heardMusicIds: [], lastActId: '' };
+    seenCharacterIds: [], seenImageIds: [], heardMusicIds: [], enteredActIds: [], lastActId: '' };
   try {
     const stored = JSON.parse(localStorage.getItem(lifetimeKey()) || 'null');
     if (stored && typeof stored === 'object') {
-      for (const key of ['viewedDialogueIds', 'seenCharacterIds', 'seenImageIds', 'heardMusicIds'])
+      for (const key of ['viewedDialogueIds', 'seenCharacterIds', 'seenImageIds', 'heardMusicIds', 'enteredActIds'])
         if (Array.isArray(stored[key])) fresh[key] = [...new Set(stored[key].filter(id => typeof id === 'string'))];
       if (stored.characterLineCounts && typeof stored.characterLineCounts === 'object')
         for (const [id, count] of Object.entries(stored.characterLineCounts))
@@ -1420,6 +1504,8 @@ function recordViewedDialogue(entry) {
   if (mode !== 'player') return;
   const progress = loadLifetimeProgress();
   let changed = false;
+  const actId = project.acts[playAct]?.id;
+  if (actId && !progress.enteredActIds.includes(actId)) { progress.enteredActIds.push(actId); changed = true; }
   if (!progress.viewedDialogueIds.includes(id)) {
     progress.viewedDialogueIds.push(id);
     if (entry.characterId) progress.characterLineCounts[entry.characterId] =
@@ -1480,7 +1566,13 @@ function closePlayerModal() {
     galleryStage = null;
   }
   saveModalMode = '';
-  document.querySelector('#player-modal')?.remove();
+  const modal = document.querySelector('#player-modal');
+  if (modal) {
+    modal.classList.add('closing');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.inert = true;
+    setTimeout(() => modal.remove(), 180);
+  }
   if (playing && autoPlay) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
 }
 function restartPlayerAutoSave() {
@@ -1569,6 +1661,7 @@ function renderSettingsModal() {
   const volume = (key, label) => `<label class="volume-line"><span>${label}</span><input type="range" data-volume="${key}" min="0" max="100" value="${Math.round(audioSettings[key] * 100)}"><output data-volume-output="${key}">${Math.round(audioSettings[key] * 100)}%</output></label>`;
   document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal" role="dialog" aria-modal="true" aria-label="游戏设置">
     <div class="modal-box settings-box"><header><div><small>GAME MENU</small><h2>游戏设置</h2></div>${button('关闭 ×', 'close-modal')}</header>
+      <div class="settings-body">
       <h3>音量</h3>${volume('master', '总音量')}${volume('music', '背景音乐')}${volume('voice', '角色语音')}${volume('effects', '按钮与场景音效')}
       <h3>对白</h3><label class="volume-line"><span>文字出现速度</span><input type="range" data-text-speed min="5" max="100" value="${textSpeed}"><output data-text-speed-output>${textSpeed} 字/秒</output></label>
       <h3>画面</h3>
@@ -1577,7 +1670,7 @@ function renderSettingsModal() {
       <div class="settings-line"><span>全屏显示</span>${button(playerFullscreen ? '退出全屏' : '进入全屏', 'toggle-fullscreen')}</div>
       <p>无论窗口大小或显示器比例如何，游戏画面始终保持 16:9。</p>
       <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
-    </div></section>`);
+    </div></div></section>`);
 }
 const galleryTracks = () => byType('audio').filter(item => item.galleryMusic !== false);
 function nextUnlockedTrack(direction) {
@@ -1743,6 +1836,7 @@ function refreshGalleryFrameControl(item) {
   output.textContent = `第 ${frame} / ${frames} 帧`;
 }
 async function showCharacterEditorPreview() {
+  applySceneColor(colorDefaults);
   const overlay = document.querySelector('#character-preview');
   const frame = document.querySelector('.editor .stage-frame');
   if (!overlay || !frame || !stage) return;
@@ -1824,7 +1918,8 @@ function progressStatistics() {
     const read = own.filter(exact).length;
     const status = own.length && read === own.length ? 'complete'
       : own.length && read > 0 && progress.lastActId === item.id ? 'current' : 'pending';
-    return { index: index + 1, name: item.name, total: own.length, seen: read, status };
+    return { index: index + 1, name: item.name, total: own.length, seen: read, status,
+      unlocked: chapterUnlocked(item, index, progress), cover: asset(item.coverImageId) || asset(item.backgroundId) };
   });
   return { total: lines.length, seen, characters, acts };
 }
@@ -1835,13 +1930,37 @@ function renderProgressModal() {
   const percent = (seen, total) => total ? `${Math.round(seen / total * 100)}%` : '0%';
   document.querySelector('#player-modal')?.remove();
   document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal progress-modal" role="dialog" aria-modal="true" aria-label="游玩进度">
-    <div class="modal-box progress-box"><header><div><small>STORY PROGRESS</small><h2>游玩进度</h2></div>${button('关闭 ×', 'close-modal')}</header>
-      <div class="progress-body"><div class="progress-summary">
-        <div class="progress-overall"><small>全部台词</small><strong>${percent(stats.seen, stats.total)}</strong><span>已看过 ${stats.seen} / 共 ${stats.total} 句</span></div>
-        <h3>各角色台词</h3><div class="progress-character-list">${stats.characters.map(item => `<div class="progress-character-row"><span>${escape(item.name)}</span><b>${percent(item.seen, item.total)}</b><small>${item.seen} / ${item.total} 句</small></div>`).join('') || '<p>还没有角色台词。</p>'}</div>
-      </div><div class="progress-acts"><h3>幕的进度</h3><div class="progress-act-list">${stats.acts.map(item =>
-        `<div class="progress-act-row ${item.status}"><span class="progress-act-number">${String(item.index).padStart(2, '0')}</span><span class="progress-act-name">${escape(item.name)}</span><small>${item.seen} / ${item.total} 句</small><strong>${item.status === 'complete' ? '✓ 已完成' : item.status === 'current' ? '正在经历' : '未完成'}</strong></div>`).join('')}</div></div></div>
+    <div class="modal-box progress-box chapter-box"><header><div><small>STORY PROGRESS</small><h2>游玩进度 · 章节选择</h2></div><div class="chapter-header-actions"><div class="chapter-total"><small>总体进度</small><strong>${percent(stats.seen, stats.total)}</strong><span>已读 ${stats.seen} / ${stats.total} 句</span></div>${button('关闭 ×', 'close-modal')}</div></header>
+      <div class="chapter-body"><div class="chapter-content"><div class="chapter-toolbar"><div><h3>选择章节</h3><p>左右滑动选择，点击已解锁的封面从头游玩。</p></div><div>${button('‹', 'chapter-scroll', 'data-direction="-1" aria-label="上一组章节"')}${button('›', 'chapter-scroll', 'data-direction="1" aria-label="下一组章节"')}</div></div>
+      <div id="chapter-rail" class="chapter-rail" tabindex="0" aria-label="左右滑动选择章节">${stats.acts.map(item => `<button id="chapter-card-${item.index - 1}" class="chapter-card ${item.unlocked ? '' : 'locked'}" data-action="chapter-replay" data-index="${item.index - 1}" ${!item.unlocked || !project.acts[item.index - 1].steps.length ? 'disabled' : ''}>
+        <div class="chapter-art">${item.cover?.type === 'image' ? `<img src="${escape(assetUrl(item.cover))}" alt="${escape(item.name)}封面" draggable="false">` : `<div class="chapter-cover-placeholder"><small>CHAPTER</small><strong>${String(item.index).padStart(2,'0')}</strong></div>`}
+        </div><div class="chapter-card-caption"><div class="chapter-caption-heading"><small>第 ${item.index} 章</small><b>${percent(item.seen,item.total)}</b></div><h3>${escape(item.name)}</h3><div class="chapter-progress"><div><i style="width:${percent(item.seen,item.total)}"></i></div></div><span>${item.seen} / ${item.total} 句 · ${!item.unlocked ? '🔒 尚未解锁' : item.status === 'complete' ? '✓ 已完成' : '可以游玩'}</span><span>${!item.unlocked ? '先在故事中到达这一幕' : !project.acts[item.index - 1].steps.length ? '暂无对白' : '点击从头游玩'}</span></div></button>`).join('')}</div>
+      <details class="chapter-character-stats"><summary>各角色台词进度</summary><div class="chapter-character-grid">${stats.characters.map(item => `<div class="progress-character-row"><span>${escape(item.name)}</span><b>${percent(item.seen,item.total)}</b><small>${item.seen} / ${item.total} 句</small></div>`).join('') || '<p>还没有角色台词。</p>'}</div></details></div></div>
     </div></section>`);
+  const rail = document.querySelector('#chapter-rail');
+  rail.addEventListener('wheel', event => {
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX) && rail.scrollWidth > rail.clientWidth) {
+      const next = Math.max(0, Math.min(rail.scrollWidth - rail.clientWidth, rail.scrollLeft + event.deltaY));
+      if (next !== rail.scrollLeft) { event.preventDefault(); rail.scrollLeft = next; }
+    }
+  }, { passive: false });
+  let drag = null;
+  rail.addEventListener('pointerdown', event => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    drag = { x: event.clientX, left: rail.scrollLeft, moved: false };
+  });
+  rail.addEventListener('pointermove', event => {
+    if (!drag || !(event.buttons & 1)) return;
+    if (Math.abs(event.clientX - drag.x) > 8) {
+      drag.moved = true; rail.classList.add('dragging'); rail.setPointerCapture(event.pointerId);
+      rail.scrollLeft = drag.left - (event.clientX - drag.x);
+    }
+  });
+  rail.addEventListener('click', event => { if (drag?.moved) { event.preventDefault(); event.stopPropagation(); } }, true);
+  rail.addEventListener('pointerup', () => { rail.classList.remove('dragging'); setTimeout(() => { drag = null; }, 0); });
+  rail.addEventListener('pointercancel', () => { drag = null; rail.classList.remove('dragging'); });
+  const active = Math.max(0, project.acts.findIndex(item => item.id === loadLifetimeProgress().lastActId));
+  requestAnimationFrame(() => document.querySelector(`#chapter-card-${active}`)?.scrollIntoView({ block: 'nearest', inline: 'center' }));
 }
 function renderImageImportModal(folderId = '', titleImport = '') {
   document.querySelector('#image-import-modal')?.remove();
@@ -1918,6 +2037,9 @@ document.addEventListener('click', async event => {
   const action = node.dataset.action;
   if (new URLSearchParams(location.search).has('smoke')) window.__lastClickAction = action;
   try {
+    if (action.startsWith('book-') || action.startsWith('search-') || action === 'knowledge-open') {
+      await library.click(action, node); return;
+    }
     if (action === 'asset-tab') {
       activeAssetType = node.dataset.type;
       document.querySelector('#asset-dock-body').scrollTop = 0;
@@ -1995,8 +2117,16 @@ document.addEventListener('click', async event => {
       if (result) toast('游戏已导出到：' + result.directory);
     } else if (action === 'add-act') {
       project.acts.push({ id: uid(), name: `第${project.acts.length + 1}幕`, backgroundId: '', bgmId: '',
+        coverImageId: '', render: chapterRender(null, project.render),
         cast: { left: '', center: '', right: '' }, castSettings: {}, steps: [] });
       selectedAct = project.acts.length - 1; selectedStep = 0; markDirty(); renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'upload-act-cover') {
+      await uploadActCover();
+    } else if (action === 'edit-act-render') {
+      activePanel = 'render'; renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'reset-act-color') {
+      Object.assign(act().render, colorDefaults, { autoLight: true, lightStrength: .6 });
+      markDirty(); renderInspector(); updatePreview();
     } else if (action === 'select-act') {
       selectedAct = Number(node.dataset.index); selectedStep = 0; renderSidebar(); renderInspector(); updatePreview();
     } else if (action === 'delete-act') {
@@ -2193,6 +2323,23 @@ document.addEventListener('click', async event => {
       renderGalleryCharacterText();
     }
     else if (action === 'play-progress') renderProgressModal();
+    else if (action === 'chapter-scroll') {
+      const rail = document.querySelector('#chapter-rail');
+      rail?.scrollBy({ left: Number(node.dataset.direction) * rail.clientWidth * .8, behavior: 'smooth' });
+    }
+    else if (action === 'chapter-select') {
+      const card = document.querySelector(`#chapter-card-${Number(node.dataset.index)}`);
+      card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      document.querySelectorAll('[data-action="chapter-select"]').forEach(button => button.classList.toggle('selected', button === node));
+    }
+    else if (action === 'chapter-replay') {
+      const index = Number(node.dataset.index);
+      const chapter = project.acts[index];
+      if (!chapter || !chapterUnlocked(chapter, index, loadLifetimeProgress()) || !chapter.steps.length) return;
+      closePlayerModal(); playing = true; playAct = index; playStep = 0; preparedAct = -1;
+      titleRequest++; playViewedStepIds = new Set(); playCharacterLineCounts = {};
+      restartPlayerAutoSave(); showPlayStep();
+    }
     else if (action === 'exit-game') await bridge('exitGame');
     else if (action === 'apply-resolution') {
       const value = document.querySelector('#window-resolution')?.value;
@@ -2218,6 +2365,7 @@ document.addEventListener('click', async event => {
 });
 
 document.addEventListener('input', event => {
+  if (library.input(event.target)) return;
   const node = event.target;
   if (node.dataset.motionOptions && project) {
     const scope = node.dataset.motionOptions;
@@ -2389,16 +2537,18 @@ document.addEventListener('input', event => {
   }
   if (node.dataset.render && project) {
     const key = node.dataset.render;
-    project.render[key] = key === 'autoLight' ? node.value === 'true'
+    act().render[key] = key === 'autoLight' ? node.value === 'true'
       : key === 'shadowEnabled' ? node.checked
-      : ['outline', 'shadowAngle'].includes(key) ? Number(node.value)
+      : ['outline', 'shadowAngle', ...Object.keys(colorDefaults)].includes(key) ? Number(node.value)
       : ['lightStrength', 'shadowOpacity', 'paintStrength', 'shadowHeight'].includes(key) ? Number(node.value) / 100 : node.value;
     if (key === 'lightStrength') document.querySelector('#light-strength-value').textContent = `${node.value}%`;
     const output = document.querySelector(`[data-render-output="${key}"]`);
     if (output) output.textContent = key === 'shadowAngle' ? `${node.value}°`
+      : key === 'hue' ? `${node.value}°` : key === 'temperature' ? node.value
       : key === 'shadowHeight' ? `${Number(node.value) > 0 ? '+' : ''}${node.value} 厘米` : `${node.value}%`;
     markDirty();
-    stage?.setRenderSettings(project.render);
+    stage?.setRenderSettings(act().render);
+    applySceneColor(act().render);
     stage?.setBackgroundLighting(asset(act()?.backgroundId));
     return;
   }
@@ -2460,6 +2610,7 @@ document.addEventListener('input', event => {
   else target[property] = node.value;
   markDirty();
   if (node.tagName === 'SELECT') {
+    if (path === 'act.coverImageId') renderInspector();
     if (path === 'step.characterId' && !step().speaker) {
       document.querySelector('[data-field="step.speaker"]')?.setAttribute('placeholder', character(node.value)?.name || '留空时用角色名字');
     }
@@ -2502,7 +2653,189 @@ document.addEventListener('keydown', event => {
 });
 window.addEventListener('beforeunload', event => { if (dirty) event.preventDefault(); });
 if (new URLSearchParams(location.search).has('smoke'))
-  Object.assign(window, { __vrmSmokeAutoSave: () => saveAutoSlot(), __vrmSmokeSaveSlot: index => saveSlot(index) });
+  Object.assign(window, { __vrmSmokeAutoSave: () => saveAutoSlot(), __vrmSmokeSaveSlot: index => saveSlot(index),
+    __vrmSmokeMenuPolish: async phase => {
+      const assert = (condition, message) => { if (!condition) throw new Error(message); };
+      if (phase === 'library-search') {
+        closePlayerModal(); mode = 'editor'; renderEditor();
+        const old = project.characters[0].name;
+        document.querySelector('#text-search').value = old;
+        await library.click('search-open', {});
+        assert(document.querySelectorAll('.search-results article').length > 0, 'search found no role name');
+        document.querySelector('#replace-with').value = '批量改名验证';
+        await library.click('search-replace', {});
+        assert(project.characters[0].name === '批量改名验证', 'replacement failed');
+        await library.click('search-undo', {});
+        assert(project.characters[0].name === old, 'undo failed');
+        return { ok: true, replaceAndUndo: true };
+      }
+      if (phase === 'library-editor') {
+        await library.click('search-close', {}); activePanel = 'knowledge'; renderSidebar(); renderInspector();
+        assert(document.querySelector('[data-book-field="unlockActId"]'), 'book editor missing');
+        return { ok: true, bookCount: project.knowledgeBooks.length };
+      }
+      if (phase === 'library-shelf') {
+        mode = 'player'; renderPlayer(); await new Promise(resolve => setTimeout(resolve,1000));
+        for (let i = 0; i < 70 && !document.querySelector('#act-loading').classList.contains('hidden'); i++) await new Promise(resolve => setTimeout(resolve,100));
+        const bookButton = document.querySelector('.knowledge-title-button');
+        const bounds = bookButton.getBoundingClientRect();
+        const icon = bookButton.querySelector('svg').getBoundingClientRect();
+        assert(icon.width >= 24 && icon.height >= 24, 'book icon collapsed');
+        assert(getComputedStyle(bookButton).pointerEvents === 'auto', 'book button cannot receive clicks');
+        assert(document.elementFromPoint(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2)?.closest('[data-action="knowledge-open"]') === bookButton, 'book button is covered');
+        bookButton.click();
+        await new Promise(resolve => setTimeout(resolve,300));
+        assert(document.querySelector('.book-library'), 'title book button did not open library');
+        assert(document.querySelector('.book-locked'), 'locked cover missing');
+        await library.click('book-read', { dataset: { index: '0' } });
+        assert(!document.querySelector('#book-reader'), 'locked PDF was opened');
+        await new Promise(resolve => setTimeout(resolve,1200));
+        return { ok: true, lockedBookBlocked: true, titleButtonHit: true, iconWidth: icon.width };
+      }
+      if (phase === 'library-reader') {
+        lifetimeProgress.viewedDialogueIds = project.acts[0].steps.map(line => line.id);
+        await library.openBook(0);
+        assert(document.querySelectorAll('.book-paper canvas').length === 2, 'PDF spread missing');
+        return { ok: true, pages: document.querySelector('#book-page-state').textContent };
+      }
+      if (phase === 'library-turn') {
+        await library.click('book-next', {});
+        assert(document.querySelector('#book-page-state').textContent.startsWith('3'), 'next spread failed');
+        await library.click('book-next', {});
+        assert(document.querySelector('#book-page-state').textContent.startsWith('5') && document.querySelectorAll('.book-paper canvas').length === 1, 'odd last page failed');
+        assert(document.querySelector('[data-action="book-next"]').disabled, 'last page next button enabled');
+        await library.click('book-prev', {});
+        await library.click('book-prev', {});
+        assert(document.querySelector('#book-page-state').textContent.startsWith('1'), 'previous spread failed');
+        return { ok: true, forwardAndBackward: true, oddLastPage: true };
+      }
+      if (phase === 'audio') {
+        assert(mode === 'player' && !playing, 'test must start on untouched title screen');
+        const titleButton = getComputedStyle(document.querySelector('#player-start [data-action="play"]'));
+        assert(titleButton.color === 'rgb(0, 0, 0)' && titleButton.backdropFilter.includes('blur(0px)'), 'title button must start clear with black text');
+        for (let i = 0; i < 50 && (music.paused || music.currentTime <= 0); i++) await new Promise(resolve => setTimeout(resolve,100));
+        assert(!music.paused && music.currentTime > 0 && music.src === assetUrl(asset(project.title.bgmId)), 'title music did not autoplay');
+        return { ok: true, titleMusicPlaying: true, time: music.currentTime };
+      }
+      if (phase === 'settings') {
+        document.querySelector('#player-start [data-action="settings"]').click();
+        const body = document.querySelector('.settings-body');
+        const box = document.querySelector('.settings-box');
+        assert(body && getComputedStyle(body).overflowY === 'auto', 'settings is not scrollable');
+        for (const node of body.querySelectorAll('.volume-line,.volume-line output,.field > span,p'))
+          assert(getComputedStyle(node).color === 'rgb(0, 0, 0)', 'settings text must be pure black');
+        assert(getComputedStyle(box).animationName === 'menu-panel-in', 'popup transition missing');
+        await new Promise(resolve => setTimeout(resolve,300));
+        body.scrollTop = body.scrollHeight;
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        const bounds = body.getBoundingClientRect();
+        const button = body.querySelector('[data-action="toggle-fullscreen"]').getBoundingClientRect();
+        assert(button.top >= bounds.top && button.bottom <= bounds.bottom + 1, 'fullscreen button still clipped after scrolling');
+        return { ok: true, scrolling: body.scrollHeight > body.clientHeight, fullscreenVisible: true, height: body.clientHeight };
+      }
+      if (['music','characters','chapters','saves','story'].includes(phase)) {
+        closePlayerModal();
+        await new Promise(resolve => setTimeout(resolve,200));
+        if (phase === 'chapters') renderProgressModal();
+        else if (phase === 'saves') renderSaveModal('load');
+        else if (phase === 'music' || phase === 'characters') {
+          galleryTab = phase; renderGalleryModal();
+        } else {
+          playing = true; playAct = 0; playStep = 0; preparedAct = -1;
+          await showPlayStep(); finishTyping();
+          const dialogue = getComputedStyle(document.querySelector('#dialogue'));
+          assert(dialogue.borderTopWidth === '0px' && dialogue.backgroundImage === 'none', 'default dialogue gained a frame');
+          assert(getComputedStyle(document.querySelector('.scene-quick-actions button')).backdropFilter.includes('blur('), 'bottom glass controls missing');
+          const subtitle = getComputedStyle(document.querySelector('#dialogue-text'));
+          assert(subtitle.color === 'rgb(255, 255, 255)' && subtitle.textShadow.includes('rgb(0, 0, 0)'), 'subtitle needs white text and black shadow');
+          return { ok: true, borderlessDialogue: true, glassControls: true };
+        }
+        await new Promise(resolve => setTimeout(resolve,500));
+        const panel = getComputedStyle(document.querySelector('#player-modal > .modal-box'));
+        assert(panel.backdropFilter.includes('blur'), 'glass modal missing');
+        return { ok: true, phase, glass: panel.backdropFilter };
+      }
+      closePlayerModal();
+      assert(document.querySelector('#player-modal')?.classList.contains('closing'), 'close transition missing');
+      await new Promise(resolve => setTimeout(resolve,200));
+      assert(!document.querySelector('#player-modal'), 'closed popup did not disappear');
+      document.querySelector('#player-start [data-action="gallery"]').click();
+      await new Promise(resolve => setTimeout(resolve,300));
+      assert(getComputedStyle(document.querySelector('.gallery-box')).animationName === 'menu-panel-in', 'gallery transition missing');
+      return { ok: true, closeAnimation: true, galleryAnimation: true };
+    },
+    __vrmSmokeChapters: async (phase, testCover = false) => {
+      const assert = (condition, message) => { if (!condition) throw new Error(message); };
+      if (phase === 'editor') {
+        assert(project.acts.length >= 2, 'fixture needs two chapters');
+        assert(project.acts[0].render !== project.acts[1].render, 'chapter settings share an object');
+        selectedAct = 0; activePanel = 'story'; renderSidebar(); renderInspector(); await updatePreview();
+        assert(document.querySelectorAll('.act-dialogues').length === 1, 'accordion did not fold');
+        if (testCover) {
+          const otherCover = project.acts[1].coverImageId;
+          await uploadActCover();
+          assert(asset(act().coverImageId)?.type === 'image' && project.acts[1].coverImageId === otherCover, 'cover upload failed or affected another chapter');
+        }
+        const original = project.acts[1].render.brightness;
+        activePanel = 'render'; renderSidebar(); renderInspector();
+        const slider = document.querySelector('[data-render="brightness"]');
+        slider.value = 135; slider.dispatchEvent(new Event('input', { bubbles: true }));
+        assert(project.acts[0].render.brightness === 135 && project.acts[1].render.brightness === original, 'color leaked to another chapter');
+        const warmth = document.querySelector('[data-render="temperature"]');
+        warmth.value = 35; warmth.dispatchEvent(new Event('input', { bubbles: true }));
+        assert(document.querySelector('#stage-canvas').style.filter.includes('scene-temperature'), 'model color filter not applied');
+        assert(document.querySelector('#scene-bg').style.filter === document.querySelector('#stage-canvas').style.filter, 'model and background color differ');
+        warmth.value = 0; warmth.dispatchEvent(new Event('input', { bubbles: true }));
+        selectedAct = 1; renderSidebar(); renderInspector(); await updatePreview();
+        assert(document.querySelector('#scene-bg').style.filter.includes(`brightness(${original}%)`), 'chapter switch kept previous color');
+        selectedAct = 0; activePanel = 'story'; renderSidebar(); renderInspector(); await updatePreview();
+        const restored = JSON.parse(JSON.stringify(project));
+        assert(restored.acts[0].render.brightness === 135 && restored.acts[0].coverImageId === project.acts[0].coverImageId, 'chapter fields lost on serialization');
+        await save();
+        return { ok: true, accordion: document.querySelectorAll('.act-dialogues').length, independentColors: restored.acts.map(a => a.render.brightness) };
+      }
+      if (phase === 'render') {
+        activePanel = 'render'; renderSidebar(); renderInspector(); await updatePreview();
+        return { ok: true, autoLight: act().render.autoLight };
+      }
+      if (phase === 'portraits') {
+        mode = 'editor'; selectedCharacter = 0; activePanel = 'characters'; renderEditor();
+        await Promise.all([...portraitJobs.values()]);
+        const item = project.characters.find(character => character.modelId);
+        assert(item, 'fixture needs a model');
+        await ensureCharacterPortrait(item, true);
+        const id = item.portraitId, path = asset(id)?.path, revision = asset(id)?.revision;
+        item.galleryPoseFrame = Math.max(1, (Number(item.galleryPoseFrame) || 1) + 1);
+        await ensureCharacterPortrait(item, true);
+        await ensureCharacterPortrait(item, true);
+        assert(item.portraitId === id && asset(id)?.path === path, 'reshoot changed portrait identity');
+        assert(asset(id)?.revision !== revision, 'reshoot kept cached image');
+        assert(project.assets.filter(asset => asset.generatedPortrait && asset.characterId === item.id).length === 1, 'reshoot duplicated portrait');
+        assert(!project.assets.some(asset => asset.name === '自动头像.png' && !assetIsReferenced(asset.id)), 'unused legacy portraits remain');
+        await save(); renderSidebar(); renderInspector(); await updatePreview();
+        return { ok: true, id, path, count: project.assets.filter(asset => asset.generatedPortrait && asset.characterId === item.id).length };
+      }
+      if (phase === 'player') {
+        mode = 'player'; lifetimeProgress = null;
+        localStorage.removeItem(lifetimeKey()); renderPlayer();
+        playing = true; playAct = 0; playStep = 0; await showPlayStep();
+        renderProgressModal();
+        assert(document.querySelectorAll('.chapter-card').length === project.acts.length, 'chapter cards missing');
+        assert(document.querySelector('#chapter-card-1').disabled, 'unvisited chapter unlocked');
+        playAct = 1; playStep = 0; closePlayerModal(); await showPlayStep(); renderProgressModal();
+        assert(!document.querySelector('#chapter-card-1').disabled, 'visited chapter stayed locked');
+        return { ok: true, cards: project.acts.length, progress: progressStatistics() };
+      }
+      const before = progressStatistics().seen;
+      document.querySelector('#chapter-card-0').click();
+      for (let i = 0; i < 100 && transitioning; i++) await new Promise(resolve => setTimeout(resolve, 50));
+      assert(playAct === 0 && playStep === 0 && playing && !saveModalMode, 'chapter replay failed');
+      assert(progressStatistics().seen === before, 'replay erased lifetime progress');
+      assert(document.querySelector('#scene-bg').style.filter.includes('brightness(135%)'), 'replay used wrong chapter color');
+      clearTyping(); clearAutoAdvance();
+      return { ok: true, replayAct: playAct, replayStep: playStep, lifetimeSeen: before };
+    }
+  });
 window.__vrmDiagnostics = () => ({
   directory,
   editorAutoSaveMinutes: editorSettings.autoSaveMinutes,
@@ -2631,6 +2964,8 @@ window.__vrmDiagnostics = () => ({
   ,canvasVisible: document.querySelector('#stage-canvas')?.style.visibility !== 'hidden'
   ,audioSettings
   ,musicVolume: music.volume
+  ,musicPlaying: !music.paused && music.currentTime > 0
+  ,musicCurrentTime: music.currentTime
   ,voiceVolume: voice.volume
   ,autoPlay
   ,autoButtonText: document.querySelector('#auto-play-button')?.textContent || ''
@@ -2675,4 +3010,3 @@ window.__vrmDiagnostics = () => ({
   ,playStep
 });
 init();
-
