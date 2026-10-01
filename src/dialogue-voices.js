@@ -1,1 +1,74 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×ŸtN‹Z–‹­¦ëeŠw¬Õ•áÁ½ÉÐ½¹ÍÐÙ½¥•½±‘•É%€ô¡…É…Ñ•É%€ôø¡…É…Ñ•ÈµÙ½¥”´‘í¡…É…Ñ•É%‘õ€ì)•áÁ½ÉÐ½¹ÍÐ‘¥…±½Õ•1¥¹•Ì€ôÁÉ½©•Ð€ôø€¡ÁÉ½©•Ð¹…ÑÌñðmt¤¹™¥±Ñ•È¡…Ð€ôø…Ð¹­¥¹€„ôô€•Ù•¹Ðœ¤(€€¹™±…Ñ5…À¡…Ð€ôø€¡…Ð¹ÍÑ•ÁÌñðmt¤¹µ…À¡±¥¹”€ôø€¡ì…Ð°±¥¹”ô¤¤¤ì)™Õ¹Ñ¥½¸½±±•ÑMÑÉ¥¹Ì¡Ù…±Õ”°É•ÍÕ±Ð€ô¹•ÜM•Ð ¤¤ì(€¥˜€¡ÑåÁ•½˜Ù…±Õ”€ôôô€ÍÑÉ¥¹œœ¤É•ÍÕ±Ð¹…‘¡Ù…±Õ”¤ì(€•±Í”¥˜€¡Ù…±Õ”€˜˜ÑåÁ•½˜Ù…±Õ”€ôôô€½‰©•Ðœ¤=‰©•Ð¹Ù…±Õ•Ì¡Ù…±Õ”¤¹™½É… ¡¥Ñ•´€ôø½±±•ÑMÑÉ¥¹Ì¡¥Ñ•´°É•ÍÕ±Ð¤¤ì(€É•ÑÕÉ¸É•ÍÕ±Ðì)ô)™Õ¹Ñ¥½¸±•…å¡…É…Ñ•È¡ÁÉ½©•Ð°±¥¹”¤ì(€½¹ÍÐ¹…µ”€ô±¥¹”¹ÍÁ•…­•Èñð€Ÿš^žfôœì(€±•Ð¡…É…Ñ•È€ôÁÉ½©•Ð¹¡…É…Ñ•ÉÌ¹™¥¹¡¥Ñ•´€ôø¥Ñ•´¹±•…åY½¥•¡…É…Ñ•È€˜˜¥Ñ•´¹¹…µ”€ôôô¹…µ”¤ì(€¥˜€ …¡…É…Ñ•È¤ì(€€€¡…É…Ñ•È€ôì¥èÉåÁÑ¼¹É…¹‘½µUU% ¤¹É•Á±…•±° œ´œ°€œœ¤°¹…µ”°±•…åY½¥•¡…É…Ñ•ÈèÑÉÕ”°µ½‘•±%è€œœ°Á½ÉÑÉ…¥Ñ%è€œœ°(€€€€€Ñ¥Ñ±”è€œœ°‘•ÍÉ¥ÁÑ¥½¸è€œœ°…±±•Éå5½Ñ¥½¹%è€œœ°…±±•ÉåA½Í•É…µ”è€Ä°…±±•Éåe…Üè€À°(€€€€€ÍÑ½É¥•ÌèÉÉ…ä¹™É½´¡ì±•¹Ñ è€Ìô°€ ¤€ôø€¡ìÑ•áÐè€œœ°Õ¹±½­1¥¹•Ìè€Àô¤¤ôì(€€€ÁÉ½©•Ð¹¡…É…Ñ•ÉÌ¹ÁÕÍ ¡¡…É…Ñ•È¤ì(€ô(€±¥¹”¹¡…É…Ñ•É%€ô¡…É…Ñ•È¹¥ì(€É•ÑÕÉ¸¡…É…Ñ•Èì)ô(¼¼Ù•ÉäÙ½¥”‰•±½¹ÌÑ¼„¡…É…Ñ•È™½±‘•È¸Q¡¥ÌÉÕ¹Ì¥¸Ñ¡”Í…µ”•‘¥Ð…Ì„(¼¼É•¹…µ”½É•…Ñ”½¡…¹”°Í¼Õ¹‘¼É•ÍÑ½É•ÌÑ¡”‘¥…±½Õ”°™½±‘•È…¹Ù½¥”Ñ½•Ñ¡•È¸)•áÁ½ÉÐ™Õ¹Ñ¥½¸Íå¹¥…±½Õ•Y½¥•Ì¡ÁÉ½©•Ð°ìµ¥É…Ñ•1•…ä€ô™…±Í”ô€ôíô¤ì(€ÁÉ½©•Ð¹…ÍÍ•Ñ½±‘•ÉÌñðômtìÁÉ½©•Ð¹…ÍÍ•ÑÌñðômtìÁÉ½©•Ð¹¡…É…Ñ•ÉÌñðômtì(€½¹ÍÐ±¥¹•Ì€ô‘¥…±½Õ•1¥¹•Ì¡ÁÉ½©•Ð¤°µ¥É…Ñ•€ô¹•ÜM•Ð ¤°½É¥¥¹…±ÍÍ•ÑÌ€ô¹•Ü5…À¡ÁÉ½©•Ð¹‡Ÿt¶‰žËkºwµçeì(€€€¥˜€ …¥Ñ•´¹¡…É…Ñ•É%€˜˜µ¥É…Ñ•1•…ä¤¥Ñ•´¹¡…É…Ñ•É%€ô±•…å¡…É…Ñ•È¡ÁÉ½©•Ð°½Ý¹•Èñðíô¤¹¥ì(€€€¥˜€ …¥Ñ•´¹¡…É…Ñ•É%¤½¹Ñ¥¹Õ”ì(€€€¥Ñ•´¹™½±‘•É%€ôÙ½¥•½±‘•É%¡¥Ñ•´¹¡…É…Ñ•É%¤ì¥Ñ•´¹…±±•Éå5ÕÍ¥Œ€ô™…±Í”ì(€€€¥˜€ …ÁÉ½©•Ð¹…ÍÍ•Ñ½±‘•ÉÌ¹Í½µ”¡™½±‘•È€ôø™½±‘•È¹¥€ôôô¥Ñ•´¹™½±‘•É%¤¤ÁÉ½©•Ð¹…ÍÍ•Ñ½±‘•ÉÌ¹ÁÕÍ ¡ì(€€€€€¥è¥Ñ•´¹™½±‘•É%°ÑåÁ”è€Ù½¥”œ°¹…µ”èÁÉ½©•Ð¹¡…É…Ñ•ÉÌ¹™¥¹¡É½±”€ôøÉ½±”¹¥€ôôô¥Ñ•´¹¡…É…Ñ•É%¤ü¹¹…µ”ñð€Ÿš^Ÿ¦7¦~Ï¢žK¢&Èœ°(€€€€€¡…É…Ñ•É%è¥Ñ•´¹¡…É…Ñ•É%°±½­•èÑÉÕ”°¡…É…Ñ•É•±•Ñ•è€…ÁÉ½©•Ð¹¡…É…Ñ•ÉÌ¹Í½µ”¡É½±”€ôøÉ½±”¹¥€ôôô¥Ñ•´¹¡…É…Ñ•É%¤ô¤ì(€€€¥˜€¡½Ý¹•Èü¹¡…É…Ñ•É%€ôôô¥Ñ•´¹¡…É…Ñ•É%¤¥Ñ•´¹¹…µ”€ô½Ý¹•È¹Ñ•áÐñð€Ÿ¾ò#ž¦ëžf÷–¾çžf÷¾ò$œì(€ô(€½¹ÍÐ…ÍÍ•ÑÌ€ô¹•Ü5…À¡ÁÉ½©•Ð¹…ÍÍ•ÑÌ¹µ…À¡¥Ñ•´€ôøm¥Ñ•´¹¥°¥Ñ•µt¤¤°É½±•Ì€ô¹•ÜM•Ð¡ÁÉ½©•Ð¹¡…É…Ñ•ÉÌ¹µ…À¡É½±”€ôøÉ½±”¹¥¤¤ì(€™½È€¡½¹ÍÐì±¥¹”ô½˜±¥¹•Ì¤ì(€€€¥˜€ …±¥¹”¹Ù½¥•%¤½¹Ñ¥¹Õ”ì(€€€½¹ÍÐÙ½¥”€ô…ÍÍ•ÑÌ¹•Ð¡±¥¹”¹Ù½¥•%¤ì(€€€¥˜€¡Ù½¥”ü¹ÑåÁ”€„ôô€Ù½¥”œñðÙ½¥”¹¡…É…Ñ•É%€„ôô±¥¹”¹¡…É…Ñ•É%ñð€…É½±•Ì¹¡…Ì¡±¥¹”¹¡…É…Ñ•É%¤¤±¥¹”¹Ù½¥•%€ô€œœì(€ô)ô)•áÁ½ÉÐ™Õ¹Ñ¥½¸Ù½¥•Í½É¡…É…Ñ•È¡ÁÉ½©•Ð°¡…É…Ñ•É%¤ì(€É•ÑÕÉ¸ÁÉ½©•Ð¹¡…É…Ñ•ÉÌ¹Í½µ”¡É½±”€ôøÉ½±”¹¥€ôôô¡…É…Ñ•É%¤(€€€€üÁÉ½©•Ð¹…ÍÍ•ÑÌ¹™¥±Ñ•È¡¥Ñ•´€ôø¥Ñ•´¹ÑåÁ”€ôôô€Ù½¥”œ€˜˜¥Ñ•´¹¡…É…Ñ•É%€ôôô¡…É…Ñ•É%€˜˜¥Ñ•´¹™½±‘•É%€ôôôÙ½¥•½±‘•É%¡¡…É…Ñ•É%¤¤€èmtì)ô)•áÁ½ÉÐ™Õ¹Ñ¥½¸±•…ÉY½¥•I•™•É•¹•Ì¡ÁÉ½©•Ð°¥¤ì(€™½È€¡½¹ÍÐì±¥¹”ô½˜‘¥…±½Õ•1¥¹•Ì¡ÁÉ½©•Ð¤¤¥˜€¡±¥¹”¹Ù½¥•%€ôôô¥¤±¥¹”¹Ù½¥•%€ô€œœì)ô(
+export const voiceFolderId = characterId => `character-voice-${characterId}`;
+export const dialogueLines = project => (project.acts || []).filter(act => act.kind !== 'event')
+  .flatMap(act => (act.steps || []).map(line => ({ act, line })));
+function collectStrings(value, result = new Set()) {
+  if (typeof value === 'string') result.add(value);
+  else if (value && typeof value === 'object') Object.values(value).forEach(item => collectStrings(item, result));
+  return result;
+}
+function legacyCharacter(project, line) {
+  const name = line.speaker || 'æ—ç™½';
+  let character = project.characters.find(item => item.legacyVoiceCharacter && item.name === name);
+  if (!character) {
+    character = { id: crypto.randomUUID().replaceAll('-', ''), name, legacyVoiceCharacter: true, modelId: '', portraitId: '',
+      title: '', description: '', galleryMotionId: '', galleryPoseFrame: 1, galleryYaw: 0,
+      stories: Array.from({ length: 3 }, () => ({ text: '', unlockLines: 0 })) };
+    project.characters.push(character);
+  }
+  line.characterId = character.id;
+  return character;
+}
+// Every voice belongs to a character folder. This runs in the same edit as a
+// rename/create/change, so undo restores the dialogue, folder and voice together.
+export function syncDialogueVoices(project, { migrateLegacy = false } = {}) {
+  project.assetFolders ||= []; project.assets ||= []; project.characters ||= [];
+  const lines = dialogueLines(project), migrated = new Set(), originalAssets = new Map(project.assets.map(item => [item.id, item]));
+  if (migrateLegacy) for (const { line } of lines) {
+    const old = originalAssets.get(line.voiceId);
+    if (old?.type !== 'audio') continue;
+    const role = project.characters.find(item => item.id === line.characterId) || legacyCharacter(project, line);
+    line.id ||= crypto.randomUUID().replaceAll('-', '');
+    const id = `legacy-voice-${line.id}`;
+    if (!project.assets.some(item => item.id === id)) project.assets.push({ ...old, id, type: 'voice', name: line.text || 'ï¼ˆç©ºç™½å¯¹ç™½ï¼‰',
+      originalName: old.name, characterId: role.id, dialogueId: line.id, folderId: voiceFolderId(role.id), galleryMusic: false });
+    line.voiceId = id; migrated.add(old.id);
+  }
+  if (migrateLegacy) {
+    const referenced = collectStrings({ ...project, assets: undefined, assetFolders: undefined });
+    project.assets = project.assets.filter(item => !migrated.has(item.id) || referenced.has(item.id));
+  }
+  for (const role of project.characters) {
+    let folder = project.assetFolders.find(item => item.id === voiceFolderId(role.id));
+    if (!folder) { folder = { id: voiceFolderId(role.id) }; project.assetFolders.push(folder); }
+    Object.assign(folder, { type: 'voice', name: role.name, characterId: role.id, locked: true, characterDeleted: false });
+  }
+  for (const folder of project.assetFolders.filter(item => item.type === 'voice')) {
+    folder.locked = true;
+    folder.characterDeleted = !project.characters.some(role => role.id === folder.characterId);
+  }
+  const owners = new Map(lines.map(({ line }) => [line.id, line]));
+  for (const item of project.assets.filter(item => item.type === 'voice')) {
+    const owner = owners.get(item.dialogueId);
+    if (!item.characterId) item.characterId = owner?.characterId;
+    if (!item.characterId && migrateLegacy) item.characterId = legacyCharacter(project, owner || {}).id;
+    if (!item.characterId) continue;
+    item.folderId = voiceFolderId(item.characterId); item.galleryMusic = false;
+    if (!project.assetFolders.some(folder => folder.id === item.folderId)) project.assetFolders.push({
+      id: item.folderId, type: 'voice', name: project.characters.find(role => role.id === item.characterId)?.name || 'æ—§é…éŸ³è§’è‰²',
+      characterId: item.characterId, locked: true, characterDeleted: !project.characters.some(role => role.id === item.characterId) });
+    if (owner?.characterId === item.characterId) item.name = owner.text || 'ï¼ˆç©ºç™½å¯¹ç™½ï¼‰';
+  }
+  const assets = new Map(project.assets.map(item => [item.id, item])), roles = new Set(project.characters.map(role => role.id));
+  for (const { line } of lines) {
+    if (!line.voiceId) continue;
+    const voice = assets.get(line.voiceId);
+    if (voice?.type !== 'voice' || voice.characterId !== line.characterId || !roles.has(line.characterId)) line.voiceId = '';
+  }
+}
+export function voicesForCharacter(project, characterId) {
+  return project.characters.some(role => role.id === characterId)
+    ? project.assets.filter(item => item.type === 'voice' && item.characterId === characterId && item.folderId === voiceFolderId(characterId)) : [];
+}
+export function clearVoiceReferences(project, id) {
+  for (const { line } of dialogueLines(project)) if (line.voiceId === id) line.voiceId = '';
+}

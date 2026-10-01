@@ -1,26 +1,403 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Õ¥µÁ½ÉĞ€œ¸½ÍÑå±”¹ÍÌœì4)¥µÁ½ÉĞ€œ¸½Í­¥¸¹ÍÌœì4)¥µÁ½ÉĞ€œ¸½±…å½ÕĞ¹ÍÌœì4)¥µÁ½ÉĞ€œ¸½Ù¸µÑ¡•µ”¹ÍÌœì4)¥µÁ½ÉĞ€œ¸½¥½ÌÜµÑ¡•µ”¹ÍÌœì4)¥µÁ½ÉĞ€œ¸½¡…ÁÑ•ÉÌ¹ÍÌœì4)¥µÁ½ÉĞ€œ¸½µ•¹Ôµµ½Ñ¥½¸¹ÍÌœì4)¥µÁ½ÉĞ€œ¸½…µ”µ±…ÍÌ¹ÍÌœì4)¥µÁ½ÉĞ€œ¸½İ•…Ñ¡•È¹ÍÌœì4)¥µÁ½ÉĞ€œ¸½•Ù•¹ÑÌ¹ÍÌœì4)¥µÁ½ÉĞìÉ•…Ñ•Ù•¹ÑÌ°•Ù•¹Ñ9…µ•Ì°•Ù•¹ÑM•½¹‘Ì°¥ÍÙ•¹Ğ°¹½Éµ…±¥é•Ù•¹Ğ°¹•İÙ•¹Ğô™É½´€œ¸½•Ù•¹ÑÌ¹©Ìœì4)¥µÁ½ÉĞì¹½Éµ…±¥é•]•…Ñ¡•È°İ•…Ñ¡•É•™…Õ±ÑÌ°İ•…Ñ¡•É9…µ•Ì°İ•…Ñ¡•É5½½ô™É½´€œ¸½İ•…Ñ¡•È¹©Ìœì4)¥µÁ½ÉĞì½±½É•™…Õ±ÑÌ°¡…ÁÑ•ÉI•¹‘•È°½±½É¥±Ñ•È°¡…ÁÑ•ÉU¹±½­•ô™É½´€œ¸½¡…ÁÑ•ÉÌ¹©Ìœì4)¥µÁ½ÉĞìYI5MÑ…”°…ÍÍ•ÑUÉ°°µ½Ñ¥½¹É…µ•%¹™¼°…ÁÑÕÉ•YÉµA½ÉÑÉ…¥Ğô™É½´€œ¸½É•¹‘•É•È¹©Ìœì4)¥µÁ½ÉĞìÉ•…Ñ•1¥‰É…Éäô™É½´€œ¸½±¥‰É…Éä¹©Ìœì4)¥µÁ½ÉĞìÉ•…Ñ•‘¥Ñ½É!¥ÍÑ½Éäô™É½´€œ¸½•‘¥Ñ½Èµ¡¥ÍÑ½Éä¹©Ìœì4)¥µÁ½ÉĞ€œ¸½•‘¥Ñ½Èµ¡¥ÍÑ½Éä¹ÍÌœì4)¥µÁ½ÉĞìÍå¹¥…±½Õ•Y½¥•Ì°Ù½¥•Í½É¡…É…Ñ•È°Ù½¥•½±‘•É%°‘¥…±½Õ•1¥¹•Ì°±•…ÉY½¥•I•™•É•¹•Ìô™É½´€œ¸½‘¥…±½Õ”µÙ½¥•Ì¹©Ìœì4)¥µÁ½ÉĞ€œ¸½‘¥…±½Õ”µÙ½¥•Ì¹ÍÌœì)¥µÁ½ÉĞ€œ¸½™••‘‰…¬¹ÍÌœì)¥µÁ½ÉĞìÉ•…Ñ•MÑ½ÉåÍÍ¥ÍÑ…¹Ğô™É½´€œ¸½ÍÑ½Éäµ…ÍÍ¥ÍÑ…¹Ğ¹©Ìœì(4)½¹ÍĞ…ÁÀ€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ…ÁÀœ¤ì4)½¹ÍĞÁ•¹‘¥¹œ€ô¹•Ü5…À ¤ì4)±•Ğ½Õ¹Ñ•È€ô€Àì4)±•ĞÁÉ½©•Ğ€ô¹Õ±°ì4)±•Ğµ½‘”€ô€•‘¥Ñ½Èœì4)±•Ğ‘¥É•Ñ½Éä€ô€œœì4)±•ĞÉ••¹ÑAÉ½©•ÑÌ€ômtì4)±•ĞÍÑ…”€ô¹Õ±°ì4)±•ĞÍ•±•Ñ•‘Ğ€ô€Àì4)±•ĞÍ•±•Ñ•‘MÑ•À€ô€Àì4)±•ĞÍ•±•Ñ•‘¡…É…Ñ•È€ô€Àì4)±•Ğ…Ñ¥Ù•A…¹•°€ô€ÍÑ½Éäœì4)½¹ÍĞ½Á•¹ÍÍ•Ñ½±‘•ÉÌ€ô¹•ÜM•Ğ¡lÕ¹™¥±•éÙÉ´œ°€Õ¹™¥±•éµ½Ñ¥½¸œ°€Õ¹™¥±•é¥µ…”œ°€Õ¹™¥±•é…Õ‘¥¼œ°€Õ¹™¥±•éÙ¥‘•¼t¤ì4)±•Ğ‘½­%¹¥Ñ¥…±¥é•‘AÉ½©•Ñ%€ô€œœì4)±•Ğ…Ñ¥Ù•ÍÏ}4ÖÚ$z{-®éÜj×–Ç26Æ73Ò&Ö÷F–öâÖGfæ6VB#ãÇ7VÖÖ'“îš¹{ª~XªKÙÎ˜š“Â÷7VÖÖ'“ãÆF—b6Æ73Ò&Ö÷F–öâÖGfæ6VBÖ&öG’#àĞ¢ÆÆ&VÂ6Æ73Ò&Ö÷F–öâÖ÷F–öâ×&÷r#ãÇ7ãî[ê®xêşi*ŞiKãÂ÷7ããÇ6VÆV7BFFÖÖ÷F–öâÖ÷F–öç3Ò"G¶W66R‡66÷R—Ò"FFÖÖ÷F–öâ×6WGF–æsÒ&Æö÷#àĞ¢Æ÷F–öâfÇVSÒ'G'VR"G¶Æö÷òw6VÆV7FVBr¢rwÓîiŠşûÈ›¹ŠêNûÈ“Âö÷F–öããÆ÷F–öâfÇVSÒ&fÇ6R"G¶Æö÷òrr¢w6VÆV7FVBwÓîY
-nûÈÎXú®i*ŞKˆjÊÂö÷F–öããÂ÷6VÆV7CãÂöÆ&VÃàĞ¢ÆÆ&VÂ6Æ73Ò&Ö÷F–öâÖ÷F–öâ×&÷r#ãÇ7ãîXªKÙÎ‹[KØÓÂ÷7ããÇ6VÆV7BFFÖÖ÷F–öâÖ÷F–öç3Ò"G¶W66R‡66÷R—Ò"FFÖÖ÷F–öâ×6WGF–æsÒ'Æ6VÖVçB#àĞ¢Æ÷F–öâfÇVSÒ&&÷VæFVB"G·6WGF–æw2çÆ6VÖVçBÓÓÒvg&VRròrr¢w6VÆV7FVBwÓî™™X‹nZJ~[˜^‹[KØŞûÈ›¹ŠêNûÈ“Âö÷F–öãàĞ¢Æ÷F–öâfÇVSÒ&g&VR"G·6WGF–æw2çÆ6VÖVçBÓÓÒvg&VRròw6VÆV7FVBr¢rwÓîZèÎi[NKùŞyYXªKÙÎ‹[KØÓÂö÷F–öããÂ÷6VÆV7CãÂöÆ&VÃàĞ¢Ç6Æ73Ò'F—#î™™X‹n‹[KØŞXú®{ªniÙş[znXû>Y(ÎX˜ŞYîûÈÎ‹{>‹x>8YÙKˆ¾zØKˆ®Kˆ¾XªKÙÎxZ~[‹i*ŞiKî8#Â÷àĞ¢ÆÆ&VÂ6Æ73Ò&Ö÷F–öâÖ÷F–öâ×&÷r#ãÇ7ãîˆI®hèÎY»®Zé£Â÷7ããÇ6VÆV7BFFÖÖ÷F–öâÖ÷F–öç3Ò"G¶W66R‡66÷R—Ò"FFÖÖ÷F–öâ×6WGF–æsÒ&fVWB#àĞ¢Æ÷F–öâfÇVSÒ&WFò"G·6WGF–æw2æfVWBÓÓÒvÆö6²rÇÂ6WGF–æw2æfVWBÓÓÒvg&VRròrr¢w6VÆV7FVBwÓîˆz®XªûÈ[è^iË®8ŠûNŠùŞzØûÈ“Âö÷F–öãàĞ¢Æ÷F–öâfÇVSÒ&Æö6²"G·6WGF–æw2æfVWBÓÓÒvÆö6²ròw6VÆV7FVBr¢rwÓî[ÈY
-óÂö÷F–öãàĞ¢Æ÷F–öâfÇVSÒ&g&VR"G·6WGF–æw2æfVWBÓÓÒvg&VRròw6VÆV7FVBr¢rwÓîX[>™zŞûÈXXŠë‹øjÚ^ûÈ“Âö÷F–öããÂ÷6VÆV7CãÂöÆ&VÃàĞ¢ÆF—b6Æ73Ò&Ö÷F–öâÖg&ÖR×&÷r#ãÆÆ&VÃãÇ7ãî‹[~Zx¾[ŠsÂ÷7ããÆ–çWBG—SÒ&çVÖ&W""Ö–ãÒ#š®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍHˆİ\HŒHˆ˜[YOH‰Üİ\HƒBˆ]K[[İ[Û‹[Ü[ÛœÏH‰Ù\ØØ\JØÛÜJ_Hˆ]K[[İ[Û‹\Ù][™ÏHœİ\œ˜[YHÛX™[ƒBˆX™[Ü[¹îäù§gùn)ÏÜÜ[[œ]\OH›[X™\ˆˆZ[HŒHˆİ\HŒHˆ˜[YOH‰Ù[™HˆXÙZÛ\H¹§ 9d#¹. 9n)ÈƒBˆ]K[[İ[Û‹[Ü[ÛœÏH‰Ù\ØØ\JØÛÜJ_Hˆ]K[[İ[Û‹\Ù][™ÏH™[™œ˜[YHÛX™[Ù]ƒBˆÛ\ÜÏH\ˆ]K[[İ[Û‹Z[H‰Ù\ØØ\JØÛÜJ_H¹ë+H9n)ù¦+ùbª9/g9o 9i-;ï#9îäù§gùn)ùåfyên¹/&¹¤«yb,9§ 9d#¸à ÜƒBˆX™[Û\ÜÏH›[İ[Û‹[Ü[Û‹\›İÈÜ[¹¤«yk£9d#ÜÜ[Ù[Xİ]K[[İ[Û‹[Ü[ÛœÏH‰Ù\ØØ\JØÛÜJ_Hˆ]K[[İ[Û‹\Ù][™ÏH˜Y\ˆˆ	ÛÛÜÈ	Ù\ØX›Y	Èˆ	ÉßOƒBˆÜ[Ûˆ˜[YOHšÛˆ	ÜÙ][™ÜË˜Y\ˆOOH	ÚYIÈÈ	ÉÈˆ	ÜÙ[XİY	ßO¹`g9g*9§ 9d#¹. 9n)ÏÛÜ[ÛƒBˆÜ[Ûˆ˜[YOHšYHˆ	ÜÙ][™ÜË˜Y\ˆOOH	ÚYIÈÈ	ÜÙ[XİY	Èˆ	ÉßO‰ÜØÛÜHOOH	Üİ\	ÈÈ	ùnlù®äyfç¹b,9§+9neybª9/g	Èˆ	ùnlù®äyfç¹b,:næ:+©9bª9/g	ßOÛÜ[ÛÜÙ[XİÛX™[ƒBˆÙ]Ù]Z[Ï˜ÃBŸCB˜\Ş[˜È[˜İ[Ûˆ™Yœ™\Ú[İ[Û’[Ê
-HÃBˆ›Üˆ
-ÛÛœİ[ÙˆØİ[Y[œ]Y\TÙ[XİÜ[
-	ÖÙ]K[[İ[Û‹Z[IÊJHÃBˆÛÛœİØÛÜHH[™]\Ù]›[İ[Û’[ÃBˆ][İ[Û‹[Ù[XİÜ’Ù^NÃBˆYˆ
-ØÛÜHOOH	Üİ\	ÊHÃBˆ[İ[ÛˆH\ÜÙ]
-İ\
+import './style.css';
+import './skin.css';
+import './layout.css';
+import './vn-theme.css';
+import './ios7-theme.css';
+import './chapters.css';
+import './menu-motion.css';
+import './game-glass.css';
+import './weather.css';
+import './events.css';
+import { createEvents, eventNames, eventSeconds, isEvent, normalizeEvent, newEvent } from './events.js';
+import { normalizeWeather, weatherDefaults, weatherNames, weatherMood } from './weather.js';
+import { colorDefaults, chapterRender, colorFilter, chapterUnlocked } from './chapters.js';
+import { VRMStage, assetUrl, motionFrameInfo, captureVrmPortrait } from './renderer.js';
+import { createLibrary } from './library.js';
+import { createEditorHistory } from './editor-history.js';
+import './editor-history.css';
+import { syncDialogueVoices, voicesForCharacter, voiceFolderId, dialogueLines, clearVoiceReferences } from './dialogue-voices.js';
+import './dialogue-voices.css';
+import './feedback.css';
+import { createStoryAssistant } from './story-assistant.js';
 
-OË›[İ[Û’Y
-NÃBˆ[Ù[H[Ù[›Ü”İ\
-İ\
+const app = document.querySelector('#app');
+const pending = new Map();
+let counter = 0;
+let project = null;
+let mode = 'editor';
+let directory = '';
+let recentProjects = [];
+let stage = null;
+let selectedAct = 0;
+let selectedStep = 0;
+let selectedCharacter = 0;
+let activePanel = 'story';
+const openAssetFolders = new Set(['unfiled:vrm', 'unfiled:motion', 'unfiled:image', 'unfiled:audio', 'unfiled:video']);
+let dockInitializedProjectId = '';
+let activeAssetType = 'image';
+const currentAssetFolder = { image: '', vrm: '', motion: '', audio: '', voice: '', video: '' };
+let draggingStory = null;
+let playing = false;
+let playAct = 0;
+let playStep = 0;
+let preparedAct = -1;
+let transitioning = false;
+let playRequest = 0;
+let previewRequest = 0;
+let titleRequest = 0;
+let dirty = false;
+let changeRevision = 0;
+let saveInFlight = null;
+let editorSettings = { autoSaveMinutes: 5, theme: 'light' };
+let feedbackGroup = '';
+let editorAutoSaveTimer = null;
+let music = new Audio();
+let musicFadeFactor = 1, musicFadeToken = 0, restoredEventRemaining, eventMusicActive = false;
+let displayedBackgroundId = '';
+let voice = new Audio();
+const editorVoicePreview = new Audio();
+let previewVoiceId = '';
+editorVoicePreview.addEventListener('ended', () => { previewVoiceId = ''; renderAssetDock(); });
+let audioSettings = { master: 1, music: 0.8, voice: 1, effects: 0.8 };
+let textSpeed = 35;
+let typingTimer = null;
+let typingCharacters = [];
+let typingIndex = 0;
+const activeEffects = new Set();
+const eventEffects = new Set();
+let clickAudioContext = null;
+let autoPlay = false;
+let autoTimer = null;
+let playViewedStepIds = new Set();
+let playCharacterLineCounts = {};
+let lifetimeProgress = null;
+let playerAutoSaveTimer = null;
+let galleryTab = 'images';
+let galleryPage = 0;
+let galleryCharacterId = '';
+let galleryStoryIndex = 0;
+let editorGalleryStoryIndex = 0;
+let galleryStage = null;
+let galleryTrackIndex = 0;
+let galleryRepeatOne = false;
+const galleryMusic = new Audio();
+let galleryMusicInterruptedBgm = false;
+let stageError = '';
+const portraitJobs = new Map();
+const temporaryPortraits = new Map();
+const pendingPortraitDeletes = new Set();
+let saveModalMode = '';
+let playerResolution = '1280x720';
+let availableResolutions = [];
+let playerFullscreen = false;
+let historyBusy = false, historyInput = null, historyPointer = null, historyAction = null;
+const editorHistory = createEditorHistory({ project: () => project, selection: editorSelection, changed: updateHistoryButtons });
+music.loop = true;
+galleryMusic.addEventListener('ended', () => {
+  const tracks = galleryTracks();
+  if (!tracks.length || saveModalMode !== 'gallery' || galleryTab !== 'music') return;
+  if (galleryRepeatOne) {
+    galleryMusic.currentTime = 0;
+    galleryMusic.play().catch(() => {});
+  } else playGalleryTrack(nextUnlockedTrack(1));
+});
+galleryMusic.addEventListener('timeupdate', updateGalleryMusicTime);
+galleryMusic.addEventListener('loadedmetadata', updateGalleryMusicTime);
 
-JNÃBˆXİÜ’Ù^HHİ\
+function bridge(action, payload = {}) {
+  return new Promise((resolve, reject) => {
+    if (!window.chrome?.webview) return reject(new Error('è¯·æ‰“å¼€ Windows ç¨‹åºä½¿ç”¨ç¼–è¾‘å™¨'));
+    const id = String(++counter);
+    pending.set(id, { resolve, reject });
+    window.chrome.webview.postMessage({ id, action, payload });
+  });
+}
+window.chrome?.webview?.addEventListener('message', event => {
+  const message = event.data;
+  if (message.agentRequest) {
+    const {id,name,arguments:args} = message.agentRequest;
+    Promise.resolve().then(() => storyAssistant.call(name,args)).then(
+      data => bridge('agentReply',{id,ok:true,data}),
+      error => bridge('agentReply',{id,ok:false,error:error.message})
+    ).catch(error=>toast(error.message,true));
+    return;
+  }
+  const promise = pending.get(message.id);
+  if (!promise) return;
+  pending.delete(message.id);
+  message.ok ? promise.resolve(message.data) : promise.reject(new Error(message.error));
+});
 
-OË˜Ú\˜Xİ\’Y[Ù[ËšYÃBˆH[ÙHYˆ
-ØÛÜHOOH	İ]IÊHÃBˆ[İ[ÛˆH\ÜÙ]
-›Ú™Xİ]K›[İ[Û’Y
-NÃBˆ[Ù[H\ÜÙ]
-›Ú™Xİ]K›[Ù[Y
-NÃBˆXİÜ’Ù^HH]N‰Ü›Ú™Xİ]K›[Ù[Y	Ù[\IßXÃBˆH[ÙHYˆ
-ØÛÜKœİ\ÕÚ]
-	ØØ\İ‰ÊJHÃwÓMm¢G§²ÚîÆ­yŞportraitId)?.name === 'è‡ªåŠ¨å¤´åƒ.png' ? 'auto' : 'manual' : '';
+const uid = () => crypto.randomUUID().replaceAll('-', '');
+const escape = value => String(value ?? '').replace(/[&<>"']/g, char =>
+  ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[char]);
+const asset = id => project?.assets.find(item => item.id === id);
+const library = createLibrary({ project: () => project, escape, assetUrl, bridge, markDirty, toast,
+  history: () => editorHistory.status(), undo: () => restoreEditorHistory(-1), redo: () => restoreEditorHistory(1),
+  progress: () => lifetimeProgress, refresh: () => { renderSidebar(); renderInspector(); updatePreview(); },
+  openModal: view => { closePlayerModal(); document.querySelector('#player-modal')?.remove(); saveModalMode = view; } });
+const events = createEvents({ project: () => project, escape, asset, assetUrl,
+  paused: () => Boolean(saveModalMode || document.querySelector('#player-modal.closing')),
+  player: () => mode === 'player', prepare: prepareEventScene,
+  audio: e => {
+    eventMusicActive = true; transitionMusic(e.bgmId);
+    const previous = new Set(activeEffects);
+    if (e.seId) playEffect(e.seId);
+    for (const sound of activeEffects) if (!previous.has(sound)) eventEffects.add(sound);
+    voice.pause(); const narration = asset(e.voiceId);
+    if (narration) { voice.src = assetUrl(narration); voice.play().catch(() => {}); }
+  },
+  cleanAudio: () => {
+    musicFadeToken++; musicFadeFactor = 1; voice.pause();
+    for (const sound of eventEffects) { sound.pause(); activeEffects.delete(sound); }
+    eventEffects.clear(); applyAudioSettings();
+  },
+  cue: () => { if (mode === 'player') playEventSignal(); },
+  finish: id => {
+    if (!playing || project.acts[playAct]?.id !== id) return;
+    if (mode === 'player') { const progress = loadLifetimeProgress(); if (!progress.completedEventIds.includes(id)) progress.completedEventIds.push(id); localStorage.setItem(lifetimeKey(), JSON.stringify(progress)); }
+    playAct++; playStep = 0; preparedAct = -1; showPlayStep();
+  } });
+const act = () => project.acts[selectedAct];
+const storyAssistant = createStoryAssistant({project:()=>project,mode:()=>mode,escape,bridge,toast,
+  revision:()=>changeRevision,dirty:()=>dirty,busy:()=>historyBusy||transitioning||playing,
+  begin:()=>{editorHistory.seal();editorHistory.begin();},
+  changed:label=>{normalize();markDirty({label});},
+  refresh:async()=>{renderSidebar();renderInspector();await updatePreview();},
+  selectAct:index=>{selectedAct=index;selectedStep=0;activePanel='story';},
+  undo:restoreEditorHistory,history:()=>editorHistory.status(),save});
+const step = () => act()?.steps[selectedStep];
+const character = id => project.characters.find(item => item.id === id);
+const options = (items, value, empty = 'æ— ') =>
+  `<option value="">${escape(empty)}</option>${items.map(item =>
+    `<option value="${escape(item.id)}" ${item.id === value ? 'selected' : ''}>${escape(item.name)}</option>`).join('')}`;
+const byType = type => project.assets.filter(item => item.type === type);
+const field = (label, control) => `<label class="field"><span>${label}</span>${control}</label>`;
+const input = (key, value, placeholder = '') => `<input data-field="${key}" value="${escape(value)}" placeholder="${escape(placeholder)}">`;
+const textarea = (key, value, placeholder = '') => `<textarea data-field="${key}" placeholder="${escape(placeholder)}">${escape(value)}</textarea>`;
+const select = (key, items, value, empty) => `<select data-field="${key}">${options(items, value, empty)}</select>`;
+const button = (label, action, extra = '') => `<button type="button" data-action="${action}" ${extra}>${label}</button>`;
+const loadingSpinner = '<span class="loading-spinner" role="status" aria-label="äººç‰©åŠ è½½ä¸­"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+function setStagePlaceholder(node, message, loading = false) {
+  if (!node) return;
+  if (loading) node.innerHTML = loadingSpinner;
+  else node.textContent = message;
+}
+const defaultSize = 1.15;
+const expressionLabels = {
+  happy:'å¼€å¿ƒ', angry:'ç”Ÿæ°”', sad:'éš¾è¿‡', relaxed:'æ”¾æ¾', surprised:'æƒŠè®¶',
+  aa:'å£å‹ A', ih:'å£å‹ I', ou:'å£å‹ U', ee:'å£å‹ E', oh:'å£å‹ O',
+  blink:'çœ¨çœ¼', blinkLeft:'å·¦çœ¼çœ¨çœ¼', blinkRight:'å³çœ¼çœ¨çœ¼', neutral:'è‡ªç„¶'
+};
+const expressionWeightsOf = entry => entry?.expressionWeights && typeof entry.expressionWeights === 'object'
+  ? entry.expressionWeights : entry?.expression ? { [entry.expression]: 1 } : {};
+const transformOf = entry => ({
+  size: Number(entry?.size) || defaultSize,
+  offsetX: Number(entry?.offsetX) || 0,
+  offsetY: Number(entry?.offsetY) || 0,
+  offsetZ: Number(entry?.offsetZ) || 0,
+  yaw: Number(entry?.yaw) || 0,
+  pitch: Number(entry?.pitch) || 0
+});
+const modelForStep = entry => asset(character(entry?.characterId)?.modelId);
+const castSlots = ['left', 'center', 'right'];
+const castSlotLabels = { left: 'å·¦ä¾§', center: 'ä¸­é—´', right: 'å³ä¾§' };
+const castSettingsOf = (currentAct, slot) => currentAct?.castSettings?.[slot] || {};
+const motionOptionsOf = holder => holder?.motionOptions || {};
+function motionAdvanced(holder, scope) {
+  const settings = motionOptionsOf(holder);
+  const loop = settings.loop !== false;
+  const start = Math.max(1, Math.floor(Number(settings.startFrame) || 1));
+  const end = Number(settings.endFrame) > 0 ? Math.floor(Number(settings.endFrame)) : '';
+  return `<details class="motion-advanced"><summary>é«˜çº§åŠ¨ä½œé€‰é¡¹</summary><div class="motion-advanced-body">
+    <label class="motion-option-row"><span>å¾ªç¯æ’­æ”¾</span><select data-motion-options="${escape(scope)}" data-motion-setting="loop">
+      <option value="true" ${loop ? 'selected' : ''}>æ˜¯ï¼ˆé»˜è®¤ï¼‰</option><option value="false" ${loop ? '' : 'selected'}>å¦ï¼Œåªæ’­ä¸€æ¬¡</option></select></label>
+    <label class="motion-option-row"><span>åŠ¨ä½œèµ°ä½</span><select data-motion-options="${escape(scope)}" data-motion-setting="placement">
+      <option value="bounded" ${settings.placement === 'free' ? '' : 'selected'}>é™åˆ¶å¤§å¹…èµ°ä½ï¼ˆé»˜è®¤ï¼‰</option>
+      <option value="free" ${settings.placement === 'free' ? 'selected' : ''}>å®Œæ•´ä¿ç•™åŠ¨ä½œèµ°ä½</option></select></label>
+    <p class="tip">é™åˆ¶èµ°ä½åªçº¦æŸå·¦å³å’Œå‰åï¼Œè·³è·ƒã€åä¸‹ç­‰ä¸Šä¸‹åŠ¨ä½œç…§å¸¸æ’­æ”¾ã€‚</p>
+    <label class="motion-option-row"><span>è„šæŒå›ºå®š</span><select data-motion-options="${escape(scope)}" data-motion-setting="feet">
+      <option value="auto" ${settings.feet === 'lock' || settings.feet === 'free' ? '' : 'selected'}>è‡ªåŠ¨ï¼ˆå¾…æœºã€è¯´è¯ç­‰ï¼‰</option>
+      <option value="lock" ${settings.feet === 'lock' ? 'selected' : ''}>å¼€å¯</option>
+      <option value="free" ${settings.feet === 'free' ? 'selected' : ''}>å…³é—­ï¼ˆå…è®¸è¿ˆæ­¥ï¼‰</option></select></label>
+    <div class="motion-frame-row"><label><span>èµ·å§‹å¸§</span><input type="number" min="1" step="1" value="${start}"
+      data-motion-options="${escape(scope)}" data-motion-setting="startFrame"></label>
+      <label><span>ç»“æŸå¸§</span><input type="number" min="1" step="1" value="${end}" placeholder="æœ€åä¸€å¸§"
+      data-motion-options="${escape(scope)}" data-motion-setting="endFrame"></label></div>
+    <p class="tip" data-motion-hint="${escape(scope)}">ç¬¬ 1 å¸§æ˜¯åŠ¨ä½œå¼€å¤´ï¼Œç»“æŸå¸§ç•™ç©ºä¼šæ’­åˆ°æœ€åã€‚</p>
+    <label class="motion-option-row"><span>æ’­å®Œå</span><select data-motion-options="${escape(scope)}" data-motion-setting="after" ${loop ? 'disabled' : ''}>
+      <option value="hold" ${settings.after === 'idle' ? '' : 'selected'}>åœåœ¨æœ€åä¸€å¸§</option>
+      <option value="idle" ${settings.after === 'idle' ? 'selected' : ''}>${scope === 'step' ? 'å¹³æ»‘å›åˆ°æœ¬å¹•åŠ¨ä½œ' : 'å¹³æ»‘å›åˆ°é»˜è®¤åŠ¨ä½œ'}</option></select></label>
+  </div></details>`;
+}
+async function refreshMotionHints() {
+  for (const hint of document.querySelectorAll('[data-motion-hint]')) {
+    const scope = hint.dataset.motionHint;
+    let motion, model, actorKey;
+    if (scope === 'step') {
+      motion = asset(step()?.motionId);
+      model = modelForStep(step());
+      actorKey = step()?.characterId || model?.id;
+    } else if (scope === 'title') {
+      motion = asset(project.title.motionId);
+      model = asset(project.title.modelId);
+      actorKey = `title:${project.title.modelId || 'empty'}`;
+    } else if (scope.startsWith('cast:')) {
+      const slot = scope.slice(5);
+      motion = asset(castSettingsOf(act(), slot).motionId);
+      actorKey = act()?.cast?.[slot];
+      model = asset(character(actorKey)?.modelId);
+    }
+    if (!motion) { hint.textContent = 'ç¬¬ 1 å¸§æ˜¯åŠ¨ä½œå¼€å¤´ï¼Œç»“æŸå¸§ç•™ç©ºä¼šæ’­åˆ°æœ€åã€‚'; continue; }
+    if (!model) { hint.textContent = 'é€‰æ‹©è§’è‰²å’Œæ¨¡å‹åï¼Œä¼šæ˜¾ç¤ºè¿™ä¸ªåŠ¨ä½œçš„æ€»å¸§æ•°ã€‚'; continue; }
+    hint.textContent = 'æ­£åœ¨è¯»å–åŠ¨ä½œå¸§æ•°â€¦';
+    try {
+      const clip = await stage.prepareClip(model, motion, actorKey);
+      if (!hint.isConnected) continue;
+      const info = motionFrameInfo(clip);
+      hint.textContent = `åŠ¨ä½œå…±çº¦ ${info.frames} å¸§ï¼ˆæ¯ç§’ ${info.fps} å¸§ï¼‰ã€‚ç¬¬ 1 å¸§æ˜¯å¼€å¤´ï¼›ç»“æŸå¸§ç•™ç©ºä¼šæ’­åˆ°æœ€åã€‚`;
+      const endInput = hint.closest('.motion-advanced')?.querySelector('[data-motion-setting="endFrame"]');
+      if (endInput) endInput.max = info.frames;
+    } catch {
+      if (hint.isConnected) hint.textContent = 'åŠ¨ä½œå¸§æ•°æš‚æ—¶æ— æ³•è¯»å–ï¼Œä»å¯å¡«å†™èµ·å§‹å¸§å’Œç»“æŸå¸§ã€‚';
+    }
+  }
+}
+function castAssignments(currentAct, speakingStep) {
+  const slots = { ...currentAct?.cast };
+  const seen = new Set();
+  const actors = castSlots.flatMap(baseSlot => {
+    const actorKey = slots[baseSlot];
+    if (!actorKey || seen.has(actorKey)) return [];
+    seen.add(actorKey);
+    return [{ actorKey, baseSlot }];
+  });
+  const occupied = new Set();
+  for (const actor of actors) {
+    const wanted = speakingStep?.castPositions?.[actor.actorKey];
+    actor.position = castSlots.includes(wanted) && !occupied.has(wanted) ? wanted : null;
+    if (actor.position) occupied.add(actor.position);
+  }
+  for (const actor of actors) {
+    if (actor.position) continue;
+    actor.position = !occupied.has(actor.baseSlot) ? actor.baseSlot : castSlots.find(slot => !occupied.has(slot));
+    occupied.add(actor.position);
+  }
+  return actors;
+}
+function castForAct(currentAct, speakingStep) {
+  return castAssignments(currentAct, speakingStep).flatMap(({ actorKey, baseSlot, position }) => {
+    const modelAsset = asset(character(actorKey)?.modelId);
+    if (!modelAsset) return [];
+    const settings = castSettingsOf(currentAct, baseSlot);
+    return [{ actorKey, modelAsset, position, transform: transformOf(settings),
+      expressionWeights: settings.expressionWeights || {}, motionAsset: asset(settings.motionId),
+      motionOptions: motionOptionsOf(settings), playbackKey: `act:${currentAct.id}:${actorKey}` }];
+  });
+}
+async function displayActStep(currentAct, current) {
+  const cast = castForAct(currentAct, current);
+  if (cast.length > 0) {
+    const speakingEntry = cast.find(entry => entry.actorKey === current?.characterId);
+    const base = speakingEntry?.transform || transformOf(null);
+    const moment = transformOf(current);
+    await stage.showCast(cast, speakingEntry ? {
+      actorKey: current.characterId, modelAsset: modelForStep(current),
+      motionAsset: asset(current.motionId) || speakingEntry?.motionAsset,
+      motionOptions: current.motionId ? motionOptionsOf(current) : speakingEntry?.motionOptions,
+      playbackKey: current.motionId ? `step:${current.id}` : speakingEntry?.playbackKey,
+      expressionWeights: { ...(speakingEntry?.expressionWeights || {}), ...expressionWeightsOf(current) },
+      transform: { size: base.size * moment.size / defaultSize,
+        offsetX: base.offsetX + moment.offsetX, offsetY: base.offsetY + moment.offsetY,
+        offsetZ: base.offsetZ + moment.offsetZ,
+        yaw: base.yaw + moment.yaw }
+    } : null, playing);
+  } else {
+    await stage.show(null, null, {}, 'center', transformOf(null), '', {}, '');
+  }
+}
+const adjustmentSlider = (key, label, value, min, max, stepSize, display) =>
+  `<label class="adjustment"><span>${label}</span><input type="range" data-adjust="${key}" min="${min}" max="${max}" step="${stepSize}" value="${value}"><output data-adjust-output="${key}">${display}</output></label>`;
+const titleSlider = (key, label, value, min, max, stepSize, display) =>
+  `<label class="adjustment"><span>${label}</span><input type="range" data-title-adjust="${key}" min="${min}" max="${max}" step="${stepSize}" value="${value}"><output data-title-output="${key}">${display}</output></label>`;
+function titleMarkup(interactive) {
+  const logo = asset(project.title.logoImageId);
+  const logoMarkup = logo
+    ? `<img class="title-logo-image" src="${escape(assetUrl(logo))}" alt="${escape(project.name)}">`
+    : `<div class="title-logo-fallback"><small>VRM GALGAME</small><strong>${escape(project.name)}</strong></div>`;
+  const items = [
+    ['ç»§ç»­æ¸¸æˆ', 'continue-game'], ['å¼€å§‹æ¸¸æˆ', 'play'], ['è½½å…¥æ¸¸æˆ', 'load-game'],
+    ['ç³»ç»Ÿè®¾ç½®', 'settings'], ['é™„åŠ é‰´èµ', 'gallery'], ['æ¸¸ç©è¿›åº¦', 'play-progress'], ['é€€å‡ºæ¸¸æˆ', 'exit-game']
+  ];
+  const hasSave = interactive && readSaveSlots().some(Boolean);
+  const menu = items.map(([label, action]) => interactive
+    ? `<button type="button" data-action="${action}" ${action === 'continue-game' && !hasSave ? 'disabled' : ''}>${label}</button>`
+    : `<span>${label}</span>`).join('');
+  return `${interactive ? '<button class="knowledge-title-button" data-action="knowledge-open" title="çŸ¥è¯†åº“" aria-label="æ‰“å¼€çŸ¥è¯†åº“"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5C8 2 3 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-3-2-7-1-10 1Z"/><path d="M12 5v15"/></svg></button>' : ''}<div class="title-logo-region">${logoMarkup}</div><nav class="title-bottom-menu">${menu}</nav>`;
+}
+async function showTitleScene(interactive = false) {
+  stage?.stopTalking();
+  events.cancel();
+  eventMusicActive = false;
+  setSceneWeather();
+  applySceneColor(colorDefaults);
+  const request = ++titleRequest;
+  const frame = document.querySelector('.stage-frame');
+  frame?.classList.add('title-mode');
+  showBackground(asset(project.title.backgroundId));
+  if (interactive && project.title.logoImageId) rememberDiscovery('image', project.title.logoImageId);
+  stage.setRenderSettings(project.render);
+  stage.setBackgroundLighting(asset(project.title.backgroundId));
+  stage.setCameraAngle(project.title.cameraAngle);
+  const overlay = document.querySelector(interactive ? '#player-start' : '#title-preview');
+  if (overlay) {
+    overlay.innerHTML = titleMarkup(interactive);
+    overlay.classList.remove('hidden');
+  }
+  if (interactive) setMusic(project.title.bgmId);
+  const placeholder = document.querySelector('#stage-placeholder');
+  if (placeholder) placeholder.style.display = 'none';
+  const loading = document.querySelector('#act-loading');
+  if (project.title.modelId) loading?.classList.remove('hidden');
+  await stage.show(asset(project.title.modelId), asset(project.title.motionId),
+    project.title.expressionWeights || {}, 'center', transformOf(project.title), `title:${project.title.modelId || 'empty'}`,
+    motionOptionsOf(project.title), 'title');
+  if (request === titleRequest && !playing) {
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    if (request === titleRequest && !playing) loading?.classList.add('hidden');
+  }
+  if (interactive && project.title.modelId)
+    for (const item of project.characters.filter(item => item.modelId === project.title.modelId))
+      rememberDiscovery('character', item.id);
+  if (!interactive && activePanel === 'title') refreshMotionHints();
+  if (!interactive && activePanel === 'title') renderTitleExpressionControls();
+}
+
+function defaultProject(name) {
+  return {
+    version: 1, id: uid(), name: name || 'æˆ‘çš„ VRM æ•…äº‹', ui: { dialogueImageId: '', clickSoundId: '' },
+    title: { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
+      size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12 },
+    render: { antialias: 'standard', style: 'anime', outline: 1, autoLight: true, lightStrength: 0.6,
+      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, shadowHeight: 0,
+      paintEffect: 'none', paintStrength: 0.65 },
+    assets: [], assetFolders: [], characters: [],
+    acts: [{ id: uid(), name: 'ç¬¬ä¸€å¹•', backgroundId: '', bgmId: '', weather: normalizeWeather(), steps: [
+      { id: uid(), characterId: '', speaker: '', text: 'åœ¨è¿™é‡Œå†™ç¬¬ä¸€å¥å¯¹ç™½ã€‚', expressionWeights: {}, motionId: '', position: 'center', size: defaultSize, offsetX: 0, offsetY: 0, voiceId: '', choices: [] }
+    ] }]
+  };
+}
+function normalize() {
+  library.reset();
+  project.knowledgeBooks ||= [];
+  project.assets ||= [];
+  project.assetFolders ||= [];
+  project.characters ||= [];
+  for (const item of project.characters) {
+    item.autoMouth = item.autoMouth !== false;
+    item.portraitId ||= '';
+    item.portraitSource ||= item.portraitId
+      ? asset(item.portraitId)?.name === 'è‡ªåŠ¨å¤´åƒ.png' ? 'auto' : 'manual' : '';
     item.title ||= '';
     item.description ||= '';
     item.galleryMotionId ||= '';
@@ -44,17 +421,330 @@ NÃBˆXİÜ’Ù^HH]N‰Ü›Ú™Xİ]K›[Ù[Y	Ù[\IßXÃBˆH[ÙHYˆ
   for (const item of project.acts) {
     if (isEvent(item)) {
       item.event = normalizeEvent(item.event); item.cast = {}; item.castSettings = {};
-      item.steps = [{ id: item.steYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬ÕÁÌü¹lÁtü¹¥ñğÕ¥ ¤°Ñ•áĞè€œœ°ÍÁ•…­•Èè€œœ°¡…É…Ñ•É%è€œœ°¡½¥•Ìèmtõtì4(€€€ô4(€€€¥Ñ•´¹½Ù•É%µ…•%ñğô€œœì4(€€€¥Ñ•´¹İ•…Ñ¡•È€ô¹½Éµ…±¥é•]•…Ñ¡•È¡¥Ñ•´¹İ•…Ñ¡•È¤ì4(€€€¥Ñ•´¹É•¹‘•È€ô¡…ÁÑ•ÉI•¹‘•È¡¥Ñ•´°ÁÉ½©•Ğ¹É•¹‘•È¤ì4(€€€¥Ñ•´¹ÍÑ•ÁÌñğômtì4(€€€¥Ñ•´¹…ÍÑM•ÑÑ¥¹Ìñğôíôì4(€€€¥˜€ …¥Ñ•´¹…ÍĞ¤ì4(€€€€€½¹ÍĞ‘¥ÍÑ¥¹Ğ€ôl¸¸¹¹•ÜM•Ğ¡¥Ñ•´¹ÍÑ•ÁÌ¹µ…À¡•¹ÑÉä€ôø•¹ÑÉä¹¡…É…Ñ•É%¤¹™¥±Ñ•È¡	½½±•…¸¤¥tì4(€€€€€¥Ñ•´¹…ÍĞ€ôì±•™Ğè€œœ°•¹Ñ•Èè€œœ°É¥¡Ğè€œœôì4(€€€€€™½È€¡½¹ÍĞ¥½˜‘¥ÍÑ¥¹Ğ¹Í±¥” À°€Ì¤¤ì4(€€€€€€€½¹ÍĞÁÉ•™•ÉÉ•€ô¥Ñ•´¹ÍÑ•ÁÌ¹™¥¹¡•¹ÑÉä€ôø•¹ÑÉä¹¡…É…Ñ•É%€ôôô¥¤ü¹Á½Í¥Ñ¥½¸ñğ€•¹Ñ•Èœì4(€€€€€€€½¹ÍĞÍ±½Ğ€ô…ÍÑM±½ÑÌ¹¥¹±Õ‘•Ì¡ÁÉ•™•ÉÉ•¤€˜˜€…¥Ñ•´¹…ÍÑmÁÉ•™•ÉÉ•‘t€üÁÉ•™•ÉÉ•€è…ÍÑM±½ÑÌ¹™¥¹¡­•ä€ôø€…¥Ñ•´¹…ÍÑm­•åt¤ì4(€€€€€€€¥˜€¡Í±½Ğ¤¥Ñ•´¹…ÍÑmÍ±½Ñt€ô¥ì4(€€€€€ô4(€€€ô4(€€€™½È€¡½¹ÍĞ•¹ÑÉä½˜¥Ñ•´¹ÍÑ•ÁÌ¤•¹ÑÉä¹¡½¥•Ìñğômtì4(€ô4)ô4)…Íå¹Œ™Õ¹Ñ¥½¸¥¹¥Ğ ¤ì4(€ÑÉäì4(€€€±•ĞÙ½¥•UÁÉ…‘”€ô™…±Í”°Ù½¥•]…É¹¥¹Ì€ômtì4(€€€½¹ÍĞ¥¹™¼€ô…İ…¥Ğ‰É¥‘” ¥¹¥Ğœ¤ì4(€€€µ½‘”€ô¥¹™¼¹µ½‘”ì(€€€ÍÑ½ÉåÍÍ¥ÍÑ…¹Ğ¹Í•Ñ½¹¹•Ñ¥½¸¡¥¹™¼¹…•¹Ğ¤ì(€€€™••‘‰…­É½ÕÀ€ô¥¹™¼¹™••‘‰…­É½ÕÀñğ€œœì(€€€‘¥É•Ñ½Éä€ô¥¹™¼¹‘¥É•Ñ½Éäñğ€œœì4(€€€É••¹ÑAÉ½©•ÑÌ€ô¥¹™¼¹É••¹ÑAÉ½©•ÑÌñğmtì4(€€€Á±…å•ÉI•Í½±ÕÑ¥½¸€ô¥¹™¼¹İ¥¹‘½İI•Í½±ÕÑ¥½¸ñğÁ±…å•ÉI•Í½±ÕÑ¥½¸ì4(€€€…Ù…¥±…‰±•I•Í½±ÕÑ¥½¹Ì€ô¥¹™¼¹…Ù…¥±…‰±•I•Í½±ÕÑ¥½¹Ìñğmtì4(€€€Á±…å•ÉÕ±±ÍÉ••¸€ô	½½±•…¸¡¥¹™¼¹™Õ±±ÍÉ••¸¤ì4(€€€ÁÉ½©•Ğ€ô¥¹™¼¹ÁÉ½©•Ğì4(€€€¥˜€¡ÁÉ½©•Ğ¤ì4(€€€€€¹½Éµ…±¥é” ¤ì½¹ÍĞ‰•™½É•Y½¥•Ì€ô)M=8¹ÍÑÉ¥¹¥™ä¡ÁÉ½©•Ğ¤ìÍå¹¥…±½Õ•Y½¥•Ì¡Ã}4ÖÚ$z{-®éÜj×Ç6S°Ğ¢6öç7BÖ&¶W"ÒFö7VÖVçBçVW'•6VÆV7F÷"‚r76fR×7FFRr“°Ğ¢–b†Ö&¶W"’Ö&¶W"çFW‡D6öçFVçBÒ~)É2[{.KùŞZÙ‚s°Ğ¢ĞĞ¢Òf–æÆÇ’°Ğ¢–b‡6fT–äfÆ–v‡BÓÓÒF6²’6fT–äfÆ–v‡BÒçVÆÃ°Ğ¢ĞĞ§ĞĞ¦gVæ7F–öâÆöDVF—F÷%6WGF–æw2‚’°Ğ¢G'’°Ğ¢6öç7B6fVBÒ¥4ôâç'6R†Æö6Å7F÷&vRævWD—FVÒ‚wg&ÒÖVF—F÷"×6WGF–æw2r’ÇÂvçVÆÂr“°Ğ¢–b…³RÂÂ3ÂcÒæ–æ6ÇVFW2„çVÖ&W"‡6fVCòæWFõ6fTÖ–çWFW2’’Ğ¢VF—F÷%6WGF–æw2æWFõ6fTÖ–çWFW2ÒçVÖ&W"‡6fVBæWFõ6fTÖ–çWFW2“°Ğ¢VF—F÷%6WGF–æw2çF†VÖRÒ6fVCòçF†VÖRÓÓÒvF&²ròvF&²r¢vÆ–v‡Bs°Ğ¢Ò6F6‚²ò¢¶VWF†RFVfVÇB–çFW'fÂâ¢òĞĞ¢Ç”VF—F÷%F†VÖR‚“°Ğ¢&W7F'DVF—F÷$WFõ6fR‚“°Ğ§ĞĞ¦gVæ7F–öâÇ”VF—F÷%F†VÖR‚’°Ğ¢Fö7VÖVçBæ&öG’æFF6WBæVF—F÷%F†VÖRÒVF—F÷%6WGF–æw2çF†VÖS°Ğ¢6öç7BFövvÆRÒFö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öãÒ'FövvÆRÖVF—F÷"×F†VÖR%Òr“°Ğ¢–b‡FövvÆR’°Ğ¢FövvÆRçFW‡D6öçFVçBÒVF—F÷%6WGF–æw2çF†VÖRÓÓÒvF&²rò~)ˆr¢~)‹âs°Ğ¢FövvÆRçF—FÆRÒVF—F÷%6WGF–æw2çF†VÖRÓÓÒvF&²rò~Xˆ~hÚ.X‹iz^™{NjŠ[Èòr¢~Xˆ~hÚ.X‹ZIÎ™{NjŠ[Èòs°Ğ¢FövvÆRç6WDGG&–'WFR‚v&–ÖÆ&VÂrÂFövvÆRçF—FÆR“°Ğ¢FövvÆRç6WDGG&–'WFR‚v&–×&W76VBrÂ7G&–ær†VF—F÷%6WGF–æw2çF†VÖRÓÓÒvF&²r’“°Ğ¢ĞĞ§ĞĞ¦gVæ7F–öâ6fTVF—F÷%6WGF–æw2‚’°Ğ¢Æö6Å7F÷&vRç6WD—FVÒ‚wg&ÒÖVF—F÷"×6WGF–æw2rÂ¥4ôâç7G&–æv–g’†VF—F÷%6WGF–æw2’“°Ğ§ĞĞ¦gVæ7F–öâ&W7F'DVF—F÷$WFõ6fR‚’°Ğ¢6ÆV$–çFW'fÂ†VF—F÷$WFõ6fUF–ÖW"“°Ğ¢VF—F÷$WFõ6fUF–ÖW"Ò6WD–çFW'fÂ‚‚’Óâ°Ğ¢–b†ÖöFRÓÓÒvVF—F÷"rbb&ö¦V7BbbF—'G’Ğ¢6fR‚’æ6F6‚†W'&÷"ÓâFö7B†ˆz®XªKùŞZÙZK‹JUš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍ{ï&‰Ù\œ›Ü‹›Y\ÜØYÙ_XYJJNÃBˆKY]Ü”Ù][™ÜË˜]]ÔØ]™SZ[]\È
-ˆŒÌ
-NÃBŸCB™[˜İ[Ûˆ™[™\‘Y]Ü”Ù][™ÜÊ
-HÃBˆØİ[Y[œ]Y\TÙ[XİÜŠ	ÈÙY]Ü‹\Ù][™ÜË[[Ù[	ÊOËœ™[[İ™J
-NÃBˆØİ[Y[œ]Y\TÙ[XİÜŠ	Ë™Y]Ü‰ÊOËš[œÙ\Y˜XÙ[S
-	Ø™Y›Ü™Y[™	Ë]ˆYH™Y]Ü‹\Ù][™ÜË[[Ù[ˆÛ\ÜÏH™Y]Ü‹\Ù][™ÜËX˜XÚÙ›Üˆ›ÛOH™X[ÙÈˆ\šXK[[Ù[HYHˆ\šXK[X™[H¹ï%º/¤yfj:+¯¹ïkˆƒBˆ]ˆÛ\ÜÏH™Y]Ü‹\Ù][™ÜËXØ\™XY\¹ï%º/¤yfj:+¯¹ïkÚ‰Ø]ÛŠ	ùalúeëH0åÉË	ØÛÜÙKYY]Ü‹\Ù][™ÜÉÊ_OÚXY\ƒBˆX™[Û\ÜÏH™šY[Ü[º!ê¹bª9/çykf:eí:f¥ÜÜ[Ù[XİYH™Y]Ü‹X]]Ë\Ø]™K[Z[]\ÈƒBˆ	ÖÖÍK	ù«ãÈH9b!ºd§É×KÌL	ù«ãÈL9b!ºd§É×KÌÌ	ù«ãÈÌ9b!ºd§É×KÍŒ	ù«ãÈH9l#ù¥í‰×WK›X\
+      item.steps = [{ id: item.steps?.[0]?.id || uid(), text: '', speaker: '', characterId: '', choices: [] }];
+    }
+    item.coverImageId ||= '';
+    item.weather = normalizeWeather(item.weather);
+    item.render = chapterRender(item, project.render);
+    item.steps ||= [];
+    item.castSettings ||= {};
+    if (!item.cast) {
+      const distinct = [...new Set(item.steps.map(entry => entry.characterId).filter(Boolean))];
+      item.cast = { left: '', center: '', right: '' };
+      for (const id of distinct.slice(0, 3)) {
+        const preferred = item.steps.find(entry => entry.characterId === id)?.position || 'center';
+        const slot = castSlots.includes(preferred) && !item.cast[preferred] ? preferred : castSlots.find(key => !item.cast[key]);
+        if (slot) item.cast[slot] = id;
+      }
+    }
+    for (const entry of item.steps) entry.choices ||= [];
+  }
+}
+async function init() {
+  try {
+    let voiceUpgrade = false, voiceWarnings = [];
+    const info = await bridge('init');
+    mode = info.mode;
+    storyAssistant.setConnection(info.agent);
+    feedbackGroup = info.feedbackGroup || '';
+    directory = info.directory || '';
+    recentProjects = info.recentProjects || [];
+    playerResolution = info.windowResolution || playerResolution;
+    availableResolutions = info.availableResolutions || [];
+    playerFullscreen = Boolean(info.fullscreen);
+    project = info.project;
+    if (project) {
+      normalize(); const beforeVoices = JSON.stringify(project); syncDialogueVoices(project, { migrateLegacy: true });
+      if (mode === 'editor') {
+        const result = await bridge('organizeDialogueVoices', { project: structuredClone(project) });
+        for (const update of result.assets) Object.assign(asset(update.id), update);
+        voiceWarnings = result.warnings;
+      }
+      voiceUpgrade = beforeVoices !== JSON.stringify(project);
+    }
+    if (project) loadAudioSettings();
+    if (project && mode === 'player') loadLifetimeProgress();
+    if (mode === 'editor') { loadEditorSettings(); editorHistory.reset(); }
+    window.__vrmProjectId = project?.id || project?.name || '';
+    if (mode === 'player') renderPlayer();
+    else if (project) renderEditor();
+    else renderWelcome();
+    if (project && mode === 'editor') {
+      if (voiceUpgrade) markDirty({ derived: true });
+      if (voiceWarnings.length) toast(`æœ‰ ${voiceWarnings.length} ä¸ªæ—§é…éŸ³æ–‡ä»¶æ‰¾ä¸åˆ°ï¼Œè¯·åœ¨å¯¹åº”å¯¹ç™½é‡æ–°ä¸Šä¼ ã€‚`, true);
+      queueMissingPortraits();
+    }
+  } catch (error) {
+    app.innerHTML = `<div class="fatal">${escape(error.message)}</div>`;
+  }
+}
+function toast(message, isError = false) {
+  let node = document.querySelector('#toast');
+  if (!node) {
+    node = document.createElement('div');
+    node.id = 'toast';
+    document.body.appendChild(node);
+  }
+  node.textContent = message;
+  node.className = isError ? 'show error' : 'show';
+  clearTimeout(node.timer);
+  node.timer = setTimeout(() => node.className = '', 4500);
+}
+function editorSelection() {
+  const focused = document.activeElement;
+  const focus = focused?.matches('input,textarea,select') && historyInputContextSupported(focused)
+    ? { tag: focused.tagName, id: focused.id, dataset: { ...focused.dataset }, start: focused.selectionStart, end: focused.selectionEnd } : null;
+  return { selectedAct, selectedStep, selectedCharacter, activePanel, activeAssetType,
+    folders: { ...currentAssetFolder }, storyIndex: editorGalleryStoryIndex, library: library.editorState(),
+    focus,
+    scroll: ['.sidebar', '.inspector', '#asset-dock-body'].map(selector => document.querySelector(selector)?.scrollTop || 0) };
+}
+function updateHistoryButtons() {
+  const state = editorHistory.status();
+  for (const [action, enabled, label, shortcut] of [
+    ['editor-undo', state.canUndo, state.undoLabel, 'Ctrl+Z'], ['editor-redo', state.canRedo, state.redoLabel, 'Ctrl+Y / Ctrl+Shift+Z'],
+    ['search-undo', state.canUndo, state.undoLabel, 'Ctrl+Z'], ['search-redo', state.canRedo, state.redoLabel, 'Ctrl+Y']
+  ]) for (const button of document.querySelectorAll(`[data-action="${action}"]`)) {
+    button.disabled = historyBusy || !enabled;
+    button.title = `${action.endsWith('undo') ? 'æ’¤é”€' : 'é‡åš'}${label ? 'ï¼š' + label : ''}ï¼ˆ${shortcut}ï¼‰`;
+  }
+}
+function historyInputContextSupported(node) {
+  const bindings = Object.entries(node.dataset || {}).filter(([key]) => !key.endsWith('Output'));
+  const supported = bindings.some(([key]) => ['field','bookField','eventField','motionOptions','galleryMusic','galleryImage',
+    'audioTitle','storyIndex','assetFolder','titleField','uiField','titleAdjust','titleExpression','stepCast','castSlot','castMotion','castAdjust','castExpression',
+    'render','weather','galleryAdjust','adjust','expression','choiceField'].includes(key)) || node.id === 'project-name' || node.hasAttribute('data-gallery-frame-number');
+  return supported;
+}
+function historyInputContext(node) {
+  if (!historyInputContextSupported(node)) return null;
+  const bindings = Object.entries(node.dataset || {}).filter(([key]) => !key.endsWith('Output'));
+  const key = JSON.stringify([act()?.id, step()?.id, project.characters[selectedCharacter]?.id, library.editorState().selected,
+    node.id, bindings]);
+  const label = node.closest('label')?.querySelector('span')?.textContent?.trim() || node.getAttribute('aria-label') || 'æ–‡å­—æˆ–è®¾ç½®';
+  return { key, label: `ä¿®æ”¹${label.slice(0, 24)}`, continuous: historyPointer === node };
+}
+document.addEventListener('input', event => {
+  if (mode !== 'editor' || !project || historyBusy) return;
+  historyInput = historyInputContext(event.target);
+  if (historyInput) editorHistory.begin();
+  queueMicrotask(() => { historyInput = null; });
+}, true);
+document.addEventListener('click', event => {
+  if (mode !== 'editor' || !project || historyBusy) return;
+  const button = event.target.closest?.('[data-action], [data-panel]');
+  if (button) {
+    historyInput = null;
+    editorHistory.seal(); editorHistory.begin();
+    historyAction = { label: button.textContent.trim().replace(/^ï¼‹\s*/, '').slice(0, 24) || 'ç¼–è¾‘å·¥ç¨‹' };
+  }
+}, true);
+document.addEventListener('pointerdown', event => {
+  if (mode === 'editor' && event.target.type === 'range') { editorHistory.seal(); editorHistory.begin(); historyPointer = event.target; }
+}, true);
+document.addEventListener('pointerup', () => { if (historyPointer) { historyPointer = null; editorHistory.seal(); } }, true);
+document.addEventListener('pointercancel', () => { historyPointer = null; editorHistory.seal(); }, true);
+document.addEventListener('focusout', event => {
+  if (mode === 'editor' && !historyPointer && event.target.matches?.('input, textarea, select')) editorHistory.seal();
+}, true);
+document.addEventListener('drop', () => { if (mode === 'editor') { editorHistory.seal(); editorHistory.begin(); } }, true);
 
-İ˜[YKX™[JHOƒBˆÜ[Ûˆ˜[YOH‰İ˜[Y_Hˆ	ÙY]Ü”Ù][™ÜË˜]]ÔØ]™SZ[]\ÈOOH˜[YHÈ	ÜÙ[XİY	Èˆ	ÉßO‰ÛX™[OÛÜ[Û˜
-Kš›Ú[Š	ÉÊ_CBˆÜÙ[XİÛX™[X™[Û\ÜÏH™šY[Ü[¹åc:gh¹i%º)àÜÜ[Ù[XİYH™Y]Ü‹][YHƒBˆÜ[Ûˆ˜[YOH›YÚˆ	ÙY]Ü”Ù][™ÜË[YHOOH	ÛYÚ	ÈÈ	ÜÙ[XİY	Èˆ	ÉßO¹¥ézeí0­È9æoz"lÛÜ[ÛƒBˆÜ[Ûˆ˜[YOH™\šÈˆ	ÙY]Ü”Ù][™ÜË[YHOOH	Ù\šÉÈÈ	ÜÙ[XİY	Èˆ	ÉßO¹i':eí0­È9­ìyàl:"lÛÜ[ÛƒBˆÜÙ[XİÛX™[¹i%º)àº+¯¹ïk¹cê¹olydãyï%º/¤yfj;ï&ùkï9aî¹æ¡9®.9¢#ù/çy£ yæoz"l¹åc:gh¸à ÜƒBˆÛ\ÜÏH™›ÛXÜ™Y]¹åc:gh¹/oùå*\›[ÛSÔÈØ[œÈ9keù/døà °ªHŒŒHX]ÙZH]šXÙHÛË‹ÜƒBˆÙ]Ù]˜
-NÃBŸCB™[˜İ[Ûˆ™[™\•Ù[ÛÛYJ
-HÃBˆ\š[›™\’SHXZ[ˆÛ\ÜÏHÙ[ÛÛYH]ˆÛ\ÜÏHÙ[ÛÛYKXØ\™·ÓMm¢G§²ÚîÆ­yÕcted' : ''}" data-action="select-character" data-index="${index}">
+async function restoreEditorHistory(direction) {
+  if (mode !== 'editor' || !project || historyBusy || playing || document.querySelector('#book-reader')) return false;
+  historyBusy = true; document.querySelector('.editor')?.classList.add('history-busy'); updateHistoryButtons();
+  try {
+    await Promise.all([...portraitJobs.values()]);
+    const entry = editorHistory.peek(direction);
+    if (!entry) return false;
+    await bridge('restoreHistoryAssets', { project: entry.project });
+    stopEditorVoicePreview(); events.cancel(); previewRequest++; titleRequest++;
+    project = entry.project;
+    const view = entry.view;
+    selectedAct = Math.max(0, Math.min(view.selectedAct, project.acts.length - 1));
+    selectedStep = Math.max(0, Math.min(view.selectedStep, (act()?.steps.length || 1) - 1));
+    selectedCharacter = Math.max(0, Math.min(view.selectedCharacter, project.characters.length - 1));
+    activePanel = view.activePanel; activeAssetType = view.activeAssetType;
+    Object.assign(currentAssetFolder, view.folders); editorGalleryStoryIndex = view.storyIndex;
+    library.restoreEditorState(view.library);
+    temporaryPortraits.clear(); editorHistory.accept(entry.target);
+    changeRevision++; dirty = true;
+    renderSidebar(); renderInspector(); await updatePreview(); library.refreshSearch();
+    ['.sidebar', '.inspector', '#asset-dock-body'].forEach((selector, index) => {
+      const node = document.querySelector(selector); if (node) node.scrollTop = view.scroll?.[index] || 0;
+    });
+    if (view.focus) {
+      const focused = [...document.querySelectorAll(view.focus.tag)].find(node => node.id === view.focus.id &&
+        Object.entries(view.focus.dataset).every(([key, value]) => node.dataset[key] === value));
+      focused?.focus({ preventScroll: true });
+      if (focused && view.focus.start != null && ['INPUT', 'TEXTAREA'].includes(focused.tagName)) {
+        try { focused.setSelectionRange(Math.min(view.focus.start, focused.value.length), Math.min(view.focus.end, focused.value.length)); } catch { /* Non-text input. */ }
+      }
+    }
+    const marker = document.querySelector('#save-state'); if (marker) marker.textContent = 'â— æœªä¿å­˜';
+    toast(`å·²${direction < 0 ? 'æ’¤é”€' : 'é‡åš'}ï¼š${entry.label}`);
+    return true;
+  } catch (error) { toast(`æ¢å¤å¤±è´¥ï¼š${error.message}`, true); return false; }
+  finally { historyBusy = false; document.querySelector('.editor')?.classList.remove('history-busy'); updateHistoryButtons(); }
+}
+function markDirty(options) {
+  if (project) syncDialogueVoices(project);
+  changeRevision++;
+  dirty = true;
+  const marker = document.querySelector('#save-state');
+  if (marker) marker.textContent = 'â— æœªä¿å­˜';
+  if (mode === 'editor' && !options?.skipHistory && (!historyBusy || options?.derived)) editorHistory.commit(options || historyInput || historyAction || {});
+}
+async function save() {
+  if (!project || mode !== 'editor') return;
+  if (saveInFlight) await saveInFlight;
+  editorHistory.seal();
+  const revision = changeRevision;
+  const retainedPaths = new Set(editorHistory.retainedAssetPaths());
+  const obsoletePortraitPaths = [...pendingPortraitDeletes].filter(path => !retainedPaths.has(path));
+  const task = bridge('saveProject', { project: structuredClone(project), obsoletePortraitPaths });
+  saveInFlight = task;
+  try {
+    await task;
+    obsoletePortraitPaths.forEach(path => pendingPortraitDeletes.delete(path));
+    if (revision === changeRevision) {
+      dirty = false;
+      const marker = document.querySelector('#save-state');
+      if (marker) marker.textContent = 'âœ“ å·²ä¿å­˜';
+    }
+  } finally {
+    if (saveInFlight === task) saveInFlight = null;
+  }
+}
+function loadEditorSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('vrm-editor-settings') || 'null');
+    if ([5, 10, 30, 60].includes(Number(saved?.autoSaveMinutes)))
+      editorSettings.autoSaveMinutes = Number(saved.autoSaveMinutes);
+    editorSettings.theme = saved?.theme === 'dark' ? 'dark' : 'light';
+  } catch { /* Keep the default interval. */ }
+  applyEditorTheme();
+  restartEditorAutoSave();
+}
+function applyEditorTheme() {
+  document.body.dataset.editorTheme = editorSettings.theme;
+  const toggle = document.querySelector('[data-action="toggle-editor-theme"]');
+  if (toggle) {
+    toggle.textContent = editorSettings.theme === 'dark' ? 'â˜€' : 'â˜¾';
+    toggle.title = editorSettings.theme === 'dark' ? 'åˆ‡æ¢åˆ°æ—¥é—´æ¨¡å¼' : 'åˆ‡æ¢åˆ°å¤œé—´æ¨¡å¼';
+    toggle.setAttribute('aria-label', toggle.title);
+    toggle.setAttribute('aria-pressed', String(editorSettings.theme === 'dark'));
+  }
+}
+function saveEditorSettings() {
+  localStorage.setItem('vrm-editor-settings', JSON.stringify(editorSettings));
+}
+function restartEditorAutoSave() {
+  clearInterval(editorAutoSaveTimer);
+  editorAutoSaveTimer = setInterval(() => {
+    if (mode === 'editor' && project && dirty)
+      save().catch(error => toast(`è‡ªåŠ¨ä¿å­˜å¤±è´¥ï¼š${error.message}`, true));
+  }, editorSettings.autoSaveMinutes * 60_000);
+}
+function renderEditorSettings() {
+  document.querySelector('#editor-settings-modal')?.remove();
+  document.querySelector('.editor')?.insertAdjacentHTML('beforeend', `<div id="editor-settings-modal" class="editor-settings-backdrop" role="dialog" aria-modal="true" aria-label="ç¼–è¾‘å™¨è®¾ç½®">
+    <div class="editor-settings-card"><header><h2>ç¼–è¾‘å™¨è®¾ç½®</h2>${button('å…³é—­ Ã—', 'close-editor-settings')}</header>
+      <label class="field"><span>è‡ªåŠ¨ä¿å­˜é—´éš”</span><select id="editor-auto-save-minutes">
+        ${[[5, 'æ¯ 5 åˆ†é’Ÿ'], [10, 'æ¯ 10 åˆ†é’Ÿ'], [30, 'æ¯ 30 åˆ†é’Ÿ'], [60, 'æ¯ 1 å°æ—¶']].map(([value, label]) =>
+          `<option value="${value}" ${editorSettings.autoSaveMinutes === value ? 'selected' : ''}>${label}</option>`).join('')}
+      </select></label><label class="field"><span>ç•Œé¢å¤–è§‚</span><select id="editor-theme">
+        <option value="light" ${editorSettings.theme === 'light' ? 'selected' : ''}>æ—¥é—´ Â· ç™½è‰²</option>
+        <option value="dark" ${editorSettings.theme === 'dark' ? 'selected' : ''}>å¤œé—´ Â· æ·±ç°è‰²</option>
+      </select></label><p>å¤–è§‚è®¾ç½®åªå½±å“ç¼–è¾‘å™¨ï¼›å¯¼å‡ºçš„æ¸¸æˆä¿æŒç™½è‰²ç•Œé¢ã€‚</p>
+      <p class="font-credit">ç•Œé¢ä½¿ç”¨ HarmonyOS Sans å­—ä½“ã€‚Â© 2021 Huawei Device Co., Ltd.</p>
+    </div></div>`);
+}
+function renderWelcome() {
+  app.innerHTML = `<main class="welcome"><div class="welcome-card">
+    <div class="eyebrow">VRM GALGAME STUDIO</div>
+    <h1>è®© VRM è§’è‰²èµ°è¿›ä½ çš„æ•…äº‹</h1>
+    <p>å¯¼å…¥æ¨¡å‹å’ŒåŠ¨ä½œï¼Œå†™å¯¹ç™½ï¼Œé€‰è¡¨æƒ…ã€‚å·¥ç¨‹å’Œå…¨éƒ¨ç´ æä¼šè£…è¿›ä¸€ä¸ªå·¥ç¨‹åŒ…ã€‚</p>
+    <label class="field"><span>æ–°å·¥ç¨‹åç§°</span><input id="new-name" value="æˆ‘çš„ VRM æ•…äº‹"></label>
+    <div class="welcome-actions">${button('æ–°å»ºå·¥ç¨‹', 'new-project', 'class="primary"')}${button('æ‰“å¼€å·¥ç¨‹åŒ…', 'open-project')}${button('å¯¼å…¥æ—§å·¥ç¨‹', 'import-folder-project')}</div>
+    <small>æ–°å»ºæ—¶é€‰æ‹©ä¿å­˜ä½ç½®ï¼Œç¨‹åºä¼šå»ºç«‹ä¸€ä¸ª .vrmg å·¥ç¨‹åŒ…ã€‚æ—§ç‰ˆå·¥ç¨‹æ–‡ä»¶å¤¹å¯ä»¥å¯¼å…¥ã€‚</small>
+    ${recentProjects.length ? `<div class="recent-projects"><h2>æœ€è¿‘æ‰“å¼€</h2>${recentProjectButtons()}</div>` : ''}
+  </div></main>`;
+}
+function recentProjectButtons() {
+  return recentProjects.map((path, index) => `<button type="button" class="recent-project" data-action="open-recent" data-index="${index}" title="${escape(path)}">
+    <strong>${escape(path.replace(/\\/g, '/').split('/').pop())}</strong><small>${escape(path)}</small></button>`).join('');
+}
+function renderRecentProjectsModal() {
+  document.querySelector('#recent-projects-modal')?.remove();
+  document.querySelector('.editor')?.insertAdjacentHTML('beforeend', `<div id="recent-projects-modal" class="editor-settings-backdrop" role="dialog" aria-modal="true" aria-label="æœ€è¿‘æ‰“å¼€çš„å·¥ç¨‹">
+    <div class="editor-settings-card recent-projects-card"><header><h2>æœ€è¿‘æ‰“å¼€çš„å·¥ç¨‹</h2>${button('å…³é—­ Ã—', 'close-recent-projects')}</header>
+      ${recentProjects.length ? recentProjectButtons() : '<p>è¿˜æ²¡æœ‰æ‰“å¼€è¿‡å·¥ç¨‹åŒ…ã€‚</p>'}</div></div>`);
+}
+function renderEditor() {
+  events.cancel();
+  stage?.destroy();
+  if (activePanel === 'assets') activePanel = 'story';
+  app.innerHTML = `<div class="editor">
+    <header class="topbar"><div class="brand">âœ¦ <b>VRM Galgame</b><span>ç¼–è¾‘å™¨</span></div>
+      <div class="project-title"><input id="text-search" placeholder="æŸ¥æ‰¾ä¸æ›¿æ¢å‰§æƒ…ã€è§’è‰²åç§°â€¦" aria-label="æŸ¥æ‰¾å‰§æƒ…æ–‡æœ¬ï¼ŒæŒ‰å›è½¦æ‰“å¼€æ›¿æ¢å·¥å…·"><button class="search-open-button" data-action="search-open" title="æŸ¥æ‰¾ä¸æ›¿æ¢">âŒ•</button><span id="save-state">âœ“ å·²ä¿å­˜</span></div>
+      <div class="editor-history-controls" role="group" aria-label="æ’¤é”€å’Œé‡åš">${button('â†¶ æ’¤é”€', 'editor-undo', 'disabled')}${button('â†· é‡åš', 'editor-redo', 'disabled')}</div>
+      <nav>${button('æ–°å»º', 'new-project')}${button('æ‰“å¼€', 'open-project')}${button('æœ€è¿‘', 'recent-projects')}${button('å¯¼å…¥æ—§å·¥ç¨‹', 'import-folder-project')}${button('ä¿å­˜', 'save')}${button('å¦å­˜ä¸º', 'save-as')}${button('â˜¾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="åˆ‡æ¢å¤œé—´æ¨¡å¼" aria-pressed="false" title="åˆ‡æ¢åˆ°å¤œé—´æ¨¡å¼"')}${button('è®¾ç½®', 'editor-settings')}${button('å‰§æƒ…åŠ©æ‰‹', 'assistant-open')}${button('è¯•ç©', 'play', 'class="primary"')}${button('å¯¼å‡ºæ¸¸æˆ', 'export')}<div class="editor-feedback" aria-label="Bugåé¦ˆäº¤æµç¾¤"><span>Bugåé¦ˆäº¤æµç¾¤ Â· QQ</span><strong>${escape(feedbackGroup)}</strong></div></nav>
+    </header>
+    <div class="workspace">
+      <aside class="sidebar"><div class="tabs">
+        <button data-panel="story" class="active">å‰§æƒ…</button><button data-panel="characters">è§’è‰²</button><button data-panel="title">æ ‡é¢˜</button><button data-panel="render">æ¸²æŸ“</button><button data-panel="knowledge">çŸ¥è¯†åº“</button>
+      </div><div id="sidebar-body"></div></aside>
+      <main class="center"><div class="stage-toolbar"><span id="stage-caption"></span><span>é¢„è§ˆç”»é¢</span></div>
+        <div class="stage-frame"><div id="scene-bg"></div><div id="stage-canvas"></div><div id="title-preview" class="title-composition hidden"></div>
+          <div id="character-preview" class="character-editor-preview hidden"></div>
+          <div id="stage-placeholder">å¯¼å…¥ VRM è§’è‰²åï¼Œè¿™é‡Œä¼šæ˜¾ç¤º 3D äººç‰©</div>
+          <div id="speaker-portrait" class="speaker-portrait hidden"><img alt="è¯´è¯è§’è‰²å¤´åƒ"></div>
+          <div id="dialogue" class="dialogue"><div class="speaker" id="dialogue-speaker"></div><div id="dialogue-text"></div></div>
+          <button type="button" id="auto-play-button" class="auto-play-button hidden" data-action="auto-toggle" aria-pressed="false">â–¶ è‡ªåŠ¨æ’­æ”¾</button>
+          <div id="choice-list"></div>
+          <div id="play-controls">${button('é€€å‡ºè¯•ç©', 'stop-play')}</div>
+          <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
+        </div>
+        <div class="stage-hint">é€‰ä¸­å·¦ä¾§å¯¹ç™½å³å¯é¢„è§ˆã€‚è¯•ç©æ—¶ç‚¹å‡»ç”»é¢ç©ºç™½å¤„ï¼Œæˆ–æŒ‰ç©ºæ ¼ / Enter ç»§ç»­ã€‚</div>
+        <section class="asset-dock" aria-label="å¸¸é©»ç´ æåº“"><div class="asset-dock-heading"><strong>ç´ æåº“</strong><small>å›¾ç‰‡ç›´æ¥æ˜¾ç¤ºç¼©ç•¥å›¾ï¼›åœ¨è¿™é‡Œå¯¼å…¥ã€åˆ†ç±»ã€åˆ é™¤ç´ æ</small></div><div id="asset-dock-tabs" class="asset-dock-tabs" role="tablist" aria-label="ç´ æç±»å‹"></div><div id="asset-dock-body" class="asset-dock-body"></div></section>
+      </main>
+      <aside class="inspector"><div class="inspector-heading">å±æ€§</div><div id="inspector-body"></div></aside>
+    </div>
+    <footer class="status"><span id="project-path">${escape(directory)}</span><span>ç´ æå’Œå‰§æƒ…ä¿å­˜åœ¨å·¥ç¨‹åŒ…ä¸­</span></footer>
+  </div>`;
+  stageError = '';
+  stage = new VRMStage(document.querySelector('#stage-canvas'), message => {
+    stageError = message;
+    const placeholder = document.querySelector('#stage-placeholder');
+    if (placeholder && !stage?.vrm) {
+      placeholder.textContent = message;
+      placeholder.style.display = 'grid';
+    }
+    toast(message, true);
+  });
+  stage.setRenderSettings(project.render);
+  applyEditorTheme();
+  updateHistoryButtons();
+  renderSidebar();
+  renderInspector();
+  updatePreview();
+}
+function renderSidebar() {
+  document.querySelectorAll('[data-panel]').forEach(node => node.classList.toggle('active', node.dataset.panel === activePanel));
+  const body = document.querySelector('#sidebar-body');
+  if (activePanel === 'knowledge') { library.editor(); renderAssetDock(); return; }
+  if (activePanel === 'story') {
+    body.innerHTML = `<div class="section-heading">å‰§æƒ… <span class="heading-actions">${button('ï¼‹ å¹•', 'add-act')}${button('ï¼‹ äº‹ä»¶', 'event-add')}</span></div>
+      <div class="list act-accordion" data-order-list="act">${project.acts.map((item, index) =>
+        `<section class="act-group ${isEvent(item) ? 'event-group' : ''} ${index === selectedAct ? 'expanded' : ''}"><button class="list-row sortable-row ${index === selectedAct ? 'selected' : ''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" aria-expanded="${index === selectedAct}">
+          <span class="number">${index === selectedAct ? 'â–¾' : 'â–¸'} ${String(index + 1).padStart(2, '0')}</span><span>${isEvent(item) ? 'â–¤ ' : ''}${escape(item.name)}</span><small>${isEvent(item) ? eventNames[item.event.type] : `${item.steps.length} å¥`}</small><span class="drag-grip" aria-hidden="true">â‹®â‹®</span></button>
+          ${index === selectedAct ? isEvent(item) ? `<div class="act-dialogues event-sidebar-info"><p>${escape(item.event.title || 'åœ¨å³ä¾§å¡«å†™äº‹ä»¶å†…å®¹')}</p><small>${eventSeconds[item.event.type] ? `è§‚çœ‹ ${eventSeconds[item.event.type]} ç§’åç»§ç»­` : 'å¯ä»¥ç«‹å³å…³é—­'}</small><div class="inline-actions">${button('é¢„è§ˆ', 'event-preview')}${button('å¤åˆ¶', 'event-duplicate')}</div></div>` : `<div class="act-dialogues"><div class="section-heading">æœ¬å¹•å¯¹ç™½ <span class="heading-actions">${button('å¤åˆ¶', 'duplicate-step', item.steps.length ? '' : 'disabled')}${button('ï¼‹ æ–°å¢', 'add-step')}</span></div>
+          <div class="list step-list" data-order-list="step">${item.steps.map((line, stepIndex) => `<button class="list-row sortable-row ${stepIndex === selectedStep ? 'selected' : ''}" draggable="true" data-order-kind="step" data-order-index="${stepIndex}" data-action="select-step" data-index="${stepIndex}"><span class="number">${stepIndex + 1}</span><span><b>${escape(line.speaker || character(line.characterId)?.name || 'æ—ç™½')}</b><small>${escape(line.text || 'ç©ºå¯¹ç™½')}</small></span><span class="drag-grip" aria-hidden="true">â‹®â‹®</span></button>`).join('') || '<p class="tip">ç‚¹å‡»â€œæ–°å¢â€å†™ç¬¬ä¸€å¥å¯¹ç™½ã€‚</p>'}</div></div>` : ''}</section>`).join('')}</div>
+      <div class="sidebar-note">æ‹–åŠ¨å¹•æˆ–äº‹ä»¶å¯ä»¥è°ƒæ•´æ’­æ”¾é¡ºåºã€‚ç‚¹å‡»â€œï¼‹ äº‹ä»¶â€ï¼Œä¼šæ’å…¥åˆ°å½“å‰é€‰ä¸­é¡¹åé¢ã€‚</div>`;
+  } else if (activePanel === 'characters') {
+    body.innerHTML = `<div class="section-heading">è§’è‰² ${button('ï¼‹ æ–°å¢', 'add-character')}</div>
+      <div class="list">${project.characters.map((item, index) =>
+        `<button class="list-row ${index === selectedCharacter ? 'selected' : ''}" data-action="select-character" data-index="${index}">
           <span class="number">âœ¦</span><span>${escape(item.name)}</span><small>${item.modelId ? 'VRM' : 'æœªè®¾æ¨¡å‹'}</small></button>`).join('')}</div>
       <div class="sidebar-note">è§’è‰²åªéœ€è®¾ç½®ä¸€æ¬¡ã€‚å¯¹ç™½é€‰ä¸­è§’è‰²åå°±èƒ½è°ƒç”¨å®ƒçš„æ¨¡å‹ã€‚</div>`;
   } else if (activePanel === 'render') {
@@ -66,77 +756,572 @@ HÃBˆ\š[›™\’SHXZ[ˆÛ\ÜÏHÙ[ÛÛYH]ˆÛ\ÜÏHÙ[ÛÛYKXØ\™·ÓMm¢G§²Úî
         ${button('å¯¼å…¥æ ‡é¢˜äººç‰©', 'import', 'data-type="vrm" data-title-import="modelId"')}
         ${button('å¯¼å…¥æ ‡é¢˜åŠ¨ä½œ', 'import', 'data-type="motion" data-title-import="motionId"')}
         ${button('å¯¼å…¥èƒŒæ™¯', 'import', 'data-type="image" data-title-import="backgroundId"')}
-      </div><div class="sidebar-note">æ ‡é¢˜å¸ƒå±€å›YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Öë–ºk¾òi1½¼ƒ–r£–Ş›’úŸ¾ò3’êë&§–r£’â·¦^Ó–?–>Ï¾ò3¢>s–6Wš:K–r£–êW¦£–¾ó–—–B;–"Ã–>Ï’úŸ¢ÂšVÓ’ö7ö»–J3¢K–ê›ğ½‘¥Øù€ì4(€ô4(€É•¹‘•ÉÍÍ•Ñ½¬ ¤ì4)ô4)™Õ¹Ñ¥½¸‘¥…±½Õ•Y½¥•¥•±¡ÕÉÉ•¹Ğ¤ì4(€½¹ÍĞÉ½±”€ô¡…É…Ñ•È¡ÕÉÉ•¹Ğ¹¡…É…Ñ•É%¤ì4(€½¹ÍĞÙ½¥•Ì€ôÙ½¥•Í½É¡…É…Ñ•È¡ÁÉ½©•Ğ°ÕÉÉ•¹Ğ¹¡…É…Ñ•É%¤ì4(€É•ÑÕÉ¸€ñ‘¥Ø±…ÍÌô‰™¥•±‘¥…±½Õ”µÙ½¥”µ™¥•±ˆøñÍÁ…¸û¢K¢&Ë¦7¦~Ì‘íÉ½±”€ü€ƒ
-Ü€‘í•Í…Á”¡É½±”¹¹…µ”¥õ€€è€œôğ½ÍÁ…¸ø4(€€€€‘íÍ•±•Ğ ÍÑ•À¹Ù½¥•%œ°Ù½¥•Ì°ÕÉÉ•¹Ğ¹Ù½¥•%°É½±”€ü€Ÿš^ƒ¦7¦~Ï¾ò#’îšbû’ë¢şg’â«¢K¢&Ëj¦7¦~Ï¾ò$œ€è€Ÿ¢¾ß–#¦'š.§¢şg–>—–¾çf÷j¢K¢&Èœ¥ô4(€€€€ñ‘¥Ø±…ÍÌô‰‘¥…±½Õ”µÙ½¥”µÑ½½±Ìˆø‘í‰ÕÑÑ½¸¡ÕÉÉ•¹Ğ¹Ù½¥•%€ü€Ÿ’â+’òƒšZÃ¦7¦~Ìœ€è€Ÿ’â+’òƒ¦7¦~Ìœ°€ÕÁ±½…µ‘¥…±½Õ”µÙ½¥”œ¥ô4(€€€€‘í‰ÕÑÑ½¸ ŸŠZØƒ¢¾W–B°œ°€ÁÉ•Ù¥•Üµ‘¥…±½Õ”µÙ½¥”œ°ÕÉÉ•¹Ğ¹Ù½¥•%€ü€œœ€è€‘¥Í…‰±•œ¥ô4(€€€€‘í‰ÕÑÑ½¸ Ÿï¦f“îG–ºhœ°€É•µ½Ù”µ‘¥…±½Õ”µÙ½¥”œ°ÕÉÉ•¹Ğ¹Ù½¥•%€ü€œœ€è€‘¥Í…‰±•œ¥ôğ½‘¥Øø4(€€€€ñÀ±…ÍÌô‰Ñ¥Àˆû–>«–r£¢şg–>—–¾çf÷’â+’òƒšZ’îÛ¢«–*£šRû–—¢K¢&Ë’âO–Æ{šZ’îÛ–’ç¾ò3–æÛR£–¾çf÷–£šZ–F÷–B7ğ½Àøğ½‘¥Øù€ì4)ô4)™Õ¹Ñ¥½¸ÍÑ½Á‘¥Ñ½ÉY½¥•AÉ•Ù¥•Ü ¤ì4(€•‘¥Ñ½ÉY½¥•AÉ•Ù¥•Ü¹Á…ÕÍ” ¤ì•‘¥Ñ½ÉY½¥•AÉ•Ù¥•Ü¹É•µ½Ù•ÑÑÉ¥‰ÕÑ” ÍÉŒœ¤ì•‘¥Ñ½ÉY½¥•AÉ•Ù¥•Ü¹±½… ¤ìÁÉ•Ù¥•İY½¥•%€ô€œœì4)ô4)…Íå¹Œ™Õ¹Ñ¥½¸ÁÉ•Ù¥•İ¥…±½Õ•Y½¥”¡¥¤ì4(€½¹ÍĞ¥Ñ•´€ô…ÍÍ•Ğ¡¥¤ì4(€¥˜€¡¥Ñ•´ü¹ÑåÁ”€„ôô€Ù½¥”œ¤É•ÑÕÉ¸ì4(€¥˜€¡ÁÉ•Ù¥•İY½¥•%€ôôô¥€˜˜€…•‘¥Ñ½ÉY½¥•AÉ•Ù¥•Ü¹Á…ÕÍ•¤ìÍÑ½Á‘¥Ñ½ÉY½¥•AÉ•Ù¥•Ü ¤ìÉ•¹‘•ÉÍÍ•Ñ½¬ ¤ìÉ•ÑÕÉ¸ìô4(€ÍÑ½Á‘¥Ñ½ÉY½¥•AÉ•Ù¥•Ü ¤ìÁÉ•Ù¥•İY½¥•%€ô¥ì•‘¥Ñ½ÉY½¥•AÉ•Ù¥•Ü¹ÍÉŒ€ô…ÍÍ•ÑUÉ°¡¥Ñ•´¤ì7}4ÖÚ$z{-®éÜj×WDföÆFW%F–ÆR†föÆFW"’°Ğ¢6öç7B6÷VçBÒ'•G—R†föÆFW"çG—R’æf–ÇFW"†—FVÒÓâ—FVÒæföÆFW$–BÓÓÒföÆFW"æ–B’æÆVæwFƒ°Ğ¢&WGW&âÆ'WGFöâG—SÒ&'WGFöâ"6Æ73Ò&76WB×F–ÆR76WBÖföÆFW"×F–ÆR"FFÖ7F–öãÒ&76WBÖ÷VâÖföÆFW""FFÖföÆFW"Ö–CÒ"G¶W66R†föÆFW"æ–B—Ò"F—FÆSÒ.h™>[ÈG¶W66R†föÆFW"ææÖR—Ò#àĞ¢Ç7â6Æ73Ò&76WBÖföÆFW"×–7GW&R"&–Ö†–FFVãÒ'G'VR#ï	ù8Â÷7ããÇ7â6Æ73Ò&76WB×F–ÆRÖæÖR#âG¶W66R†föÆFW"ææÖR—ÓÂ÷7ããÇ6ÖÆÃâG¶6÷VçGÒKŠ®{JiÙG¶föÆFW"çG—RÓÓÒwfö–6Rrò†föÆFW"æ6†&7FW$FVÆWFVBòr+rŠy.ˆ›.[{.XŠ™šNûÈÎih~K»nZKKùŞyY’r¢r+rY»®Zé®ih~K»nZK’r’¢rwÓÂ÷6ÖÆÃãÂö'WGFöãæ°Ğ§ĞĞ¦gVæ7F–öâ&VæFW$76WEF–ÆR†—FVÒÂföÆFW'2’°Ğ¢6öç7B–6öç2Ò²g&Ó¢~)™òrÂÖ÷F–öã¢~)kbrÂVF–ó¢~)š²rÂf–FVó¢~)j2rÓ°Ğ¢6öç7B&Wf–WrÒ—FVÒçG—RÓÓÒv–ÖvRpĞ¢òÆ–Ör6Æ73Ò&76WB×F–ÆR×&Wf–Wr"ÆöF–æsÒ&Æ§’"7&3Ò"G¶W66R†76WEW&Â†—FVÒ’—Ò"ÇCÒ"G¶W66R†—FVÒææÖR—Şy¨N{ÊyZ^Y»â#æ Ğ¢¢Ç7â6Æ73Ò&76WB×F–ÆRÖ–6öâ76WB×F–ÆRÖ–6öâÒG¶—FVÒçG—WÒ"&–Ö†–FFVãÒ'G'VR#âG¶–6öç5¶—FVÒçG—UÒÇÂ~)j2wÓÂ÷7ãæ°Ğ¢&WGW&âÆF—b6Æ73Ò&76WB×F–ÆR76WBÖf–ÆR×F–ÆR"F—FÆSÒ"G¶W66R†—FVÒææÖR—Ò#ãÆF—b6Æ73Ò&76WB×F–ÆR×–7GW&R#âG·&Wf–WwÓÂöF—cãÇ7â6Æ73Ò&76WB×F–ÆRÖæÖR#âG¶W66R†—FVÒææÖR—ÓÂ÷7ãàĞ¢ÆF—b6Æ73Ò&76WB×F–ÆR×FööÇ2#ãÇ6VÆV7BFFÖ76WBÖföÆFW#Ò"G¶W66R†—FVÒæ–B—Ò"&–ÖÆ&VÃÒ.h¨¢G¶W66R†—FVÒææÖR—Òz{¾XªX‹ih~K»nZK’"F—FÆSÒ.z{¾XªX‹ih~K»nZK’#àĞ¢Æ÷F–öâfÇVSÒ""G²—FVÒæföÆFW$–Bòw6VÆV7FVBr¢rwÓîiÊ®Xˆn{³Âö÷F–öãâG¶föÆFW'2æÖ†föÆFW"ÓâÆ÷F–öâfÇVSÒ"G¶W66R†föÆFW"æ–B—Ò"Eš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍ^Ú][K™›Û\’YOOH›Û\‹šYÈ	ÜÙ[XİY	Èˆ	ÉßO‰Ù\ØØ\J›Û\‹›˜[YJ_OÛÜ[Û˜
-Kš›Ú[Š	ÉÊ_CBˆÜÙ[Xİ‰Ø]ÛŠ	ùb(:fi	Ë	Ù[]KX\ÜÙ]	Ë]KX\ÜÙ]ZYH‰Ù\ØØ\J][KšY
-_HˆÛ\ÜÏH˜\ÜÙ]Y[]H˜
-_OÙ]Ù]˜ÃBŸCB™[˜İ[Ûˆ™[Ü™\”İÜJÚ[™Ûİ\˜ÙK\™Ù]Y\ŠHÃBˆÛÛœİ][\ÈHÚ[™OOH	ØXİ	ÈÈ›Ú™Xİ˜XİÈˆXİ
+      </div><div class="sidebar-note">æ ‡é¢˜å¸ƒå±€å›ºå®šï¼šLogo åœ¨å·¦ä¾§ï¼Œäººç‰©åœ¨ä¸­é—´åå³ï¼Œèœå•æ’åœ¨åº•éƒ¨ã€‚å¯¼å…¥ååˆ°å³ä¾§è°ƒæ•´ä½ç½®å’Œè§’åº¦ã€‚</div>`;
+  }
+  renderAssetDock();
+}
+function dialogueVoiceField(current) {
+  const role = character(current.characterId);
+  const voices = voicesForCharacter(project, current.characterId);
+  return `<div class="field dialogue-voice-field"><span>è§’è‰²é…éŸ³${role ? ` Â· ${escape(role.name)}` : ''}</span>
+    ${select('step.voiceId', voices, current.voiceId, role ? 'æ— é…éŸ³ï¼ˆä»…æ˜¾ç¤ºè¿™ä¸ªè§’è‰²çš„é…éŸ³ï¼‰' : 'è¯·å…ˆé€‰æ‹©è¿™å¥å¯¹ç™½çš„è§’è‰²')}
+    <div class="dialogue-voice-tools">${button(current.voiceId ? 'ä¸Šä¼ æ–°é…éŸ³' : 'ä¸Šä¼ é…éŸ³', 'upload-dialogue-voice')}
+    ${button('â–¶ è¯•å¬', 'preview-dialogue-voice', current.voiceId ? '' : 'disabled')}
+    ${button('ç§»é™¤ç»‘å®š', 'remove-dialogue-voice', current.voiceId ? '' : 'disabled')}</div>
+    <p class="tip">åªåœ¨è¿™å¥å¯¹ç™½ä¸Šä¼ ã€‚æ–‡ä»¶è‡ªåŠ¨æ”¾å…¥è§’è‰²ä¸“å±æ–‡ä»¶å¤¹ï¼Œå¹¶ç”¨å¯¹ç™½å…¨æ–‡å‘½åã€‚</p></div>`;
+}
+function stopEditorVoicePreview() {
+  editorVoicePreview.pause(); editorVoicePreview.removeAttribute('src'); editorVoicePreview.load(); previewVoiceId = '';
+}
+async function previewDialogueVoice(id) {
+  const item = asset(id);
+  if (item?.type !== 'voice') return;
+  if (previewVoiceId === id && !editorVoicePreview.paused) { stopEditorVoicePreview(); renderAssetDock(); return; }
+  stopEditorVoicePreview(); previewVoiceId = id; editorVoicePreview.src = assetUrl(item);
+  try { await editorVoicePreview.play(); } catch (error) { previewVoiceId = ''; toast(`æ— æ³•è¯•å¬ï¼š${error.message}`, true); }
+  renderAssetDock();
+}
+function redirectVoiceUpload() {
+  const folder = project.assetFolders.find(item => item.id === currentAssetFolder.voice);
+  const roleId = folder?.characterId || step()?.characterId;
+  const candidates = dialogueLines(project).filter(({ line }) => !roleId || line.characterId === roleId);
+  const selected = !isEvent(act()) && step() && (!roleId || step().characterId === roleId) ? { act: act(), line: step() } : null;
+  const target = selected || candidates.find(({ line }) => !line.voiceId) || candidates[0] || dialogueLines(project)[0];
+  activePanel = 'story';
+  if (target) { selectedAct = project.acts.indexOf(target.act); selectedStep = target.act.steps.indexOf(target.line); }
+  renderSidebar(); renderInspector(); updatePreview();
+  const field = document.querySelector('.dialogue-voice-field');
+  field?.classList.add('voice-upload-target'); field?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  field?.querySelector('[data-action="upload-dialogue-voice"]')?.focus({ preventScroll: true });
+  setTimeout(() => field?.classList.remove('voice-upload-target'), 4000);
+  toast(roleId && target?.line.characterId !== roleId ? 'è¿™ä¸ªè§’è‰²è¿˜æ²¡æœ‰å¯¹ç™½ã€‚è¯·å…ˆæ–°å¢å¯¹ç™½å¹¶é€‰æ‹©è¯¥è§’è‰²ï¼Œå†åœ¨å¯¹ç™½é‡Œä¸Šä¼ é…éŸ³ã€‚'
+    : 'é…éŸ³ä¸èƒ½åœ¨ç´ æåº“ä¸Šä¼ ã€‚è¯·åœ¨å¯¹åº”å¯¹ç™½çš„â€œä¸Šä¼ é…éŸ³â€æŒ‰é’®ä¸Šä¼ ã€‚', true);
+}
+async function uploadDialogueVoice() {
+  const targetProject = project, targetAct = act(), target = step(), role = character(target?.characterId);
+  if (isEvent(targetAct) || !target) { toast('è¯·å…ˆé€‰ä¸­è¦é…éŸ³çš„å¯¹ç™½ã€‚', true); return; }
+  if (!role) { toast('è¯·å…ˆä¸ºè¿™å¥å¯¹ç™½é€‰æ‹©ä¸€ä¸ªè§’è‰²ï¼›æ—ç™½ä¹Ÿå¯ä»¥åˆ›å»ºä¸€ä¸ªâ€œæ—ç™½â€è§’è‰²ã€‚', true); return; }
+  if (!target.text?.trim()) { toast('è¯·å…ˆå¡«å†™å¯¹ç™½å†…å®¹ï¼Œå†ä¸Šä¼ é…éŸ³ã€‚', true); return; }
+  const item = await bridge('importDialogueVoice', { project: structuredClone(project), actId: targetAct.id, dialogueId: target.id });
+  if (!item || project !== targetProject || !project.acts.includes(targetAct) || !targetAct.steps.includes(target) || target.characterId !== role.id) return;
+  project.assets.push(item); target.voiceId = item.id;
+  const referenced = new Set(dialogueLines(project).map(({ line }) => line.voiceId));
+  project.assets = project.assets.filter(previous => previous.type !== 'voice' || previous.dialogueId !== target.id ||
+    previous.id === item.id || referenced.has(previous.id));
+  syncDialogueVoices(project); markDirty({ label: 'ä¸Šä¼ å¯¹ç™½é…éŸ³' });
+  renderSidebar(); renderInspector(); toast('é…éŸ³å·²ä¸Šä¼ ï¼Œå·²æŒ‰å¯¹ç™½å…¨æ–‡å‘½åå¹¶æ”¾å…¥è§’è‰²æ–‡ä»¶å¤¹ã€‚');
+}
+function renderVoiceLibrary(body, folderId, folders, selectedFolder, scroll) {
+  const visible = folderId ? byType('voice').filter(item => item.folderId === folderId) : [];
+  body.innerHTML = `<div class="asset-browser-toolbar"><div class="asset-browser-location">
+    ${folderId ? button('â† è¿”å›', 'asset-folder-back') : '<strong>è§’è‰²ä¸“å±é…éŸ³æ–‡ä»¶å¤¹</strong>'}<span>${escape(selectedFolder?.name || '')}</span></div>
+    <div class="asset-browser-actions">${button('å»å¯¹ç™½ä¸Šä¼ é…éŸ³', 'import', 'data-type="voice"')}</div></div>
+    <p class="voice-library-note">é…éŸ³è¯·åˆ°å¯¹åº”å¯¹ç™½ä¸Šä¼ ï¼›è¿™é‡Œåªèƒ½è¯•å¬ã€åˆ é™¤ã€‚è§’è‰²æ–‡ä»¶å¤¹å›ºå®šä¿ç•™ã€‚</p>
+    <div class="asset-file-area" data-asset-dropzone="voice" aria-label="è§’è‰²é…éŸ³æ–‡ä»¶åŒº"><div class="asset-tile-grid">
+    ${!folderId ? folders.map(folder => renderAssetFolderTile(folder)).join('') : ''}
+    ${visible.map(item => `<div class="asset-tile asset-file-tile asset-voice-tile" title="${escape(item.name)}"><div class="asset-tile-picture"><span class="asset-tile-icon" aria-hidden="true">ğŸ™</span></div>
+      <span class="asset-tile-name">${escape(item.name)}</span><div class="asset-tile-tools">
+      ${button(previewVoiceId === item.id && !editorVoicePreview.paused ? 'â…¡ åœæ­¢' : 'â–¶ è¯•å¬', 'preview-voice-asset', `data-asset-id="${escape(item.id)}"`)}
+      ${button('åˆ é™¤', 'delete-asset', `data-asset-id="${escape(item.id)}" class="asset-delete"`)}</div></div>`).join('')}</div>
+      <div class="asset-drop-hint">${folderId ? (visible.length ? 'æ–°å¢é…éŸ³è¯·åˆ°å¯¹åº”å¯¹ç™½ä¸Šä¼ ' : 'è¿™ä¸ªè§’è‰²è¿˜æ²¡æœ‰é…éŸ³ï¼Œè¯·åˆ°å¯¹åº”å¯¹ç™½ä¸Šä¼ ') : (folders.length ? 'é€‰æ‹©ä¸€ä¸ªè§’è‰²æ–‡ä»¶å¤¹è¯•å¬é…éŸ³' : 'åˆ›å»ºè§’è‰²åï¼Œä¼šè‡ªåŠ¨å»ºç«‹ä¸å¯åˆ é™¤çš„ä¸“å±é…éŸ³æ–‡ä»¶å¤¹')}</div>
+    </div>`;
+  body.scrollTop = scroll;
+}
 
-OËœİ\ÎÃBˆYˆ
-Z][\ÈÛİ\˜ÙH\™Ù]Ûİ\˜ÙHH][\Ë›[™İ\™Ù]H][\Ë›[™İ
-H™]\›ÃBˆÛÛœİÙ[XİYXİYHXİ
-
-OËšYÃBˆÛÛœİÙ[XİYİ\YHİ\
-
-OËšYÃBˆ][œÙ\[ÛˆH\™Ù]
-È
-Y\ˆÈHˆ
-NÃBˆYˆ
-Ûİ\˜ÙH[œÙ\[ÛŠH[œÙ\[Û‹KNÃBˆYˆ
-Ûİ\˜ÙHOOH[œÙ\[ÛŠH™]\›ÃBˆÛÛœİÛ[İ™YHH][\ËœÜXÙJÛİ\˜ÙKJNÃBˆ][\ËœÜXÙJ[œÙ\[Û‹[İ™Y
-NÃBˆÙ[XİYXİHX]›X^
-›Ú™Xİ˜XİË™š[™[™^
-][HOˆ][KšYOOHÙ[XİYXİY
-JNÃBˆÙ[XİYİ\HX]›X^
-Xİ
-
-OËœİ\Ë™š[™[™^
-][HOˆ][KšYOOHÙ[XİYİ\Y
-HÏÈ
-NÃBˆX\šÑ\J
-NÈ™[™\”ÚYX˜\Š
-NÈ™[™\’[œÜXİÜŠ
-NÈ\]T™]šY]Ê
-NÃBŸCB™[˜İ[ÛˆÛX\”İÜQ˜YÊ
-HÃBˆØİ[Y[œ]Y\TÙ[XİÜ[
-	ËœÛÜX›K\›İÉÊK™›Ü‘XXÚ
-›ÙHOˆ›ÙK˜Û\ÜÓ\İœ™[[İ™J	Ù˜YÙÚ[™ÉË	Ù›ÜX™Y›Ü™IË	Ù›ÜXY\‰ÊJNÃBŸCB™Øİ[Y[˜Y]™[\İ[™\Š	Ù˜YÜİ\	Ë]™[OˆÃBˆÛÛœİ›İÈH]™[\™Ù]˜ÛÜÙ\İËŠ	ÖÙ]K[Ü™\‹ZÚ[™IÊNÃBˆYˆ
-\›İÈ\›Ú™XİXİ]™T[™[OOH	ÜİÜIÊH™]\›ÃBˆ˜YÙÚ[™ÔİÜHHÈÚ[™ˆ›İË™]\Ù]›Ü™\’Ú[™[™^ˆ[X™\Š›İË™]\Ù]›Ü™\’[™^
-KXİYˆXİ
-
-OËšYNÃBˆ]™[™]U˜[œÙ™\‹™Y™™Xİ[İÙYH	Û[İ™IÎÃBˆ]™[™]U˜[œÙ™\‹œÙ]]J	İ^ÜZ[‰÷ÓMm¢G§²ÚîÆ­yÔ´åƒ</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}çš„å¤´åƒ">` : '<div class="portrait-empty">è¿˜æ²¡æœ‰å¤´åƒ</div>'}
+function renderAssetDock() {
+  const body = document.querySelector('#asset-dock-body');
+  if (!body || !project) return;
+  if (dockInitializedProjectId !== project.id) {
+    for (const folder of project.assetFolders) openAssetFolders.add(folder.id);
+    for (const type of Object.keys(currentAssetFolder)) currentAssetFolder[type] = '';
+    dockInitializedProjectId = project.id;
+  }
+  const type = activeAssetType;
+  const folders = project.assetFolders.filter(folder => folder.type === type);
+  if (currentAssetFolder[type] && !folders.some(folder => folder.id === currentAssetFolder[type])) currentAssetFolder[type] = '';
+  const folderId = currentAssetFolder[type];
+  const selectedFolder = folders.find(folder => folder.id === folderId);
+  const scroll = body.scrollTop;
+  const settingsOpen = body.querySelector('.asset-dock-settings')?.open || false;
+  const tabs = [['image', 'å›¾åƒ'], ['vrm', 'VRM'], ['motion', 'åŠ¨ä½œ'], ['audio', 'éŸ³ä¹ä¸éŸ³æ•ˆ'], ['voice', 'é…éŸ³'], ['video', 'è§†é¢‘']];
+  document.querySelector('#asset-dock-tabs').innerHTML = tabs.map(([key, label]) =>
+    `<button type="button" role="tab" aria-selected="${type === key}" class="${type === key ? 'active' : ''}" data-action="asset-tab" data-type="${key}">${label}<small>${byType(key).length}</small></button>`).join('');
+  if (type === 'voice') { renderVoiceLibrary(body, folderId, folders, selectedFolder, scroll); return; }
+  const visible = byType(type).filter(item => folderId ? item.folderId === folderId : !folders.some(folder => folder.id === item.folderId));
+  body.innerHTML = `<div class="asset-browser-toolbar">
+      <div class="asset-browser-location">${folderId ? button('â† è¿”å›', 'asset-folder-back') : '<strong>å…¨éƒ¨æ–‡ä»¶å¤¹</strong>'}<span>${escape(selectedFolder?.name || (folderId ? 'æ–‡ä»¶å¤¹' : 'æœªåˆ†ç±»ç´ æ'))}</span></div>
+      <div class="asset-browser-actions">${folderId ? button('æ”¹å', 'rename-asset-folder', `data-folder-id="${escape(folderId)}"`) : button('ï¼‹ æ–‡ä»¶å¤¹', 'add-asset-folder', `data-type="${type}"`)}${button('ï¼‹ å¯¼å…¥', 'import', `data-type="${type}" data-folder-id="${escape(folderId)}"`)}</div>
+    </div><div class="asset-file-area" data-asset-dropzone="${type}" aria-label="${escape(type)} ç´ ææ–‡ä»¶åŒº">
+      <div class="asset-tile-grid">${!folderId ? folders.map(folder => renderAssetFolderTile(folder)).join('') : ''}${visible.map(item => renderAssetTile(item, folders)).join('')}</div>
+      <div class="asset-drop-hint">åŒå‡»ç©ºç™½å¤„ä¸Šä¼ ç´ æï¼Œæˆ–å°†æ–‡ä»¶ã€æ–‡ä»¶å¤¹æ‹–åˆ°è¿™é‡Œ</div>
+    </div><details class="asset-dock-settings" ${settingsOpen ? 'open' : ''}><summary>æ¸¸æˆç•Œé¢ä¸é‰´èµè®¾ç½®</summary><div class="asset-dock-settings-body">
+    ${field('å¯¹è¯æ¡†å›¾ç‰‡', select('project.ui.dialogueImageId', byType('image'), project.ui.dialogueImageId, 'ä½¿ç”¨å†…ç½®æ ·å¼'))}
+    <p class="tip">å¯æ¢æˆè‡ªå·±çš„ PNG æˆ– WebP å›¾ç‰‡ã€‚å»ºè®®ä½¿ç”¨æ¨ªå‘ã€å¸¦é€æ˜é€šé“çš„å›¾ç‰‡ã€‚</p>
+    <h3>å›¾ç‰‡é‰´èµ</h3><p class="tip">å‹¾é€‰åï¼Œç©å®¶åœ¨æ¸¸æˆé‡Œè§è¿‡çš„å›¾ç‰‡å¯è¿›å…¥å›¾åƒé‰´èµã€‚</p>
+    ${byType('image').length ? byType('image').map(item => `<label class="gallery-audio-check gallery-image-check"><input type="checkbox" data-gallery-image="${escape(item.id)}" ${item.galleryImage === false ? '' : 'checked'}><span>${escape(item.name)}</span></label>`).join('') : '<p class="tip">è¿˜æ²¡æœ‰å¯¼å…¥å›¾ç‰‡ã€‚</p>'}
+    <h3>éŸ³ä¹é‰´èµ</h3><p class="tip">å‹¾é€‰è¦æ”¶å½•çš„éŸ³ä¹ï¼›éŸ³æ•ˆå¯ä»¥å–æ¶ˆå‹¾é€‰ã€‚è§’è‰²é…éŸ³åœ¨å•ç‹¬çš„é…éŸ³æ ç®¡ç†ã€‚</p>
+    ${byType('audio').length ? byType('audio').map(item => `<div class="gallery-audio-editor"><label class="gallery-audio-check"><input type="checkbox" data-gallery-music="${escape(item.id)}" ${item.galleryMusic === false ? '' : 'checked'}><span>${escape(item.name)}</span></label>
+      <input data-audio-title="${escape(item.id)}" value="${escape(item.galleryTitle || '')}" placeholder="æ­Œåï¼š${escape(item.name.replace(/\.[^.]+$/, ''))}"></div>`).join('') : '<p class="tip">è¿˜æ²¡æœ‰å¯¼å…¥éŸ³é¢‘ã€‚</p>'}
+    <p class="tip">æ”¯æŒ VRM äººç‰©ã€VRMA / Mixamo FBX åŠ¨ä½œã€PNG / JPG / WebP å›¾ç‰‡ã€MP3 / WAV / OGG å£°éŸ³å’Œ MP4 / WebM è§†é¢‘ã€‚</p>
+  </div></details>`;
+  body.scrollTop = scroll;
+}
+function renderAssetFolderTile(folder) {
+  const count = byType(folder.type).filter(item => item.folderId === folder.id).length;
+  return `<button type="button" class="asset-tile asset-folder-tile" data-action="asset-open-folder" data-folder-id="${escape(folder.id)}" title="æ‰“å¼€ ${escape(folder.name)}">
+    <span class="asset-folder-picture" aria-hidden="true">ğŸ“</span><span class="asset-tile-name">${escape(folder.name)}</span><small>${count} ä¸ªç´ æ${folder.type === 'voice' ? (folder.characterDeleted ? ' Â· è§’è‰²å·²åˆ é™¤ï¼Œæ–‡ä»¶å¤¹ä¿ç•™' : ' Â· å›ºå®šæ–‡ä»¶å¤¹') : ''}</small></button>`;
+}
+function renderAssetTile(item, folders) {
+  const icons = { vrm: 'â™Ÿ', motion: 'â–¶', audio: 'â™«', video: 'â–£' };
+  const preview = item.type === 'image'
+    ? `<img class="asset-tile-preview" loading="lazy" src="${escape(assetUrl(item))}" alt="${escape(item.name)}çš„ç¼©ç•¥å›¾">`
+    : `<span class="asset-tile-icon asset-tile-icon-${item.type}" aria-hidden="true">${icons[item.type] || 'â–£'}</span>`;
+  return `<div class="asset-tile asset-file-tile" title="${escape(item.name)}"><div class="asset-tile-picture">${preview}</div><span class="asset-tile-name">${escape(item.name)}</span>
+    <div class="asset-tile-tools"><select data-asset-folder="${escape(item.id)}" aria-label="æŠŠ ${escape(item.name)} ç§»åŠ¨åˆ°æ–‡ä»¶å¤¹" title="ç§»åŠ¨åˆ°æ–‡ä»¶å¤¹">
+      <option value="" ${!item.folderId ? 'selected' : ''}>æœªåˆ†ç±»</option>${folders.map(folder => `<option value="${escape(folder.id)}" ${item.folderId === folder.id ? 'selected' : ''}>${escape(folder.name)}</option>`).join('')}
+    </select>${button('åˆ é™¤', 'delete-asset', `data-asset-id="${escape(item.id)}" class="asset-delete"`)}</div></div>`;
+}
+function reorderStory(kind, source, target, after) {
+  const items = kind === 'act' ? project.acts : act()?.steps;
+  if (!items || source < 0 || target < 0 || source >= items.length || target >= items.length) return;
+  const selectedActId = act()?.id;
+  const selectedStepId = step()?.id;
+  let insertion = target + (after ? 1 : 0);
+  if (source < insertion) insertion--;
+  if (source === insertion) return;
+  const [moved] = items.splice(source, 1);
+  items.splice(insertion, 0, moved);
+  selectedAct = Math.max(0, project.acts.findIndex(item => item.id === selectedActId));
+  selectedStep = Math.max(0, act()?.steps.findIndex(item => item.id === selectedStepId) ?? 0);
+  markDirty(); renderSidebar(); renderInspector(); updatePreview();
+}
+function clearStoryDrag() {
+  document.querySelectorAll('.sortable-row').forEach(node => node.classList.remove('dragging', 'drop-before', 'drop-after'));
+}
+document.addEventListener('dragstart', event => {
+  const row = event.target.closest?.('[data-order-kind]');
+  if (!row || !project || activePanel !== 'story') return;
+  draggingStory = { kind: row.dataset.orderKind, index: Number(row.dataset.orderIndex), actId: act()?.id };
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', `${draggingStory.kind}:${draggingStory.index}`);
+  row.classList.add('dragging');
+});
+document.addEventListener('dragover', event => {
+  const row = event.target.closest?.('[data-order-kind]');
+  if (!row || !draggingStory || row.dataset.orderKind !== draggingStory.kind ||
+      (draggingStory.kind === 'step' && draggingStory.actId !== act()?.id)) return;
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'move';
+  clearStoryDrag();
+  row.classList.add(event.clientY > row.getBoundingClientRect().top + row.clientHeight / 2 ? 'drop-after' : 'drop-before');
+});
+document.addEventListener('drop', event => {
+  const row = event.target.closest?.('[data-order-kind]');
+  if (!row || !draggingStory || row.dataset.orderKind !== draggingStory.kind) return;
+  event.preventDefault();
+  const after = event.clientY > row.getBoundingClientRect().top + row.clientHeight / 2;
+  reorderStory(draggingStory.kind, draggingStory.index, Number(row.dataset.orderIndex), after);
+  draggingStory = null;
+  clearStoryDrag();
+});
+document.addEventListener('dragend', () => { draggingStory = null; clearStoryDrag(); });
+document.addEventListener('dblclick', event => {
+  const area = event.target.closest?.('.asset-file-area');
+  if (!area || event.target.closest('.asset-tile, button, select, input')) return;
+  if (activeAssetType === 'image') renderImageImportModal(currentAssetFolder.image);
+  else importAssets(activeAssetType, currentAssetFolder[activeAssetType]).catch(error => toast(error.message, true));
+});
+document.addEventListener('dragover', event => {
+  const area = event.target.closest?.('.asset-file-area');
+  if (!area || !event.dataTransfer?.types.includes('Files')) return;
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'copy';
+  area.classList.add('drag-over');
+});
+document.addEventListener('dragleave', event => {
+  const area = event.target.closest?.('.asset-file-area');
+  if (area && !area.contains(event.relatedTarget)) area.classList.remove('drag-over');
+});
+document.addEventListener('drop', async event => {
+  const area = event.target.closest?.('.asset-file-area');
+  if (!area || !event.dataTransfer?.types.includes('Files')) return;
+  event.preventDefault();
+  area.classList.remove('drag-over');
+  try { await importDroppedEntries(event.dataTransfer); }
+  catch (error) { toast(error.message, true); }
+});
+const droppedAssetTypes = {
+  vrm: ['.vrm'], motion: ['.vrma', '.fbx'], image: ['.png', '.jpg', '.jpeg', '.webp'],
+  audio: ['.mp3', '.wav', '.ogg'], video: ['.mp4', '.webm']
+};
+function droppedAssetType(name) {
+  const extension = name.slice(name.lastIndexOf('.')).toLowerCase();
+  return Object.keys(droppedAssetTypes).find(type => droppedAssetTypes[type].includes(extension));
+}
+async function readDroppedEntry(entry, folderName, result) {
+  if (entry.isFile) {
+    const file = await new Promise((resolve, reject) => entry.file(resolve, reject));
+    result.push({ file, folderName });
+  } else if (entry.isDirectory) {
+    const reader = entry.createReader();
+    for (;;) {
+      const batch = await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
+      if (!batch.length) break;
+      for (const child of batch) await readDroppedEntry(child, folderName || entry.name, result);
+    }
+  }
+}
+async function importDroppedEntries(transfer) {
+  if (activeAssetType === 'voice') { redirectVoiceUpload(); return; }
+  const entries = [];
+  const items = [...transfer.items].filter(item => item.kind === 'file')
+    .map(item => ({ entry: item.webkitGetAsEntry?.(), file: item.getAsFile() }));
+  const fallbackFiles = [...transfer.files];
+  for (const item of items) {
+    if (item.entry) await readDroppedEntry(item.entry, item.entry.isDirectory ? item.entry.name : '', entries);
+    else if (item.file) entries.push({ file: item.file, folderName: '' });
+  }
+  if (!items.length) for (const file of fallbackFiles) entries.push({ file, folderName: '' });
+  let imported = 0;
+  let skipped = 0;
+  const folderCache = new Map();
+  for (const { file, folderName } of entries) {
+    const type = droppedAssetType(file.name);
+    if (!type) { skipped++; continue; }
+    let folderId = type === activeAssetType ? currentAssetFolder[type] : '';
+    if (folderName) {
+      const key = `${type}:${folderName.toLowerCase()}`;
+      if (!folderCache.has(key)) {
+        let folder = project.assetFolders.find(item => item.type === type && item.name.toLowerCase() === folderName.toLowerCase());
+        if (!folder) {
+          folder = { id: uid(), type, name: folderName.slice(0, 64) };
+          project.assetFolders.push(folder);
+        }
+        folderCache.set(key, folder.id);
+      }
+      folderId = folderCache.get(key);
+    }
+    const transferId = uid();
+    try {
+      await bridge('importAssetChunk', { command: 'start', transferId, type, name: file.name });
+      for (let offset = 0; offset < file.size; offset += 256 * 1024) {
+        const bytes = new Uint8Array(await file.slice(offset, offset + 256 * 1024).arrayBuffer());
+        let binary = '';
+        for (let pos = 0; pos < bytes.length; pos += 16384) binary += String.fromCharCode(...bytes.subarray(pos, pos + 16384));
+        await bridge('importAssetChunk', { command: 'append', transferId, base64: btoa(binary) });
+      }
+      const assetItem = await bridge('importAssetChunk', { command: 'finish', transferId });
+      assetItem.folderId = folderId;
+      if (type === 'image') assetItem.galleryImage = false;
+      project.assets.push(assetItem);
+      imported++;
+    } catch (error) {
+      await bridge('importAssetChunk', { command: 'abort', transferId }).catch(() => {});
+      throw error;
+    }
+  }
+  if (imported || folderCache.size) { markDirty(); renderAssetDock(); renderInspector(); }
+  toast(`å·²å¯¼å…¥ ${imported} ä¸ªç´ æ${skipped ? `ï¼Œè·³è¿‡ ${skipped} ä¸ªä¸æ”¯æŒçš„æ–‡ä»¶` : ''}`);
+}
+document.addEventListener('toggle', event => {
+  const details = event.target;
+  if (!details.matches?.('.asset-folder')) return;
+  if (details.open) openAssetFolders.add(details.dataset.folderKey);
+  else openAssetFolders.delete(details.dataset.folderKey);
+}, true);
+function castEditor(currentAct, slot) {
+  const settings = castSettingsOf(currentAct, slot);
+  const actorId = currentAct.cast?.[slot];
+  const slider = (key, label, value, min, max, stepSize, unit = '') =>
+    `<label class="adjustment"><span>${label}</span><input type="range" data-cast-adjust="${slot}.${key}" min="${min}" max="${max}" step="${stepSize}" value="${value}"><output data-cast-output="${slot}.${key}">${value}${unit}</output></label>`;
+  return `<details class="cast-editor"><summary>${castSlotLabels[slot]} Â· ${escape(character(actorId)?.name || 'æœªé€‰æ‹©')}</summary>
+    <div class="cast-editor-body">
+      ${field('è§’è‰²', `<select data-cast-slot="${slot}">${options(project.characters.filter(item => item.modelId || item.id === actorId), actorId, 'æ­¤ä½ç½®æ— äºº')}</select>`)}
+      ${actorId ? `${field('æœ¬å¹•åŠ¨ä½œ', `<select data-cast-motion="${slot}">${options(byType('motion'), settings.motionId, 'ä¿æŒç«™ç«‹')}</select>`)}
+        ${motionAdvanced(settings, `cast:${slot}`)}
+        ${slider('size', 'å¤§å°', Math.round((settings.size ?? defaultSize) * 100), 50, 250, 5, '%')}
+        ${slider('offsetX', 'å·¦å³', Number(settings.offsetX) || 0, -1.5, 1.5, 0.05)}
+        ${slider('offsetY', 'ä¸Šä¸‹', Number(settings.offsetY) || 0, -3, 2, 0.05)}
+        ${slider('offsetZ', 'å‰å', Number(settings.offsetZ) || 0, -2, 1.5, 0.05)}
+        ${slider('yaw', 'è½¬èº«è§’åº¦', Number(settings.yaw) || 0, -90, 90, 5, 'Â°')}
+        <div class="field"><span>æœ¬å¹•è¡¨æƒ…</span><div id="cast-expression-${slot}" class="expression-controls"></div></div>` : ''}
+    </div></details>`;
+}
+function renderInspector() {
+  if (activePanel === 'knowledge') { library.editor(); return; }
+  const body = document.querySelector('#inspector-body');
+  if (isEvent(act()) && ['story', 'render'].includes(activePanel)) { body.innerHTML = events.editor(act()); return; }
+  if (activePanel === 'characters') {
+    const item = project.characters[selectedCharacter];
+    body.innerHTML = item ? `<div class="inspector-content"><h2>è§’è‰²è®¾ç½®</h2>
+      ${field('è§’è‰²åå­—', input('character.name', item.name))}
+      ${field('VRM æ¨¡å‹', select('character.modelId', byType('vrm'), item.modelId, 'è¯·é€‰æ‹©æ¨¡å‹'))}
+      <label class="field"><span>è‡ªåŠ¨è¯´è¯å˜´å‹</span><select data-field="character.autoMouth"><option value="on" ${item.autoMouth !== false ? 'selected' : ''}>å¼€å¯ï¼ˆé»˜è®¤ï¼‰</option><option value="off" ${item.autoMouth === false ? 'selected' : ''}>å…³é—­</option></select></label>
+      <p class="tip">è·Ÿéšå¯¹ç™½æ–‡å­—æ˜¾ç¤ºåŠ¨å˜´ï¼Œæ ‡ç‚¹å¤„ç¨ä½œåœé¡¿ï¼›æ–‡å­—æ˜¾ç¤ºå®Œå°±åœæ­¢ã€‚æœ‰ Aã€Iã€Uã€Eã€O å˜´å‹çš„æ¨¡å‹å¯ä½¿ç”¨ã€‚</p>
+      <div class="portrait-editor"><span>è¯´è¯å¤´åƒ</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}çš„å¤´åƒ">` : '<div class="portrait-empty">è¿˜æ²¡æœ‰å¤´åƒ</div>'}
         <div class="inline-actions">${button('ä¸Šä¼ å¤´åƒ', 'upload-character-portrait')}${item.modelId ? button('é‡æ–°æ‹æ‘„ VRM', 'capture-character-portrait') : ''}</div>
         <p class="tip">æ²¡æœ‰æ¨¡å‹ä¹Ÿèƒ½ä¸Šä¼ å¤´åƒè¯´è¯ã€‚VRM è‡ªåŠ¨å¤´åƒä¼šé‡‡ç”¨ä¸‹æ–¹é€‰ä¸­çš„åŠ¨ä½œå’Œå®šæ ¼å¸§ï¼›é€‰å¥½å¸§åä¼šé‡æ‹ã€‚æ‰‹åŠ¨ä¸Šä¼ çš„å¤´åƒä¸ä¼šè¢«è¦†ç›–ã€‚</p></div>
       ${field('é‰´èµå§¿åŠ¿ / åŠ¨ä½œ', select('character.galleryMotionId', byType('motion'), item.galleryMotionId, 'ä¿æŒç«™ç«‹'))}
       <label class="adjustment"><span>é‰´èµè½¬èº«è§’åº¦</span><input type="range" data-gallery-adjust="galleryYaw" min="-90" max="90" step="5" value="${item.galleryYaw}"><output data-gallery-output="galleryYaw">${item.galleryYaw}Â°</output></label>
       <label class="adjustment gallery-frame-adjustment"><span>åŠ¨ä½œå®šæ ¼å¸§</span><input type="range" data-gallery-adjust="galleryPoseFrame" min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled><output data-gallery-output="galleryPoseFrame">${item.galleryMotionId ? 'è¯»å–ä¸­â€¦' : 'å…ˆé€‰æ‹©åŠ¨ä½œ'}</output></label>
-      <label class="gallery-frame-number"><span>è¾“å…¥å¸§å·</span><input type="number" data-gallery-frame-number min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${iYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬ÕÑ•´¹…±±•ÉåA½Í•É…µ•ôˆ‘¥Í…‰±•øğ½±…‰•°ø4(€€€€€€‘í™¥•± Ÿ¢ê¯’îô€¼ƒÃ–>Üœ°¥¹ÁÕĞ ¡…É…Ñ•È¹Ñ¥Ñ±”œ°¥Ñ•´¹Ñ¥Ñ±”°€Ÿ’ú/–š¾òkš^¢†3¢–¶›R|œ¤¥ô4(€€€€€€‘í™¥•± Ÿ¢K¢&Ëº’î,œ°Ñ•áÑ…É•„ ¡…É…Ñ•È¹‘•ÍÉ¥ÁÑ¥½¸œ°¥Ñ•´¹‘•ÍÉ¥ÁÑ¥½¸°€Ÿ:§–ºÛ–r£¢K¢&Ë¦&Ó¢Ö?¦3r/–"Ãj’î/î4œ¤¥ô4(€€€€€€ñ¡Èøñ Èû¢K¢&ËšV’ê/¾ò#šr–’k’â'šº×¾ò$ğ½ Èø4(€€€€€€ñÀ±…ÍÌô‰Ñ¥ÀˆûVg¦ëjšV’ê/’â7’òk–ë:Ã–r£šâãš"?¦3¢¦RšVÃ–¶_–†¬€Àƒš^Û¾ò3:§–ºÛ’â–ò–/–ÂÇ¢÷¦b¢¾ïğ½Àø4(€€€€€€‘í¥Ñ•´¹ÍÑ½É¥•Ì¹µ…À ¡ÍÑ½Éä°¥¹‘•à¤€ôø€ñ‘¥Ø±…ÍÌô‰¡…É…Ñ•ÈµÍÑ½Éäµ•‘¥Ñ½Èˆø4(€€€€€€€€ñ ÌûšV’ê,€‘í¥¹‘•à€¬€Åôğ½ Ìø4(€€€€€€€€‘í™¥•± ŸšV’ê/––ºäœ°€ñÑ•áÑ…É•„‘…Ñ„µÍÑ½Éäµ¥¹‘•àôˆ‘í¥¹‘•áôˆ‘…Ñ„µÍÑ½Éäµ™¥•±ô‰Ñ•áĞˆÁ±…•¡½±‘•Èô‹’â7–g–ÂÇ’â7šbû’èˆø‘í•Í…Á”¡ÍÑ½Éä¹Ñ•áĞ¥ôğ½Ñ•áÑ…É•„ù€¥ô4(€€€€€€€€‘í™¥•± Ÿ¢¾ï¢ş¢şg’â«¢K¢&Ë–’k–ÂG–>—–¾çf÷–B;¢¦Rœ°€ñ¥¹ÁÕĞÑåÁ”ô‰¹Õµ‰•Èˆµ¥¸ôˆÀˆÍÑ•ÀôˆÄˆ‘…Ñ„µÍÑ½Éäµ¥¹‘•àôˆ‘í¥¹‘•áôˆ‘…Ñ„µÍÑ½Éäµ™¥•±ô‰Õ¹±½­1¥¹•ÌˆÙ…±Õ”ôˆ‘í5…Ñ ¹µ…à À°9Õµ‰•È¡ÍÑ½Éä¹Õ¹±½­1¥¹•Ì¤ñğ€À¥ôˆù€¥ô4(€€€€€€ğ½‘¥Øù€¤¹©½¥¸ œœ¥ô4(€€€€€€ñ‘¥Ø±…ÍÌô‰¥¹±¥¹”µ…Ñ¥½¹Ìˆø‘í‰ÕÑÑ½¸ Ÿ–¾ó–”YI4œ°€¥µÁ½ÉĞœ°€‘…Ñ„µÑåÁ”ô‰ÙÉ´ˆœ¥ô‘í‰ÕÑÑ½¸ Ÿ–"ƒ¦f“¢K¢&Èœ°€‘•±•Ñ”µ¡…É…Ñ•Èœ°€±…ÍÌô‰‘…¹•Èˆœ¥ôğ½‘¥Øø4(€€€€€€ñÀ±…ÍÌô‰Ñ¥Àˆû¦'’â·¢K¢&Ë–B;¾ò3¦Š¢#¦3’òkšbû’ë–º¢†£š–B7Ã–>[–Ï’ê;š¢‡–z/šr³¢ê¯ğ½Àøğ½‘¥Øù€€è€œñ‘¥Ø±…ÍÌô‰¥¹ÍÁ•Ñ½Èµ½¹Ñ•¹Ğ•µÁÑäˆû–#šZÃ–Š{¢K¢&Èğ½‘¥Øøœì4(€€€¥˜€¡¥Ñ•´¤ÕÁ‘…Ñ•AÉ•Ù¥•Ü ¤ì4(€€€É•ÑÕÉ¸ì4(€ô4(€¥˜€¡…Ñ¥Ù•A…¹•°€ôôô€Ñ¥Ñ±”œ¤ì4(€€€½¹ÍĞÑ¥Ñ±”€ôÁÉ½©•Ğ¹Ñ¥Ñ±”ì4(€€€‰½‘ä¹¥¹¹•É!Q50€ô€ñ‘¥Ø±…ÍÌô‰¥¹ÍÁ•Ñ½Èµ½¹Ñ•¹Ğˆøñ Èûš‚¦ŠcRï¦vˆó}4ÖÚ$z{-®éÜj×—ÓÂöF—càĞ¢Æ‡#ãÆƒ#îzÊÂG·6VÆV7FVE7FW²ÒXú^Zûy›ÓÂöƒ#àĞ¢G¶7W'&VçBò Ğ¢G¶f–VÆB‚~Šy.ˆ›"rÂ6VÆV7B‚w7FWæ6†&7FW$–BrÂ&ö¦V7Bæ6†&7FW'2Â7W'&VçBæ6†&7FW$–BÂ~ixy›ÒòizjŠYè²r’—ĞĞ¢G¶67D76–væÖVçG2†7W'&VçD7BÂ7W'&VçB’æÆVæwF‚âòÆF—b6Æ73Ò'7FWÖ67B×÷6—F–öç2#ãÇ7ãî‹ùKˆXú^y¨NK«®xšz¹KØÓÂ÷7ãàĞ¢G¶67D76–væÖVçG2†7W'&VçD7BÂ7W'&VçB’æÖ†VçG'’ÓâÆÆ&VÃãÇ7ãâG¶W66R†6†&7FW"†VçG'’æ7F÷$¶W’“òææÖRÇÂ~Šy.ˆ›"r—ÓÂ÷7ãàĞ¢Ç6VÆV7BFF×7FWÖ67CÒ"G¶W66R†VçG'’æ7F÷$¶W’—Ò#âG¶67E6Æ÷G2æÖ‡6Æ÷BÓâÆ÷F–öâfÇVSÒ"G·6Æ÷GÒ"G¶VçG'’ç÷6—F–öâÓÓÒ6Æ÷Bòw6VÆV7FVBr¢rwÓâG¶67E6Æ÷DÆ&VÇ5·6Æ÷E×ÓÂö÷F–öãæ’æ¦ö–â‚rr—ÓÂ÷6VÆV7CàĞ¢ÂöÆ&VÃæ’æ¦ö–â‚rr—ÓÇ6ÖÆÃîh¨®KˆK«®hÚ.X‹X[nK¹nKØŞ{Úîi{nûÈÎXéşKØŞ{Úîy¨NK«®KÉ®KˆîX[nKªNhÚ.8#Â÷6ÖÆÃãÂöF—cæ¢rwĞĞ¢G¶f–VÆB‚~i‹îzK®YŞZÙrrÂ–çWB‚w7FWç7V¶W"rÂ7W'&VçBç7V¶W"Â~yYz›®i{nyJŠy.ˆ›.YŞZÙrr’—ĞĞ¢G¶f–VÆB‚~Zûy›ŞXh^Zë’rÂFW‡F&V‚w7FWçFW‡BrÂ7W'&VçBçFW‡BÂ~YÊ‹ù˜xÎXiXûŠøÒr’—ĞĞ¢ÆF—b6Æ73Ò&f–VÆB#ãÇ7ãîŠh8^Xø.i[ûÈXúşKº^YÎi{n‹>ZI®šûÈ“Â÷7ããÆF—b–CÒ&W‡&W76–öâÖ6öçG&öÇ2"6Æ73Ò&W‡&W76–öâÖ6öçG&öÇ2#ãÂöF—cãÂöF—càĞ¢G¶f–VÆB‚~XªKÙÂrÂ6VÆV7B‚w7FWæÖ÷F–öä–BrÂ'•G—R‚vÖ÷F–öâr’Â7W'&VçBæÖ÷F–öä–BÂ~KùŞhÈz¹z¸²r’—ĞĞ¢G¶Ö÷F–öäGfæ6VB†7W'&VçBÂw7FWr—ĞĞ¢G¶f–VÆB‚~KØŞ{ÚîûÈXÙ^K«®[™^KÛşyJûÈ’rÂÇ6VÆV7BFFÖf–VÆCÒ'7FWç÷6—F–öâ#ãÆ÷F–öâfÇVSÒ&ÆVgB"G¶7W'&VçBç÷6—F–öâÓÓÒvÆVgBròw6VÆV7FVBr¢rwÓî[znKêsÂö÷F–öããÆ÷F–öâfÇVSÒ&6VçFW""G¶7W'&VçBç÷6—F–öâÓÓÒv5š®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍY[\‰ÈÈ	ÜÙ[XİY	Èˆ	ÉßO¹.+zeíÛÜ[ÛÜ[Ûˆ˜[YOHœšYÚˆ	Øİ\œ™[œÜÚ][ÛˆOOH	ÜšYÚ	ÈÈ	ÜÙ[XİY	Èˆ	ÉßO¹cìù/©ÏÛÜ[ÛÜÙ[Xİ˜
-_CBˆ]ˆÛ\ÜÏH™šY[Ü[¹.®¹âjyi)ùl#ùd£9/cyïkÜÜ[ƒBˆ	ØY\İY[ÛY\Š	ÜÚ^™IË	ùi)ùl#ÉËX]œ›İ[™
-
-İ\œ™[œÚ^™HÏÈY˜][Ú^™JH
-ˆL
-KLLK	ÓX]œ›İ[™
-
-İ\œ™[œÚ^™HÏÈY˜][Ú^™JH
-ˆL
-_IX
-_CBˆ	ØY\İY[ÛY\Š	ÛÙ™œÙ]	Ë	ùmé¹cìùo«º, ÉË[X™\Šİ\œ™[›Ù™œÙ]
-HLKKKKŒK
-[X™\Šİ\œ™[›Ù™œÙ]
-H
-KÑš^Y
-ŠJ_CBˆ	ØY\İY[ÛY\Š	ÛÙ™œÙ]IË	ù."¹."ùo«º, ÉË[X™\Šİ\œ™[›Ù™œÙ]JHLË‹ŒK
-[X™\Šİ\œ™[›Ù™œÙ]JH
-KÑš^Y
-ŠJ_CBˆ	ØY\İY[ÛY\Š	ÛÙ™œÙ]‰Ë	ùbcyd#¹o«º, ÉË[X™\Šİ\œ™[›Ù™œÙ]ŠHL‹KKŒK
-[X™\Šİ\œ™[›Ù™œÙ]ŠH
-KÑš^Y
-ŠJ_CBˆ	ØY\İY[ÛY\Š	ŞX]ÉË	ú/k:.ªùo«º, ÉË[X™\Šİ\œ™[X]ÊHNLLK	Ó[X™\Šİ\œ™[X]ÊHp¬
-_CBˆÛ\ÜÏH\¹mé¹cìûï&º-'ù¥l9d$ymé»ï#9«hù¥l9d$ycìøà ¹."¹."ûï&¹«hù¥l9d$y."¸à ¹bcyd#»ï&¹«hù¥l:gh:/äzeg9i-;ï#:-'ù¥l:/ç9é®úeg9i-8à º/k:.ªú)ä¹n©¹cëù.éz+ªy.®¹âjy/©ú.ªøà ÜÙ]ƒBˆ	ÙX[ÙİYU›ÚXÙQšY[
-İ\œ™[
-_CBˆ	ÙšY[
-	ù§+9cézgìù¥b	ËÙ[Xİ
-	Üİ\œÙRY	ËU\J	Ø]Y[ÉÊKİ\œ™[œÙRY	ù¥è:gìù¥b	ÊJ_CBˆ]ˆÛ\ÜÏHš[›[™KXXİ[ÛœÈ‰Ø]ÛŠ	ùi#yb-¹§+9céIË	Ù\XØ]K\İ\	Ê_IØ]ÛŠ	ù."¹éîÉË	Û[İ™K]\	Ê_IØ]ÛŠ	ù."ùéîÉË	Û[İ™KYİÛ‰Ê_IØ]ÛŠ	ùb(:fi	Ë	Ù[]K\İ\	Ë	ØÛ\ÜÏH™[™Ù\ˆ‰Ê_OÙ]ƒBˆ]ˆÛ\ÜÏHœÙXİ[Û‹ZXY[™Èº`"y¢êyb!¹¥+È	Ø]Û·ÓMm¢G§²ÚîÆ­yĞlay().catch(() => {}); fade(musicFadeFactor, 1, 300); return; }
+      <label class="gallery-frame-number"><span>è¾“å…¥å¸§å·</span><input type="number" data-gallery-frame-number min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled></label>
+      ${field('èº«ä»½ / ç§°å·', input('character.title', item.title, 'ä¾‹å¦‚ï¼šæ—…è¡Œè€…ã€å­¦ç”Ÿ'))}
+      ${field('è§’è‰²ç®€ä»‹', textarea('character.description', item.description, 'ç©å®¶åœ¨è§’è‰²é‰´èµé‡Œçœ‹åˆ°çš„ä»‹ç»'))}
+      <hr><h2>è§’è‰²æ•…äº‹ï¼ˆæœ€å¤šä¸‰æ®µï¼‰</h2>
+      <p class="tip">ç•™ç©ºçš„æ•…äº‹ä¸ä¼šå‡ºç°åœ¨æ¸¸æˆé‡Œã€‚è§£é”æ•°å­—å¡« 0 æ—¶ï¼Œç©å®¶ä¸€å¼€å§‹å°±èƒ½é˜…è¯»ã€‚</p>
+      ${item.stories.map((story, index) => `<div class="character-story-editor">
+        <h3>æ•…äº‹ ${index + 1}</h3>
+        ${field('æ•…äº‹å†…å®¹', `<textarea data-story-index="${index}" data-story-field="text" placeholder="ä¸å†™å°±ä¸æ˜¾ç¤º">${escape(story.text)}</textarea>`)}
+        ${field('è¯»è¿‡è¿™ä¸ªè§’è‰²å¤šå°‘å¥å¯¹ç™½åè§£é”', `<input type="number" min="0" step="1" data-story-index="${index}" data-story-field="unlockLines" value="${Math.max(0, Number(story.unlockLines) || 0)}">`)}
+      </div>`).join('')}
+      <div class="inline-actions">${button('å¯¼å…¥ VRM', 'import', 'data-type="vrm"')}${button('åˆ é™¤è§’è‰²', 'delete-character', 'class="danger"')}</div>
+      <p class="tip">é€‰ä¸­è§’è‰²åï¼Œé¢„è§ˆé‡Œä¼šæ˜¾ç¤ºå®ƒã€‚è¡¨æƒ…åç§°å–å†³äºæ¨¡å‹æœ¬èº«ã€‚</p></div>` : '<div class="inspector-content empty">å…ˆæ–°å¢è§’è‰²</div>';
+    if (item) updatePreview();
+    return;
+  }
+  if (activePanel === 'title') {
+    const title = project.title;
+    body.innerHTML = `<div class="inspector-content"><h2>æ ‡é¢˜ç”»é¢</h2>
+      ${field('æ¸¸æˆåç§°', `<input id="project-name" value="${escape(project.name)}" aria-label="æ¸¸æˆåç§°">`)}
+      ${field('Logo å›¾ç‰‡', `<select data-title-field="logoImageId">${options(byType('image'), title.logoImageId, 'ä½¿ç”¨æ¸¸æˆåç§°')}</select>`)}
+      ${field('æ ‡é¢˜èƒŒæ™¯', `<select data-title-field="backgroundId">${options(byType('image'), title.backgroundId, 'ä½¿ç”¨é»˜è®¤æ·±è“èƒŒæ™¯')}</select>`)}
+      ${field('æ ‡é¢˜ VRM äººç‰©', `<select data-title-field="modelId">${options(byType('vrm'), title.modelId, 'ä¸æ˜¾ç¤ºäººç‰©')}</select>`)}
+      ${field('æ ‡é¢˜äººç‰©åŠ¨ä½œ', `<select data-title-field="motionId">${options(byType('motion'), title.motionId, 'ä¿æŒç«™ç«‹')}</select>`)}
+      ${motionAdvanced(title, 'title')}
+      ${field('æ ‡é¢˜éŸ³ä¹', `<select data-title-field="bgmId">${options(byType('audio'), title.bgmId, 'æ— éŸ³ä¹')}</select>`)}
+      ${field('æŒ‰é’®ç‚¹å‡»éŸ³æ•ˆ', `<select data-ui-field="clickSoundId">${options(byType('audio'), project.ui.clickSoundId, 'ä½¿ç”¨å†…ç½®è½»æç¤ºéŸ³')}</select>`)}
+      <p class="tip">Logo å›ºå®šåœ¨å·¦ä¾§ï¼ŒæŒ‰é’®å›ºå®šåœ¨åº•éƒ¨ã€‚äººç‰©çš„ä½ç½®å’Œè§’åº¦å¯ä»¥è°ƒæ•´ã€‚</p>
+      <hr><h2>æ ‡é¢˜äººç‰©</h2>
+      ${titleSlider('size', 'å¤§å°', Math.round(title.size * 100), 50, 500, 5, `${Math.round(title.size * 100)}%`)}
+      ${titleSlider('offsetX', 'å·¦å³ä½ç½®', title.offsetX, -2, 2, .05, Number(title.offsetX).toFixed(2))}
+      ${titleSlider('offsetY', 'ä¸Šä¸‹ä½ç½®', title.offsetY, -10, 3, .05, Number(title.offsetY).toFixed(2))}
+      ${titleSlider('offsetZ', 'å‰åä½ç½®', title.offsetZ, -2, 1.5, .05, Number(title.offsetZ).toFixed(2))}
+      ${titleSlider('yaw', 'å·¦å³è½¬èº«', title.yaw, -120, 120, 5, `${title.yaw}Â°`)}
+      ${titleSlider('pitch', 'äººç‰©ä¸Šä¸‹è½¬è§’', title.pitch, -60, 60, 5, `${title.pitch}Â°`)}
+      ${titleSlider('cameraAngle', 'é•œå¤´ä¿¯è§†è§’', title.cameraAngle, 0, 65, 5, `${title.cameraAngle}Â°`)}
+      <h3>æ ‡é¢˜äººç‰©è¡¨æƒ…</h3><div id="title-expression-controls" class="expression-controls"></div>
+      <p class="tip">æƒ³åšä¿¯è§†ç”»é¢ï¼Œå¯ä»¥å…ˆæé«˜â€œé•œå¤´ä¿¯è§†è§’â€ï¼Œå†å¾®è°ƒäººç‰©çš„ä¸Šä¸‹è½¬è§’ä¸ä½ç½®ã€‚</p>
+    </div>`;
+    renderTitleExpressionControls();
+    return;
+  }
+  if (activePanel === 'render') {
+    if (!act()) { body.innerHTML = '<div class="inspector-content">å…ˆæ–°å¢ä¸€å¹•</div>'; return; }
+    const settings = act().render;
+    body.innerHTML = `<div class="inspector-content"><h2>æœ¬å¹•æ¸²æŸ“ Â· ${escape(act().name)}</h2><p class="tip">è¿™é‡Œåªæ”¹å˜è¿™ä¸€å¹•ã€‚èƒŒæ™¯è‡ªåŠ¨é…å…‰é»˜è®¤å¼€å¯ï¼Œä¸‹é¢çš„è°ƒè‰²ä¹Ÿä¼šä¸€èµ·ä½œç”¨äºäººç‰©å’ŒèƒŒæ™¯ã€‚</p>
+      <h3>æœ¬å¹•è°ƒè‰²</h3>
+      ${[['brightness','äº®åº¦',0,200,'%'],['contrast','å¯¹æ¯”åº¦',0,200,'%'],['saturation','é¥±å’Œåº¦',0,200,'%'],['temperature','è‰²æ¸©ï¼ˆå·¦å†·å³æš–ï¼‰',-100,100,''],['hue','è‰²å·®ï¼ˆè‰²ç›¸åç§»ï¼‰',-180,180,'Â°']].map(([key,label,min,max,unit]) => field(label, `<input type="range" data-render="${key}" min="${min}" max="${max}" step="1" value="${settings[key]}"><output data-render-output="${key}">${settings[key]}${unit}</output>`)).join('')}
+      ${button('æ¢å¤é»˜è®¤è°ƒè‰²ä¸è‡ªåŠ¨é…å…‰', 'reset-act-color')}<hr>
+      ${field('æŠ—é”¯é½¿', `<select data-render="antialias"><option value="off" ${settings.antialias === 'off' ? 'selected' : ''}>å…³é—­</option><option value="standard" ${settings.antialias === 'standard' ? 'selected' : ''}>æ ‡å‡†</option><option value="high" ${settings.antialias === 'high' ? 'selected' : ''}>é«˜æ¸…</option></select>`)}
+      ${field('äººç‰©ç”»é£', `<select data-render="style"><option value="original" ${settings.style === 'original' ? 'selected' : ''}>æ¨¡å‹åŸç‰ˆ</option><option value="anime" ${settings.style === 'anime' ? 'selected' : ''}>ä¸‰æ¸²äºŒï¼ˆæ¨èï¼‰</option><option value="soft" ${settings.style === 'soft' ? 'selected' : ''}>æŸ”å’ŒåŠ¨æ¼«</option><option value="cinematic" ${settings.style === 'cinematic' ? 'selected' : ''}>ç”µå½±è‰²è°ƒ</option></select>`)}
+      ${field('äººç‰©æè¾¹', `<select data-render="outline"><option value="0" ${Number(settings.outline) === 0 ? 'selected' : ''}>å…³é—­</option><option value="1" ${Number(settings.outline) === 1 ? 'selected' : ''}>ç»†</option><option value="2" ${Number(settings.outline) === 2 ? 'selected' : ''}>ä¸­</option><option value="3" ${Number(settings.outline) === 3 ? 'selected' : ''}>ç²—</option></select>`)}
+      ${field('æ ¹æ®èƒŒæ™¯è‡ªåŠ¨é…å…‰', `<select data-render="autoLight"><option value="true" ${settings.autoLight ? 'selected' : ''}>å¼€å¯</option><option value="false" ${!settings.autoLight ? 'selected' : ''}>å…³é—­</option></select>`)}
+      ${field('èƒŒæ™¯é…å…‰å¼ºåº¦', `<input type="range" data-render="lightStrength" min="0" max="100" step="5" value="${Math.round(settings.lightStrength * 100)}"><output id="light-strength-value">${Math.round(settings.lightStrength * 100)}%</output>`)}
+      ${field('ç”»é¢æ•ˆæœ', `<select data-render="paintEffect"><option value="none" ${settings.paintEffect !== 'oil' ? 'selected' : ''}>å…³é—­</option><option value="oil" ${settings.paintEffect === 'oil' ? 'selected' : ''}>æ²¹ç”»ç¬”è§¦ï¼ˆäººç‰©ä¸èƒŒæ™¯ï¼‰</option></select>`)}
+      ${field('æ²¹ç”»ç¬”è§¦å¼ºåº¦', `<input type="range" data-render="paintStrength" min="0" max="100" step="5" value="${Math.round((Number(settings.paintStrength) || 0) * 100)}"><output data-render-output="paintStrength">${Math.round((Number(settings.paintStrength) || 0) * 100)}%</output>`)}
+      <p class="tip">æ²¹ç”»ç¬”è§¦ä¼šä¸€èµ·å¤„ç†èƒŒæ™¯å’Œäººç‰©ï¼›å¯¹ç™½ã€èœå•ä¿æŒæ¸…æ™°ã€‚å¼€å¯åä¼šå¤šç”¨ä¸€äº›æ˜¾å¡æ€§èƒ½ï¼Œæ—§å·¥ç¨‹é»˜è®¤å…³é—­ã€‚</p>
+      <details class="render-advanced"><summary>é«˜çº§æ¸²æŸ“ Â· è§’è‰²é˜´å½±</summary><div class="render-advanced-body">
+        <label class="render-shadow-toggle"><input type="checkbox" data-render="shadowEnabled" ${settings.shadowEnabled ? 'checked' : ''}><span>æ˜¾ç¤ºè§’è‰²é˜´å½±</span></label>
+        <label class="adjustment"><span>å½±å­æ–¹å‘</span><input type="range" data-render="shadowAngle" min="-180" max="180" step="5" value="${Number(settings.shadowAngle) || 0}"><output data-render-output="shadowAngle">${Number(settings.shadowAngle) || 0}Â°</output></label>
+        <label class="adjustment"><span>å½±å­æ·±æµ…</span><input type="range" data-render="shadowOpacity" min="0" max="100" step="5" value="${Math.round((Number(settings.shadowOpacity) || 0) * 100)}"><output data-render-output="shadowOpacity">${Math.round((Number(settings.shadowOpacity) || 0) * 100)}%</output></label>
+        <label class="adjustment shadow-height-adjustment"><span>é˜´å½±æ°´å¹³é«˜åº¦</span><input type="range" data-render="shadowHeight" min="-40" max="40" step="1" value="${Math.round((Number(settings.shadowHeight) || 0) * 100)}"><output data-render-output="shadowHeight">${Math.round((Number(settings.shadowHeight) || 0) * 100) > 0 ? '+' : ''}${Math.round((Number(settings.shadowHeight) || 0) * 100)} å˜ç±³</output></label>
+        <p class="tip">ä¸€å¥—è®¾ç½®æ§åˆ¶ç”»é¢ä¸­çš„å…¨éƒ¨è§’è‰²ã€‚è„šæŒçœ‹ç€æµ®èµ·æ—¶ï¼ŒæŠŠé˜´å½±é«˜åº¦å¾€å³è°ƒï¼›å½±å­ç›–ä½é‹å­æ—¶å¾€å·¦è°ƒã€‚0Â° è¡¨ç¤ºå½±å­æœç”»é¢ä¸‹æ–¹ï¼›é»˜è®¤å…³é—­ã€‚</p>
+      </div></details>
+      <p class="tip">â€œä¸‰æ¸²äºŒâ€ä¼šå¢å¼ºåŠ¨ç”»å¼æ˜æš—ã€å‡å°‘å¡‘æ–™èˆ¬çš„é«˜å…‰ã€‚æè¾¹é€‰â€œç»†â€é€šå¸¸æ›´è‡ªç„¶ã€‚èƒŒæ™¯é…å…‰ä¼šä»å›¾ç‰‡ä¼°è®¡äº®å¤„å’Œé¢œè‰²ï¼›è§†é¢‘èƒŒæ™¯ä½¿ç”¨é»˜è®¤ç¯å…‰ã€‚</p></div>`;
+    return;
+  }
+  const currentAct = act();
+  const current = step();
+  if (!currentAct) { body.innerHTML = '<div class="inspector-content empty">å…ˆæ–°å¢ä¸€å¹•</div>'; return; }
+  body.innerHTML = `<div class="inspector-content"><h2>${escape(currentAct.name)}</h2>
+    ${field('å¹•åç§°', input('act.name', currentAct.name))}
+    ${field('ç« èŠ‚å°é¢', select('act.coverImageId', byType('image'), currentAct.coverImageId, 'é»˜è®¤ä½¿ç”¨èƒŒæ™¯å›¾'))}
+    ${asset(currentAct.coverImageId || currentAct.backgroundId)?.type === 'image' ? `<img class="act-cover-preview" src="${escape(assetUrl(asset(currentAct.coverImageId || currentAct.backgroundId)))}" alt="æœ¬å¹•å°é¢">` : '<p class="tip">è¿˜æ²¡æœ‰å°é¢ã€‚å»ºè®®ä¸Šä¼ ç«–å›¾ï¼Œäººç‰©æ”¾åœ¨å›¾ç‰‡ä¸­å¤®ã€‚</p>'}
+    <div class="inline-actions">${button('ä¸Šä¼ æœ¬å¹•å°é¢', 'upload-act-cover')}${button('æœ¬å¹•æ¸²æŸ“ä¸è°ƒè‰²', 'edit-act-render')}</div>
+    ${field('èƒŒæ™¯å›¾ç‰‡ / è§†é¢‘', select('act.backgroundId', [...byType('image'),...byType('video')], currentAct.backgroundId, 'æ— èƒŒæ™¯'))}
+    ${field('èƒŒæ™¯éŸ³ä¹', select('act.bgmId', byType('audio'), currentAct.bgmId, 'æ— éŸ³ä¹'))}
+    ${weatherEditor(currentAct)}
+    <hr><h2>æœ¬å¹•ç™»åœºäººç‰©ï¼ˆåˆå§‹ä½ç½®ï¼‰</h2>
+    ${castSlots.map(slot => castEditor(currentAct, slot)).join('')}
+    <p class="tip">è¿™é‡Œé€‰æœ¬å¹•èˆå°ä¸Šçš„äººç‰©ã€‚æ²¡æœ‰ç«™åœ¨èˆå°ä¸Šçš„è§’è‰²ï¼Œä¹Ÿèƒ½ç”¨å¤´åƒã€åå­—å’Œå¯¹ç™½è¯´è¯ã€‚</p>
+    <div class="inline-actions">${button('åˆ é™¤æœ¬å¹•', 'delete-act', 'class="danger"')}</div>
+    <hr><h2>ç¬¬ ${selectedStep + 1} å¥å¯¹ç™½</h2>
+    ${current ? `
+      ${field('è§’è‰²', select('step.characterId', project.characters, current.characterId, 'æ—ç™½ / æ— æ¨¡å‹'))}
+      ${castAssignments(currentAct, current).length > 1 ? `<div class="step-cast-positions"><span>è¿™ä¸€å¥çš„äººç‰©ç«™ä½</span>
+        ${castAssignments(currentAct, current).map(entry => `<label><span>${escape(character(entry.actorKey)?.name || 'è§’è‰²')}</span>
+          <select data-step-cast="${escape(entry.actorKey)}">${castSlots.map(slot => `<option value="${slot}" ${entry.position === slot ? 'selected' : ''}>${castSlotLabels[slot]}</option>`).join('')}</select>
+        </label>`).join('')}<small>æŠŠä¸€äººæ¢åˆ°å…¶ä»–ä½ç½®æ—¶ï¼ŒåŸä½ç½®çš„äººä¼šä¸å…¶äº¤æ¢ã€‚</small></div>` : ''}
+      ${field('æ˜¾ç¤ºåå­—', input('step.speaker', current.speaker, 'ç•™ç©ºæ—¶ç”¨è§’è‰²åå­—'))}
+      ${field('å¯¹ç™½å†…å®¹', textarea('step.text', current.text, 'åœ¨è¿™é‡Œå†™å°è¯'))}
+      <div class="field"><span>è¡¨æƒ…å‚æ•°ï¼ˆå¯ä»¥åŒæ—¶è°ƒå¤šé¡¹ï¼‰</span><div id="expression-controls" class="expression-controls"></div></div>
+      ${field('åŠ¨ä½œ', select('step.motionId', byType('motion'), current.motionId, 'ä¿æŒç«™ç«‹'))}
+      ${motionAdvanced(current, 'step')}
+      ${field('ä½ç½®ï¼ˆå•äººå¹•ä½¿ç”¨ï¼‰', `<select data-field="step.position"><option value="left" ${current.position === 'left' ? 'selected' : ''}>å·¦ä¾§</option><option value="center" ${current.position === 'center' ? 'selected' : ''}>ä¸­é—´</option><option value="right" ${current.position === 'right' ? 'selected' : ''}>å³ä¾§</option></select>`)}
+      <div class="field"><span>äººç‰©å¤§å°å’Œä½ç½®</span>
+        ${adjustmentSlider('size', 'å¤§å°', Math.round((current.size ?? defaultSize) * 100), 50, 250, 5, `${Math.round((current.size ?? defaultSize) * 100)}%`)}
+        ${adjustmentSlider('offsetX', 'å·¦å³å¾®è°ƒ', Number(current.offsetX) || 0, -1.5, 1.5, 0.05, (Number(current.offsetX) || 0).toFixed(2))}
+        ${adjustmentSlider('offsetY', 'ä¸Šä¸‹å¾®è°ƒ', Number(current.offsetY) || 0, -3, 2, 0.05, (Number(current.offsetY) || 0).toFixed(2))}
+        ${adjustmentSlider('offsetZ', 'å‰åå¾®è°ƒ', Number(current.offsetZ) || 0, -2, 1.5, 0.05, (Number(current.offsetZ) || 0).toFixed(2))}
+        ${adjustmentSlider('yaw', 'è½¬èº«å¾®è°ƒ', Number(current.yaw) || 0, -90, 90, 5, `${Number(current.yaw) || 0}Â°`)}
+        <p class="tip">å·¦å³ï¼šè´Ÿæ•°å‘å·¦ï¼Œæ­£æ•°å‘å³ã€‚ä¸Šä¸‹ï¼šæ­£æ•°å‘ä¸Šã€‚å‰åï¼šæ­£æ•°é è¿‘é•œå¤´ï¼Œè´Ÿæ•°è¿œç¦»é•œå¤´ã€‚è½¬èº«è§’åº¦å¯ä»¥è®©äººç‰©ä¾§èº«ã€‚</p></div>
+      ${dialogueVoiceField(current)}
+      ${field('æœ¬å¥éŸ³æ•ˆ', select('step.seId', byType('audio'), current.seId, 'æ— éŸ³æ•ˆ'))}
+      <div class="inline-actions">${button('å¤åˆ¶æœ¬å¥', 'duplicate-step')}${button('ä¸Šç§»', 'move-up')}${button('ä¸‹ç§»', 'move-down')}${button('åˆ é™¤', 'delete-step', 'class="danger"')}</div>
+      <hr><div class="section-heading">é€‰æ‹©åˆ†æ”¯ ${button('ï¼‹ é€‰é¡¹', 'add-choice')}</div>
+      ${current.choices.map((choice,index) => `<div class="choice-editor">
+        <input data-choice-index="${index}" data-choice-field="text" value="${escape(choice.text)}" placeholder="ç©å®¶çœ‹åˆ°çš„é€‰é¡¹">
+        <select data-choice-index="${index}" data-choice-field="actId">${options(project.acts,choice.actId,'é€‰æ‹©è·³è½¬åˆ°å“ªä¸€å¹•')}</select>
+        ${button('åˆ é™¤é€‰é¡¹', 'delete-choice', `data-index="${index}"`)}</div>`).join('')}
+    ` : '<p class="tip">è¿™å¹•è¿˜æ²¡æœ‰å¯¹ç™½ã€‚</p>'}
+    </div>`;
+  renderExpressionControls();
+  renderCastExpressionControls();
+  refreshMotionHints();
+}
+function renderCastExpressionControls() {
+  if (!stage || !act()) return;
+  for (const slot of castSlots) {
+    const node = document.querySelector(`#cast-expression-${slot}`);
+    if (!node) continue;
+    const actorId = act().cast?.[slot];
+    const record = stage.visibleRecords.get(actorId);
+    if (!record) { node.innerHTML = '<p class="tip">æ­£åœ¨è¯»å–äººç‰©è¡¨æƒ…â€¦</p>'; continue; }
+    const weights = castSettingsOf(act(), slot).expressionWeights || {};
+    const names = record.vrm.expressionManager?.expressions?.map(item => item.expressionName) || [];
+    node.innerHTML = names.length ? names.map(name => {
+      const value = Math.round(Math.max(0, Math.min(1, Number(weights[name]) || 0)) * 100);
+      return `<label class="expression-slider"><span title="${escape(name)}">${escape(expressionLabels[name] || name)}</span>
+        <input type="range" data-cast-expression="${slot}.${escape(name)}" min="0" max="100" step="1" value="${value}">
+        <output data-cast-expression-output="${slot}.${escape(name)}">${value}%</output></label>`;
+    }).join('') : '<p class="tip">è¿™ä¸ªæ¨¡å‹æ²¡æœ‰å¯è°ƒè¡¨æƒ…ã€‚</p>';
+  }
+}
+function renderTitleExpressionControls() {
+  const node = document.querySelector('#title-expression-controls');
+  if (!node || !project) return;
+  const modelAsset = asset(project.title.modelId);
+  if (!modelAsset) { node.innerHTML = '<p class="tip">å…ˆé€‰æ‹©ä¸€ä¸ªæ ‡é¢˜ VRM äººç‰©ã€‚</p>'; return; }
+  if (stage?.currentModelId !== modelAsset.id || !stage?.vrm) {
+    node.innerHTML = '<p class="tip">æ­£åœ¨è¯»å–äººç‰©çš„è¡¨æƒ…å‚æ•°â€¦</p>';
+    return;
+  }
+  const names = stage.expressions();
+  if (!names.length) { node.innerHTML = '<p class="tip">è¿™ä¸ªæ¨¡å‹æ²¡æœ‰å¯è°ƒçš„è¡¨æƒ…å‚æ•°ã€‚</p>'; return; }
+  const weights = project.title.expressionWeights || {};
+  node.innerHTML = names.map(name => {
+    const value = Math.round(Math.max(0, Math.min(1, Number(weights[name]) || 0)) * 100);
+    return `<label class="expression-slider"><span title="${escape(name)}">${escape(expressionLabels[name] || name)}</span>
+      <input type="range" data-title-expression="${escape(name)}" min="0" max="100" step="1" value="${value}">
+      <output data-title-expression-output="${escape(name)}">${value}%</output></label>`;
+  }).join('') + `<div class="inline-actions">${button('è¡¨æƒ…å…¨éƒ¨å½’é›¶', 'reset-title-expressions')}</div>`;
+}
+function renderExpressionControls() {
+  const node = document.querySelector('#expression-controls');
+  if (!node) return;
+  const current = step();
+  const modelAsset = modelForStep(current);
+  if (!modelAsset) { node.innerHTML = '<p class="tip">å…ˆç»™è¿™å¥å¯¹ç™½é€‰æ‹©ä¸€ä¸ª VRM è§’è‰²ã€‚</p>'; return; }
+  if (stage?.currentModelId !== modelAsset.id || !stage?.vrm) {
+    node.innerHTML = '<p class="tip">æ­£åœ¨è¯»å–æ¨¡å‹çš„è¡¨æƒ…å‚æ•°â€¦</p>';
+    return;
+  }
+  const names = stage.expressions();
+  if (!names.length) { node.innerHTML = '<p class="tip">è¿™ä¸ªæ¨¡å‹æ²¡æœ‰å¯è°ƒçš„è¡¨æƒ…å‚æ•°ã€‚</p>'; return; }
+  const weights = expressionWeightsOf(current);
+  node.innerHTML = names.map(name => {
+    const value = Math.round(Math.max(0, Math.min(1, Number(weights[name]) || 0)) * 100);
+    return `<label class="expression-slider"><span title="${escape(name)}">${escape(expressionLabels[name] || name)}</span>
+      <input type="range" data-expression="${escape(name)}" min="0" max="100" step="1" value="${value}">
+      <output data-expression-output="${escape(name)}">${value}%</output></label>`;
+  }).join('') + `<div class="inline-actions">${button('è¡¨æƒ…å…¨éƒ¨å½’é›¶', 'reset-expressions')}</div>`;
+}
+async function updatePreview() {
+  if (!stage || !project || playing) return;
+  const request = ++previewRequest;
+  if (activePanel === 'characters') {
+    events.cancel();
+    await showCharacterEditorPreview();
+    return;
+  }
+  hideCharacterEditorPreview();
+  if (activePanel === 'title') {
+    showDialogue('', '', false);
+    document.querySelector('#dialogue')?.classList.remove('visible');
+    document.querySelector('#stage-caption').textContent = 'æ ‡é¢˜ç•Œé¢';
+    await showTitleScene(false);
+    return;
+  }
+  document.querySelector('#title-preview')?.classList.add('hidden');
+  document.querySelector('.stage-frame')?.classList.remove('title-mode');
+  stage.setCameraAngle(0);
+  const currentAct = act();
+  if (isEvent(currentAct)) { document.querySelector('#stage-caption').textContent = currentAct.name; await events.show(currentAct, true); return; }
+  events.cancel();
+  const current = step();
+  const modelAsset = modelForStep(current);
+  const motionAsset = asset(current?.motionId);
+  const bgAsset = asset(currentAct?.backgroundId);
+  showBackground(bgAsset);
+  setSceneWeather(currentAct);
+  stage.setRenderSettings(chapterRender(currentAct, project.render));
+  applySceneColor(chapterRender(currentAct, project.render));
+  stage.setBackgroundLighting(bgAsset);
+  document.querySelector('#stage-caption').textContent = currentAct?.name || 'æ²¡æœ‰å¹•';
+  const placeholder = document.querySelector('#stage-placeholder');
+  setStagePlaceholder(placeholder, current ? 'æ­¤å¥æ²¡æœ‰ VRM è§’è‰²' : 'è¿™ä¸€å¹•è¿˜æ²¡æœ‰äººç‰©', Boolean(modelAsset));
+  placeholder.style.display = 'grid';
+  showDialogue(current?.speaker || character(current?.characterId)?.name || 'æ—ç™½', current?.text || '', false, current?.characterId);
+  if (!current) document.querySelector('#dialogue')?.classList.remove('visible');
+  await displayActStep(currentAct, current);
+  if (request !== previewRequest || playing) return;
+  if (stage.visibleRecords.size || (current && !stageError))
+    placeholder.style.display = 'none';
+  else if (modelAsset && !stageError)
+    setStagePlaceholder(placeholder, '', true);
+  renderExpressionControls();
+  renderCastExpressionControls();
+}
+function eventBackdrop(node) {
+  const index = project.acts.indexOf(node);
+  const previous = project.acts.slice(0, index).findLast(item => !isEvent(item));
+  return { chapter: previous, backgroundId: node.event.backgroundId || previous?.backgroundId || project.title.backgroundId || '' };
+}
+async function prepareEventScene(node) {
+  clearTyping(); clearAutoAdvance(); titleRequest++; previewRequest++;
+  document.querySelector('.stage-frame')?.classList.remove('title-mode');
+  document.querySelector('#player-start')?.classList.add('hidden');
+  document.querySelector('#title-preview')?.classList.add('hidden');
+  document.querySelector('#character-preview')?.classList.add('hidden');
+  document.querySelector('#auto-play-button')?.classList.add('hidden');
+  document.querySelector('#act-loading')?.classList.add('hidden');
+  const backdrop = eventBackdrop(node), bg = asset(backdrop.backgroundId);
+  const sameBackground = displayedBackgroundId === backdrop.backgroundId;
+  setSceneWeather();
+  stage.setRenderSettings(chapterRender(backdrop.chapter, project.render));
+  applySceneColor(chapterRender(backdrop.chapter, project.render));
+  if (!sameBackground) showBackground(bg);
+  const container = document.querySelector('#scene-bg');
+  document.querySelector('.stage-frame').style.setProperty('--event-base-filter', container.style.filter || 'brightness(100%)');
+  const video = container.querySelector('video');
+  if (video) { video.autoplay = false; video.pause(); }
+  const imageReady = bg?.type === 'image' ? new Promise(resolve => { const img = new Image(); img.onload = img.onerror = resolve; img.src = assetUrl(bg); }) : Promise.resolve();
+  await Promise.all([stage.showCast([], '', false), Promise.race([imageReady, new Promise(resolve => setTimeout(resolve, 6000))])]);
+}
+function transitionMusic(id) {
+  const token = ++musicFadeToken;
+  const fade = (from, to, duration, done) => {
+    const start = performance.now();
+    const frame = now => {
+      if (token !== musicFadeToken) return;
+      // A frame scheduled inside another frame can carry a timestamp just before start.
+      const t = Math.max(0, Math.min(1, (now - start) / duration));
+      musicFadeFactor = from + (to - from) * t; applyAudioSettings();
+      if (t < 1) requestAnimationFrame(frame); else done?.();
+    }; requestAnimationFrame(frame);
+  };
+  const url = asset(id) ? assetUrl(asset(id)) : '';
+  if (music.src === url && url) { music.play().catch(() => {}); fade(musicFadeFactor, 1, 300); return; }
   fade(musicFadeFactor, 0, music.paused ? 1 : 180, () => {
     music.pause(); music.src = url;
     if (url) music.play().then(() => rememberDiscovery('music', id)).catch(() => {});
@@ -160,36 +1345,400 @@ async function handleEventAction(action, node) {
   if (action === 'event-confirm') { events.confirm(); return; }
   if (playing) return;
   if (action === 'event-add') {
-    const item = newEvent(uid(), uid()); project.acts.splice(selectedAct + 1, 0, item); selectedAct++; selectedStep = 0; activePanelYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Ô€ô€ÍÑ½Éäœì4(€ô•±Í”¥˜€ …¥ÍÙ•¹Ğ¡…Ğ ¤¤¤É•ÑÕÉ¸ì4(€•±Í”¥˜€¡…Ñ¥½¸€ôôô€•Ù•¹ĞµÁÉ•Ù¥•Üœ¤ì…İ…¥Ğ•Ù•¹ÑÌ¹Í¡½Ü¡…Ğ ¤°ÑÉÕ”¤ìÉ•ÑÕÉ¸ìô4(€•±Í”¥˜€¡…Ñ¥½¸€ôôô€•Ù•¹Ğµ‘ÕÁ±¥…Ñ”œ¤ì½¹ÍĞ¥Ñ•´€ôÍÑÉÕÑÕÉ•‘±½¹”¡…Ğ ¤¤ì¥Ñ•´¹¥€ôÕ¥ ¤ì¥Ñ•´¹ÍÑ•ÁÍlÁt¹¥€ôÕ¥ ¤ì¥Ñ•´¹¹…µ”€¬ô€Ÿ¾ò#–&¿šr³¾ò$œìÁÉ½©•Ğ¹…ÑÌ¹ÍÁ±¥” ¬­Í•±•Ñ•‘Ğ°€À°¥Ñ•´¤ìô4(€•±Í”¥˜€¡…Ñ¥½¸€ôôô€•Ù•¹Ğµ‘•±•Ñ”œ¤ì4(€€€¥˜€¡ÁÉ½©•Ğ¹…ÑÌ¹±•¹Ñ €ğô€Ä¤ìÑ½…ÍĞ Ÿ¢Ï–ÂG’şwVg’â’â«–&Ÿš¢*
-äœ°ÑÉÕ”¤ìÉ•ÑÕÉ¸ìô4(€€€¥˜€ …½¹™¥É´ Ÿ–"ƒ¦f“¢şg’â«’ê/’îÛ¾ò|œ¤¤É•ÑÕÉ¸ì4(€€€ÁÉ½©•Ğ¹…ÑÌ¹ÍÁ±¥”¡Í•±•Ñ•‘Ğ°€Ä¤ìÍ•±•Ñ•‘Ğ€ô5…Ñ ¹µ…à À°Í•±•Ñ•‘Ğ€´€Ä¤ìÍ•±•Ñ•‘MÑ•À€ô€Àì4(€ô•±Í”¥˜€¡…Ñ¥½¸€ôôô€•Ù•¹Ğµ…‘µÉ½Üœ¤ì4(€€€¥˜€¡…Ğ ¤¹•Ù•¹Ğ¹‘•±…É…Ñ¥½¹Ì¹±•¹Ñ €øô€Ôä¤É•ÑÕÉ¸ì4(€€€…Ğ ¤¹•Ù•¹Ğ¹‘•±…É…Ñ¥½¹Ì¹ÁÕÍ ¡ì½Õ¹ÑÉåè€œœ°½Õ¹ÑÉåè€œœ°™±…%è€œœ°™±…	%è€œœ°‰½‘äè€œœô¤ì4(€ô•±Í”¥˜€¡…Ñ¥½¸€ôôô€•Ù•¹ĞµÉ•µ½Ù”µÉ½Üœ¤…Ğ ¤¹•Ù•¹Ğ¹‘•±…É…Ñ¥½¹Ì¹ÍÁ±¥”¡9Õµ‰•È¡¹½‘”¹‘…Ñ…Í•Ğ¹¥¹‘•à¤°€Ä¤ì4(€•±Í”¥˜€¡…Ñ¥½¸€ôôô€•Ù•¹ĞµÕÁ±½…œ¤ì4(€€€½¹ÍĞ¥µÁ½ÉÑ•€ô…İ…¥Ğ‰É¥‘” ¥µÁ½ÉÑÍÍ•Ğœ°ìÑåÁ”è¹½‘”¹‘…Ñ…Í•Ğ¹ÑåÁ”ô¤ì4(€€€¥˜€ …¥µÁ½ÉÑ•ü¹±•¹Ñ ¤É•ÑÕÉ¸ì4(€€€™½È€¡½¹ÍĞ¥Ñ•´½˜¥µÁ½ÉÑ•¤ì¥Ñ•´¹…±±•Éå%µ…”€ô™…±Í”ìÁÉ½©•Ğ¹…ÍÍ•ÑÌ¹ÁÕÍ ¡¥Ñ•´¤ìô4(€€€…Ğ ¤¹•Ù•¹Ñm¹½‘”¹‘…Ñ…Í•Ğ¹•Ù•¹Ñ-•åt€ô¥µÁ½ÉÑ•‘lÁt¹¥ì4(€ô•±Í”É•ÑÕÉ¸ì4(€µ…É­¥ÉÑä ¤ìÉ•¹‘•ÉM¥‘•‰…È ¤ìÉ•¹‘•É%¹ÍÁ•Ñ½È ¤ìÕÁ‘…Ñ•AÉ•Ù¥•Ü ¤ì4)ô4)™Õ¹Ñ¥½¸…ÁÁ±åM•¹•½±½È¡Í•ÑÑ¥¹Ì¤ì4(€±•ĞÍÙœ€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÍ•¹”µ½±½Èµ‘•™Ìœ¤ì4(€¥˜€ …ÍÙœ¤ì4(€€€‘½Õµ•¹Ğ¹‰½‘ä¹¥¹Í•ÉÑ‘©…•¹Ñ!Q50 ‰•™½É••¹œ°€œó}4ÖÚ$z{-®éÜj×Bæ76WG2æf–ÇFW"†÷F†W"Óâ÷F†W"ÓÒöÆB“°Ğ¢Ö&´F—'G’†FVfW$†—7F÷'’ò²6¶—†—7F÷'“¢G'VRÒ¢²FW&—fVC¢G'VRÒ“°Ğ¢ĞĞ§ĞĞ¦7–æ2gVæ7F–öâ&WÆ6TWFõ÷'G&—B†—FVÒÂ6fVBÂFVfW$†—7F÷'’ÒfÇ6R’°Ğ¢–b‚&ö¦V7Bæ76WDföÆFW'2ç6öÖR†föÆFW"ÓâföÆFW"æ–BÓÓÒWFõ÷'G&—DföÆFW$–B’Ğ¢&ö¦V7Bæ76WDföÆFW'2çW6‚‡²–C¢WFõ÷'G&—DföÆFW$–BÂæÖS¢~ˆz®XªŠy.ˆ›.ZKNX8òrÂG—S¢v–ÖvRrÒ“°Ğ¢6fVBævÆÆW'”–ÖvRÒfÇ6S²6fVBæföÆFW$–BÒWFõ÷'G&—DföÆFW$–C°Ğ¢6öç7BW†—7F–ærÒ76WB‡6fVBæ–B“°Ğ¢–b†W†—7F–ær’ö&¦V7Bæ76–vâ†W†—7F–ærÂ6fVB“°Ğ¢VÇ6R&ö¦V7Bæ76WG2çW6‚‡6fVB“°Ğ¢—FVÒç÷'G&—D–BÒ6fVBæ–C°Ğ¢—FVÒç÷'G&—E6÷W&6RÒvWFòs°Ğ¢Ö&´F—'G’†FVfW$†—7F÷'’ò²6¶—†—7F÷'“¢G'VRÒ¢²FW&—fVC¢G'VRÒ“°Ğ¢v—B&VÖ÷fUVçW6VDWFõ÷'G&—G2†FVfW$†—7F÷'’“°Ğ¢&VæFW$76WDFö6²‚“°Ğ§ĞĞ¦7–æ2gVæ7F–öâVWVTÖ—76–æu÷'G&—G2‚’°Ğ¢6öç7B7W'&VçE&ö¦V7BÒ&ö¦V7C°Ğ¢G'’°Ğ¢f÷"†6öç7B—FVÒöb&ö¦V7Bæ6†&7FW'2’°Ğ¢6öç7BöÆBÒ76WB†—FVÒç÷'G&—D–B“°Ğ¢–b†—FVÒç÷'G&—E6÷W&6RÓÒvWFòrÇÂöÆBÇÂöÆBævVæW&FVE÷'G&—B’6öçF–çVS°Ğ¢6öç7B6fVBÒv—B'&–FvR‚v÷&væ—¦TvVæW&FVE÷'G&—BrÂ²Fƒ¢öÆBçF‚Â6†&7FW$–C¢—FVÒæ–BÂæÖS¢—FVÒææÖRÒ“°Ğ¢–b‡&ö¦V7BÓÒ7W'&VçE&ö¦V7B’&WGW&ã°Ğ¢v—B&WÆ6TWFõ÷'G&—B†—FVÒÂ6fVB“°Ğ¢–b†7F—fUæVÂÓÓÒv6†&7FW'2r’&VæFW$–ç7V7F÷"‚“°Ğ¢WFFU7V¶W%÷'G&—B‡7FW‚“òæ6†&7FW$–BÂG'VR“°Ğ¢ĞĞ¢v—B&VÖ÷fUVçW6VDWFõ÷'G&—G2‚“°Ğ¢&VæFW$76WDFö6²‚“°Ğ¢Ò6F6‚†W'&÷"’²Fö7B†ˆz®XªZKNX8şi[NynZEš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍlz-){ï&‰Ù\œ›Ü‹›Y\ÜØYÙ_XYJNÈCBˆÛÛœİ][\ÈH›Ú™Xİ˜Ú\˜Xİ\œË™š[\Š][HOˆ][K›[Ù[Y	‰ˆÜ˜Z]\Ğ]]ÛX]XÊ][JH	‰ƒBˆ
-X\ÜÙ]
-][KœÜ˜Z]Y
-H][KœÜ˜Z]ÜÙRÙ^HOOCBˆÜ˜Z]]ŒÎ‰Ú][K›[Ù[YN‰Ú][K™Ø[\S[İ[Û’Y	ÉßN‰ÓX]›X^
-KX]™›ÛÜŠ[X™\Š][K™Ø[\TÜÙQœ˜[YJHJJ_X
-JNÃBˆ
-\Ş[˜È
-
-HOˆÈ›Üˆ
-ÛÛœİ][HÙˆ][\ÊH]ØZ][œİ\™PÚ\˜Xİ\”Ü˜Z]
-][K›ÛÛX[Š\ÜÙ]
-][KœÜ˜Z]Y
-JJNÈJJ
-NÃBŸCB™[˜İ[Ûˆ\]TÜXZÙ\”Ü˜Z]
-Ú\˜Xİ\’Yš\ÚX›JHÃBˆÛÛœİ›ÙHHØİ[Y[œ]Y\TÙ[XİÜŠ	ÈÜÜXZÙ\‹\Ü˜Z]	ÊNÃBˆÛÛœİ[XYÙHH›ÙOËœ]Y\TÙ[XİÜŠ	Ú[YÉÊNÃBˆYˆ
-[›ÙHZ[XYÙJH™]\›ÃBˆÛÛœİ][HHÚ\˜Xİ\’YÈÚ\˜Xİ\ŠÚ\˜Xİ\’Y
-Hˆ[ÃBˆÛÛœİÜ˜Z]\ÜÙ]H\ÜÙ]
-][OËœÜ˜Z]Y
-NÃBˆÛÛœİ\›HÜ˜Z]\ÜÙ]È\ÜÙ]\›
-Ü˜Z]\ÜÙ]
-Hˆ[\Ü˜\TÜ˜Z]Ë™Ù]
-][OËšY
-H	ÉÎÃBˆ[XYÙKœÜ˜ÈHš\ÚX›H	‰ˆ\›È\›ˆ	ÉÎÃBˆ›ÙK˜Û\ÜÓ\İÙÙÛJ	ÚY[‰Ë]š\ÚX›H]\›
-NÃBŸCB™[˜İ[ÛˆÚİÑX[ÙİYJÜXZÙ\‹^š\ÚX›HHYKÚ\˜Xİ\’YH	ÉÊHÃBˆÛÛœİ›ÙHHØİ[Y[œ]Y\TÙ[XİÜŠ	ÈÙX[ÙİYIÊNÃBˆYˆ
-[›ÙJH™]\›ÃBˆ›ÙK˜Û\ÜÓ\İÙÙÛJ	İš\ÚX›IËš\ÚX›H[ÙHOOH	ÙY]Ü‰ÊNÃBˆ›ÙK˜Û\ÜÓ\İÙÙÛJ	Øİ\İÛKYX[ÙİYIË›ÛÛX[Š›Ú™XİZK™X[ÙİYR[XYÙRY
-JNÃBˆØİ[Y[œ]Y\TÙ[XİÜŠ	ÈÙX[ÙİYK\ÜXZÙ\‰ÊK^ÛÛ[HÜXZÙ\ÃBˆYˆ
-[ÙHOOH	Ü^Y\‰È	‰ˆ^Z[™È	‰ˆš\ÚX›JHİ\\[™Ê^Ú\˜Xİ\’Y
-NÃBˆ[ÙHÈÛX\•\[™Ê
-NÈØİ[Y[œ]Y\TÙ[XİÜŠ	ÈÙX[ÙİYK]^	ÊK^ÛÛ[H^ÈCBˆ\]TÜXZÙ\”÷ÓMm¢G§²ÚîÆ­yßn data-action="choose" data-index="${index}">${escape(choice.text || 'ç»§ç»­')}</button>`).join('');
+    const item = newEvent(uid(), uid()); project.acts.splice(selectedAct + 1, 0, item); selectedAct++; selectedStep = 0; activePanel = 'story';
+  } else if (!isEvent(act())) return;
+  else if (action === 'event-preview') { await events.show(act(), true); return; }
+  else if (action === 'event-duplicate') { const item = structuredClone(act()); item.id = uid(); item.steps[0].id = uid(); item.name += 'ï¼ˆå‰¯æœ¬ï¼‰'; project.acts.splice(++selectedAct, 0, item); }
+  else if (action === 'event-delete') {
+    if (project.acts.length <= 1) { toast('è‡³å°‘ä¿ç•™ä¸€ä¸ªå‰§æƒ…èŠ‚ç‚¹', true); return; }
+    if (!confirm('åˆ é™¤è¿™ä¸ªäº‹ä»¶ï¼Ÿ')) return;
+    project.acts.splice(selectedAct, 1); selectedAct = Math.max(0, selectedAct - 1); selectedStep = 0;
+  } else if (action === 'event-add-row') {
+    if (act().event.declarations.length >= 59) return;
+    act().event.declarations.push({ countryA: '', countryB: '', flagAId: '', flagBId: '', body: '' });
+  } else if (action === 'event-remove-row') act().event.declarations.splice(Number(node.dataset.index), 1);
+  else if (action === 'event-upload') {
+    const imported = await bridge('importAsset', { type: node.dataset.type });
+    if (!imported?.length) return;
+    for (const item of imported) { item.galleryImage = false; project.assets.push(item); }
+    act().event[node.dataset.eventKey] = imported[0].id;
+  } else return;
+  markDirty(); renderSidebar(); renderInspector(); updatePreview();
+}
+function applySceneColor(settings) {
+  let svg = document.querySelector('#scene-color-defs');
+  if (!svg) {
+    document.body.insertAdjacentHTML('beforeend', '<svg id="scene-color-defs" width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><filter id="scene-temperature" color-interpolation-filters="sRGB"><feColorMatrix type="matrix"/></filter></defs></svg>');
+    svg = document.querySelector('#scene-color-defs');
+  }
+  const mood = weatherMood(stage?.weatherSettings);
+  const result = colorFilter({ ...settings,
+    brightness: (settings.brightness ?? 100) * mood.brightness,
+    saturation: (settings.saturation ?? 100) * mood.saturation,
+    temperature: (settings.temperature ?? 0) + mood.temperature });
+  svg.querySelector('feColorMatrix').setAttribute('values', result.matrix);
+  for (const node of document.querySelectorAll('#scene-bg, #stage-canvas, .weather-atmosphere')) node.style.filter = result.filter;
+}
+function setSceneWeather(chapter) {
+  const settings = normalizeWeather(chapter?.weather);
+  const sound = asset(settings.soundId);
+  stage?.setWeather(settings, { playing, url: sound?.type === 'audio' ? assetUrl(sound) : '',
+    master: audioSettings.master, effects: audioSettings.effects });
+}
+function weatherEditor(chapter) {
+  const w = normalizeWeather(chapter.weather);
+  const slider = (key,label,min=0,max=100) => field(label, `<input type="range" data-weather="${key}" min="${min}" max="${max}" step="1" value="${Math.round(w[key]*100)}"><output data-weather-output="${key}">${Math.round(w[key]*100)}%</output>`);
+  const toggle = (key,label) => `<label class="weather-toggle"><input type="checkbox" data-weather="${key}" ${w[key] ? 'checked' : ''}><span>${label}</span></label>`;
+  return `<section class="weather-editor"><h3>æœ¬å¹•å¤©æ°”</h3>
+    ${field('å¤©æ°”', `<select data-weather="type">${Object.entries(weatherNames).map(([key,name]) => `<option value="${key}" ${w.type===key?'selected':''}>${name}</option>`).join('')}</select>`)}
+    ${w.type !== 'none' ? `${slider('intensity','å¤©æ°”å¼ºåº¦')}
+    ${slider('wind','é£é€Ÿ')}
+    ${field('é£å‘', `<select data-weather="direction"><option value="1" ${w.direction===1?'selected':''}>å‘å³å¹ â†’</option><option value="-1" ${w.direction===-1?'selected':''}>å‘å·¦å¹ â†</option></select>`)}
+    ${w.type==='rain' ? `${toggle('splashes','æ˜¾ç¤ºåœ°é¢æ°´èŠ±ä¸ç»†å°æ¶Ÿæ¼ª')}${w.splashes ? slider('ground','åœ°é¢èµ·ç‚¹ï¼ˆä¸Š â†’ ä¸‹ï¼‰',20) : ''}` : ''}
+    ${w.type==='sunny' ? slider('sunX','é˜³å…‰ä½ç½®ï¼ˆå·¦ â†’ å³ï¼‰') : ''}
+    ${toggle('windMotion','é£å¹åŠ¨æ¨¡å‹çš„å¤´å‘ä¸è¡£ç‰©ï¼ˆæ¨¡å‹éœ€è¦æ”¯æŒï¼‰')}
+    ${toggle('atmosphere','æŸ”å’Œå…‰æŸ / ç©ºæ°”è–„é›¾')}${toggle('autoMood','å¤©æ°”è‡ªåŠ¨é…è‰²ä¸äººç‰©é…å…‰')}
+    ${field('å¤©æ°”å£°éŸ³', `<select data-weather="soundId"><option value="">é™éŸ³</option><option value="auto" ${w.soundId==='auto'?'selected':''}>å†…ç½®é›¨å£° / é£å£°</option>${byType('audio').map(a => `<option value="${escape(a.id)}" ${w.soundId===a.id?'selected':''}>${escape(a.name)}</option>`).join('')}</select>`)}
+    ${slider('volume','å¤©æ°”éŸ³é‡')}
+    <p class="tip">åªæ”¹å˜è¿™ä¸€å¹•ã€‚é›¨é›ªæœ‰è¿œè¿‘å±‚æ¬¡ï¼›æ°´èŠ±è¯·å¯¹å‡†èƒŒæ™¯çš„åœ°é¢ï¼Œå®¤å†…å¯ä»¥å…³é—­æ°´èŠ±ã€‚é¢„è§ˆä¸æ’­æ”¾å¤©æ°”å£°ï¼Œè¯•ç©ä¼šæ’­æ”¾ï¼›å£°éŸ³è·Ÿéšæ¸¸æˆè®¾ç½®ä¸­çš„éŸ³æ•ˆéŸ³é‡ã€‚</p>` : '<p class="tip">æ—§å·¥ç¨‹é»˜è®¤æ²¡æœ‰å¤©æ°”ã€‚é€‰æ‹©å¤©æ°”åï¼Œå¯ä»¥é©¬ä¸Šåœ¨ä¸­é—´é¢„è§ˆã€‚</p>'}
+    </section>`;
+}
+async function uploadActCover() {
+  const target = act();
+  const imported = await bridge('importAsset', { type: 'image', single: true });
+  if (!target || !imported?.length) return;
+  imported.forEach(item => { item.galleryImage = false; });
+  project.assets.push(...imported); target.coverImageId = imported[0].id;
+  markDirty(); renderSidebar(); renderInspector();
+}
+function showBackground(bgAsset) {
+  displayedBackgroundId = bgAsset?.id || '';
+  const node = document.querySelector('#scene-bg');
+  node.replaceChildren();
+  node.style.backgroundImage = '';
+  stage?.setPaintBackground(bgAsset);
+  if (!bgAsset) return;
+  if (bgAsset.type === 'image') rememberDiscovery('image', bgAsset.id);
+  if (bgAsset.type === 'video') {
+    const video = document.createElement('video');
+    video.crossOrigin = 'anonymous';
+    video.src = assetUrl(bgAsset);
+    video.autoplay = true; video.muted = true; video.loop = true; video.playsInline = true;
+    node.appendChild(video);
+    stage?.setPaintBackground(bgAsset, video);
+  } else {
+    node.style.backgroundImage = `url("${assetUrl(bgAsset)}")`;
+    return;
+  }
+  node.style.backgroundImage = '';
+}
+async function ensureCharacterPortrait(item, force = false, userCapture = false) {
+  const modelAsset = asset(item?.modelId);
+  if (!item || !modelAsset || (!force && asset(item.portraitId))) return;
+  const motionId = item.galleryMotionId || '';
+  const motionAsset = asset(motionId);
+  const poseFrame = Math.max(1, Math.floor(Number(item.galleryPoseFrame) || 1));
+  const legacySeconds = Number.isFinite(Number(item.galleryPoseTime)) ? Number(item.galleryPoseTime) : null;
+  const jobKey = `${project.id}:${item.id}:${item.modelId}:${motionId}:${poseFrame}`;
+  if (portraitJobs.has(jobKey)) return portraitJobs.get(jobKey);
+  const modelId = item.modelId;
+  const task = (async () => {
+    const { dataUrl, frame } = await captureVrmPortrait(modelAsset, motionAsset, poseFrame, legacySeconds);
+    if (project.characters.find(entry => entry.id === item.id) !== item || item.modelId !== modelId ||
+      item.galleryMotionId !== motionId ||
+      !(Number(item.galleryPoseFrame) === poseFrame || (legacySeconds !== null && Number(item.galleryPoseFrame) === frame)) ||
+      (!force && asset(item.portraitId))) return;
+    item.galleryPoseFrame = frame;
+    delete item.galleryPoseTime;
+    if (mode === 'player') temporaryPortraits.set(item.id, dataUrl);
+    else {
+      const saved = await bridge('saveGeneratedPortrait', { dataUrl, characterId: item.id, name: item.name, previousRevision: asset(item.portraitId)?.revision || '' });
+      if (project.characters.find(entry => entry.id === item.id) !== item || item.modelId !== modelId ||
+        item.galleryMotionId !== motionId || Number(item.galleryPoseFrame) !== frame || (!force && asset(item.portraitId))) return;
+      await replaceAutoPortrait(item, saved, true);
+      item.portraitSource = 'auto';
+      item.portraitPoseKey = `portrait-v3:${item.modelId}:${motionId}:${frame}`;
+      if (!userCapture) editorHistory.amend(value => {
+        const target = value.characters.find(character => character.id === item.id);
+        if (!target || target.portraitSource === 'manual' || target.modelId !== item.modelId ||
+            (target.galleryMotionId || '') !== motionId || Number(target.galleryPoseFrame) !== frame || target.portraitPoseKey === item.portraitPoseKey) return false;
+        Object.assign(target, { portraitId: saved.id, portraitSource: 'auto', portraitPoseKey: item.portraitPoseKey });
+        const existing = value.assets.find(asset => asset.id === saved.id);
+        if (existing) Object.assign(existing, saved); else value.assets.push(structuredClone(saved));
+        if (!value.assetFolders.some(folder => folder.id === autoPortraitFolderId))
+          value.assetFolders.push({ id: autoPortraitFolderId, name: 'è‡ªåŠ¨è§’è‰²å¤´åƒ', type: 'image' });
+        return true;
+      });
+      markDirty(userCapture ? { label: 'é‡æ–°æ‹æ‘„å¤´åƒ' } : { derived: true });
+      if (activePanel === 'characters' && project.characters[selectedCharacter] === item) {
+        const inspector = document.querySelector('.inspector');
+        const scroll = inspector?.scrollTop || 0;
+        renderInspector();
+        if (inspector) inspector.scrollTop = scroll;
+        refreshGalleryFrameControl(item);
+      }
+    }
+    if (step()?.characterId === item.id || (playing && project.acts[playAct]?.steps[playStep]?.characterId === item.id))
+      updateSpeakerPortrait(item.id, true);
+  })().catch(error => toast(`å¤´åƒç”Ÿæˆå¤±è´¥ï¼š${error.message}`, true)).finally(() => portraitJobs.delete(jobKey));
+  portraitJobs.set(jobKey, task);
+  return task;
+}
+function portraitIsAutomatic(item) {
+  return !asset(item?.portraitId) || item.portraitSource === 'auto';
+}
+const autoPortraitFolderId = 'auto-character-portraits';
+function assetIsReferenced(id) {
+  const scan = value => typeof value === 'string' ? value === id : value && typeof value === 'object' ? Object.values(value).some(scan) : false;
+  return scan({ ...project, assets: undefined, assetFolders: undefined });
+}
+async function removeUnusedAutoPortraits(deferHistory = false) {
+  for (const old of [...project.assets]) {
+    if (old.type !== 'image' || !(old.generatedPortrait || old.name === 'è‡ªåŠ¨å¤´åƒ.png') || assetIsReferenced(old.id)) continue;
+    // Another asset can still use the same physical file.
+    if (!project.assets.some(other => other.id !== old.id && other.path === old.path))
+      pendingPortraitDeletes.add(old.path);
+    project.assets = project.assets.filter(other => other !== old);
+    markDirty(deferHistory ? { skipHistory: true } : { derived: true });
+  }
+}
+async function replaceAutoPortrait(item, saved, deferHistory = false) {
+  if (!project.assetFolders.some(folder => folder.id === autoPortraitFolderId))
+    project.assetFolders.push({ id: autoPortraitFolderId, name: 'è‡ªåŠ¨è§’è‰²å¤´åƒ', type: 'image' });
+  saved.galleryImage = false; saved.folderId = autoPortraitFolderId;
+  const existing = asset(saved.id);
+  if (existing) Object.assign(existing, saved);
+  else project.assets.push(saved);
+  item.portraitId = saved.id;
+  item.portraitSource = 'auto';
+  markDirty(deferHistory ? { skipHistory: true } : { derived: true });
+  await removeUnusedAutoPortraits(deferHistory);
+  renderAssetDock();
+}
+async function queueMissingPortraits() {
+  const currentProject = project;
+  try {
+    for (const item of project.characters) {
+      const old = asset(item.portraitId);
+      if (item.portraitSource !== 'auto' || !old || old.generatedPortrait) continue;
+      const saved = await bridge('organizeGeneratedPortrait', { path: old.path, characterId: item.id, name: item.name });
+      if (project !== currentProject) return;
+      await replaceAutoPortrait(item, saved);
+      if (activePanel === 'characters') renderInspector();
+      updateSpeakerPortrait(step()?.characterId, true);
+    }
+    await removeUnusedAutoPortraits();
+    renderAssetDock();
+  } catch (error) { toast(`è‡ªåŠ¨å¤´åƒæ•´ç†å¤±è´¥ï¼š${error.message}`, true); }
+  const items = project.characters.filter(item => item.modelId && portraitIsAutomatic(item) &&
+    (!asset(item.portraitId) || item.portraitPoseKey !==
+      `portrait-v3:${item.modelId}:${item.galleryMotionId || ''}:${Math.max(1, Math.floor(Number(item.galleryPoseFrame) || 1))}`));
+  (async () => { for (const item of items) await ensureCharacterPortrait(item, Boolean(asset(item.portraitId))); })();
+}
+function updateSpeakerPortrait(characterId, visible) {
+  const node = document.querySelector('#speaker-portrait');
+  const image = node?.querySelector('img');
+  if (!node || !image) return;
+  const item = characterId ? character(characterId) : null;
+  const portraitAsset = asset(item?.portraitId);
+  const url = portraitAsset ? assetUrl(portraitAsset) : temporaryPortraits.get(item?.id) || '';
+  image.src = visible && url ? url : '';
+  node.classList.toggle('hidden', !visible || !url);
+}
+function showDialogue(speaker, text, visible = true, characterId = '') {
+  const node = document.querySelector('#dialogue');
+  if (!node) return;
+  node.classList.toggle('visible', visible || mode === 'editor');
+  node.classList.toggle('custom-dialogue', Boolean(project.ui.dialogueImageId));
+  document.querySelector('#dialogue-speaker').textContent = speaker;
+  if (mode === 'player' && playing && visible) startTyping(text, characterId);
+  else { clearTyping(); document.querySelector('#dialogue-text').textContent = text; }
+  updateSpeakerPortrait(characterId, visible || mode === 'editor');
+  node.style.backgroundImage = project.ui.dialogueImageId ? `url("${assetUrl(asset(project.ui.dialogueImageId))}")` : '';
+  if (visible && project.ui.dialogueImageId) rememberDiscovery('image', project.ui.dialogueImageId);
+}
+function clearTyping() {
+  stage?.stopTalking();
+  clearInterval(typingTimer);
+  typingTimer = null;
+  typingCharacters = [];
+  typingIndex = 0;
+}
+function finishTyping() {
+  if (!typingTimer) return false;
+  const full = typingCharacters.join('');
+  clearTyping();
+  const node = document.querySelector('#dialogue-text');
+  if (node) node.textContent = full;
+  if (playing && autoPlay) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+  return true;
+}
+function startTyping(value, characterId = project.acts[playAct]?.steps[playStep]?.characterId) {
+  clearTyping();
+  const node = document.querySelector('#dialogue-text');
+  if (!node) return;
+  typingCharacters = Array.from(String(value || ''));
+  node.textContent = '';
+  if (!typingCharacters.length) return;
+  const role = character(characterId);
+  stage?.startTalking(characterId, Boolean(role) && role.autoMouth !== false);
+  typingTimer = setInterval(() => {
+    if (!node.isConnected) { clearTyping(); return; }
+    const end = Math.min(typingCharacters.length, typingIndex + 1);
+    node.textContent += typingCharacters.slice(typingIndex, end).join('');
+    stage?.talkingLetter(typingCharacters[end - 1]);
+    typingIndex = end;
+    if (typingIndex >= typingCharacters.length) {
+      clearTyping();
+      if (playing && autoPlay) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+    }
+  }, 1000 / textSpeed);
+}
+function playEffect(id) {
+  const item = asset(id);
+  if (!item) return false;
+  const sound = new Audio(assetUrl(item));
+  sound.volume = audioSettings.master * audioSettings.effects;
+  activeEffects.add(sound);
+  const remove = () => activeEffects.delete(sound);
+  sound.addEventListener('ended', remove, { once: true });
+  sound.addEventListener('error', remove, { once: true });
+  sound.play().catch(remove);
+  return true;
+}
+function playButtonClick() {
+  if (playEffect(project?.ui?.clickSoundId)) return;
+  try {
+    clickAudioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+    const tone = clickAudioContext.createOscillator();
+    const gain = clickAudioContext.createGain();
+    const now = clickAudioContext.currentTime;
+    tone.type = 'sine';
+    tone.frequency.setValueAtTime(680, now);
+    tone.frequency.exponentialRampToValueAtTime(430, now + 0.06);
+    gain.gain.setValueAtTime(Math.max(0.0001, audioSettings.master * audioSettings.effects * 0.07), now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+    tone.connect(gain).connect(clickAudioContext.destination);
+    tone.start(now); tone.stop(now + 0.08);
+  } catch { /* Audio may be unavailable before the first user gesture. */ }
+}
+function setMusic(id) {
+  musicFadeToken++; musicFadeFactor = 1; applyAudioSettings();
+  const next = asset(id);
+  const url = next ? assetUrl(next) : '';
+  if (music.src === url) {
+    if (url && music.paused) music.play().then(() => rememberDiscovery('music', id)).catch(() => {});
+    return;
+  }
+  music.pause();
+  music.src = url;
+  if (url) music.play().then(() => rememberDiscovery('music', id)).catch(() => {});
+}
+const audioKey = () => `vrm-audio-${project.id || project.name}`;
+function applyAudioSettings() {
+  music.volume = audioSettings.master * audioSettings.music * musicFadeFactor;
+  voice.volume = audioSettings.master * audioSettings.voice;
+  galleryMusic.volume = audioSettings.master * audioSettings.music;
+  for (const sound of activeEffects) sound.volume = audioSettings.master * audioSettings.effects;
+  stage?.weather?.setVolume(audioSettings.master, audioSettings.effects);
+}
+function loadAudioSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(audioKey()) || 'null');
+    if (saved) for (const key of ['master', 'music', 'voice', 'effects'])
+      if (Number.isFinite(Number(saved[key]))) audioSettings[key] = Math.max(0, Math.min(1, Number(saved[key])));
+  } catch { /* Use the default volumes if old settings are invalid. */ }
+  const savedSpeed = Number(localStorage.getItem(`vrm-text-speed-${project.id || project.name}`));
+  textSpeed = Number.isFinite(savedSpeed) && savedSpeed >= 5 && savedSpeed <= 100 ? savedSpeed : 35;
+  applyAudioSettings();
+}
+function clearAutoAdvance() {
+  clearTimeout(autoTimer);
+  autoTimer = null;
+  voice.onended = null;
+  voice.onerror = null;
+}
+function scheduleAutoAdvance(current) {
+  clearAutoAdvance();
+  if (events.active() || isEvent(project.acts[playAct]) || !autoPlay || !playing || !current || current.choices?.length || saveModalMode || typingTimer) return;
+  const wait = Math.max(1800, Math.min(7000, 1100 + (current.text?.length || 0) * 95));
+  const advance = () => { autoTimer = setTimeout(() => next(), wait); };
+  if (current.voiceId && !voice.paused && !voice.ended) {
+    voice.onended = advance;
+    voice.onerror = advance;
+  } else advance();
+}
+function updateAutoButton() {
+  const button = document.querySelector('#auto-play-button');
+  if (!button) return;
+  button.textContent = autoPlay ? 'è‡ªåŠ¨æ’­æ”¾ä¸­' : 'è‡ªåŠ¨æ’­æ”¾';
+  button.title = autoPlay ? 'å…³é—­è‡ªåŠ¨æ’­æ”¾' : 'å¼€å¯è‡ªåŠ¨æ’­æ”¾';
+  button.classList.toggle('active', autoPlay);
+  button.setAttribute('aria-pressed', String(autoPlay));
+}
+async function showPlayStep() {
+  const request = ++playRequest;
+  clearAutoAdvance();
+  clearTyping();
+  const currentAct = project.acts[playAct];
+  const current = currentAct?.steps[playStep];
+  if (!current) { stopPlay(); toast('æ•…äº‹æ’­æ”¾å®Œæ¯•'); return; }
+  if (isEvent(currentAct)) { preparedAct = -1; transitioning = false; const remaining = restoredEventRemaining; restoredEventRemaining = undefined; await events.show(currentAct, false, remaining); return; }
+  const leavingEvent = events.active() || eventMusicActive;
+  events.cancel();
+  transitioning = true;
+  let displayed = false;
+  const loading = document.querySelector('#act-loading');
+  try {
+    if (preparedAct !== playAct) {
+      loading?.classList.remove('hidden');
+      const castIds = new Set(Object.values(currentAct.cast || {}));
+      const entries = currentAct.steps.filter(entry => castIds.has(entry.characterId)).map(entry => ({ actorKey: entry.characterId,
+        modelAsset: modelForStep(entry), motionAsset: asset(entry.motionId) }));
+      for (const castEntry of castForAct(currentAct, current))
+        entries.push({ actorKey: castEntry.actorKey, modelAsset: castEntry.modelAsset, motionAsset: castEntry.motionAsset });
+      await stage.prepareAct(entries);
+      if (request !== playRequest || !playing) return;
+      preparedAct = playAct;
+    }
+    const modelAsset = modelForStep(current);
+    const caption = document.querySelector('#stage-caption');
+    if (caption) caption.textContent = currentAct.name;
+    const placeholder = document.querySelector('#stage-placeholder');
+    setStagePlaceholder(placeholder, 'æ­¤å¥æ²¡æœ‰ VRM è§’è‰²', Boolean(modelAsset));
+    placeholder.style.display = 'grid';
+    stageError = '';
+    document.querySelector('.stage-frame')?.classList.remove('title-mode');
+    document.querySelector('#title-preview')?.classList.add('hidden');
+    stage.setCameraAngle(0);
+    setSceneWeather(currentAct);
+    stage.setRenderSettings(chapterRender(currentAct, project.render));
+    applySceneColor(chapterRender(currentAct, project.render));
+    stage.setBackgroundLighting(asset(currentAct.backgroundId));
+    await displayActStep(currentAct, current);
+    if (request !== playRequest || !playing) return;
+    if (mode === 'player') for (const id of stage.visibleRecords.keys())
+      if (character(id)) rememberDiscovery('character', id);
+    if (mode === 'player' && character(current.characterId)) rememberDiscovery('character', current.characterId);
+    showBackground(asset(currentAct.backgroundId));
+    await ensureCharacterPortrait(character(current.characterId));
+    if (request !== playRequest || !playing) return;
+    showDialogue(current.speaker || character(current.characterId)?.name || 'æ—ç™½', current.text, true, current.characterId);
+    recordViewedDialogue(current);
+    if (leavingEvent) transitionMusic(currentAct.bgmId); else setMusic(currentAct.bgmId);
+    eventMusicActive = false;
+    if (current.seId) playEffect(current.seId);
+    voice.pause();
+    const voiceAsset = asset(current.voiceId);
+    if (voiceAsset) {
+      voice.src = assetUrl(voiceAsset);
+      voice.play().catch(() => {
+        if (request === playRequest && autoPlay) scheduleAutoAdvance(current);
+      });
+    }
+    const choiceList = document.querySelector('#choice-list');
+    choiceList.innerHTML = current.choices.map((choice,index) =>
+      `<button data-action="choose" data-index="${index}">${escape(choice.text || 'ç»§ç»­')}</button>`).join('');
     if (stage.visibleRecords.size || !stageError)
       placeholder.style.display = 'none';
     else if (modelAsset && stageError)
@@ -224,45 +1773,385 @@ function startPlay() {
 function stopPlay() {
   events.cancel(); restoredEventRemaining = undefined; musicFadeToken++;
   playing = false;
-  clearInterval(playerAutoSaveTimYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Õ•È¤ì4(€Á±…å•ÉÕÑ½M…Ù•Q¥µ•È€ô¹Õ±°ì4(€…ÕÑ½A±…ä€ô™…±Í”ì4(€±•…ÉÕÑ½‘Ù…¹” ¤ì4(€±•…ÉQåÁ¥¹œ ¤ì4(€Á±…åI•ÅÕ•ÍĞ¬¬ì4(€ÑÉ…¹Í¥Ñ¥½¹¥¹œ€ô™…±Í”ì4(€ÁÉ•Á…É•‘Ğ€ô€´Äì4(€±½Í•A±…å•É5½‘…° ¤ì4(€µÕÍ¥Œ¹Á…ÕÍ” ¤ìÙ½¥”¹Á…ÕÍ” ¤ì4(€ÍÑ…”ü¹±•…È ¤ì4(€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ¹•‘¥Ñ½Èœ¤ü¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ¥ÌµÁ±…å¥¹œœ¤ì4(€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÁ±…äµ½¹ÑÉ½±Ìœ¤ü¹±…ÍÍ1¥ÍĞ¹…‘ ¡¥‘‘•¸œ¤ì4(€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ…ÕÑ¼µÁ±…äµ‰ÕÑÑ½¸œ¤ü¹±…ÍÍ1¥ÍĞ¹…‘ ¡¥‘‘•¸œ¤ì4(€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ¡½¥”µ±¥ÍĞœ¤¹¥¹¹•É!Q50€ô€œœì4(€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ…Ğµ±½…‘¥¹œœ¤ü¹±…ÍÍ1¥ÍĞ¹…‘ ¡¥‘‘•¸œ¤ì4(€¥˜€¡µ½‘”€ôôô€Á±…å•Èœ¤ì4(€€€Í¡½İ¥…±½Õ” œœ°€œœ°™…±Í”¤ì4(€€€Í¡½İQ¥Ñ±•M•¹”¡ÑÉÕ”¤ì4(€ô4(€•±Í”ÕÁ‘…Ñ•AÉ•Ù¥•Ü ¤ì4)ô4)™Õ¹Ñ¥½¸¹•áĞ ¤ì4(€¥˜€ …Á±…å¥¹œñğÑÉ…¹Í¥Ñ¥½¹¥¹œñğÍ…Ù•5½‘…±5½‘”¤É•ÑÕÉ¸ì4(€¥˜€¡¥ÍÙ•¹Ğ¡ÁÉ½©•Ğ¹…ÑÍmÁ±…åÑt¤¤ì•Ù•¹ÑÌ¹½¹™¥É´ ¤ìÉ•ÑÕÉ¸ìô4(€¥˜€¡™¥¹¥Í¡QåÁ¥¹œ ¤¤É•ÑÕÉ¸ì4(€±•…ÉÕÑ½‘Ù…¹” ¤ì4(€½¹ÍĞÕÉÉ•¹ÑĞ€ôÁÉ½©•Ğ¹…ÑÍmÁ±…åÑtì4(€¥˜€¡ÕÉÉ•¹ÑĞ¹ÍÑ•ÁÍmÁ±…åMÑ•Átü¹¡½¥•Ì¹±•¹Ñ ¤É•ÑÕÉ¸ì4(€Á±…åMÑ•À¬¬ì4(€¥˜€¡Á±…åMÑ•À€øôÕÉÉ•¹ÑĞ¹ÍÑ•ÁÌ¹±•¹Ñ ¤ìÁ±…åĞ¬¬ìÁ±…åMÑ•À€ô€Àìô4(€Í¡½İA±…åMÑ•À ¤ì4)ô4)½¹ÍĞÍ…Ù•-•ä€ô€ ¤€ôøÙÉ´µÍ…Ù”µÍ±½ÑÌ´‘íÁÉ½©•Ğ¹¥ñğÁÉ½©•Ğ¹¹…µ•õ€ì4)½¹ÍĞ±•…åM±½Ñ-•ä€ô€ ¤€ôø€‘íÍ…Ù•-•ä ¥ôµ±•…äµÍ±½Ğ´Å€ì4)™Õ¹Ñ¥½¸É•…‘1•…å¥ÉÍÑM±½Ğ ¤ì4(€ÑÉäìÉ•ÑÕÉ¸)M=8¹Á…ÉÍ”¡±½…±MÑ½É…”¹•Ñ%Ñ•´¡±•…åM±½Ñ-•ä ¤¤ñğ€¹Õ±°œ¤ìô4(€…Ñ ìÉ•ÑÕÉ¸¹Õ±°ìô4)ô4)½¹ÍĞ±¥™•Ñ¥µ•-•ä€ô€ ¤€ôøÙÉ´µ±¥™•Ñ¥µ”µÁÉ½É•ÍÌ´‘íÁÉ½©•Ğ¹¥ñğÁÉ½©•Ğ¹¹…µ•õ€ì4)™Õ¹Ñ¥½¸±½…‘1¥™•Ñ¥µ•AÉ½É•ÍÌ §}4ÖÚ$z{-®éÜj×7Bæ7G5·Æ”7EÓòç7FW5·Æ•7FWÒ’6fTWFõ6Æ÷B‚“°Ğ¢ÒÂR¢có“°Ğ§ĞĞ¦gVæ7F–öâ6æ6†÷E6Æ÷B†WFòÒfÇ6R’°Ğ¢6öç7B7W'&VçD7BÒ&ö¦V7Bæ7G5·Æ”7EÓ°Ğ¢6öç7B7W'&VçE7FWÒ7W'&VçD7Còç7FW5·Æ•7FWÓ°Ğ¢–b‚7W'&VçE7FW’&WGW&âçVÆÃ°Ğ¢&WGW&â°Ğ¢WFòÂ7C¢Æ”7BÂ7FW¢Æ•7FWÂ7D–C¢7W'&VçD7Bæ–BÂ7FW–C¢7W'&VçE7FWæ–BÀĞ¢7DæÖS¢7W'&VçD7BææÖRÂFW‡C¢—4WfVçB†7W'&VçD7B’ò7W'&VçD7BæWfVçBçF—FÆR¢7W'&VçE7FWçFW‡BÀĞ¢WfVçE&VÖ–æ–æs¢—4WfVçB†7W'&VçD7B’òWfVçG2ç&VÖ–æ–ær‚’¢VæFVf–æVBÀĞ¢7V¶W#¢7W'&VçE7FWç7V¶W"ÇÂ6†&7FW"†7W'&VçE7FWæ6†&7FW$–B“òææÖRÇÂ~ixy›ÒrÀĞ¢&6¶w&÷VæD–C¢—4WfVçB†7W'&VçD7B’òWfVçD&6¶G&÷†7W'&VçD7B’æ&6¶w&÷VæD–B¢7W'&VçD7Bæ&6¶w&÷VæD–BÂ6fVDC¢æWrFFR‚’çFô•4õ7G&–ær‚’ÀĞ¢&öw&W75&æ³¢7F÷'•&æ²‡Æ”7BÂÆ•7FW’ÀĞ¢6†&7FW$Æ–æT6÷VçG3¢²ââçÆ”6†&7FW$Æ–æT6÷VçG2ÒÀĞ¢f–WvVDF–ÆöwVT–G3¢²ââçÆ•f–WvVE7FW–G5ĞĞ¢Ó°Ğ§ĞĞ¦gVæ7F–öâ6fTWFõ6Æ÷B‚’°Ğ¢6öç7B6æ6†÷BÒ6æ6†÷E6Æ÷B‡G'VR“°Ğ¢–b‚6æ6†÷B’&WGW&ã°Ğ¢6öç7B6Æ÷G2Ò&VE6fU6Æ÷G2‚“°Ğ¢6Æ÷G5³ÒÒ6æ6†÷C°Ğ¢Æö6Å7F÷&vRç6WD—FVÒ‡6fT¶W’‚’Â¥4ôâç7G&–æv–g’‡6Æ÷G2’“°Ğ¢–b‡6fTÖöFÄÖöFRÓÓÒvÆöBr’&VæFW%6fTÖöFÂ‚vÆöBr“°Ğ§ĞĞ¦gVæ7F–öâ6fU6Æ÷B†–æFW‚’°Ğ¢–b‚Æ––ærÇÂçVÖ&W"æ—4–çFVvW"†–æFW‚’ÇÂ–æFW‚ÂÇÂ–æFW‚ãÒ#’&WGW&ã°Ğ¢6öç7B6Æ÷G2Ò&VE6fU6Æ÷G2‚“°Ğ¢–b‡6Æ÷G5¶–æFW…Òbb6öæf—&Ò†Šhny¹nzÊÂG¶–æFW‚²ÒKŠ®ZÙj>Y	~ûÉö’’&WGW&ã°Ğ¢6Æ÷G5¶–æFW…ÒÒ6æ6†÷E6Æ÷B‚“°Ğ¢–b‚6Æ÷G5¶–æFW…Ò’²Fö7B‚~‹ùXú^Zûy›Şizk9^KùŞUš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍkf	ËYJNÈ™]\›ÈCBˆØØ[İÜ˜YÙKœÙ]][JØ]™RÙ^J
-K”ÓÓ‹œİš[™ÚYJÛİÊJNÃBˆ™[™\”Ø]™S[Ù[
-	ÜØ]™IÊNÃBˆØ\İ
-9mì¹/çykf9b,9ë+	Ú[™^
-È_H9.*¹kf9¨hØ
-NÃBŸCB™[˜İ[ÛˆØYÛİ
-[™^
-HÃBˆÛÛœİÛİH[™^OOHLHÈ™XYYØXŞQš\œİÛİ
-
-Hˆ™XYØ]™TÛİÊ
-VÚ[™^NÃBˆYˆ
-\Ûİ
-H™]\›ÃBˆÛÛœİÈXİ[™^ˆ\™Ù]Xİİ\[™^ˆ\™Ù]İ\HHÛİØØ][ÛŠÛİ
-NÃBˆYˆ
-\›Ú™Xİ˜XİÖİ\™Ù]XİOËœİ\Öİ\™Ù]İ\JHÈØ\İ
-	ú/æy.*¹kf9¨hùkîyn¥9æ¡9biù áymì¹.#ykf9g*	ËYJNÈ™]\›ÈCBˆYˆ
-^Z[™È	‰ˆXÛÛ™š\›J:+îùcå‰Ú[™^OOHLHÈ	ù¥éùâb9i!ù.ïIÈˆ9ë+	Ú[™^
-È_H9.*¹kf9¨hØ{ï'ùodùbcz/æùn©º"éy§*¹/çykf9/&¹.(¹i,xà ˜
-JH™]\›ÃBˆÛÛœİ›ÙÜ™\ÜÈHÛİX[ÙİYT›ÙÜ™\ÜÊÛİ
-NÃBˆ^UšY]ÙYİ\YÈH™]ÈÙ]
-›ÙÜ™\ÜËœÙY[ŠNÃBˆ^PÚ\˜Xİ\“[™PÛİ[ÈHÈ‹‹œ›ÙÜ™\ÜË˜Ûİ[ÈNÃBˆ™\İÜ™Y]™[™[XZ[š[™ÈH\Ñ]™[
-›Ú™Xİ˜XİÖİ\™Ù]XİJH	‰ˆ[X™\‹š\Ñš[š]JÛİ™]™[™[XZ[š[™ÊHÈÛİ™]™[™[XZ[š[™Èˆ[™Yš[™YÃBˆ^PXİH\™Ù]XİÈ^Tİ\H\™Ù]İ\È^Z[™ÈHYNÈ™\\™YXİHLNÃBˆ™\İ\^Y\]]ÔØ]™J
-NÃBˆÛÜÙT^Y\“[Ù[
-
-NÃBˆÚİÔ^Tİ\
-
-NÃBŸCB™[˜İ[Ûˆ™[™\”Ø]™S[Ù[
-šY]ÊHÃBˆYˆ
-šY]ÈOOH	ÜØ]™IÈ	‰ˆ\^Z[™ÊHÈØ\İ
-	ú+íùab9o 9iâù®.9¢#ÉÊNÈ™]\›ÈCBˆÛX\]]ĞY˜[˜ÙJ
-NÃBˆØ]™S[Ù[[ÙHHšY]ÎÃBˆÛÛœİÛİÈH™XYØ]™TÛİÊ
-NÃBˆÛÛœİØ\™ÈHÛİË›X\
-
-Ûİ[™^
-HOˆÃBˆÛÛœİ˜XÚÙÜ›İ[™HÛİ	‰ˆ\ÜÙ]
-Ûİ˜˜XÚÙÜ›İ[™Y
-NÃBˆÛÛœİ™]šY]ÈH˜XÚÙÜ›İ[™	‰ˆ˜XÚÙÜ›İ[™\HOOH	Ú[XYÙIÃBˆÈİ[OH˜˜XÚÙÜ›İ[™Z[XYÙN\›
-	ÉÙ\ØØ\J\ÜÙ]\›
-˜XÚÙ÷ÓMm¢G§²ÚîÆ­yÚfunction galleryImageMarkup() {
+  clearInterval(playerAutoSaveTimer);
+  playerAutoSaveTimer = null;
+  autoPlay = false;
+  clearAutoAdvance();
+  clearTyping();
+  playRequest++;
+  transitioning = false;
+  preparedAct = -1;
+  closePlayerModal();
+  music.pause(); voice.pause();
+  stage?.clear();
+  document.querySelector('.editor')?.classList.remove('is-playing');
+  document.querySelector('#play-controls')?.classList.add('hidden');
+  document.querySelector('#auto-play-button')?.classList.add('hidden');
+  document.querySelector('#choice-list').innerHTML = '';
+  document.querySelector('#act-loading')?.classList.add('hidden');
+  if (mode === 'player') {
+    showDialogue('', '', false);
+    showTitleScene(true);
+  }
+  else updatePreview();
+}
+function next() {
+  if (!playing || transitioning || saveModalMode) return;
+  if (isEvent(project.acts[playAct])) { events.confirm(); return; }
+  if (finishTyping()) return;
+  clearAutoAdvance();
+  const currentAct = project.acts[playAct];
+  if (currentAct.steps[playStep]?.choices.length) return;
+  playStep++;
+  if (playStep >= currentAct.steps.length) { playAct++; playStep = 0; }
+  showPlayStep();
+}
+const saveKey = () => `vrm-save-slots-${project.id || project.name}`;
+const legacySlotKey = () => `${saveKey()}-legacy-slot-1`;
+function readLegacyFirstSlot() {
+  try { return JSON.parse(localStorage.getItem(legacySlotKey()) || 'null'); }
+  catch { return null; }
+}
+const lifetimeKey = () => `vrm-lifetime-progress-${project.id || project.name}`;
+function loadLifetimeProgress() {
+  if (lifetimeProgress) return lifetimeProgress;
+  const fresh = { version: 2, viewedDialogueIds: [], viewedDialogueText: {}, characterLineCounts: {},
+    seenCharacterIds: [], seenImageIds: [], heardMusicIds: [], enteredActIds: [], completedEventIds: [], lastActId: '' };
+  try {
+    const stored = JSON.parse(localStorage.getItem(lifetimeKey()) || 'null');
+    if (stored && typeof stored === 'object') {
+      for (const key of ['viewedDialogueIds', 'seenCharacterIds', 'seenImageIds', 'heardMusicIds', 'enteredActIds', 'completedEventIds'])
+        if (Array.isArray(stored[key])) fresh[key] = [...new Set(stored[key].filter(id => typeof id === 'string'))];
+      if (stored.characterLineCounts && typeof stored.characterLineCounts === 'object')
+        for (const [id, count] of Object.entries(stored.characterLineCounts))
+          fresh.characterLineCounts[id] = Math.max(0, Number(count) || 0);
+      if (stored.viewedDialogueText && typeof stored.viewedDialogueText === 'object')
+        for (const [id, value] of Object.entries(stored.viewedDialogueText))
+          if (typeof value === 'string') fresh.viewedDialogueText[id] = value;
+      if (typeof stored.lastActId === 'string') fresh.lastActId = stored.lastActId;
+    } else {
+      // æ—§ç‰ˆæ²¡æœ‰ç‹¬ç«‹çš„é‰´èµè®°å½•ï¼šå°½é‡ä»å·²æœ‰å­˜æ¡£è¡¥å›å·²è¯»å¯¹ç™½å’Œåœºæ™¯ã€‚
+      for (const slot of [...readSaveSlots().filter(Boolean), readLegacyFirstSlot()].filter(Boolean)) {
+        const old = slotDialogueProgress(slot);
+        for (const id of old.seen) if (!fresh.viewedDialogueIds.includes(id)) fresh.viewedDialogueIds.push(id);
+        for (const [id, count] of Object.entries(old.counts))
+          fresh.characterLineCounts[id] = Math.max(fresh.characterLineCounts[id] || 0, Number(count) || 0);
+        if (slot.backgroundId && !fresh.seenImageIds.includes(slot.backgroundId)) fresh.seenImageIds.push(slot.backgroundId);
+      }
+      const seen = new Set(fresh.viewedDialogueIds);
+      for (const act of project.acts) for (const line of act.steps)
+        if (seen.has(line.id) && line.characterId && !fresh.seenCharacterIds.includes(line.characterId))
+          fresh.seenCharacterIds.push(line.characterId);
+    }
+    // v0.7.2 åªè®°å¯¹ç™½ç¼–å·ï¼›é¦–æ¬¡å‡çº§æ—¶æŒ‰å½“å‰å·¥ç¨‹è¡¥è®°æ–‡æœ¬ï¼Œåç»­ä¿®æ”¹æ–‡æœ¬åˆ™éœ€è¦é‡æ–°é˜…è¯»ã€‚
+    const seen = new Set(fresh.viewedDialogueIds);
+    for (const act of project.acts) for (const line of act.steps)
+      if (line.id && seen.has(line.id) && fresh.viewedDialogueText[line.id] === undefined) {
+        fresh.viewedDialogueText[line.id] = String(line.text || '');
+        fresh.lastActId = act.id;
+      }
+  } catch { /* æŸåçš„è®°å½•ä»ç©ºç™½é‡å»ºï¼Œä¸å½±å“æ™®é€šå­˜æ¡£ã€‚ */ }
+  lifetimeProgress = fresh;
+  localStorage.setItem(lifetimeKey(), JSON.stringify(fresh));
+  return fresh;
+}
+function rememberDiscovery(type, id) {
+  if (mode !== 'player' || !id) return;
+  const progress = loadLifetimeProgress();
+  const key = { character: 'seenCharacterIds', image: 'seenImageIds', music: 'heardMusicIds' }[type];
+  if (!key || progress[key].includes(id)) return;
+  progress[key].push(id);
+  localStorage.setItem(lifetimeKey(), JSON.stringify(progress));
+}
+const hasDiscovered = (type, id) => mode !== 'player' || Boolean(id && loadLifetimeProgress()[
+  { character: 'seenCharacterIds', image: 'seenImageIds', music: 'heardMusicIds' }[type]]?.includes(id));
+const maskSecret = value => Array.from(String(value || '')).map(char => /\s/u.test(char) ? char : 'X').join('');
+const hiddenName = value => { const chars = Array.from(String(value || '')); return chars.length ? `${chars[0]}${'X'.repeat(chars.length - 1)}` : 'X'; };
+function storyRank(actIndex, stepIndex) {
+  if (actIndex < 0 || stepIndex < 0) return -1;
+  return project.acts.slice(0, actIndex).reduce((total, item) => total + item.steps.length, 0) + stepIndex + 1;
+}
+function slotLocation(slot) {
+  const actIndex = slot.actId ? project.acts.findIndex(item => item.id === slot.actId) : Number(slot.act);
+  const stepIndex = slot.stepId ? project.acts[actIndex]?.steps.findIndex(item => item.id === slot.stepId) : Number(slot.step);
+  return { actIndex, stepIndex };
+}
+function legacyDialogueProgress(slot) {
+  const { actIndex, stepIndex } = slotLocation(slot);
+  const seen = [];
+  const counts = {};
+  if (!Number.isInteger(actIndex) || !Number.isInteger(stepIndex) || actIndex < 0 || stepIndex < 0) return { seen, counts };
+  for (let a = 0; a <= actIndex; a++) {
+    if (isEvent(project.acts[a])) continue;
+    for (const entry of project.acts[a]?.steps.slice(0, a === actIndex ? stepIndex + 1 : undefined) || []) {
+      if (entry.id) seen.push(entry.id);
+      if (entry.characterId) counts[entry.characterId] = (counts[entry.characterId] || 0) + 1;
+    }
+  }
+  return { seen, counts };
+}
+function slotDialogueProgress(slot) {
+  if (Array.isArray(slot.viewedDialogueIds) && slot.characterLineCounts && typeof slot.characterLineCounts === 'object') {
+    return { seen: slot.viewedDialogueIds, counts: slot.characterLineCounts };
+  }
+  return legacyDialogueProgress(slot);
+}
+function recordViewedDialogue(entry) {
+  const id = entry.id || `${playAct}:${playStep}`;
+  if (!playViewedStepIds.has(id)) {
+    playViewedStepIds.add(id);
+    if (entry.characterId) playCharacterLineCounts[entry.characterId] = (playCharacterLineCounts[entry.characterId] || 0) + 1;
+  }
+  if (mode !== 'player') return;
+  const progress = loadLifetimeProgress();
+  let changed = false;
+  const actId = project.acts[playAct]?.id;
+  if (actId && !progress.enteredActIds.includes(actId)) { progress.enteredActIds.push(actId); changed = true; }
+  if (!progress.viewedDialogueIds.includes(id)) {
+    progress.viewedDialogueIds.push(id);
+    if (entry.characterId) progress.characterLineCounts[entry.characterId] =
+      (progress.characterLineCounts[entry.characterId] || 0) + 1;
+    changed = true;
+  }
+  if (progress.viewedDialogueText[id] !== String(entry.text || '')) {
+    progress.viewedDialogueText[id] = String(entry.text || '');
+    changed = true;
+  }
+  const currentActId = project.acts[playAct]?.id || '';
+  if (currentActId && progress.lastActId !== currentActId) { progress.lastActId = currentActId; changed = true; }
+  if (changed) localStorage.setItem(lifetimeKey(), JSON.stringify(progress));
+  rememberDiscovery('character', entry.characterId);
+}
+function deepestSave() {
+  return readSaveSlots().filter(Boolean).sort((a, b) => {
+    const first = slotLocation(a), second = slotLocation(b);
+    const rankA = storyRank(first.actIndex, first.stepIndex);
+    const rankB = storyRank(second.actIndex, second.stepIndex);
+    return rankB - rankA || (Date.parse(b.savedAt || '') || 0) - (Date.parse(a.savedAt || '') || 0);
+  })[0] || null;
+}
+function readSaveSlots() {
+  const slots = Array(20).fill(null);
+  try {
+    const stored = JSON.parse(localStorage.getItem(saveKey()) || 'null');
+    if (Array.isArray(stored)) {
+      stored.slice(0, 20).forEach((item, index) => { slots[index] = item || null; });
+      if (slots[0] && !slots[0].auto) {
+        const free = slots.findIndex((item, index) => index > 0 && !item);
+        if (free > 0) slots[free] = slots[0];
+        else localStorage.setItem(legacySlotKey(), JSON.stringify(slots[0]));
+        slots[0] = null;
+        localStorage.setItem(saveKey(), JSON.stringify(slots));
+      }
+      return slots;
+    }
+    // Preserve progress created by the earlier one-slot version.
+    const old = JSON.parse(localStorage.getItem(`vrm-save-${project.id || project.name}`) || 'null');
+    if (old && Number.isInteger(old.act) && Number.isInteger(old.step)) {
+      const oldAct = project.acts[old.act];
+      const oldStep = oldAct?.steps[old.step];
+      if (oldStep) slots[1] = {
+        act: old.act, step: old.step, actId: oldAct.id, stepId: oldStep.id,
+        actName: oldAct.name, text: oldStep.text, speaker: oldStep.speaker || character(oldStep.characterId)?.name || 'æ—ç™½',
+        backgroundId: oldAct.backgroundId, savedAt: null
+      };
+      localStorage.setItem(saveKey(), JSON.stringify(slots));
+    }
+  } catch { /* Ignore broken old save data; the slots remain usable. */ }
+  return slots;
+}
+function closePlayerModal() {
+  if (saveModalMode === 'gallery') {
+    stopGalleryMusic();
+    galleryStage?.destroy();
+    galleryStage = null;
+  }
+  saveModalMode = '';
+  const modal = document.querySelector('#player-modal');
+  if (modal) {
+    modal.classList.add('closing');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.inert = true;
+    setTimeout(() => modal.remove(), 180);
+  }
+  if (playing && autoPlay) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+}
+function restartPlayerAutoSave() {
+  clearInterval(playerAutoSaveTimer);
+  if (mode !== 'player') return;
+  playerAutoSaveTimer = setInterval(() => {
+    if (playing && !transitioning && project.acts[playAct]?.steps[playStep]) saveAutoSlot();
+  }, 5 * 60_000);
+}
+function snapshotSlot(auto = false) {
+  const currentAct = project.acts[playAct];
+  const currentStep = currentAct?.steps[playStep];
+  if (!currentStep) return null;
+  return {
+    auto, act: playAct, step: playStep, actId: currentAct.id, stepId: currentStep.id,
+    actName: currentAct.name, text: isEvent(currentAct) ? currentAct.event.title : currentStep.text,
+    eventRemaining: isEvent(currentAct) ? events.remaining() : undefined,
+    speaker: currentStep.speaker || character(currentStep.characterId)?.name || 'æ—ç™½',
+    backgroundId: isEvent(currentAct) ? eventBackdrop(currentAct).backgroundId : currentAct.backgroundId, savedAt: new Date().toISOString(),
+    progressRank: storyRank(playAct, playStep),
+    characterLineCounts: { ...playCharacterLineCounts },
+    viewedDialogueIds: [...playViewedStepIds]
+  };
+}
+function saveAutoSlot() {
+  const snapshot = snapshotSlot(true);
+  if (!snapshot) return;
+  const slots = readSaveSlots();
+  slots[0] = snapshot;
+  localStorage.setItem(saveKey(), JSON.stringify(slots));
+  if (saveModalMode === 'load') renderSaveModal('load');
+}
+function saveSlot(index) {
+  if (!playing || !Number.isInteger(index) || index < 1 || index >= 20) return;
+  const slots = readSaveSlots();
+  if (slots[index] && !confirm(`è¦†ç›–ç¬¬ ${index + 1} ä¸ªå­˜æ¡£å—ï¼Ÿ`)) return;
+  slots[index] = snapshotSlot();
+  if (!slots[index]) { toast('è¿™å¥å¯¹ç™½æ— æ³•ä¿å­˜', true); return; }
+  localStorage.setItem(saveKey(), JSON.stringify(slots));
+  renderSaveModal('save');
+  toast(`å·²ä¿å­˜åˆ°ç¬¬ ${index + 1} ä¸ªå­˜æ¡£`);
+}
+function loadSlot(index) {
+  const slot = index === -1 ? readLegacyFirstSlot() : readSaveSlots()[index];
+  if (!slot) return;
+  const { actIndex: targetAct, stepIndex: targetStep } = slotLocation(slot);
+  if (!project.acts[targetAct]?.steps[targetStep]) { toast('è¿™ä¸ªå­˜æ¡£å¯¹åº”çš„å‰§æƒ…å·²ä¸å­˜åœ¨', true); return; }
+  if (playing && !confirm(`è¯»å–${index === -1 ? 'æ—§ç‰ˆå¤‡ä»½' : `ç¬¬ ${index + 1} ä¸ªå­˜æ¡£`}ï¼Ÿå½“å‰è¿›åº¦è‹¥æœªä¿å­˜ä¼šä¸¢å¤±ã€‚`)) return;
+  const progress = slotDialogueProgress(slot);
+  playViewedStepIds = new Set(progress.seen);
+  playCharacterLineCounts = { ...progress.counts };
+  restoredEventRemaining = isEvent(project.acts[targetAct]) && Number.isFinite(slot.eventRemaining) ? slot.eventRemaining : undefined;
+  playAct = targetAct; playStep = targetStep; playing = true; preparedAct = -1;
+  restartPlayerAutoSave();
+  closePlayerModal();
+  showPlayStep();
+}
+function renderSaveModal(view) {
+  if (view === 'save' && !playing) { toast('è¯·å…ˆå¼€å§‹æ¸¸æˆ'); return; }
+  clearAutoAdvance();
+  saveModalMode = view;
+  const slots = readSaveSlots();
+  const cards = slots.map((slot, index) => {
+    const background = slot && asset(slot.backgroundId);
+    const preview = background && background.type === 'image'
+      ? ` style="background-image:url('${escape(assetUrl(background))}')"` : '';
+    const time = slot?.savedAt ? new Date(slot.savedAt).toLocaleString('zh-CN', { hour12: false }) : 'æ—§ç‰ˆå­˜æ¡£';
+    return `<button type="button" class="save-slot ${slot ? 'filled' : 'vacant'} ${index === 0 ? 'auto-save-slot' : ''}" data-action="${view}-slot" data-index="${index}" ${(view === 'load' && !slot) || (view === 'save' && index === 0) ? 'disabled' : ''}>
+      <span class="save-thumb"${preview}><b>${String(index + 1).padStart(2, '0')}</b></span>
+      <span class="save-details"><strong>${index === 0 ? 'è‡ªåŠ¨å­˜æ¡£' : `å­˜æ¡£ ${String(index + 1).padStart(2, '0')}`} Â· ${slot ? escape(slot.actName || 'å‰§æƒ…') : 'ç©ºæ¡£ä½'}</strong>
+        <small>${index === 0 && view === 'save' ? 'æ¯ 5 åˆ†é’Ÿè‡ªåŠ¨ä¿å­˜ï¼Œä¸å¯æ‰‹åŠ¨è¦†ç›–' : slot ? escape(time) : view === 'save' ? 'ç‚¹å‡»è¿™é‡Œä¿å­˜' : 'å°šæœªä¿å­˜'}</small>
+        <span>${slot ? escape(`${slot.speaker || 'æ—ç™½'}ï¼š${slot.text || ''}`) : ''}</span>
+      </span>
+    </button>`;
+  }).join('');
+  document.querySelector('#player-modal')?.remove();
+  document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal" role="dialog" aria-modal="true" aria-label="${view === 'save' ? 'å­˜æ¡£' : 'è¯»æ¡£'}">
+    <div class="modal-box"><header><div><small>GAME MENU</small><h2>${view === 'save' ? 'ä¿å­˜æ¸¸æˆ' : 'è¯»å–å­˜æ¡£'}</h2></div>${button('å…³é—­ Ã—', 'close-modal')}</header>
+      <div class="modal-tabs">${button('å­˜æ¡£', 'save-game', `class="${view === 'save' ? 'active' : ''}" ${!playing ? 'disabled' : ''}`)}${button('è¯»æ¡£', 'load-game', `class="${view === 'load' ? 'active' : ''}"`)}</div>
+      <div class="save-grid">${cards}</div>${view === 'load' && readLegacyFirstSlot() ? button('è¯»å–æ—§ç‰ˆ 1 å·ä½å¤‡ä»½', 'load-legacy-slot', 'class="legacy-save-button"') : ''}<footer>1 å·ä½å›ºå®šä¸ºè‡ªåŠ¨å­˜æ¡£ï¼Œæ¯ 5 åˆ†é’Ÿä¿å­˜ä¸€æ¬¡ï¼›${view === 'save' ? 'è¯·åœ¨ 2â€“20 å·ä½æ‰‹åŠ¨å­˜æ¡£ã€‚' : 'ç‚¹å‡»å·²æœ‰å­˜æ¡£ç»§ç»­æ¸¸æˆã€‚'}</footer>
+    </div></section>`);
+}
+function renderSettingsModal() {
+  clearAutoAdvance();
+  saveModalMode = 'settings';
+  document.querySelector('#player-modal')?.remove();
+  const resolutions = availableResolutions.length ? availableResolutions : ['960x540', '1280x720'];
+  const volume = (key, label) => `<label class="volume-line"><span>${label}</span><input type="range" data-volume="${key}" min="0" max="100" value="${Math.round(audioSettings[key] * 100)}"><output data-volume-output="${key}">${Math.round(audioSettings[key] * 100)}%</output></label>`;
+  document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal" role="dialog" aria-modal="true" aria-label="æ¸¸æˆè®¾ç½®">
+    <div class="modal-box settings-box"><header><div><small>GAME MENU</small><h2>æ¸¸æˆè®¾ç½®</h2></div>${button('å…³é—­ Ã—', 'close-modal')}</header>
+      <div class="settings-body">
+      <h3>éŸ³é‡</h3>${volume('master', 'æ€»éŸ³é‡')}${volume('music', 'èƒŒæ™¯éŸ³ä¹')}${volume('voice', 'è§’è‰²è¯­éŸ³')}${volume('effects', 'æŒ‰é’®ä¸åœºæ™¯éŸ³æ•ˆ')}
+      <h3>å¯¹ç™½</h3><label class="volume-line"><span>æ–‡å­—å‡ºç°é€Ÿåº¦</span><input type="range" data-text-speed min="5" max="100" value="${textSpeed}"><output data-text-speed-output>${textSpeed} å­—/ç§’</output></label>
+      <h3>ç”»é¢</h3>
+      <label class="field"><span>çª—å£å¤§å°ï¼ˆå…¨éƒ¨ä¸º 16:9ï¼‰</span><select id="window-resolution" ${playerFullscreen ? 'disabled' : ''}>${resolutions.map(value => `<option value="${value}" ${value === playerResolution ? 'selected' : ''}>${value.replace('x', ' Ã— ')}</option>`).join('')}</select></label>
+      ${button('åº”ç”¨çª—å£å¤§å°', 'apply-resolution', playerFullscreen ? 'disabled' : '')}
+      <div class="settings-line"><span>å…¨å±æ˜¾ç¤º</span>${button(playerFullscreen ? 'é€€å‡ºå…¨å±' : 'è¿›å…¥å…¨å±', 'toggle-fullscreen')}</div>
+      <p>æ— è®ºçª—å£å¤§å°æˆ–æ˜¾ç¤ºå™¨æ¯”ä¾‹å¦‚ä½•ï¼Œæ¸¸æˆç”»é¢å§‹ç»ˆä¿æŒ 16:9ã€‚</p>
+      <p class="font-credit">ç•Œé¢ä½¿ç”¨ HarmonyOS Sans å­—ä½“ã€‚Â© 2021 Huawei Device Co., Ltd.</p>
+    </div></div></section>`);
+}
+const galleryTracks = () => byType('audio').filter(item => item.galleryMusic !== false);
+function nextUnlockedTrack(direction) {
+  const tracks = galleryTracks();
+  for (let offset = 1; offset <= tracks.length; offset++) {
+    const index = (galleryTrackIndex + direction * offset + tracks.length * 2) % tracks.length;
+    if (hasDiscovered('music', tracks[index].id)) return index;
+  }
+  return -1;
+}
+const gallerySongName = item => item?.galleryTitle?.trim() || item?.name?.replace(/\.[^.]+$/, '') || 'æœªå‘½åä¹æ›²';
+const musicTime = seconds => Number.isFinite(seconds) ? `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}` : '0:00';
+function stopGalleryMusic() {
+  const resumeBgm = galleryMusicInterruptedBgm;
+  galleryMusic.pause();
+  galleryMusic.removeAttribute('src');
+  galleryMusic.load();
+  galleryMusicInterruptedBgm = false;
+  if (resumeBgm && music.src) music.play().catch(() => {});
+}
+function updateGalleryMusicTime() {
+  const seek = document.querySelector('#gallery-music-seek');
+  const elapsed = document.querySelector('#gallery-music-elapsed');
+  const duration = document.querySelector('#gallery-music-duration');
+  if (seek) { seek.max = Number.isFinite(galleryMusic.duration) ? galleryMusic.duration : 0; seek.value = galleryMusic.currentTime || 0; }
+  if (elapsed) elapsed.textContent = musicTime(galleryMusic.currentTime);
+  if (duration) duration.textContent = musicTime(galleryMusic.duration);
+}
+function renderGalleryMusicState() {
+  const playButton = document.querySelector('[data-action="gallery-music-toggle"]');
+  if (playButton) playButton.textContent = galleryMusic.paused ? 'â–¶ æ’­æ”¾' : 'â…¡ æš‚åœ';
+  document.querySelectorAll('[data-action="gallery-track"]').forEach(node =>
+    node.classList.toggle('active', Number(node.dataset.index) === galleryTrackIndex));
+  document.querySelector('[data-action="gallery-repeat"]')?.classList.toggle('active', galleryRepeatOne);
+  updateGalleryMusicTime();
+}
+async function playGalleryTrack(index) {
+  const tracks = galleryTracks();
+  if (!tracks.length || index < 0 || !hasDiscovered('music', tracks[index]?.id)) return;
+  galleryTrackIndex = (index + tracks.length) % tracks.length;
+  if (!galleryMusicInterruptedBgm) galleryMusicInterruptedBgm = !music.paused;
+  music.pause();
+  galleryMusic.src = assetUrl(tracks[galleryTrackIndex]);
+  galleryMusic.currentTime = 0;
+  try { await galleryMusic.play(); }
+  catch { toast('è¿™é¦–éŸ³ä¹æ— æ³•æ’­æ”¾ï¼Œè¯·æ£€æŸ¥éŸ³é¢‘æ–‡ä»¶', true); }
+  if (saveModalMode === 'gallery' && galleryTab === 'music') renderGalleryModal();
+}
+function galleryCharacterData() {
+  const item = character(galleryCharacterId) || project.characters[0];
+  if (item) galleryCharacterId = item.id;
+  const counts = loadLifetimeProgress().characterLineCounts;
+  return { item, count: Math.max(0, Number(counts[item?.id]) || 0), hasSave: Boolean(readSaveSlots().some(Boolean)) };
+}
+function galleryStoryMarkup(item, count, storyIndex = galleryStoryIndex, editorPreview = false) {
+  if (!item) return '<p class="gallery-empty">è¿˜æ²¡æœ‰åˆ›å»ºè§’è‰²ã€‚</p>';
+  const story = item.stories?.[storyIndex - 1];
+  if (!editorPreview && !hasDiscovered('character', item.id)) {
+    const content = storyIndex && story?.text?.trim() ? story.text : `${item.title || ''}\n${item.description || ''}`;
+    return `<h3>${storyIndex ? `è§’è‰²æ•…äº‹ Â· ${storyIndex}` : 'è§’è‰²è¯¦æƒ…'}</h3>${storyIndex ? '' : `<strong class="gallery-detail-name">${escape(hiddenName(item.name))}</strong>`}<p class="gallery-character-text">${escape(maskSecret(content || 'æœªè§£é”'))}</p>`;
+  }
+  if (!storyIndex || !story?.text?.trim()) {
+    return `<h3>è§’è‰²è¯¦æƒ…</h3><strong class="gallery-detail-name">${escape(item.name)}</strong>${item.title?.trim() ? `<p class="gallery-character-title">${escape(item.title)}</p>` : ''}
+      ${item.description?.trim() ? `<p class="gallery-character-text">${escape(item.description)}</p>` : ''}`;
+  }
+  const required = Math.max(0, Number(story.unlockLines) || 0);
+  return `<h3>è§’è‰²æ•…äº‹ Â· ${storyIndex}</h3>${count >= required
+    ? `<p class="gallery-character-text">${escape(story.text)}</p>`
+    : `<div class="gallery-story-locked"><strong>æ•…äº‹å°šæœªè§£é”</strong><span>é˜…è¯»è¿™ä¸ªè§’è‰²çš„ ${required} å¥å¯¹ç™½åè§£é”</span><small>ç´¯è®¡é˜…è¯»ï¼š${count} / ${required} å¥</small></div>`}`;
+}
+function renderGalleryCharacterText() {
+  const { item, count } = galleryCharacterData();
+  const content = document.querySelector('#gallery-character-text');
+  if (content) content.innerHTML = galleryStoryMarkup(item, count);
+  document.querySelectorAll('[data-action="gallery-story"]').forEach(node =>
+    node.classList.toggle('active', Number(node.dataset.index) === galleryStoryIndex));
+}
+function galleryImageMarkup() {
   const images = byType('image').filter(item => item.galleryImage !== false);
   const pages = Math.max(1, Math.ceil(images.length / 6));
   galleryPage = Math.max(0, Math.min(pages - 1, galleryPage));
@@ -279,11 +2168,301 @@ function galleryMusicMarkup() {
   const tracks = galleryTracks();
   if (tracks.length && !hasDiscovered('music', tracks[galleryTrackIndex]?.id)) {
     const first = tracks.findIndex(item => hasDiscovered('music', item.id));
-    galleryTrackIndex = first >= 0 ? first : YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬ÔÀì4(€ô4(€…±±•ÉåQÉ…­%¹‘•à€ô5…Ñ ¹µ…à À°5…Ñ ¹µ¥¸¡ÑÉ…­Ì¹±•¹Ñ €´€Ä°…±±•ÉåQÉ…­%¹‘•à¤¤ì4(€½¹ÍĞÍ•±•Ñ•€ôÑÉ…­Ím…±±•ÉåQÉ…­%¹‘•átì4(€½¹ÍĞÍ•±•Ñ•‘U¹±½­•€ôÍ•±•Ñ•€˜˜¡…Í¥Í½Ù•É• µÕÍ¥Œœ°Í•±•Ñ•¹¥¤ì4(€É•ÑÕÉ¸ÑÉ…­Ì¹±•¹Ñ €ü€ñ‘¥Ø±…ÍÌô‰…±±•ÉäµµÕÍ¥Œµ±…å½ÕĞˆø4(€€€€ñ‘¥Ø±…ÍÌô‰…±±•ÉäµÑÉ…¬µ±¥ÍĞˆø‘íÑÉ…­Ì¹µ…À ¡¥Ñ•´°¥¹‘•à¤€ôø4(€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ‘…Ñ„µ…Ñ¥½¸ô‰…±±•ÉäµÑÉ…¬ˆ‘…Ñ„µ¥¹‘•àôˆ‘í¥¹‘•áôˆ±…ÍÌôˆ‘í¥¹‘•à€ôôô…±±•ÉåQÉ…­%¹‘•à€ü€…Ñ¥Ù”œ€è€œô€‘í¡…Í¥Í½Ù•É• µÕÍ¥Œœ°¥Ñ•´¹¥¤€ü€œœ€è€±½­•ôˆ€‘í¡…Í¥Í½Ù•É• µÕÍ¥Œœ°¥Ñ•´¹¥¤€ü€œœ€è€‘¥Í…‰±•ôøñÍµ…±°ø‘íMÑÉ¥¹œ¡¥¹‘•à€¬€Ä¤¹Á…‘MÑ…ÉĞ È°€œÀœ¥ôğ½Íµ…±°øñÍÁ…¸ø‘í•Í…Á”¡…±±•ÉåM½¹9…µ”¡¥Ñ•´¤¥ôğ½ÍÁ…¸ø‘í¡…Í¥Í½Ù•É• µÕÍ¥Œœ°¥Ñ•´¹¥¤€ü€œœ€è€œñ•´ûšr«¢¦Rğ½•´øôğ½‰ÕÑÑ½¸ù€¤¹©½¥¸ œœ¥ôğ½‘¥Øø4(€€€€ñ‘¥Ø±…ÍÌô‰…±±•ÉäµµÕÍ¥ŒµÁ±…å•Èˆøñ‘¥Ø±…ÍÌô‰…±±•ÉäµÉ•½ÉˆûŠf¨ğ½‘¥ØøñÍµ…±°ø‘íÍ•±•Ñ•‘U¹±½­•€ü€Ÿš¶–r£¦'š.¤œ€è€Ÿšr«¢¦Rôğ½Íµ…±°ø4(€€€€€€ñ Ìø‘íÍ•±•Ñ•‘U¹±½­•€ü•Í…Á”¡…±±•ÉåM½¹9…µ”¡Í•±•Ñ•¤¤€è€Ÿ–Âkšr«–B³¢ş’îï’öW’æCšnÈôğ½ Ìø4(€€€€€€ñ‘¥Ø±…ÍÌô‰…±±•ÉäµµÕÍ¥ŒµÁÉ½É•ÍÌˆøñÍÁ…¸¥ô‰…±±•ÉäµµÕÍ¥Œµ•±…ÁÍ•ˆøÀèÀÀğ½ÍÁ…¸øñ¥¹ÁÕĞ¥ô‰…±±•ÉäµµÕÍ¥ŒµÍ••¬ˆÑåÁ”ô‰É…¹”ˆ‘…Ñ„µ…±±•ÉäµÍ••¬ô‰ÑÉÕ”ˆµ¥¸ôˆÀˆµ…àôˆÀˆÍÑ•ÀôˆÀ¸ÄˆÙ…±Õ”ôˆÀˆøñÍÁ…¸¥ô‰…±±•ÉäµµÕÍ¥Œµ‘ÕÉ…Ñ¥½¸ˆøÀèÀÀğ½ÍÁ…¸øğ½‘¥Øø4(€€€€€€ñ‘¥Ø±…ÍÌô‰…±±•ÉäµµÕÍ¥Œµ½¹ÑÉ½±Ìˆø‘í‰ÕÑÑ½¸ Ÿ’â+’â¦šXœ°€…±±•ÉäµÁÉ•Øœ°Í•±•Ñ•‘U¹±½­•€ü€œœ€è€‘¥Í…‰±•œ¥ô‘í‰ÕÑÑ½¸¡…±±•Éå5ÕÍ¥Œ¹Á…ÕÍ•€ü€ŸŠZØƒšJ·šRøœ€è€ŸŠ„ƒšj–pœ°€…±±•ÉäµµÕÍ¥ŒµÑ½±”œ°Í•±•Ñ•‘U¹±½­•€ü€œœ€è€‘¥Í…‰±•œ¥ô‘í‰×}4ÖÚ$z{-®éÜj×FW2æf–ÇFW"†Æ–æRÓâ7G&–ær†Æ–æRçFW‡BÇÂrr’çG&–Ò‚’’“°Ğ¢6öç7B6VVâÒÆ–æW2æf–ÇFW"†W†7B’æÆVæwFƒ°Ğ¢6öç7B6†&7FW'2Ò&ö¦V7Bæ6†&7FW'2æÖ†6†&7FW"Óâ°Ğ¢6öç7B÷vâÒÆ–æW2æf–ÇFW"†Æ–æRÓâÆ–æRæ6†&7FW$–BÓÓÒ6†&7FW"æ–B“°Ğ¢&WGW&â²–C¢6†&7FW"æ–BÂæÖS¢†4F—66÷fW&VB‚v6†&7FW"rÂ6†&7FW"æ–B’ò6†&7FW"ææÖR¢†–FFVäæÖR†6†&7FW"ææÖR’ÀĞ¢F÷FÃ¢÷vâæÆVæwF‚Â6VVã¢÷vâæf–ÇFW"†W†7B’æÆVæwF‚Ó°Ğ¢Ò“°Ğ¢ÆWB6†FW$çVÖ&W"Ò°Ğ¢6öç7B7G2Ò&ö¦V7Bæ7G2æfÆDÖ‚†—FVÒÂæöFT–æFW‚’Óâ°Ğ¢–b†—4WfVçB†—FVÒ’’&WGW&âµÓ°Ğ¢6öç7B–æFW‚Ò6†FW$çVÖ&W"²³°Ğ¢6öç7B÷vâÒ—FVÒç7FW2æf–ÇFW"†Æ–æRÓâ7G&–ær†Æ–æRçFW‡BÇÂrr’çG&–Ò‚’“°Ğ¢6öç7B&VBÒ÷vâæf–ÇFW"†W†7B’æÆVæwFƒ°Ğ¢6öç7B7FGW2Ò÷vâæÆVæwF‚bb&VBÓÓÒ÷vâæÆVæwF‚òv6ö×ÆWFRpĞ¢¢÷vâæÆVæwF‚bb&VBâbb&öw&W72æÆ7D7D–BÓÓÒ—FVÒæ–Bòv7W'&VçBr¢wVæF–ærs°Ğ¢&WGW&â·²–æFWƒ¢–æFW‚²ÂæöFT–æFW‚ÂæÖS¢—FVÒææÖRÂF÷FÃ¢÷vâæÆVæwF‚Â6VVã¢&VBÂ7FGW2ÀĞ¢VæÆö6¶VC¢6†FW%VæÆö6¶VB†—FVÒÂ–æFW‚Â&öw&W72’Â6÷fW#¢76WB†—FVÒæ6÷fW$–ÖvT–B’ÇÂ76WB†—FVÒæ&6¶w&÷VæD–B’ÕÓ°Ğ¢Ò“°Ğ¢&WGW&â²F÷FÃ¢Æ–æW2æÆVæwF‚Â6VVâÂ6†&7FW'2Â7G2Ó°Ğ§ĞĞ¦gVæ7F–öâ&VæFW%&öw&W74ÖöFÂ‚’°Ğ¢6ÆV$WFôGfæ6R‚“°Ğ¢6fTÖöFÄÖöFRÒw&öw&W72s°Ğ¢6öç7B7FG2Ò&öw&W757FF—7F–72‚“°Ğ¢6öç7BW&6VçBÒ‡6VVâÂF÷FÂ’ÓâF÷FÂòG´ÖF‚ç&÷VæB‡6VVâòF÷FÂ¢—ÒV¢sRs°Ğ¢Fö7VÖVçBçVW'•6VÆV7F÷"‚r7Æ–W"ÖÖöFÂr“òç&VÖ÷fR‚“°Ğ¢Fö7VÖVçBçVW'•6VÆV7F÷"‚rçÆ–W"ç7FvRÖg&ÖRr’æ–ç6W'DF¦6VçD…DÔÂ‚v&Vf÷&VVæEš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍIËÙXİ[ÛˆYHœ^Y\‹[[Ù[ˆÛ\ÜÏHœ^Y\‹[[Ù[›ÙÜ™\ÜË[[Ù[ˆ›ÛOH™X[ÙÈˆ\šXK[[Ù[HYHˆ\šXK[X™[H¹®.9ãªz/æùn©ˆƒBˆ]ˆÛ\ÜÏH›[Ù[X›Ş›ÙÜ™\ÜËX›ŞÚ\\‹X›ŞXY\]ÛX[”ÕÔ–H“ÑÔ‘TÔÏÜÛX[¹®.9ãªz/æùn©ˆ0­È9êè:" º`"y¢êOÚÙ]]ˆÛ\ÜÏH˜Ú\\‹ZXY\‹XXİ[ÛœÈ]ˆÛ\ÜÏH˜Ú\\‹]İ[ÛX[¹ .ù/dú/æùn©ÜÛX[İ›Û™Ï‰Ü\˜Ù[
-İ]ËœÙY[‹İ]Ëİ[
-_OÜİ›Û™ÏÜ[¹mìº+îÈ	Üİ]ËœÙY[ŸHÈ	Üİ]Ëİ[H9céOÜÜ[Ù]‰Ø]ÛŠ	ùalúeëH0åÉË	ØÛÜÙK[[Ù[	Ê_OÙ]ÚXY\ƒBˆ]ˆÛ\ÜÏH˜Ú\\‹X›ÙH]ˆÛ\ÜÏH˜Ú\\‹XÛÛ[]ˆÛ\ÜÏH˜Ú\\‹]ÛÛ˜\ˆ]Ïº`"y¢êyêè:" ÚÏ¹mé¹cìù®äybª:`"y¢ê{ï#9à®yaîùmìº)èúe yæ¡9l zgh¹.ã¹i-9®.9ãªxà ÜÙ]]‰Ø]ÛŠ	ø .IË	ØÚ\\‹\ØÜ›Û	Ë	Ù]KY\™Xİ[ÛH‹LHˆ\šXK[X™[H¹."¹. 9îá9êè:" ˆ‰Ê_IØ]ÛŠ	ø .‰Ë	ØÚ\\‹\ØÜ›Û	Ë	Ù]KY\™Xİ[ÛHŒHˆ\šXK[X™[H¹."ù. 9îá9êè:" ˆ‰Ê_OÙ]Ù]ƒBˆ]ˆYH˜Ú\\‹\˜Z[ˆÛ\ÜÏH˜Ú\\‹\˜Z[ˆXš[™^HŒˆ\šXK[X™[H¹mé¹cìù®äybª:`"y¢êyêè:" ˆ‰Üİ]Ë˜XİË›X\
-][HOˆ]ÛˆYH˜Ú\\‹XØ\™IÚ][K››ÙR[™^HˆÛ\ÜÏH˜Ú\\‹XØ\™	Ú][K[›ØÚÙYÈ	ÉÈˆ	ÛØÚÙY	ßHˆ]KXXİ[ÛH˜Ú\\‹\™\^Hˆ]KZ[™^H‰Ú][K››ÙR[™^Hˆ	ÈZ][K[›ØÚÙY\›Ú™Xİ˜XİÖÚ][K››ÙR[™^Kœİ\Ë›[™İÈ	Ù\ØX›Y	Èˆ	ÉßOƒBˆ]ˆÛ\ÜÏH˜Ú\\‹X\‰Ú][K˜Ûİ™\Ë\HOOH	Ú[XYÙIÈÈ[YÈÜ˜ÏH‰Ù\ØØ\J\ÜÙ]\›
-][K˜Ûİ™\ŠJ_Hˆ[H‰Ù\ØØ\J][K›˜[YJ_yl zghˆˆ˜YÙØX›OH™˜[ÙH˜ˆ]ˆÛ\ÜÏH˜Ú\\‹XÛİ™\‹\XÙZÛ\ˆÛX[ÒTTÜÛX[İ›÷ÓMm¢G§²ÚîÆ­yĞ = 0;
+    galleryTrackIndex = first >= 0 ? first : 0;
+  }
+  galleryTrackIndex = Math.max(0, Math.min(tracks.length - 1, galleryTrackIndex));
+  const selected = tracks[galleryTrackIndex];
+  const selectedUnlocked = selected && hasDiscovered('music', selected.id);
+  return tracks.length ? `<div class="gallery-music-layout">
+    <div class="gallery-track-list">${tracks.map((item, index) =>
+      `<button type="button" data-action="gallery-track" data-index="${index}" class="${index === galleryTrackIndex ? 'active' : ''} ${hasDiscovered('music', item.id) ? '' : 'locked'}" ${hasDiscovered('music', item.id) ? '' : 'disabled'}><small>${String(index + 1).padStart(2, '0')}</small><span>${escape(gallerySongName(item))}</span>${hasDiscovered('music', item.id) ? '' : '<em>æœªè§£é”</em>'}</button>`).join('')}</div>
+    <div class="gallery-music-player"><div class="gallery-record">â™ª</div><small>${selectedUnlocked ? 'æ­£åœ¨é€‰æ‹©' : 'æœªè§£é”'}</small>
+      <h3>${selectedUnlocked ? escape(gallerySongName(selected)) : 'å°šæœªå¬è¿‡ä»»ä½•ä¹æ›²'}</h3>
+      <div class="gallery-music-progress"><span id="gallery-music-elapsed">0:00</span><input id="gallery-music-seek" type="range" data-gallery-seek="true" min="0" max="0" step="0.1" value="0"><span id="gallery-music-duration">0:00</span></div>
+      <div class="gallery-music-controls">${button('ä¸Šä¸€é¦–', 'gallery-prev', selectedUnlocked ? '' : 'disabled')}${button(galleryMusic.paused ? 'â–¶ æ’­æ”¾' : 'â…¡ æš‚åœ', 'gallery-music-toggle', selectedUnlocked ? '' : 'disabled')}${button('ä¸‹ä¸€é¦–', 'gallery-next', selectedUnlocked ? '' : 'disabled')}${button('å•æ›²å¾ªç¯', 'gallery-repeat', `class="${galleryRepeatOne ? 'active' : ''}" ${selectedUnlocked ? '' : 'disabled'}`)}</div>
+    </div></div>` : '<p class="gallery-empty">è¿˜æ²¡æœ‰å¯é‰´èµçš„éŸ³ä¹ã€‚ä½œè€…å¯ä»¥åœ¨â€œç´ æâ€ä¸­å‹¾é€‰æ­Œæ›²ã€‚</p>';
+}
+function galleryCharacterMarkup(editorPreview = false) {
+  const { item, count, hasSave } = editorPreview
+    ? { item: project.characters[selectedCharacter], count: Infinity, hasSave: false }
+    : galleryCharacterData();
+  const storyIndex = editorPreview ? editorGalleryStoryIndex : galleryStoryIndex;
+  const characterAction = editorPreview ? 'preview-character' : 'gallery-character';
+  const storyAction = editorPreview ? 'preview-story' : 'gallery-story';
+  const stories = item?.stories || [];
+  const unlocked = editorPreview || hasDiscovered('character', item?.id);
+  return item ? `<div class="gallery-character-layout"><nav class="gallery-character-picker" aria-label="é€‰æ‹©è§’è‰²">${project.characters.map(entry =>
+      `<button type="button" data-action="${characterAction}" data-character-id="${escape(entry.id)}" class="${entry.id === item.id ? 'active' : ''}">${escape(editorPreview || hasDiscovered('character', entry.id) ? entry.name : hiddenName(entry.name))}</button>`).join('')}</nav>
+    <div class="gallery-character-portrait ${unlocked ? '' : 'locked'}"><div id="gallery-character-canvas"></div>
+      ${unlocked ? '' : '<div class="gallery-character-seal">æœªè§£é”</div>'}</div>
+      <div id="gallery-character-text" class="gallery-character-content">${galleryStoryMarkup(item, count, storyIndex, editorPreview)}</div>
+      <nav class="gallery-story-tabs">${button('è§’è‰²è¯¦æƒ…', storyAction, `data-index="0" class="${storyIndex === 0 ? 'active' : ''}"`)}
+        ${stories.map((story, index) => story.text?.trim() ? button(`è§’è‰²æ•…äº‹ Â· ${index + 1}${count >= Math.max(0, Number(story.unlockLines) || 0) ? '' : ' ğŸ”’'}`,
+          storyAction, `data-index="${index + 1}" class="${storyIndex === index + 1 ? 'active' : ''}"`) : '').join('')}
+      </nav></div><div class="gallery-progress-note">${editorPreview ? 'ç¼–è¾‘é¢„è§ˆ Â· ä½œè€…å¯æŸ¥çœ‹å…¨éƒ¨è§’è‰²æ•…äº‹' : unlocked ? `ç´¯è®¡çœ‹è¿‡è¿™ä½è§’è‰²çš„ ${count} å¥å¯¹ç™½` : 'å°šæœªåœ¨æ•…äº‹ä¸­é‡è§è¿™ä½è§’è‰²'}</div>`
+    : '<p class="gallery-empty">è¿˜æ²¡æœ‰åˆ›å»ºè§’è‰²ã€‚</p>';
+}
+function hideCharacterEditorPreview() {
+  const overlay = document.querySelector('#character-preview');
+  const frame = document.querySelector('.editor .stage-frame');
+  if (!overlay || !frame) return;
+  if (stage?.element?.parentElement !== frame) frame.insertBefore(stage.element, overlay);
+  overlay.classList.add('hidden');
+  overlay.replaceChildren();
+  stage?.resize();
+}
+function refreshGalleryFrameControl(item) {
+  const input = document.querySelector('[data-gallery-adjust="galleryPoseFrame"]');
+  const number = document.querySelector('[data-gallery-frame-number]');
+  const output = document.querySelector('[data-gallery-output="galleryPoseFrame"]');
+  if (!input || !output) return;
+  const clip = stage?.activeRecord?.currentAction?.getClip();
+  if (!item?.galleryMotionId || stage?.currentMotionId !== item.galleryMotionId || !clip) {
+    input.disabled = true;
+    if (number) number.disabled = true;
+    output.textContent = item?.galleryMotionId ? 'è¯»å–ä¸­â€¦' : 'å…ˆé€‰æ‹©åŠ¨ä½œ';
+    return;
+  }
+  const { fps, frames } = motionFrameInfo(clip);
+  const legacySeconds = Number.isFinite(Number(item.galleryPoseTime)) ? Number(item.galleryPoseTime) : null;
+  const requested = legacySeconds === null ? item.galleryPoseFrame : Math.round(legacySeconds * fps) + 1;
+  const frame = Math.max(1, Math.min(frames, Math.floor(Number(requested) || 1)));
+  if (frame !== item.galleryPoseFrame || legacySeconds !== null) {
+    item.galleryPoseFrame = frame;
+    delete item.galleryPoseTime;
+    markDirty();
+  }
+  input.max = frames;
+  input.value = frame;
+  input.disabled = false;
+  if (number) { number.max = frames; number.value = frame; number.disabled = false; }
+  output.textContent = `ç¬¬ ${frame} / ${frames} å¸§`;
+}
+async function showCharacterEditorPreview() {
+  setSceneWeather();
+  applySceneColor(colorDefaults);
+  const overlay = document.querySelector('#character-preview');
+  const frame = document.querySelector('.editor .stage-frame');
+  if (!overlay || !frame || !stage) return;
+  const item = project.characters[selectedCharacter];
+  if (stage.element.parentElement !== frame) frame.insertBefore(stage.element, overlay);
+  stage.setPaintBackground(null);
+  overlay.innerHTML = `<div class="gallery-box gallery-box-character character-preview-box">
+    <header><div><small>EXTRAS</small><h2>é™„åŠ é‰´èµ</h2></div></header>
+    <div class="gallery-main-tabs"><button type="button" disabled>å›¾åƒé‰´èµ</button><button type="button" disabled>ä¹æ›²é‰´èµ</button><button type="button" class="active">äººç‰©é‰´èµ</button></div>
+    <div class="gallery-content">${galleryCharacterMarkup(true)}</div></div>`;
+  overlay.querySelector('.gallery-character-picker .active')?.scrollIntoView({ block: 'nearest' });
+  overlay.classList.remove('hidden');
+  document.querySelector('#stage-caption').textContent = 'äººç‰©é‰´èµé¢„è§ˆ';
+  document.querySelector('#stage-placeholder').style.display = 'none';
+  document.querySelector('#dialogue')?.classList.remove('visible');
+  updateSpeakerPortrait('', false);
+  if (!item?.modelId) {
+    const portraitAsset = asset(item?.portraitId);
+    const target = overlay.querySelector('#gallery-character-canvas');
+    if (target && portraitAsset) target.innerHTML = `<img class="gallery-flat-portrait" src="${assetUrl(portraitAsset)}" alt="${escape(item.name)}">`;
+    await stage.show(null, null); return;
+  }
+  const portrait = overlay.querySelector('#gallery-character-canvas');
+  if (!portrait) return;
+  portrait.appendChild(stage.element);
+  stage.resize();
+  stage.setRenderSettings(project.render);
+  stage.setPortraitCamera();
+  await stage.show(asset(item.modelId), asset(item.galleryMotionId), {}, 'center',
+    { size: 1.23, yaw: item.galleryYaw || 0 }, `gallery:${item.id}`);
+  if (activePanel === 'characters' && project.characters[selectedCharacter]?.id === item.id) {
+    refreshGalleryFrameControl(item);
+    if (item.galleryMotionId) stage.setMotionPoseFrame(item.galleryPoseFrame);
+  }
+}
+function renderGalleryModal() {
+  clearAutoAdvance();
+  saveModalMode = 'gallery';
+  galleryStage?.destroy();
+  galleryStage = null;
+  const content = galleryTab === 'images' ? galleryImageMarkup()
+    : galleryTab === 'music' ? galleryMusicMarkup() : galleryCharacterMarkup();
+  document.querySelector('#player-modal')?.remove();
+  document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal gallery-modal" role="dialog" aria-modal="true" aria-label="é™„åŠ é‰´èµ">
+    <div class="modal-box gallery-box ${galleryTab === 'characters' ? 'gallery-box-character' : ''}"><header><div><small>EXTRAS</small><h2>é™„åŠ é‰´èµ</h2></div>${button('å…³é—­ Ã—', 'close-modal')}</header>
+      <div class="gallery-main-tabs">${[['images','å›¾åƒé‰´èµ'],['music','ä¹æ›²é‰´èµ'],['characters','äººç‰©é‰´èµ']].map(([key,label]) =>
+        button(label, 'gallery-tab', `data-tab="${key}" class="${galleryTab === key ? 'active' : ''}"`)).join('')}</div>
+      <div class="gallery-content">${content}</div>
+    </div></section>`);
+  document.querySelector('#player-modal .gallery-character-picker .active')?.scrollIntoView({ block: 'nearest' });
+  if (galleryTab === 'music') renderGalleryMusicState();
+  if (galleryTab === 'characters') {
+    const target = document.querySelector('#gallery-character-canvas');
+    const item = galleryCharacterData().item;
+    if (target && item && !item.modelId && hasDiscovered('character', item.id) && asset(item.portraitId))
+      target.innerHTML = `<img class="gallery-flat-portrait" src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}">`;
+    if (target && item?.modelId && hasDiscovered('character', item.id)) {
+      galleryStage = new VRMStage(target, message => toast(message, true));
+      galleryStage.setRenderSettings(project.render);
+      galleryStage.setPortraitCamera();
+      const portrait = galleryStage;
+      portrait.show(asset(item.modelId), asset(item.galleryMotionId), {}, 'center', { size: 1.23, yaw: item.galleryYaw || 0 }, `gallery:${item.id}`)
+        .then(() => { if (galleryStage === portrait && item.galleryMotionId) portrait.setMotionPoseFrame(item.galleryPoseFrame); });
+    }
+  }
+}
+function progressStatistics() {
+  const progress = loadLifetimeProgress();
+  const exact = line => Boolean(line.id && progress.viewedDialogueText[line.id] === String(line.text || ''));
+  const lines = project.acts.filter(item => !isEvent(item)).flatMap(item => item.steps.filter(line => String(line.text || '').trim()));
+  const seen = lines.filter(exact).length;
+  const characters = project.characters.map(character => {
+    const own = lines.filter(line => line.characterId === character.id);
+    return { id: character.id, name: hasDiscovered('character', character.id) ? character.name : hiddenName(character.name),
+      total: own.length, seen: own.filter(exact).length };
+  });
+  let chapterNumber = 0;
+  const acts = project.acts.flatMap((item, nodeIndex) => {
+    if (isEvent(item)) return [];
+    const index = chapterNumber++;
+    const own = item.steps.filter(line => String(line.text || '').trim());
+    const read = own.filter(exact).length;
+    const status = own.length && read === own.length ? 'complete'
+      : own.length && read > 0 && progress.lastActId === item.id ? 'current' : 'pending';
+    return [{ index: index + 1, nodeIndex, name: item.name, total: own.length, seen: read, status,
+      unlocked: chapterUnlocked(item, index, progress), cover: asset(item.coverImageId) || asset(item.backgroundId) }];
+  });
+  return { total: lines.length, seen, characters, acts };
+}
+function renderProgressModal() {
+  clearAutoAdvance();
+  saveModalMode = 'progress';
+  const stats = progressStatistics();
+  const percent = (seen, total) => total ? `${Math.round(seen / total * 100)}%` : '0%';
+  document.querySelector('#player-modal')?.remove();
+  document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal progress-modal" role="dialog" aria-modal="true" aria-label="æ¸¸ç©è¿›åº¦">
+    <div class="modal-box progress-box chapter-box"><header><div><small>STORY PROGRESS</small><h2>æ¸¸ç©è¿›åº¦ Â· ç« èŠ‚é€‰æ‹©</h2></div><div class="chapter-header-actions"><div class="chapter-total"><small>æ€»ä½“è¿›åº¦</small><strong>${percent(stats.seen, stats.total)}</strong><span>å·²è¯» ${stats.seen} / ${stats.total} å¥</span></div>${button('å…³é—­ Ã—', 'close-modal')}</div></header>
+      <div class="chapter-body"><div class="chapter-content"><div class="chapter-toolbar"><div><h3>é€‰æ‹©ç« èŠ‚</h3><p>å·¦å³æ»‘åŠ¨é€‰æ‹©ï¼Œç‚¹å‡»å·²è§£é”çš„å°é¢ä»å¤´æ¸¸ç©ã€‚</p></div><div>${button('â€¹', 'chapter-scroll', 'data-direction="-1" aria-label="ä¸Šä¸€ç»„ç« èŠ‚"')}${button('â€º', 'chapter-scroll', 'data-direction="1" aria-label="ä¸‹ä¸€ç»„ç« èŠ‚"')}</div></div>
+      <div id="chapter-rail" class="chapter-rail" tabindex="0" aria-label="å·¦å³æ»‘åŠ¨é€‰æ‹©ç« èŠ‚">${stats.acts.map(item => `<button id="chapter-card-${item.nodeIndex}" class="chapter-card ${item.unlocked ? '' : 'locked'}" data-action="chapter-replay" data-index="${item.nodeIndex}" ${!item.unlocked || !project.acts[item.nodeIndex].steps.length ? 'disabled' : ''}>
+        <div class="chapter-art">${item.cover?.type === 'image' ? `<img src="${escape(assetUrl(item.cover))}" alt="${escape(item.name)}å°é¢" draggable="false">` : `<div class="chapter-cover-placeholder"><small>CHAPTER</small><strong>${String(item.index).padStart(2,'0')}</strong></div>`}
+        </div><div class="chapter-card-caption"><div class="chapter-caption-heading"><small>ç¬¬ ${item.index} ç« </small><b>${percent(item.seen,item.total)}</b></div><h3>${escape(item.name)}</h3><div class="chapter-progress"><div><i style="width:${percent(item.seen,item.total)}"></i></div></div><span>${item.seen} / ${item.total} å¥ Â· ${!item.unlocked ? 'ğŸ”’ å°šæœªè§£é”' : item.status === 'complete' ? 'âœ“ å·²å®Œæˆ' : 'å¯ä»¥æ¸¸ç©'}</span><span>${!item.unlocked ? 'å…ˆåœ¨æ•…äº‹ä¸­åˆ°è¾¾è¿™ä¸€å¹•' : !project.acts[item.nodeIndex].steps.length ? 'æš‚æ— å¯¹ç™½' : 'ç‚¹å‡»ä»å¤´æ¸¸ç©'}</span></div></button>`).join('')}</div>
+      <details class="chapter-character-stats"><summary>å„è§’è‰²å°è¯è¿›åº¦</summary><div class="chapter-character-grid">${stats.characters.map(item => `<div class="progress-character-row"><span>${escape(item.name)}</span><b>${percent(item.seen,item.total)}</b><small>${item.seen} / ${item.total} å¥</small></div>`).join('') || '<p>è¿˜æ²¡æœ‰è§’è‰²å°è¯ã€‚</p>'}</div></details></div></div>
+    </div></section>`);
+  const rail = document.querySelector('#chapter-rail');
+  rail.addEventListener('wheel', event => {
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX) && rail.scrollWidth > rail.clientWidth) {
+      const next = Math.max(0, Math.min(rail.scrollWidth - rail.clientWidth, rail.scrollLeft + event.deltaY));
+      if (next !== rail.scrollLeft) { event.preventDefault(); rail.scrollLeft = next; }
+    }
+  }, { passive: false });
+  let drag = null;
+  rail.addEventListener('pointerdown', event => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    drag = { x: event.clientX, left: rail.scrollLeft, moved: false };
+  });
+  rail.addEventListener('pointermove', event => {
+    if (!drag || !(event.buttons & 1)) return;
+    if (Math.abs(event.clientX - drag.x) > 8) {
+      drag.moved = true; rail.classList.add('dragging'); rail.setPointerCapture(event.pointerId);
+      rail.scrollLeft = drag.left - (event.clientX - drag.x);
+    }
+  });
+  rail.addEventListener('click', event => { if (drag?.moved) { event.preventDefault(); event.stopPropagation(); } }, true);
+  rail.addEventListener('pointerup', () => { rail.classList.remove('dragging'); setTimeout(() => { drag = null; }, 0); });
+  rail.addEventListener('pointercancel', () => { drag = null; rail.classList.remove('dragging'); });
+  const active = Math.max(0, project.acts.findIndex(item => item.id === loadLifetimeProgress().lastActId));
+  requestAnimationFrame(() => document.querySelector(`#chapter-card-${active}`)?.scrollIntoView({ block: 'nearest', inline: 'center' }));
+}
+function renderImageImportModal(folderId = '', titleImport = '') {
+  document.querySelector('#image-import-modal')?.remove();
+  document.querySelector('.editor')?.insertAdjacentHTML('beforeend', `<div id="image-import-modal" class="editor-settings-backdrop" role="dialog" aria-modal="true" aria-label="å¯¼å…¥å›¾ç‰‡">
+    <div class="editor-settings-card"><header><h2>å¯¼å…¥å›¾ç‰‡</h2>${button('å…³é—­ Ã—', 'cancel-image-import')}</header>
+      <label class="gallery-audio-check image-import-option"><input id="image-import-gallery" type="checkbox"><span>åŠ å…¥å›¾åƒé‰´èµ</span></label>
+      <p>èƒŒæ™¯ã€ç•Œé¢ç­‰æ™®é€šå›¾ç‰‡é€šå¸¸ä¸ç”¨åŠ å…¥é‰´èµã€‚ä»¥åå¯ä»¥åœ¨â€œç´ æâ€é‡Œä¿®æ”¹ã€‚</p>
+      <div class="image-import-actions">${button('é€‰æ‹©å›¾ç‰‡å¹¶å¯¼å…¥', 'confirm-image-import', `class="primary" data-folder-id="${escape(folderId)}" data-title-import="${escape(titleImport)}"`)}</div>
+    </div></div>`);
+}
+async function importAssets(type, folderId = '', titleImport = '', galleryImage = false) {
+  if (type === 'voice') { redirectVoiceUpload(); return; }
+  const imported = await bridge('importAsset', { type });
+  if (!imported?.length) return;
+  for (const item of imported) {
+    item.folderId = folderId;
+    if (type === 'image') item.galleryImage = galleryImage;
+  }
+  if (folderId) openAssetFolders.add(folderId);
+  if (titleImport) project.title[titleImport] = imported[0].id;
+  project.assets.push(...imported); markDirty(); renderSidebar(); renderInspector(); toast(`å·²å¯¼å…¥ ${imported.length} ä¸ªç´ æ`);
+  if (activePanel === 'title') updatePreview();
+}
+function renderPlayer() {
+  events.cancel();
+  stage?.destroy();
+  if (!project) { app.innerHTML = '<div class="fatal">æ¸¸æˆå·¥ç¨‹æ–‡ä»¶ä¸å®Œæ•´</div>'; return; }
+  app.innerHTML = `<div class="player"><div class="stage-frame">
+    <div id="scene-bg"></div><div id="stage-canvas"></div><div id="stage-placeholder"></div>
+    <div id="speaker-portrait" class="speaker-portrait hidden"><img alt="è¯´è¯è§’è‰²å¤´åƒ"></div>
+    <div id="dialogue" class="dialogue"><div class="speaker" id="dialogue-speaker"></div><div id="dialogue-text"></div></div>
+    <div id="choice-list"></div><div id="play-controls" class="hidden">
+      <div class="scene-top-actions">
+        <button type="button" data-action="stop-play" class="scene-icon-button" title="è¿”å›æ ‡é¢˜" aria-label="è¿”å›æ ‡é¢˜"><span class="scene-icon">â†¶</span><small>æ ‡é¢˜</small></button>
+        <button type="button" data-action="save-game" class="scene-icon-button" title="å­˜æ¡£" aria-label="å­˜æ¡£"><span class="scene-icon">â–£</span><small>å­˜æ¡£</small></button>
+        <button type="button" data-action="settings" class="scene-icon-button" title="è®¾ç½®" aria-label="è®¾ç½®"><span class="scene-icon">â˜°</span><small>èœå•</small></button>
+      </div>
+      <div class="scene-quick-actions">
+        <button type="button" id="auto-play-button" class="auto-play-button hidden" data-action="auto-toggle" aria-pressed="false" title="è‡ªåŠ¨æ’­æ”¾">è‡ªåŠ¨æ’­æ”¾</button>
+        <button type="button" data-action="load-game" title="è¯»æ¡£">è¯»æ¡£</button>
+        <button type="button" data-action="save-game" title="å­˜æ¡£">å­˜æ¡£</button>
+        <button type="button" data-action="toggle-fullscreen" title="åˆ‡æ¢å…¨å±">${playerFullscreen ? 'çª—å£' : 'å…¨å±'}</button>
+      </div>
+    </div>
+    <div id="player-start" class="title-composition"></div>
+    <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
+  </div></div>`;
+  stageError = '';
+  stage = new VRMStage(document.querySelector('#stage-canvas'), message => {
+    stageError = message;
+    const placeholder = document.querySelector('#stage-placeholder');
+    if (placeholder && !stage?.vrm) {
+      placeholder.textContent = message;
+      placeholder.style.display = 'grid';
+    }
+    toast(message, true);
+  });
+  stage.setRenderSettings(project.render);
+  showTitleScene(true);
+}
+
+document.addEventListener('click', async event => {
+  const clickedButton = event.target.closest?.('button');
+  if (mode === 'player' && clickedButton && !clickedButton.disabled) playButtonClick();
+  const panel = event.target.closest('[data-panel]');
+  if (panel && project) {
+    activePanel = panel.dataset.panel;
+    renderSidebar(); renderInspector(); updatePreview(); return;
+  }
+  const node = event.target.closest('[data-action]');
+  if (!node) {
+    if (playing && !transitioning && !saveModalMode && event.target.closest('.stage-frame')
+      && !event.target.closest('#choice-list, #play-controls, #player-start, #player-modal, #world-event')) next();
+    return;
+  }
+  const action = node.dataset.action;
+  if (new URLSearchParams(location.search).has('smoke')) window.__lastClickAction = action;
+  try {
+    if (action.startsWith('assistant-')) { await storyAssistant.click(action,node); return; }
+    if (action === 'upload-dialogue-voice') { await uploadDialogueVoice(); return; }
+    if (action === 'preview-dialogue-voice' || action === 'preview-voice-asset') { await previewDialogueVoice(action === 'preview-dialogue-voice' ? step()?.voiceId : node.dataset.assetId); return; }
+    if (action === 'remove-dialogue-voice') { if (step()) { stopEditorVoicePreview(); step().voiceId = ''; markDirty(); renderInspector(); renderAssetDock(); } return; }
+    if (action === 'delete-asset-folder' && project.assetFolders.find(folder => folder.id === node.dataset.folderId)?.type === 'voice') { toast('è§’è‰²é…éŸ³æ–‡ä»¶å¤¹ä¸èƒ½åˆ é™¤ã€‚', true); return; }
+    if (action === 'editor-undo' || action === 'editor-redo') { await restoreEditorHistory(action === 'editor-undo' ? -1 : 1); return; }
+    if (action.startsWith('event-')) { await handleEventAction(action, node); return; }
+    if (action.startsWith('book-') || action.startsWith('search-') || action === 'knowledge-open') {
+      await library.click(action, node); return;
+    }
+    if (action === 'asset-tab') {
+      activeAssetType = node.dataset.type;
+      document.querySelector('#asset-dock-body').scrollTop = 0;
+      renderAssetDock();
+    } else if (action === 'asset-open-folder') {
+      currentAssetFolder[activeAssetType] = node.dataset.folderId;
+      document.querySelector('#asset-dock-body').scrollTop = 0;
       renderAssetDock();
     } else if (action === 'asset-folder-back') {
       currentAssetFolder[activeAssetType] = '';
@@ -316,56 +2495,395 @@ _OÜİ›Û™ÏÜ[¹mìº+îÈ	Üİ]ËœÙY[ŸHÈ	Üİ]Ëİ[H9céOÜÜ[Ù]‰Ø]ÛŠ	
       const path = recentProjects[Number(node.dataset.index)];
       if (!path) return;
       await bridge('openRecentProject', { path });
-      window.location.reloaYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Õ ¤ì4(€€€ô•±Í”¥˜€¡…Ñ¥½¸€ôôô€¥µÁ½ÉĞµ™½±‘•ÈµÁÉ½©•Ğœ¤ì4(€€€€€¥˜€¡‘¥ÉÑä¤…İ…¥ĞÍ…Ù” ¤ì4(€€€€€½¹ÍĞ¥¹™¼€ô…İ…¥Ğ‰É¥‘” ¥µÁ½ÉÑ½±‘•ÉAÉ½©•Ğœ¤ì4(€€€€€¥˜€ …¥¹™¼¤É•ÑÕÉ¸ì4(€€€€€İ¥¹‘½Ü¹±½…Ñ¥½¸¹É•±½… ¤ì4(€€€ô•±Í”¥˜€¡…Ñ¥½¸€ôôô€Í…Ù”œ¤ì…İ…¥ĞÍ…Ù” ¤ìÑ½…ÍĞ Ÿ–Ş—¢/–ŞË’şw–¶`œ¤ìô4(€€€•±Í”¥˜€¡…Ñ¥½¸€ôôô€Í…Ù”µ…Ìœ¤ì4(€€€€€…İ…¥ĞÍ…Ù” ¤ì4(€€€€€½¹ÍĞ•¹Ñ•É•€ôÁÉ½µÁĞ ŸšZÃ–Ş—¢/–2–>¯’î’æ#–B7–¶_¾òš^Ÿ–Ş—¢/’òk’şwVgœ°ÁÉ½©•Ğ¹¹…µ”¤ì4(€€€€€¥˜€¡•¹Ñ•É•€ôôô¹Õ±°¤É•ÑÕÉ¸ì4(€€€€€½¹ÍĞ¹…µ”€ô•¹Ñ•É•¹ÑÉ¥´ ¤ì4(€€€€€¥˜€ …¹…µ”¤ìÑ½…ÍĞ Ÿ–Ş—¢/–B7–¶_’â7¢÷’âë¦èœ°ÑÉÕ”¤ìÉ•ÑÕÉ¸ìô4(€€€€€½¹ÍĞ½Áä€ôÍÑÉÕÑÕÉ•‘±½¹”¡ÁÉ½©•Ğ¤ì4(€€€€€½Áä¹¹…µ”€ô¹…µ”ì4(€€€€€½Áä¹¥€ôÕ¥ ¤ì4(€€€€€½¹ÍĞÉ•ÍÕ±Ğ€ô…İ…¥Ğ‰É¥‘” Í…Ù•AÉ½©•ÑÌœ°ìÁÉ½©•Ğè½Áä°¹…µ”ô¤ì4(€€€€€¥˜€ …É•ÍÕ±Ğ¤É•ÑÕÉ¸ì4(€€€€€‘¥É•Ñ½Éä€ôÉ•ÍÕ±Ğ¹‘¥É•Ñ½Éäì4(€€€€€İ¥¹‘½Ü¹±½…Ñ¥½¸¹É•±½… ¤ì4(€€€ô4(€€€•±Í”¥˜€¡…Ñ¥½¸€ôôô€•‘¥Ñ½ÈµÍ•ÑÑ¥¹Ìœ¤É•¹‘•É‘¥Ñ½ÉM•ÑÑ¥¹Ì ¤ì4(€€€•±Í”¥˜€¡…Ñ¥½¸€ôôô€Ñ½±”µ•‘¥Ñ½ÈµÑ¡•µ”œ¤ì4(€€€€€•‘¥Ñ½ÉM•ÑÑ¥¹Ì¹Ñ¡•µ”€ô•‘¥Ñ½ÉM•ÑÑ¥¹Ì¹Ñ¡•µ”€ôôô€‘…É¬œ€ü€±¥¡Ğœ€è€‘…É¬œì4(€€€€€Í…Ù•‘¥Ñ½ÉM•ÑÑ¥¹Ì ¤ì…ÁÁ±å‘¥Ñ½ÉQ¡•µ” ¤ì4(€€€€€½¹ÍĞÍ•±•Ğ€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ•‘¥Ñ½ÈµÑ¡•µ”œ¤ì4(€€€€€¥˜€¡Í•±•Ğ¤Í•±•Ğ¹Ù…±Õ”€ô•‘¥Ñ½ÉM•ÑÑ¥¹Ì¹Ñ¡•µ”ì4(€€€ô4(€€€•±Í”¥˜€¡…Ñ¥½¸€ôôô€±½Í”µ•‘¥Ñ½ÈµÍ•ÑÑ¥¹Ìœ¤‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ•‘¥Ñ½ÈµÍ•ÑÑ¥¹Ìµµ½‘…°œ¤ü¹É•µ½Ù” ¤ì4(€€€•±Í”¥˜€¡…Ñ¥½¸€ôôô€•áÁ½ÉĞœ¤ì4(€€€€€…İ…¥ĞÍ…Ù” ¤ì4(€€€€€½¹ÍĞ•¹Ñ•É•€ôÁÉ½µÁĞ Ÿ–¾ó–ëjšâãš"?šZ’îÛ–’ç–>¯’î’æ#–B7–¶_¾ò|œ°€‘íÁÉ½©•Ğ¹¹…·}4ÖÚ$z{-®éÜj×ö–6U&Wf–Wr‚“²ĞĞ¢&ö¦V7Bæ76WG2Ò&ö¦V7Bæ76WG2æf–ÇFW"†VçG'’ÓâVçG'’æ–BÓÒ—FVÒæ–B“°Ğ¢Ö&´F—'G’‚“²&VæFW%6–FV&"‚“²&VæFW$–ç7V7F÷"‚“²WFFU&Wf–Wr‚“°Ğ¢ÒVÇ6R–b†7F–öâÓÓÒw&W6WBÖW‡&W76–öç2r’°Ğ¢–b‚7FW‚’’&WGW&ã°Ğ¢7FW‚’æW‡&W76–öåvV–v‡G2Ò·Ó°Ğ¢7FW‚’æW‡&W76–öâÒrs°Ğ¢Ö&´F—'G’‚“²&VæFW$W‡&W76–öä6öçG&öÇ2‚“²7FvSòç6WDW‡&W76–öç2‡·Ò“°Ğ¢ÒVÇ6R–b†7F–öâÓÓÒw&W6WB×F—FÆRÖW‡&W76–öç2r’°Ğ¢&ö¦V7BçF—FÆRæW‡&W76–öåvV–v‡G2Ò·Ó°Ğ¢Ö&´F—'G’‚“²&VæFW%F—FÆTW‡&W76–öä6öçG&öÇ2‚“²7FvSòç6WDW‡&W76–öç2‡·Ò“°Ğ¢ÒVÇ6R–b†7F–öâÓÓÒvFBÖ6†ö–6Rr’°Ğ¢–b‚7FW‚’’&WGW&ã°Ğ¢7FW‚’æ6†ö–6W2çW6‚‡²FW‡C¢rrÂ7D–C¢rrÒ“²Ö&´F—'G’‚“²&VæFW$–ç7V7F÷"‚“°Ğ¢ÒVÇ6R–b†7F–öâÓÓÒvFVÆWFRÖ6†ö–6Rr’°Ğ¢7FW‚’æ6†ö–6W2ç7Æ–6R„çVÖ&W"†æöFRæFF6WBæ–æFW‚’Ã“²Ö&´F—'G’‚“²&VæFW$–ç7V7F÷"‚“°Ğ¢ÒVÇ6R–b†7F–öâÓÓÒwÆ’r’°Ğ¢7F÷VF—F÷%fö–6U&Wf–Wr‚“°Ğ¢–b†ÖöFRÓÓÒvVF—F÷"r’°Ğ¢æöFRæF—6&ÆVBÒG'VS°Ğ¢G'’°Ğ¢6öç7B&W7VÇBÒv—B'&–FvR‚w&Wf–WtvÖRrÂ²&ö¦V7C¢7G'V7GW&VD6ÆöæR‡&ö¦V7B’Ò“°Ğ¢v–æF÷råõöÆ7E&Wf–WtvÖRÒ&W7VÇC°Ğ¢Fö7B‚~[{.YÊikz©~Xú>Y
-şXªK‹Ni{nk‹hˆşûÉ¾X[>™zŞk‹hˆşz©~Xú>XÛ>Xúş‹ùNY¹î{Én‹é8"r“°Ğ¢Òf–æÆÇ’²æöFRæF—6&ÆVBÒfÇ6S²ĞĞ¢ÒVÇ6R7F'EÆ’‚“°Ğ¢ĞĞ¢VÇ6R–b†7F–öâÓÓÒv6öçF–çVRÖvÖRr’°Ğ¢6öç7Bf–ÆÆVBÒ&VE6fU6Æ÷G2‚’æÖ‚‡6Æ÷BÂ–æFW‚’Óâ‡²6Æ÷BÂ–æFW‚Ò’’æf–ÇFW"†—FVÒÓâ—FVÒç6Æ÷B“°Ğ¢f–ÆÆVBç6÷'B‚†Åš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍHŠHOˆ
-]Kœ\œÙJ‹œÛİœØ]™Y]	ÉÊH
-HH
-]Kœ\œÙJKœÛİœØ]™Y]	ÉÊH
-JNÃBˆYˆ
-š[Y›[™İ
-HØYÛİ
-š[YÌKš[™^
-NÃBˆCBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÜİÜ\^IÊHİÜ^J
-NÃBˆ[ÙHYˆ
-Xİ[ÛˆOOH	Ø]]Ë]ÙÙÛIÊHÃBˆ]]Ô^HHX]]Ô^NÃBˆ\]P]]Ğ]ÛŠ
-NÃBˆØÚY[P]]ĞY˜[˜ÙJ›Ú™Xİ˜XİÖÜ^PXİOËœİ\ÖÜ^Tİ\JNÃBˆCBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÜØ]™KYØ[YIÊH™[™\”Ø]™S[Ù[
-	ÜØ]™IÊNÃBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÛØYYØ[YIÊH™[™\”Ø]™S[Ù[
-	ÛØY	ÊNÃBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÜØ]™K\Ûİ	ÊHØ]™TÛİ
-[X™\Š›ÙK™]\Ù]š[™^
-JNÃBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÛØY\Ûİ	ÊHØYÛİ
-[X™\Š›ÙK™]\Ù]š[™^
-JNÃBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÛØY[YØXŞK\Ûİ	ÊHØYÛİ
-LJNÃBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ØÛÜÙK[[Ù[	ÊHÛÜÙT^Y\“[Ù[
+      window.location.reload();
+    } else if (action === 'import-folder-project') {
+      if (dirty) await save();
+      const info = await bridge('importFolderProject');
+      if (!info) return;
+      window.location.reload();
+    } else if (action === 'save') { await save(); toast('å·¥ç¨‹å·²ä¿å­˜'); }
+    else if (action === 'save-as') {
+      await save();
+      const entered = prompt('æ–°å·¥ç¨‹åŒ…å«ä»€ä¹ˆåå­—ï¼Ÿæ—§å·¥ç¨‹ä¼šä¿ç•™ã€‚', project.name);
+      if (entered === null) return;
+      const name = entered.trim();
+      if (!name) { toast('å·¥ç¨‹åå­—ä¸èƒ½ä¸ºç©º', true); return; }
+      const copy = structuredClone(project);
+      copy.name = name;
+      copy.id = uid();
+      const result = await bridge('saveProjectAs', { project: copy, name });
+      if (!result) return;
+      directory = result.directory;
+      window.location.reload();
+    }
+    else if (action === 'editor-settings') renderEditorSettings();
+    else if (action === 'toggle-editor-theme') {
+      editorSettings.theme = editorSettings.theme === 'dark' ? 'light' : 'dark';
+      saveEditorSettings(); applyEditorTheme();
+      const select = document.querySelector('#editor-theme');
+      if (select) select.value = editorSettings.theme;
+    }
+    else if (action === 'close-editor-settings') document.querySelector('#editor-settings-modal')?.remove();
+    else if (action === 'export') {
+      await save();
+      const entered = prompt('å¯¼å‡ºçš„æ¸¸æˆæ–‡ä»¶å¤¹å«ä»€ä¹ˆåå­—ï¼Ÿ', `${project.name}_å¯æ¸¸ç©ç‰ˆ`);
+      if (entered === null) return;
+      const folderName = entered.trim();
+      if (!folderName) { toast('æ–‡ä»¶å¤¹åå­—ä¸èƒ½ä¸ºç©º', true); return; }
+      const result = await bridge('exportGame', { folderName });
+      if (result) toast('æ¸¸æˆå·²å¯¼å‡ºåˆ°ï¼š' + result.directory);
+    } else if (action === 'add-act') {
+      project.acts.push({ id: uid(), name: `ç¬¬${project.acts.length + 1}å¹•`, backgroundId: '', bgmId: '', weather: normalizeWeather(),
+        coverImageId: '', render: chapterRender(null, project.render),
+        cast: { left: '', center: '', right: '' }, castSettings: {}, steps: [] });
+      selectedAct = project.acts.length - 1; selectedStep = 0; markDirty(); renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'upload-act-cover') {
+      await uploadActCover();
+    } else if (action === 'edit-act-render') {
+      activePanel = 'render'; renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'reset-act-color') {
+      Object.assign(act().render, colorDefaults, { autoLight: true, lightStrength: .6 });
+      markDirty(); renderInspector(); updatePreview();
+    } else if (action === 'select-act') {
+      selectedAct = Number(node.dataset.index); selectedStep = 0; renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'delete-act') {
+      if (project.acts.length <= 1) { toast('è‡³å°‘ä¿ç•™ä¸€å¹•', true); return; }
+      if (!confirm('åˆ é™¤è¿™ä¸€å¹•åŠå…¶ä¸­çš„å¯¹ç™½ï¼Ÿ')) return;
+      project.acts.splice(selectedAct, 1); selectedAct = Math.max(0, selectedAct - 1); selectedStep = 0;
+      markDirty(); renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'add-step') {
+      act().steps.push({ id:uid(), characterId:'', speaker:'', text:'', expressionWeights:{}, motionId:'', position:'center', size:defaultSize, offsetX:0, offsetY:0, voiceId:'', choices:[] });
+      selectedStep = act().steps.length - 1; markDirty(); renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'duplicate-step') {
+      const original = step();
+      if (!original) { toast('å…ˆé€‰ä¸­ä¸€å¥å¯¹ç™½', true); return; }
+      const copy = structuredClone(original);
+      copy.id = uid();
+      act().steps.splice(selectedStep + 1, 0, copy);
+      selectedStep++;
+      markDirty(); renderSidebar(); renderInspector(); updatePreview();
+      const dialogueInput = document.querySelector('[data-field="step.text"]');
+      dialogueInput?.focus(); dialogueInput?.select();
+      toast('å·²å¤åˆ¶è¿™ä¸€å¥ï¼Œå¯ç›´æ¥ä¿®æ”¹é€‰ä¸­çš„å°è¯');
+    } else if (action === 'select-step') {
+      selectedStep = Number(node.dataset.index); renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'delete-step') {
+      if (!confirm('åˆ é™¤è¿™å¥å¯¹ç™½ï¼Ÿ')) return;
+      act().steps.splice(selectedStep, 1); selectedStep = Math.max(0, selectedStep - 1);
+      markDirty(); renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'move-up' || action === 'move-down') {
+      const target = selectedStep + (action === 'move-up' ? -1 : 1);
+      if (target < 0 || target >= act().steps.length) return;
+      [act().steps[selectedStep],act().steps[target]] = [act().steps[target],act().steps[selectedStep]];
+      selectedStep = target; markDirty(); renderSidebar(); renderInspector();
+    } else if (action === 'add-character') {
+      project.characters.push({ id:uid(), name:`è§’è‰²${project.characters.length + 1}`, autoMouth:true, modelId:'', portraitId:'', title:'', description:'',
+        galleryMotionId: project.assets.some(item => item.id === 'preset-mixamo-029') ? 'preset-mixamo-029' : '',
+        galleryYaw: 0, galleryPoseFrame: 1,
+        stories: Array.from({ length: 3 }, () => ({ text:'', unlockLines:0 })) });
+      selectedCharacter = project.characters.length - 1; editorGalleryStoryIndex = 0;
+      markDirty(); renderSidebar(); renderInspector();
+    } else if (action === 'select-character') {
+      selectedCharacter = Number(node.dataset.index); editorGalleryStoryIndex = 0;
+      renderSidebar(); renderInspector();
+    } else if (action === 'preview-character') {
+      selectedCharacter = project.characters.findIndex(item => item.id === node.dataset.characterId);
+      if (selectedCharacter < 0) return;
+      editorGalleryStoryIndex = 0;
+      renderSidebar(); renderInspector();
+    } else if (action === 'preview-story') {
+      editorGalleryStoryIndex = Number(node.dataset.index) || 0;
+      const item = project.characters[selectedCharacter];
+      const content = document.querySelector('#character-preview #gallery-character-text');
+      if (content) content.innerHTML = galleryStoryMarkup(item, Infinity, editorGalleryStoryIndex, true);
+      document.querySelectorAll('#character-preview [data-action="preview-story"]').forEach(button =>
+        button.classList.toggle('active', Number(button.dataset.index) === editorGalleryStoryIndex));
+    } else if (action === 'delete-character') {
+      if (!confirm('åˆ é™¤è¿™ä¸ªè§’è‰²ï¼Ÿå·²æœ‰å¯¹ç™½ä¼šå˜æˆæ—ç™½ã€‚')) return;
+      project.characters.splice(selectedCharacter, 1); selectedCharacter = Math.max(0, selectedCharacter - 1);
+      markDirty(); renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'import') {
+      if (node.dataset.type === 'image') renderImageImportModal(node.dataset.folderId || '', node.dataset.titleImport || '');
+      else await importAssets(node.dataset.type, node.dataset.folderId || '', node.dataset.titleImport || '');
+    } else if (action === 'upload-character-portrait') {
+      const item = project.characters[selectedCharacter];
+      const imported = await bridge('importAsset', { type:'image', single:true });
+      if (item && imported?.length) {
+        imported[0].galleryImage = false;
+        project.assets.push(imported[0]); item.portraitId = imported[0].id; item.portraitSource = 'manual'; item.portraitPoseKey = '';
+        markDirty(); renderSidebar(); renderInspector(); updatePreview();
+      }
+    } else if (action === 'capture-character-portrait') {
+      const item = project.characters[selectedCharacter];
+      if (item?.modelId) await ensureCharacterPortrait(item, true, true);
+    } else if (action === 'cancel-image-import') {
+      document.querySelector('#image-import-modal')?.remove();
+    } else if (action === 'confirm-image-import') {
+      const galleryImage = Boolean(document.querySelector('#image-import-gallery')?.checked);
+      document.querySelector('#image-import-modal')?.remove();
+      await importAssets('image', node.dataset.folderId || '', node.dataset.titleImport || '', galleryImage);
+    } else if (action === 'add-asset-folder') {
+      const type = node.dataset.type;
+      if (type === 'voice') { redirectVoiceUpload(); return; }
+      const name = prompt('æ–°æ–‡ä»¶å¤¹å«ä»€ä¹ˆåå­—ï¼Ÿ', 'æ–°æ–‡ä»¶å¤¹')?.trim();
+      if (!name) return;
+      if (project.assetFolders.some(folder => folder.type === type && folder.name.toLowerCase() === name.toLowerCase())) {
+        toast('è¿™ä¸ªåˆ†ç±»é‡Œå·²æœ‰åŒåæ–‡ä»¶å¤¹', true); return;
+      }
+      const folder = { id: uid(), type, name: name.slice(0, 64) };
+      project.assetFolders.push(folder);
+      currentAssetFolder[type] = folder.id;
+      markDirty(); renderSidebar();
+    } else if (action === 'rename-asset-folder') {
+      const folder = project.assetFolders.find(item => item.id === node.dataset.folderId);
+      if (!folder) return;
+      if (folder.type === 'voice') { toast('é…éŸ³æ–‡ä»¶å¤¹è·Ÿéšè§’è‰²åå­—ï¼Œä¸èƒ½å•ç‹¬æ”¹åã€‚', true); return; }
+      const name = prompt('ä¿®æ”¹æ–‡ä»¶å¤¹åå­—', folder.name)?.trim();
+      if (!name || name === folder.name) return;
+      if (project.assetFolders.some(item => item !== folder && item.type === folder.type && item.name.toLowerCase() === name.toLowerCase())) {
+        toast('è¿™ä¸ªåˆ†ç±»é‡Œå·²æœ‰åŒåæ–‡ä»¶å¤¹', true); return;
+      }
+      folder.name = name.slice(0, 64);
+      markDirty(); renderSidebar();
+    } else if (action === 'delete-asset') {
+      const item = asset(node.dataset.assetId);
+      if (!item) return;
+      const used = JSON.stringify({ ...project, assets: [] }).includes(JSON.stringify(item.id));
+      if (!confirm(item.type === 'voice' ? `åˆ é™¤è¿™æ®µé…éŸ³ï¼Ÿå¼•ç”¨å®ƒçš„å¯¹ç™½ä¼šå˜æˆæ— é…éŸ³ï¼Œå¯ç”¨æ’¤é”€æ‰¾å›ã€‚\n\n${item.name}` : used ? `â€œ${item.name}â€æ­£åœ¨å·¥ç¨‹ä¸­ä½¿ç”¨ã€‚åˆ é™¤åï¼Œå¯¹åº”çš„æ¨¡å‹ã€åŠ¨ä½œæˆ–ç”»é¢ä¼šå¤±æ•ˆã€‚ç¡®å®šåˆ é™¤å—ï¼Ÿ`
+        : `ä»å·¥ç¨‹æ–‡ä»¶å¤¹ä¸­åˆ é™¤â€œ${item.name}â€ï¼Ÿ`)) return;
+      // Keep the working file while an undo/redo entry can still reference it.
+      // Saved/exported packages contain only the current asset list.
+      if (item.type === 'voice') { clearVoiceReferences(project, item.id); if (previewVoiceId === item.id) stopEditorVoicePreview(); }
+      project.assets = project.assets.filter(entry => entry.id !== item.id);
+      markDirty(); renderSidebar(); renderInspector(); updatePreview();
+    } else if (action === 'reset-expressions') {
+      if (!step()) return;
+      step().expressionWeights = {};
+      step().expression = '';
+      markDirty(); renderExpressionControls(); stage?.setExpressions({});
+    } else if (action === 'reset-title-expressions') {
+      project.title.expressionWeights = {};
+      markDirty(); renderTitleExpressionControls(); stage?.setExpressions({});
+    } else if (action === 'add-choice') {
+      if (!step()) return;
+      step().choices.push({ text:'', actId:'' }); markDirty(); renderInspector();
+    } else if (action === 'delete-choice') {
+      step().choices.splice(Number(node.dataset.index),1); markDirty(); renderInspector();
+    } else if (action === 'play') {
+      stopEditorVoicePreview();
+      if (mode === 'editor') {
+        node.disabled = true;
+        try {
+          const result = await bridge('previewGame', { project: structuredClone(project) });
+          window.__lastPreviewGame = result;
+          toast('å·²åœ¨æ–°çª—å£å¯åŠ¨ä¸´æ—¶æ¸¸æˆï¼›å…³é—­æ¸¸æˆçª—å£å³å¯è¿”å›ç¼–è¾‘ã€‚');
+        } finally { node.disabled = false; }
+      } else startPlay();
+    }
+    else if (action === 'continue-game') {
+      const filled = readSaveSlots().map((slot, index) => ({ slot, index })).filter(item => item.slot);
+      filled.sort((a, b) => (Date.parse(b.slot.savedAt || '') || 0) - (Date.parse(a.slot.savedAt || '') || 0));
+      if (filled.length) loadSlot(filled[0].index);
+    }
+    else if (action === 'stop-play') stopPlay();
+    else if (action === 'auto-toggle') {
+      autoPlay = !autoPlay;
+      updateAutoButton();
+      scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+    }
+    else if (action === 'save-game') renderSaveModal('save');
+    else if (action === 'load-game') renderSaveModal('load');
+    else if (action === 'save-slot') saveSlot(Number(node.dataset.index));
+    else if (action === 'load-slot') loadSlot(Number(node.dataset.index));
+    else if (action === 'load-legacy-slot') loadSlot(-1);
+    else if (action === 'close-modal') closePlayerModal();
+    else if (action === 'settings') renderSettingsModal();
+    else if (action === 'gallery') {
+      galleryTab = 'images'; galleryPage = 0; galleryStoryIndex = 0;
+      renderGalleryModal();
+    }
+    else if (action === 'gallery-tab') {
+      if (galleryTab === 'music' && node.dataset.tab !== 'music') stopGalleryMusic();
+      galleryTab = node.dataset.tab;
+      galleryStoryIndex = 0;
+      renderGalleryModal();
+    }
+    else if (action === 'gallery-page') { galleryPage = Number(node.dataset.index); renderGalleryModal(); }
+    else if (action === 'gallery-image') {
+      const item = asset(node.dataset.imageId);
+      if (!item || !hasDiscovered('image', item.id)) return;
+      document.querySelector('#gallery-lightbox')?.remove();
+      document.querySelector('#player-modal')?.insertAdjacentHTML('beforeend',
+        `<div id="gallery-lightbox" class="gallery-lightbox">${button('å…³é—­å¤§å›¾ Ã—', 'gallery-image-close')}
+          <img src="${escape(assetUrl(item))}" alt="é‰´èµå›¾ç‰‡"></div>`);
+    }
+    else if (action === 'gallery-image-close') document.querySelector('#gallery-lightbox')?.remove();
+    else if (action === 'gallery-track') playGalleryTrack(Number(node.dataset.index));
+    else if (action === 'gallery-music-toggle') {
+      if (galleryMusic.paused) {
+        const selected = galleryTracks()[galleryTrackIndex];
+        if (!selected || !hasDiscovered('music', selected.id)) return;
+        if (galleryMusic.src !== assetUrl(selected)) playGalleryTrack(galleryTrackIndex);
+        else {
+          if (!galleryMusicInterruptedBgm) galleryMusicInterruptedBgm = !music.paused;
+          music.pause();
+          galleryMusic.play().catch(() => toast('è¿™é¦–éŸ³ä¹æ— æ³•æ’­æ”¾ï¼Œè¯·æ£€æŸ¥éŸ³é¢‘æ–‡ä»¶', true));
+          renderGalleryMusicState();
+        }
+      } else { galleryMusic.pause(); renderGalleryMusicState(); }
+    }
+    else if (action === 'gallery-prev') playGalleryTrack(nextUnlockedTrack(-1));
+    else if (action === 'gallery-next') playGalleryTrack(nextUnlockedTrack(1));
+    else if (action === 'gallery-repeat') { galleryRepeatOne = !galleryRepeatOne; renderGalleryMusicState(); }
+    else if (action === 'gallery-character') {
+      galleryCharacterId = node.dataset.characterId;
+      galleryStoryIndex = 0;
+      renderGalleryModal();
+    }
+    else if (action === 'gallery-story') {
+      galleryStoryIndex = Number(node.dataset.index);
+      renderGalleryCharacterText();
+    }
+    else if (action === 'play-progress') renderProgressModal();
+    else if (action === 'chapter-scroll') {
+      const rail = document.querySelector('#chapter-rail');
+      rail?.scrollBy({ left: Number(node.dataset.direction) * rail.clientWidth * .8, behavior: 'smooth' });
+    }
+    else if (action === 'chapter-select') {
+      const card = document.querySelector(`#chapter-card-${Number(node.dataset.index)}`);
+      card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      document.querySelectorAll('[data-action="chapter-select"]').forEach(button => button.classList.toggle('selected', button === node));
+    }
+    else if (action === 'chapter-replay') {
+      const index = Number(node.dataset.index);
+      const chapter = project.acts[index];
+      const chapterIndex = project.acts.slice(0, index).filter(item => !isEvent(item)).length;
+      if (!chapter || isEvent(chapter) || !chapterUnlocked(chapter, chapterIndex, loadLifetimeProgress()) || !chapter.steps.length) return;
+      closePlayerModal(); playing = true; playAct = index; playStep = 0; preparedAct = -1;
+      titleRequest++; playViewedStepIds = new Set(); playCharacterLineCounts = {};
+      restartPlayerAutoSave(); showPlayStep();
+    }
+    else if (action === 'exit-game') await bridge('exitGame');
+    else if (action === 'apply-resolution') {
+      const value = document.querySelector('#window-resolution')?.value;
+      const result = await bridge('setWindowResolution', { value });
+      playerResolution = result.windowResolution;
+      renderSettingsModal();
+    }
+    else if (action === 'toggle-fullscreen') {
+      const result = await bridge('setFullscreen', { value: !playerFullscreen });
+      playerFullscreen = result.fullscreen;
+      playerResolution = result.windowResolution;
+      const quickButton = document.querySelector('.scene-quick-actions [data-action="toggle-fullscreen"]');
+      if (quickButton) quickButton.textContent = playerFullscreen ? 'çª—å£' : 'å…¨å±';
+      if (saveModalMode === 'settings') renderSettingsModal();
+    }
+    else if (action === 'choose') {
+      const choice = project.acts[playAct].steps[playStep].choices[Number(node.dataset.index)];
+      const target = project.acts.findIndex(item => item.id === choice.actId);
+      if (target < 0) { toast('è¿™ä¸ªé€‰é¡¹è¿˜æ²¡æœ‰è®¾ç½®ç›®æ ‡å¹•', true); return; }
+      playAct = target; playStep = 0; showPlayStep();
+    }
+  } catch (error) { toast(error.message, true); }
+});
 
-NÃBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÜÙ][™ÜÉÊH™[™\”Ù][™ÜÓ[Ù[
-
-NÃBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÙØ[\IÊHÃBˆØ[\UXˆH	Ú[XYÙ\ÉÎÈØ[\TYÙHHÈØ[\TİÜR[™^HÃBˆ™[™\‘Ø[\S[Ù[
-
-NÃBˆCBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÙØ[\K]X‰ÊHÃBˆYˆ
-Ø[\UXˆOOH	Û]\ÚXÉÈ	‰ˆ›ÙK™]\Ù]XˆOOH	Û]\ÚXÉÊHİÜØ[\S]\ÚXÊ
-NÃBˆØ[\UXˆH›ÙK™]\Ù]XÃBˆØ[\TİÜR[™^HÃBˆ™[™\‘Ø[\S[Ù[
-
-NÃBˆCBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÙØ[\K\YÙIÊHÈØ[\TYÙHH[X™\Š›ÙK™]\Ù]š[™^
-NÈ™[™\‘Ø[\S[Ù[
-
-NÈCBˆ[ÙHYˆ
-Xİ[ÛˆOOH	ÙØ[\KZ[XYÙIÊHÃBˆÛÛœİ][HH\ÜÙ]
-›ÙK™]\Ù]š[XYÙRY
-NÃBˆYˆ
-Z][HZ\Ñ\ØÛİ™\™Y
-	Ú[XYÙIË][KšY
-JH™]\›ÃBˆØİ[Y[œ]Y\TÙ[Xİ÷ÓMm¢G§²ÚîÆ­yŞ;
+document.addEventListener('input', event => {
+  if (library.input(event.target)) return;
+  const node = event.target;
+  if (node.dataset.eventField && isEvent(act())) {
+    const key = node.dataset.eventField;
+    const holder = key === 'name' ? act() : node.hasAttribute('data-event-row') ? act().event.declarations[Number(node.dataset.eventRow)] : act().event;
+    if (!holder) return;
+    holder[key] = node.type === 'checkbox' ? node.checked : key === 'burstInterval' ? Math.max(.12, Math.min(3, Number(node.value) || .22)) : node.value;
+    markDirty(); renderSidebar();
+    if (['type','burst'].includes(key)) renderInspector();
+    updatePreview(); return;
+  }
+  if (node.dataset.motionOptions && project) {
+    const scope = node.dataset.motionOptions;
+    const holder = scope === 'step' ? step() : scope === 'title' ? project.title
+      : scope.startsWith('cast:') ? (act().castSettings[scope.slice(5)] ||= {}) : null;
+    if (!holder) return;
+    holder.motionOptions ||= {};
+    const key = node.dataset.motionSetting;
+    if (key === 'loop') {
+      holder.motionOptions.loop = node.value === 'true';
+      const after = node.closest('.motion-advanced')?.querySelector('[data-motion-setting="after"]');
+      if (after) after.disabled = holder.motionOptions.loop;
+    } else if (key === 'startFrame') {
+      holder.motionOptions.startFrame = Math.max(1, Math.floor(Number(node.value) || 1));
+    } else if (key === 'endFrame') {
+      holder.motionOptions.endFrame = node.value === '' ? null : Math.max(1, Math.floor(Number(node.value) || 1));
+    } else if (key === 'after') holder.motionOptions.after = node.value === 'idle' ? 'idle' : 'hold';
+    else if (key === 'placement') holder.motionOptions.placement = node.value === 'free' ? 'free' : 'bounded';
+    else if (key === 'feet') holder.motionOptions.feet = ['lock', 'free'].includes(node.value) ? node.value : 'auto';
+    markDirty();
+    if (scope === 'title') showTitleScene(false);
+    else updatePreview();
+    return;
+  }
+  if (node.id === 'editor-auto-save-minutes') {
+    const minutes = Number(node.value);
+    if (![5, 10, 30, 60].includes(minutes)) return;
+    editorSettings.autoSaveMinutes = minutes;
+    saveEditorSettings();
+    restartEditorAutoSave();
+    toast(`å·²è®¾ç½®æ¯ ${minutes} åˆ†é’Ÿè‡ªåŠ¨ä¿å­˜`);
+    return;
+  }
+  if (node.id === 'editor-theme') {
+    editorSettings.theme = node.value === 'dark' ? 'dark' : 'light';
+    saveEditorSettings(); applyEditorTheme();
+    return;
+  }
+  if (node.dataset.galleryMusic && project) {
+    const item = asset(node.dataset.galleryMusic);
+    if (item) { item.galleryMusic = node.checked; markDirty(); }
+    return;
+  }
+  if (node.dataset.galleryImage && project) {
+    const item = asset(node.dataset.galleryImage);
+    if (item) { item.galleryImage = node.checked; markDirty(); }
+    return;
+  }
+  if (node.dataset.audioTitle && project) {
+    const item = asset(node.dataset.audioTitle);
+    if (item) { item.galleryTitle = node.value; markDirty(); }
+    return;
+  }
+  if (node.dataset.gallerySeek && Number.isFinite(galleryMusic.duration)) {
+    galleryMusic.currentTime = Number(node.value);
+    updateGalleryMusicTime(); return;
+  }
+  if (node.dataset.storyIndex !== undefined && project) {
+    const story = project.characters[selectedCharacter]?.stories?.[Number(node.dataset.storyIndex)];
+    if (!story) return;
+    story[node.dataset.storyField] = node.dataset.storyField === 'unlockLines'
+      ? Math.max(0, Math.floor(Number(node.value) || 0)) : node.value;
+    markDirty(); if (activePanel === 'characters') updatePreview(); return;
+  }
+  if (node.id === 'project-name') { project.name = node.value; markDirty(); if (activePanel === 'title') updatePreview(); return; }
+  if (node.dataset.titleField && project) {
+    project.title[node.dataset.titleField] = node.value;
+    markDirty();
+    if (node.dataset.titleField !== 'authorNote') updatePreview();
+    return;
+  }
+  if (node.dataset.uiField && project) {
+    project.ui[node.dataset.uiField] = node.value;
+    markDirty();
+    return;
+  }
+  if (node.dataset.titleAdjust && project) {
+    const key = node.dataset.titleAdjust;
+    project.title[key] = key === 'size' ? Number(node.value) / 100 : Number(node.value);
+    const output = document.querySelector(`[data-title-output="${key}"]`);
+    if (output) output.textContent = key === 'size' ? `${node.value}%`
+      : ['yaw', 'pitch', 'cameraAngle'].includes(key) ? `${node.value}Â°` : Number(node.value).toFixed(2);
+    markDirty(); updatePreview(); return;
+  }
+  if (node.dataset.titleExpression && project) {
+    const name = node.dataset.titleExpression;
     project.title.expressionWeights ||= {};
     project.title.expressionWeights[name] = Number(node.value) / 100;
     const output = document.querySelector(`[data-title-expression-output="${CSS.escape(name)}"]`);
@@ -394,51 +2912,325 @@ JH™]\›ÃBˆØİ[Y[œ]Y\TÙ[Xİ÷ÓMm¢G§²ÚîÆ­yŞ;
     }
     return;
   }
-  if (node.dataset.assetFolder &YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Ô˜ÁÉ½©•Ğ¤ì4(€€€½¹ÍĞ¥Ñ•´€ô…ÍÍ•Ğ¡¹½‘”¹‘…Ñ…Í•Ğ¹…ÍÍ•Ñ½±‘•È¤ì4(€€€¥˜€ …¥Ñ•´¤É•ÑÕÉ¸ì4(€€€¥˜€¡¥Ñ•´¹ÑåÁ”€ôôô€Ù½¥”œ¤ìÑ½…ÍĞ Ÿ¦7¦~Ï–ş¦†ïVg–r£š&–Æ{¢K¢&ËjšZ’îÛ–’ç’â·œ°ÑÉÕ”¤ìÉ•¹‘•ÉÍÍ•Ñ½¬ ¤ìÉ•ÑÕÉ¸ìô4(€€€¥Ñ•´¹™½±‘•É%€ô¹½‘”¹Ù…±Õ”ì4(€€€¥˜€¡¹½‘”¹Ù…±Õ”¤½Á•¹ÍÍ•Ñ½±‘•ÉÌ¹…‘¡¹½‘”¹Ù…±Õ”¤ì4(€€€µ…É­¥ÉÑä ¤ìÉ•¹‘•ÉM¥‘•‰…È ¤ìÉ•ÑÕÉ¸ì4(€ô4(€¥˜€¡¹½‘”¹‘…Ñ…Í•Ğ¹ÍÑ•Á…ÍĞ€˜˜ÍÑ•À ¤¤ì4(€€€½¹ÍĞÁ½Í¥Ñ¥½¹Ì€ô…ÍÑÍÍ¥¹µ•¹ÑÌ¡…Ğ ¤°ÍÑ•À ¤¤ì4(€€€½¹ÍĞµ½Ù¥¹œ€ôÁ½Í¥Ñ¥½¹Ì¹™¥¹¡•¹ÑÉä€ôø•¹ÑÉä¹…Ñ½É-•ä€ôôô¹½‘”¹‘…Ñ…Í•Ğ¹ÍÑ•Á…ÍĞ¤ì4(€€€¥˜€ …µ½Ù¥¹œñğ€……ÍÑM±½ÑÌ¹¥¹±Õ‘•Ì¡¹½‘”¹Ù…±Õ”¤¤É•ÑÕÉ¸ì4(€€€½¹ÍĞÁÉ•Ù¥½ÕÌ€ôµ½Ù¥¹œ¹Á½Í¥Ñ¥½¸ì4(€€€½¹ÍĞ½Ñ¡•È€ôÁ½Í¥Ñ¥½¹Ì¹™¥¹¡•¹ÑÉä€ôø•¹ÑÉä¹Á½Í¥Ñ¥½¸€ôôô¹½‘”¹Ù…±Õ”€˜˜•¹ÑÉä€„ôôµ½Ù¥¹œ¤ì4(€€€½¹ÍĞÕÁ‘…Ñ•€ô=‰©•Ğ¹™É½µ¹ÑÉ¥•Ì¡Á½Í¥Ñ¥½¹Ì¹µ…À¡•¹ÑÉä€ôøm•¹ÑÉä¹…Ñ½É-•ä°•¹ÑÉä¹Á½Í¥Ñ¥½¹t¤¤ì4(€€€ÕÁ‘…Ñ•‘mµ½Ù¥¹œ¹…Ñ½É-•åt€ô¹½‘”¹Ù…±Õ”ì4(€€€¥˜€¡½Ñ¡•È¤ÕÁ‘…Ñ•‘m½Ñ¡•È¹…Ñ½É-•åt€ôÁÉ•Ù¥½ÕÌì4(€€€ÍÑ•À ¤¹…ÍÑA½Í¥Ñ¥½¹Ì€ôÕÁ‘…Ñ•ì4(€€€µ…É­¥ÉÑä ¤ìÉ•¹‘•É%¹ÍÁ•Ñ½È ¤ìÕÁ‘…Ñ•AÉ•Ù¥•Ü ¤ìÉ•ÑÕÉ¸ì4(€ô4(€¥˜€¡¹½‘”¹‘…Ñ…Í•Ğ¹…ÍÑM±½Ğ€˜˜…Ğ ¤¤ì4(€€€…Ğ ¤¹…ÍĞñğôì±•™Ğè€œœ°•¹Ñ•Èè€œœ°É¥¡Ğè€œœôì4(€€€™½È€¡½¹ÍĞÍ±½Ğ½˜…ÍÑM±½ÑÌ¤¥˜€¡Í±½Ğ€„ôô¹½‘”¹‘…Ñ…Í•Ğ¹…ÍÑM±½Ğ€˜˜…Ğ ¤¹…ÍÑmÍ±½Ñt€ôôô¹½‘”¹Ù…±Õ”¤…Ğ ¤¹…ÍÑmÍ±½Ñt€ô€œœì4(€€€…Ğ ¤¹…ÍÑm¹½‘”¹‘…Ñ…Í•Ğ¹…ÍÑM±½Ñt€ô¹½‘”¹Ù…±Õ”ì4(€€€µ…É­¥ÉÑä ¤ìÉ•¹‘•É%¹ÍÁ•Ñ½È ¤ìÕÁ‘…Ñ•AÉ•Ù¥•Ü ¤ìÉ•ÑÕÉ¸ì4(€ô4(€¥˜€¡¹½‘”¹‘…Ñ…Í•Ğ¹…ÍÑ5½Ñ¥½¸€˜˜…Ğ ¤¤ì4(€€€½¹ÍĞÍ±½Ğ€ô¹½‘”¹‘…Ñ…Í•Ğ¹…ÍÑ5½Ñ¥½¸ì4(€€€…Ğ ¤¹…ÍÑM•ÑÑ¥¹Ìñğôíôì4(€€€ƒ}4ÖÚ$z{-®éÜj×öâ’&WGW&ã°Ğ¢WfVçBç&WfVçDFVfVÇB‚“²WfVçBç7F÷–ÖÖVF–FU&÷vF–öâ‚“°Ğ¢–b‚WfVçBç&WVB’&W7F÷&TVF—F÷$†—7F÷'’†F—&V7F–öâ“°Ğ§ÒÂG'VR“°Ğ§v–æF÷ræFDWfVçDÆ—7FVæW"‚v&Vf÷&WVæÆöBrÂWfVçBÓâ²–b†F—'G’’WfVçBç&WfVçDFVfVÇB‚“²Ò“°Ğ¦7–æ2gVæ7F–öâ'VäÖ÷WF…6Öö¶R‡†6R’°Ğ¢6öç7B76W'BÒ‡fÇVRÂÖW76vR’Óâ²–b‚fÇVR’F‡&÷ræWrW'&÷"†ÖW76vR“²Ó°Ğ¢6öç7Bv—BÒ×2ÓâæWr&öÖ—6R‡&W6öÇfRÓâ6WEF–ÖV÷WB‡&W6öÇfRÂ×2’“°Ğ¢6öç7B6†V6·2ÒµÓ°Ğ¢–b‡†6RÓÓÒvÖ÷WF‚ÖVF—F÷"r’°Ğ¢7F—fUæVÂÒv6†&7FW'2s²6VÆV7FVD6†&7FW"Ò²&VæFW%6–FV&"‚“²&VæFW$–ç7V7F÷"‚“²VF—F÷$†—7F÷'’ç&W6WB‚“°Ğ¢6öç7Bf–VÆBÒ‚’ÓâFö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖf–VÆCÒ&6†&7FW"æWFôÖ÷WF‚%Òr“°Ğ¢76W'B†f–VÆB‚“òçfÇVRÓÓÒvöârÂvFVfVÇBÖ÷WF‚6WGF–ærr“°Ğ¢f–VÆB‚’çfÇVRÒvöfbs²f–VÆB‚’æF—7F6„WfVçB†æWrWfVçB‚v–çWBrÂ²'V&&ÆW3¢G'VRÒ’“°Ğ¢76W'B‡&ö¦V7Bæ6†&7FW'5³ÒæWFôÖ÷WF‚ÓÓÒfÇ6RÂw6WGF–æræ÷B&ööÆVâr“°Ğ¢v—B&W7F÷&TVF—F÷$†—7F÷'’‚Ó“²76W'B‡&ö¦V7Bæ6†&7FW'5³ÒæWFôÖ÷WF‚ÓÓÒG'VRbbf–VÆB‚’çfÇVRÓÓÒvöârÂvÖ÷WF‚6WGF–ærVæFòr“°Ğ¢v—B&W7F÷&TVF—F÷$†—7F÷'’ƒ“²76W'B‡&ö¦V7Bæ6†&7FW'5³ÒæWFôÖ÷WF‚ÓÓÒfÇ6RÂvÖ÷WF‚6WGF–ær&VFòr“°Ğ¢v—B&W7F÷&TVF—F÷$†—7F÷'’‚Ó“°Ğ¢v—B6fR‚“°Ğ¢&WGW&â²ö³¢G'VRÂFVfVÇDVæ&ÆVC¢G'VRÂF—6&ÆTæEVæFõ&VFó¢G'VRÂ6WGF–æw3¢&ö¦V7Bæ6†&7FW'2æÖ†2Óâ‡²–C¢2æ–BÂWFôÖ÷WFƒ¢2æWFôÖ÷WF‚Ò’’Ó°Ğ¢ĞĞ¢76W'B†ÖöFRÓÓÒwÆ–W"rÂvÖ÷WF‚FW7B&WV—&W2W‡÷'FVBvÖRr“°Ğ¢6öç7B&Vf÷&RÒ¥4ôâç7G&–æv–g’‡&ö¦V7B“°Ğ¢6öç7B&öÆRÒ&õš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍZ™Xİ˜Ú\˜Xİ\œÖÌKXİÜ’YH›ÛKšYÃBˆ^ÜYYHLÈ^Z[™ÈHYNÈ^PXİHÈ^Tİ\HÈ™\\™YXİHLNÈ]ØZ]ÚİÔ^Tİ\
+  if (node.dataset.assetFolder && project) {
+    const item = asset(node.dataset.assetFolder);
+    if (!item) return;
+    if (item.type === 'voice') { toast('é…éŸ³å¿…é¡»ç•™åœ¨æ‰€å±è§’è‰²çš„æ–‡ä»¶å¤¹ä¸­ã€‚', true); renderAssetDock(); return; }
+    item.folderId = node.value;
+    if (node.value) openAssetFolders.add(node.value);
+    markDirty(); renderSidebar(); return;
+  }
+  if (node.dataset.stepCast && step()) {
+    const positions = castAssignments(act(), step());
+    const moving = positions.find(entry => entry.actorKey === node.dataset.stepCast);
+    if (!moving || !castSlots.includes(node.value)) return;
+    const previous = moving.position;
+    const other = positions.find(entry => entry.position === node.value && entry !== moving);
+    const updated = Object.fromEntries(positions.map(entry => [entry.actorKey, entry.position]));
+    updated[moving.actorKey] = node.value;
+    if (other) updated[other.actorKey] = previous;
+    step().castPositions = updated;
+    markDirty(); renderInspector(); updatePreview(); return;
+  }
+  if (node.dataset.castSlot && act()) {
+    act().cast ||= { left: '', center: '', right: '' };
+    for (const slot of castSlots) if (slot !== node.dataset.castSlot && act().cast[slot] === node.value) act().cast[slot] = '';
+    act().cast[node.dataset.castSlot] = node.value;
+    markDirty(); renderInspector(); updatePreview(); return;
+  }
+  if (node.dataset.castMotion && act()) {
+    const slot = node.dataset.castMotion;
+    act().castSettings ||= {};
+    act().castSettings[slot] ||= {};
+    act().castSettings[slot].motionId = node.value;
+    markDirty(); updatePreview(); refreshMotionHints(); return;
+  }
+  if (node.dataset.castAdjust && act()) {
+    const [slot, key] = node.dataset.castAdjust.split('.');
+    act().castSettings ||= {};
+    act().castSettings[slot] ||= {};
+    act().castSettings[slot][key] = key === 'size' ? Number(node.value) / 100 : Number(node.value);
+    const output = document.querySelector(`[data-cast-output="${slot}.${key}"]`);
+    if (output) output.textContent = key === 'size' ? `${node.value}%` : key === 'yaw' ? `${node.value}Â°` : node.value;
+    markDirty(); updatePreview(); return;
+  }
+  if (node.dataset.castExpression && act()) {
+    const divider = node.dataset.castExpression.indexOf('.');
+    const slot = node.dataset.castExpression.slice(0, divider);
+    const name = node.dataset.castExpression.slice(divider + 1);
+    act().castSettings ||= {};
+    act().castSettings[slot] ||= {};
+    act().castSettings[slot].expressionWeights ||= {};
+    act().castSettings[slot].expressionWeights[name] = Number(node.value) / 100;
+    const output = [...document.querySelectorAll('[data-cast-expression-output]')]
+      .find(item => item.dataset.castExpressionOutput === node.dataset.castExpression);
+    if (output) output.textContent = `${node.value}%`;
+    markDirty();
+    updatePreview(); return;
+  }
+  if (node.dataset.render && project) {
+    const key = node.dataset.render;
+    act().render[key] = key === 'autoLight' ? node.value === 'true'
+      : key === 'shadowEnabled' ? node.checked
+      : ['outline', 'shadowAngle', ...Object.keys(colorDefaults)].includes(key) ? Number(node.value)
+      : ['lightStrength', 'shadowOpacity', 'paintStrength', 'shadowHeight'].includes(key) ? Number(node.value) / 100 : node.value;
+    if (key === 'lightStrength') document.querySelector('#light-strength-value').textContent = `${node.value}%`;
+    const output = document.querySelector(`[data-render-output="${key}"]`);
+    if (output) output.textContent = key === 'shadowAngle' ? `${node.value}Â°`
+      : key === 'hue' ? `${node.value}Â°` : key === 'temperature' ? node.value
+      : key === 'shadowHeight' ? `${Number(node.value) > 0 ? '+' : ''}${node.value} å˜ç±³` : `${node.value}%`;
+    markDirty();
+    stage?.setRenderSettings(act().render);
+    applySceneColor(act().render);
+    stage?.setBackgroundLighting(asset(act()?.backgroundId));
+    return;
+  }
+  if (node.dataset.weather && act()) {
+    const key = node.dataset.weather;
+    act().weather = normalizeWeather(act().weather);
+    act().weather[key] = ['splashes','atmosphere','autoMood','windMotion'].includes(key) ? node.checked
+      : key === 'direction' ? Number(node.value)
+      : ['type','soundId'].includes(key) ? node.value : Number(node.value)/100;
+    act().weather = normalizeWeather(act().weather);
+    const output = document.querySelector(`[data-weather-output="${key}"]`);
+    if (output) output.textContent = `${node.value}%`;
+    markDirty(); setSceneWeather(act()); applySceneColor(chapterRender(act(),project.render));
+    if (['type','splashes'].includes(key)) renderInspector();
+    return;
+  }
+  if (node.dataset.galleryAdjust && project) {
+    const item = project.characters[selectedCharacter];
+    if (!item) return;
+    const key = node.dataset.galleryAdjust;
+    item[key] = Number(node.value);
+    if (key === 'galleryPoseFrame') delete item.galleryPoseTime;
+    if (key === 'galleryPoseFrame') {
+      const number = document.querySelector('[data-gallery-frame-number]');
+      if (number) number.value = node.value;
+    }
+    document.querySelector(`[data-gallery-output="${key}"]`).textContent = key === 'galleryYaw'
+      ? `${node.value}Â°` : `ç¬¬ ${node.value} / ${node.max} å¸§`;
+    markDirty(); if (activePanel === 'characters') updatePreview(); return;
+  }
+  if (node.hasAttribute('data-gallery-frame-number') && project) {
+    const item = project.characters[selectedCharacter];
+    const slider = document.querySelector('[data-gallery-adjust="galleryPoseFrame"]');
+    if (!item || !slider) return;
+    const frame = Math.max(1, Math.min(Number(slider.max), Math.floor(Number(node.value) || 1)));
+    node.value = frame;
+    slider.value = frame;
+    item.galleryPoseFrame = frame;
+    delete item.galleryPoseTime;
+    document.querySelector('[data-gallery-output="galleryPoseFrame"]').textContent = `ç¬¬ ${frame} / ${slider.max} å¸§`;
+    markDirty(); updatePreview(); return;
+  }
+  if (node.dataset.adjust && step()) {
+    const key = node.dataset.adjust;
+    const value = key === 'size' ? Number(node.value) / 100 : Number(node.value);
+    step()[key] = value;
+    document.querySelector(`[data-adjust-output="${key}"]`).textContent = key === 'size' ? `${node.value}%` : key === 'yaw' ? `${node.value}Â°` : value.toFixed(2);
+    markDirty(); updatePreview();
+    return;
+  }
+  if (node.dataset.expression && step()) {
+    const name = node.dataset.expression;
+    step().expressionWeights = { ...expressionWeightsOf(step()), [name]: Number(node.value) / 100 };
+    step().expression = '';
+    document.querySelectorAll('[data-expression-output]').forEach(output => {
+      if (output.dataset.expressionOutput === name) output.textContent = `${node.value}%`;
+    });
+    markDirty(); stage?.setExpressions(step().expressionWeights);
+    return;
+  }
+  if (node.dataset.choiceField) {
+    step().choices[Number(node.dataset.choiceIndex)][node.dataset.choiceField] = node.value;
+    markDirty(); return;
+  }
+  const path = node.dataset.field;
+  if (!path || !project) return;
+  const [scope, property, nested] = path.split('.');
+  const target = scope === 'act' ? act() : scope === 'step' ? step()
+    : scope === 'character' ? project.characters[selectedCharacter] : project;
+  if (!target) return;
+  if (path === 'step.voiceId' && node.value && !voicesForCharacter(project, target.characterId).some(item => item.id === node.value)) { toast('åªèƒ½é€‰æ‹©å½“å‰è§’è‰²çš„ä¸“å±é…éŸ³ã€‚', true); renderInspector(); return; }
+  if (nested) target[property][nested] = node.value;
+  else target[property] = path === 'character.autoMouth' ? node.value !== 'off' : node.value;
+  markDirty();
+  if (node.tagName === 'SELECT') {
+    if (path === 'act.coverImageId') renderInspector();
+    if (path === 'step.characterId' && !step().speaker) {
+      document.querySelector('[data-field="step.speaker"]')?.setAttribute('placeholder', character(node.value)?.name || 'ç•™ç©ºæ—¶ç”¨è§’è‰²åå­—');
+    }
+    if (path === 'character.modelId') {
+      target.portraitId = '';
+      target.portraitSource = '';
+      target.portraitPoseKey = '';
+      temporaryPortraits.delete(target.id);
+      if (target.modelId) ensureCharacterPortrait(target);
+      renderInspector();
+    }
+    if (path === 'step.characterId') renderInspector();
+    renderSidebar(); renderExpressionControls(); updatePreview();
+    if (mode === 'editor') editorHistory.commit({ derived: true });
+  } else if (path === 'step.text' || path === 'step.speaker') {
+    document.querySelector('#dialogue-text').textContent = step().text;
+    document.querySelector('#dialogue-speaker').textContent = step().speaker || character(step().characterId)?.name || 'æ—ç™½';
+    updateSpeakerPortrait(step().characterId, true);
+    renderSidebar();
+  } else if (path.startsWith('character.')) {
+    if (path === 'character.name') renderSidebar();
+    updatePreview();
+  } else if (path === 'act.name') {
+    renderSidebar();
+  }
+});
+document.addEventListener('change', event => {
+  const node = event.target;
+  if (node.dataset.galleryAdjust !== 'galleryPoseFrame' &&
+      !node.hasAttribute('data-gallery-frame-number') && node.dataset.field !== 'character.galleryMotionId') return;
+  const item = project?.characters[selectedCharacter];
+  if (item?.modelId && portraitIsAutomatic(item)) ensureCharacterPortrait(item, true);
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.querySelector('#gallery-lightbox')) {
+    document.querySelector('#gallery-lightbox').remove(); return;
+  }
+  if (event.key === 'Escape' && saveModalMode) { closePlayerModal(); return; }
+  if (saveModalMode) return;
+  if (!playing || transitioning || event.repeat || !['Enter',' '].includes(event.key) || event.target.closest('button,input,textarea,select')) return;
+  event.preventDefault(); next();
+});
+document.addEventListener('keydown', event => {
+  if (mode !== 'editor' || !project || event.isComposing || event.keyCode === 229 ||
+      document.querySelector('#book-reader') || !(event.ctrlKey || event.metaKey) || event.altKey) return;
+  const key = event.key.toLowerCase();
+  if (event.target.matches?.('input,textarea,select') && !historyInputContext(event.target)) return;
+  const direction = key === 'z' ? (event.shiftKey ? 1 : -1) : key === 'y' ? 1 : 0;
+  if (!direction) return;
+  event.preventDefault(); event.stopImmediatePropagation();
+  if (!event.repeat) restoreEditorHistory(direction);
+}, true);
+window.addEventListener('beforeunload', event => { if (dirty) event.preventDefault(); });
+async function runMouthSmoke(phase) {
+  const assert = (value, message) => { if (!value) throw new Error(message); };
+  const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+  const checks = [];
+  if (phase === 'mouth-editor') {
+    activePanel = 'characters'; selectedCharacter = 0; renderSidebar(); renderInspector(); editorHistory.reset();
+    const field = () => document.querySelector('[data-field="character.autoMouth"]');
+    assert(field()?.value === 'on', 'default mouth setting');
+    field().value = 'off'; field().dispatchEvent(new Event('input', { bubbles: true }));
+    assert(project.characters[0].autoMouth === false, 'setting not boolean');
+    await restoreEditorHistory(-1); assert(project.characters[0].autoMouth === true && field().value === 'on', 'mouth setting undo');
+    await restoreEditorHistory(1); assert(project.characters[0].autoMouth === false, 'mouth setting redo');
+    await restoreEditorHistory(-1);
+    await save();
+    return { ok: true, defaultEnabled: true, disableAndUndoRedo: true, settings: project.characters.map(c => ({ id: c.id, autoMouth: c.autoMouth })) };
+  }
+  assert(mode === 'player', 'mouth test requires exported game');
+  const before = JSON.stringify(project);
+  const role = project.characters[0], actorId = role.id;
+  textSpeed = 12; playing = true; playAct = 0; playStep = 0; preparedAct = -1; await showPlayStep();
+  const record = stage.visibleRecords.get(actorId);
+  assert(record?.talkingMouth?.diagnostics().running && typingTimer, 'mouth not active while typing');
+  const target = structuredClone(record.expressionTarget), initialOthers = [...stage.visibleRecords.entries()].filter(([id]) => id !== actorId).map(([id,r]) => [id, structuredClone(r.expressionTarget)]);
+  const samples = [], shapes = new Set(); let visibleMorphChanged = false;
+  const morphs = () => { const values = []; record.vrm.scene.traverse(node => { if (node.morphTargetInfluences) values.push(...node.morphTargetInfluences); }); return values; };
+  await wait(400); const firstMorphs = morphs();
+  for (let n = 0; n < 24; n++) {
+    await wait(45);
+    const state = record.talkingMouth.diagnostics(); samples.push(state.values);
+    state.values.forEach((value, i) => { if (value > .08) shapes.add(state.names[i]); });
+    assert(state.values.reduce((a,b) => a+b,0) < .67, 'mouth too wide');
+    assert(Math.abs(record.vrm.expressionManager.getValue('happy') - target.happy) < .005, 'emotion overwritten');
+    assert(initialOthers.every(([id]) => !stage.visibleRecords.get(id).talkingMouth?.diagnostics().running), 'other actor is talking');
+    if (morphs().some((value, i) => Math.abs(value - firstMorphs[i]) > .015)) visibleMorphChanged = true;
+  }
+  assert(shapes.size >= 2 && visibleMorphChanged, 'mouth weights changed without mesh movement');
+  assert(JSON.stringify(project) === before, 'animation changed authored project');
+  checks.push('çœŸå® VRM æ¨¡å‹å˜´å·´æŒç»­å˜åŒ–ï¼Œåªæœ‰è¯´è¯è§’è‰²åŠ¨å˜´ï¼Œç¬‘å®¹åŠå·¥ç¨‹æ•°æ®ä¿æŒåŸæ ·');
+  stage.talkingLetter('ã€‚'); await wait(120); assert(record.talkingMouth.diagnostics().pause > 0, 'punctuation pause');
+  checks.push('æ ‡ç‚¹å¤„çŸ­æš‚åœé¡¿');
+  finishTyping(); assert(!stage.talkingRecord && !record.talkingMouth.diagnostics().running, 'instant text completion did not stop');
+  for (const name of record.talkingMouth.diagnostics().names) assert(Math.abs(record.vrm.expressionManager.getValue(name) - (target[name] || 0)) < .005, 'authored mouth not restored');
+  checks.push('ç‚¹å‡»æ˜¾ç¤ºå…¨æ–‡ç«‹å³åœå˜´ï¼Œå¹¶æ¢å¤ä½œè€…è®¾å®šçš„å˜´å‹');
+  startTyping('è‡ªç„¶ç»“æŸã€‚', actorId); await wait(700); assert(!typingTimer && !stage.talkingRecord, 'natural completion did not stop');
+  checks.push('æ–‡å­—è‡ªç„¶æ˜¾ç¤ºå®Œæˆååœæ­¢');
+  role.autoMouth = false; startTyping('å…³é—­è‡ªåŠ¨å˜´å‹åçš„é•¿å¥æµ‹è¯•ã€‚', actorId); await wait(150); assert(typingTimer && !stage.talkingRecord, 'disabled role mouth still active');
+  clearTyping(); role.autoMouth = true;
+  checks.push('è§’è‰²å¼€å…³å…³é—­åä»æ˜¾ç¤ºæ–‡å­—ï¼Œä½†ä¸è‡ªåŠ¨åŠ¨å˜´');
+  playStep = 1; await showPlayStep(); const secondId = project.acts[0].steps[1].characterId;
+  assert(stage.talkingRecord === stage.visibleRecords.get(secondId) && !record.talkingMouth.diagnostics().running, 'speaker switching');
+  clearTyping(); checks.push('æ¢è¯´è¯è§’è‰²åï¼Œä¸Šä¸€ä½åœå˜´ï¼Œä¸‹ä¸€ä½å¼€å§‹åŠ¨å˜´');
+  startTyping('èƒŒæ™¯å™è¿°ä¸åº”è®©åœºä¸Šäººç‰©è¯´è¯ã€‚', ''); assert(!stage.talkingRecord, 'narrator moved actor mouth'); clearTyping();
+  startTyping('ç»§ç»­è¯´è¯å¹¶æµ‹è¯•é€Ÿåº¦è°ƒæ•´ã€‚', secondId);
+  // This exercises the same restart path used by the text-speed slider.
+  const shown = document.querySelector('#dialogue-text').textContent; const remaining = typingCharacters.slice(typingIndex).join('');
+  textSpeed = 30; startTyping(remaining); typingCharacters = Array.from(shown + remaining); typingIndex = Array.from(shown).length;
+  assert(stage.talkingRecord === stage.visibleRecords.get(secondId), 'speed adjustment lost actor');
+  await wait(1100); assert(!stage.talkingRecord && !typingTimer, 'speed completion did not stop');
+  checks.push('æ—ç™½ä¸å¸¦åŠ¨äººç‰©å˜´å·´ï¼Œä¿®æ”¹æ–‡å­—é€Ÿåº¦åå˜´å‹ç»§ç»­è·Ÿéš');
+  playStep = 0; await showPlayStep(); stopPlay(); await wait(450); assert(!stage.talkingRecord && !typingTimer, 'title transition mouth leak');
+  checks.push('è¿”å›æ ‡é¢˜åœæ­¢å˜´å‹');
+  playing = true; playAct = 0; playStep = 0; preparedAct = -1; await showPlayStep();
+  return { ok: true, checks, shapes: [...shapes], visibleMorphChanged, sampleCount: samples.length, mouth: record.talkingMouth.diagnostics() };
+}
 
-NÃBˆÛÛœİ™XÛÜ™HİYÙKš\ÚX›T™XÛÜ™Ë™Ù]
-XİÜ’Y
-NÃBˆ\ÜÙ\
-™XÛÜ™Ë[Ú[™Ó[İ]Ë™XYÛ›ÜİXÜÊ
-Kœ[›š[™È	‰ˆ\[™Õ[Y\‹	Û[İ]›İXİ]™HÚ[H\[™ÉÊNÃBˆÛÛœİ\™Ù]HİXİ\™YÛÛ™J™XÛÜ™™^™\ÜÚ[Û•\™Ù]
-K[š]X[İ\œÈHË‹‹œİYÙKš\ÚX›T™XÛÜ™Ë™[šY\Ê
-WK™š[\Š
-ÚYJHOˆYOOHXİÜ’Y
-K›X\
-
-ÚY—JHOˆÚYİXİ\™YÛÛ™J‹™^™\ÜÚ[Û•\™Ù]
-WJNÃBˆÛÛœİØ[\\ÈH×KÚ\\ÈH™]ÈÙ]
-
-NÈ]š\ÚX›S[ÜœÚ[™ÙYH˜[ÙNÃBˆÛÛœİ[ÜœÈH
-
-HOˆÈÛÛœİ˜[Y\ÈH×NÈ™XÛÜ™œ›KœØÙ[™K˜]™\œÙJ›ÙHOˆÈYˆ
-›ÙK›[Üœ\™Ù][™›Y[˜Ù\ÊH˜[Y\Ëœ\Ú
-‹‹››ÙK›[Üœ\™Ù][™›Y[˜Ù\ÊNÈJNÈ™]\›ˆ˜[Y\ÎÈNÃBˆ]ØZ]ØZ]
-
-NÈÛÛœİš\œİ[ÜœÈH[ÜœÊ
-NÃBˆ›Üˆ
-]ˆHÈˆÈŠÊÊHÃBˆ]ØZ]ØZ]
-JNÃBˆÛÛœİİ]HH™XÛÜ™[Ú[™Ó[İ]™XYÛ›ÜİXÜÊ
-NÈØ[\\Ëœ\Ú
-İ]K˜[Y\ÊNÃBˆİ]K˜[Y\Ë™›Ü‘XXÚ
-
-˜[YKJHOˆÈYˆ
-˜[YHˆŒ
-HÚ\\Ë˜Y
-İ]K›˜[Y\ÖÚWJNÈJNÃBˆ\ÜÙ\
-İ]K˜[Y\Ëœ™YXÙJ
-KŠHOˆJØ‹
-HË	Û[İ]ÛÈÚYIÊNÃBˆ\ÜÙ\
-X]˜XœÊ™XÛÜ™œ›K™^™\ÜÚ[Û“X[˜YÙ\‹™Ù]˜[YJ	Ú\IÊHH\™Ù]š\JHŒK	Ù[[İ[Ûˆİ™\Üš][‰ÊNÃBˆ\ÜÙ\
-[š]X[İ\œË™]™\J
-ÚYJHOˆ\İYÙKš\ÚX›T™XÛÜ™Ë™Ù]
-Y
-K[Ú[™Ó[İ]Ë™XYÛ›ÜİXÜÊ
-Kœ[›š[™ÊK	Ûİ\ˆXİÜˆ\È[Ú[™ÉÊNÃBˆYˆ
-[ÜœÊ
-KœÛÛYJ
-˜[YKJHOˆX]˜XœÊ˜[YHHš\œİ[ÜœÖÚWJHˆŒMJJHš\ÚX›S[ÜœÚ[™ÙYHYNÃBˆCBˆ\ÜÙ\
-Ú\\ËœÚ^™HH7ÓMm¢G§²ÚîÆ­yÙ”€é‡åšæ­£å¸¸');
+async function runDialogueVoiceSmoke() {
+  const checks = [], assert = (v, m) => { if (!v) throw new Error(m); };
+  const input = (selector, value) => { const node = document.querySelector(selector); assert(node, selector); node.value = value; node.dispatchEvent(new Event('input', { bubbles: true })); };
+  const click = action => { const node = document.querySelector(`[data-action="${action}"]`); assert(node, action); node.click(); };
+  const panel = name => document.querySelector(`[data-panel="${name}"]`).click();
+  const settle = async () => { for (let i = 0; i < 100 && historyBusy; i++) await new Promise(r => setTimeout(r, 40)); assert(!historyBusy, 'history timeout'); };
+  const undo = async () => { await restoreEditorHistory(-1); await settle(); };
+  const redo = async () => { await restoreEditorHistory(1); await settle(); };
+  const confirmBefore = window.confirm; window.confirm = () => true;
+  try {
+    selectedAct = 0; selectedStep = 0; activePanel = 'story'; renderSidebar(); renderInspector(); editorHistory.reset();
+    assert(byType('voice').length === 2, 'legacy voice migration');
+    assert(asset('shared')?.type === 'audio' && !asset('legacy'), 'music preservation');
+    assert(byType('voice').every(v => v.path.startsWith('assets/voice/') && v.folderId === voiceFolderId(v.characterId)), 'physical folder migration');
+    checks.push('æ—§å¯¹ç™½é…éŸ³è½¬å…¥è§’è‰²æ–‡ä»¶å¤¹ï¼ŒèƒŒæ™¯éŸ³ä¹ä¿ç•™');
+    assert([...document.querySelectorAll('#asset-dock-tabs button')].map(n => n.dataset.type).join(',') === 'image,vrm,motion,audio,voice,video', 'tab order');
+    assert(document.querySelector('[data-type="audio"][role="tab"]').textContent.startsWith('éŸ³ä¹ä¸éŸ³æ•ˆ'), 'music tab label');
+    checks.push('é…éŸ³ä½äºéŸ³ä¹ä¸éŸ³æ•ˆä¹‹åã€è§†é¢‘ä¹‹å‰');
+    panel('characters'); click('add-character'); const newId = project.characters.at(-1).id;
+    assert(project.assetFolders.some(f => f.id === voiceFolderId(newId) && f.locked), 'auto folder');
+    input('[data-field="character.name"]', 'æ–°è§’è‰²'); assert(project.assetFolders.find(f => f.characterId === newId).name === 'æ–°è§’è‰²', 'folder rename');
+    click('delete-character'); assert(project.assetFolders.find(f => f.characterId === newId)?.locked, 'folder deleted'); await undo();
+    assert(project.characters.some(c => c.id === newId), 'character undo'); checks.push('æ–°å¢è§’è‰²è‡ªåŠ¨å»ºå›ºå®šæ–‡ä»¶å¤¹ï¼Œè§’è‰²æ”¹ååŒæ­¥ï¼Œåˆ é™¤è§’è‰²åæ–‡ä»¶å¤¹ä»ä¿ç•™');
+    panel('story'); selectedAct = 0; selectedStep = 0; renderSidebar(); renderInspector();
+    activeAssetType = 'voice'; currentAssetFolder.voice = ''; renderAssetDock();
+    assert(!document.querySelector('#asset-dock-body .asset-file-tile') && !document.querySelector('#asset-dock-body [data-action="add-asset-folder"]'), 'voice root controls');
+    
+    const count = project.assets.length; await importAssets('voice'); await importDroppedEntries([]);
+    assert(project.assets.length === count && document.querySelector('.dialogue-voice-field'), 'library import bypass');
+    let rejected = false; try { await bridge('importAssets', { type: 'voice' }); } catch { rejected = true; } assert(rejected, 'native library import bypass');
+    checks.push('ç´ æåº“å¯¼å…¥å’Œæ‹–å…¥é…éŸ³è¢«æ‹¦æˆªå¹¶å®šä½å¯¹ç™½');
+    const original = step().voiceId; await uploadDialogueVoice(); const first = step().voiceId, firstAsset = asset(first);
+    assert(first !== original && firstAsset?.name === step().text && firstAsset.characterId === step().characterId && firstAsset.path.startsWith('assets/voice/'), 'dialogue upload');
+    const uploadedPath = firstAsset.path;
+    await uploadDialogueVoice(); const second = step().voiceId;
+    assert(second !== first && !asset(first), 'replacement pile'); await undo(); assert(step().voiceId === first && asset(first), 'upload undo'); await redo(); assert(step().voiceId === second, 'upload redo');
+    checks.push('å¯¹ç™½ä¸Šä¼ åå…¨æ–‡å‘½åï¼Œé‡å¤ä¸Šä¼ æ›¿æ¢ï¼Œæ’¤é”€é‡åšæ¢å¤æ—§é…éŸ³');
+    const fullText = 'é…éŸ³å…¨æ–‡æµ‹è¯•ï¼šæ ‡ç‚¹ã€æ¢è¡Œä¸å¾ˆé•¿çš„å¯¹ç™½éƒ½è¦ä¿ç•™ã€‚\nç¬¬äºŒè¡Œä¹Ÿå®Œæ•´æ˜¾ç¤ºã€‚';
+    input('[data-field="step.text"]', fullText); assert(asset(second).name === fullText, 'fulltext rename');
+    editorHistory.seal();
+    const opts = [...document.querySelector('[data-field="step.voiceId"]').options].map(o => o.value).filter(Boolean);
+    assert(opts.every(id => asset(id)?.type === 'voice' && asset(id).characterId === step().characterId) && !opts.includes('shared'), 'voice filter');
+    input('[data-field="step.characterId"]', 'role-b'); assert(!step().voiceId, 'cross role binding'); await undo(); assert(step().voiceId === second, 'role change undo');
+    checks.push('å…¨æ–‡éšå¯¹ç™½æ›´æ–°ï¼Œåªèƒ½é€‰æ‹©å½“å‰è§’è‰²çš„é…éŸ³');
+    currentAssetFolder.voice = voiceFolderId(step().characterId); renderAssetDock();
+    assert(!document.querySelector('#asset-dock-body [data-action="rename-asset-folder"]') && !document.querySelector('#asset-dock-body [data-asset-folder]'), 'folder protection');
+    assert(document.querySelector('.asset-voice-tile .asset-tile-name').textContent === fullText, 'display fulltext');
+    await previewDialogueVoice(second); assert(!editorVoicePreview.paused && previewVoiceId === second, 'audio playback');
+    checks.push('é…éŸ³ç´ æåº“å…¨æ–‡æ˜¾ç¤ºï¼Œå›ºå®šæ–‡ä»¶å¤¹ä¸å¯æ”¹åæˆ–ç§»åŠ¨ï¼Œå®é™…è¯•å¬æˆåŠŸ');
+    const reused = act().steps[1]; reused.characterId = step().characterId; reused.voiceId = second; markDirty(); editorHistory.seal();
+    document.querySelector(`[data-action="delete-asset"][data-asset-id="${second}"]`).click();
+    assert(!asset(second) && !step().voiceId && !act().steps[1].voiceId && editorVoicePreview.paused, 'voice delete');
+    await undo(); assert(asset(second) && step().voiceId === second && act().steps[1].voiceId === second, 'voice delete undo');
+    await redo(); assert(!asset(second), 'voice delete redo'); await undo();
+    checks.push('åˆ é™¤é…éŸ³è§£é™¤æ‰€æœ‰å¯¹ç™½ç»‘å®šï¼Œæ’¤é”€é‡åšæ­£å¸¸');
     const snapshot = structuredClone(project); snapshot.acts[0].steps[0].characterId = '';
     rejected = false; try { await bridge('importDialogueVoice', { project: snapshot, actId: act().id, dialogueId: step().id }); } catch { rejected = true; } assert(rejected, 'no role upload');
     snapshot.acts[0].steps[0].characterId = step().characterId; snapshot.acts[0].steps[0].text = '   ';
@@ -459,28 +3251,216 @@ async function runEditorHistorySmoke() {
     if (node.type === 'checkbox') node.checked = value; else node.value = value;
     node.dispatchEvent(new Event('input', { bubbles: true })); return node;
   };
-  const click = action => { const node = document.YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬ÕÅÕ•ÉåM•±•Ñ½È¡m‘…Ñ„µ…Ñ¥½¸ôˆ‘í…Ñ¥½¹ô‰u€¤ì…ÍÍ•ÉĞ¡¹½‘”°µ¥ÍÍ¥¹œ‰ÕÑÑ½¸è€‘í…Ñ¥½¹õ€¤ì¹½‘”¹±¥¬ ¤ìôì4(€½¹ÍĞİ…¥Ğ€ô…Íå¹ŒÑ•ÍĞ€ôøì™½È€¡±•Ğ¤€ô€Àì¤€ğ€ÄÀÀì¤¬¬¤ì¥˜€¡Ñ•ÍĞ ¤¤É•ÑÕÉ¸ì…İ…¥Ğ¹•ÜAÉ½µ¥Í”¡È€ôøÍ•ÑQ¥µ•½ÕĞ¡È°€ĞÀ¤¤ìôÑ¡É½Ü¹•ÜÉÉ½È U$…Ñ¥½¸Ñ¥µ•½ÕĞœ¤ìôì4(€½¹ÍĞÕ¹‘¼€ô…Íå¹Œ€ ¤€ôøì±¥¬ •‘¥Ñ½ÈµÕ¹‘¼œ¤ì…İ…¥Ğİ…¥Ğ  ¤€ôø€…¡¥ÍÑ½Éå	ÕÍä¤ìôì4(€½¹ÍĞÉ•‘¼€ô…Íå¹Œ€ ¤€ôøì±¥¬ •‘¥Ñ½ÈµÉ•‘¼œ¤ì…İ…¥Ğİ…¥Ğ  ¤€ôø€…¡¥ÍÑ½Éå	ÕÍä¤ìôì4(€½¹ÍĞÁ…¹•°€ô¹…µ”€ôøì‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È¡m‘…Ñ„µÁ…¹•°ôˆ‘í¹…µ•ô‰u€¤¹±¥¬ ¤ìôì4(€ÑÉäì4(€€€€¼¼Q¡¥ÌÉÕ¹¹•È¥Ì½¹±ä…Ù…¥±…‰±”İ¥Ñ €´µÍµ½­”…¹½Á•É…Ñ•Ì½¸„‘¥ÍÁ½Í…‰±”™¥áÑÕÉ”¸4(€€€Í•±•Ñ•‘Ğ€ô€ÀìÍ•±•Ñ•‘MÑ•À€ô€Àì…Ñ¥Ù•A…¹•°€ô€ÍÑ½ÉäœìÉ•¹‘•ÉM¥‘•‰…È ¤ìÉ•¹‘•É%¹ÍÁ•Ñ½È ¤ì…İ…¥ĞÕÁ‘…Ñ•AÉ•Ù¥•Ü ¤ì•‘¥Ñ½É!¥ÍÑ½Éä¹É•Í•Ğ ¤ì4(€€€½¹ÍĞÑ•áĞ€ôÍÑ•À ¤¹Ñ•áĞì4(€€€¥¹ÁÕĞ m‘…Ñ„µ™¥•±ô‰ÍÑ•À¹Ñ•áĞ‰tœ°€ŸšJ“¦RšÖ/¢¾Tœ¤ì¥¹ÁÕĞ m‘…Ñ„µ™¥•±ô‰ÍÑ•À¹Ñ•áĞ‰tœ°€ŸšJ“¦RšÖ/¢¾W²³’ê3š²„œ¤ì4(€€€…ÍÍ•ÉĞ¡•‘¥Ñ½É!¥ÍÑ½Éä¹ÍÑ…ÑÕÌ ¤¹Õ¹‘½½Õ¹Ğ€ôôô€Ä°€ÑåÁ¥¹œ‘¥¹½Ğµ•É”œ¤ì4(€€€…İ…¥ĞÕ¹‘¼ ¤ì…ÍÍ•ÉĞ¡ÍÑ•À ¤¹Ñ•áĞ€ôôôÑ•áĞ°€Ñ•áĞÕ¹‘¼™…¥±•œ¤ì…İ…¥ĞÉ•‘¼ ¤ì…ÍÍ•ÉĞ¡ÍÑ•À ¤¹Ñ•áĞ€ôôô€ŸšJ“¦RšÖ/¢¾W²³’ê3š²„œ°€Ñ•áĞÉ•‘¼™…¥±•œ¤ìÉ•ÍÕ±ÑÌ¹ÁÕÍ  Ÿ¢ş{î·š&O–¶_–B#–æÛ–>+šZ–¶_š‹–’4œ¤ì4(€€€½¹ÍĞ¹½‘”€ô¥¹ÁÕĞ m‘…Ñ„µ™¥•±ô‰ÍÑ•À¹ÍÁ•…­•È‰tœ°€ŸšÖ/¢¾W–B7–¶\œ¤ì4(€€€¹½‘”¹‘¥ÍÁ…Ñ¡Ù•¹Ğ¡¹•Ü-•å‰½…É‘Ù•¹Ğ ­•å‘½İ¸œ°ì­•äè€èœ°ÑÉ±-•äèÑÉÕ”°‰Õ‰‰±•ÌèÑÉÕ”°…¹•±…‰±”èÑÉÕ”ô¤¤ì…İ…¥Ğİ…¥Ğ  ¤€ôø€…¡¥ÍÑ½Éå	ÕÍä¤ì4(€€€…ÍÍ•ÉĞ¡ÍÑ•À ¤¹ÍÁ•…­•È€„ôô€ŸšÖ/¢¾W–B7–¶\œ°€ÑÉ°­h™…¥±•¥¸¥¹ÁÕĞŸ}4ÖÚ$z{-®éÜj×æWu&Wf—6–öâÒ76WB‡&ö¦V7Bæ6†&7FW'5³Òç÷'G&—D–B’ç&Wf—6–öã°Ğ¢76W'B†VF—F÷$†—7F÷'’ç7FGW2‚’çVæFô6÷VçBÓÓÒÂvÖçVÂ÷'G&—B6GW&Ræ÷BöæRVæFò7FWr“°Ğ¢v—B&W7F÷&TVF—F÷$†—7F÷'’‚Ó“²76W'B†76WB‡&ö¦V7Bæ6†&7FW'5³Òç÷'G&—D–B’ç&Wf—6–öâÓÓÒöÆE&Wf—6–öâÂvÖçVÂ÷'G&—BVæFòf–ÆVBr“°Ğ¢v—B&W7F÷&TVF—F÷$†—7F÷'’ƒ“²76W'B†76WB‡&ö¦V7Bæ6†&7FW'5³Òç÷'G&—D–B’ç&Wf—6–öâÓÓÒæWu&Wf—6–öâÂvÖçVÂ÷'G&—B&VFòf–ÆVBr“°Ğ¢6öç7BöÆDg&ÖRÒ&ö¦V7Bæ6†&7FW'5³ÒævÆÆW'•÷6Tg&ÖRÂöÆDFW67&—F–öâÒ&ö¦V7Bæ6†&7FW'5³ÒæFW67&—F–öã°Ğ¢6öç7B6Æ–FW"ÒFö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖvÆÆW'’ÖF§W7CÒ&vÆÆW'•÷6Tg&ÖR%Òr“²76W'B„çVÖ&W"‡6Æ–FW"æÖ‚’âöÆDg&ÖRÂvf—‡GW&RæVVG2âæ–ÖFVBÖ÷F–öâr“°Ğ¢6Æ–FW"çfÇVRÒÖF‚æÖ–â„çVÖ&W"‡6Æ–FW"æÖ‚’ÂöÆDg&ÖR²#“²6Æ–FW"æF—7F6„WfVçB†æWrWfVçB‚v–çWBrÂ²'V&&ÆW3¢G'VRÒ’“²6Æ–FW"æF—7F6„WfVçB†æWrWfVçB‚v6†ævRrÂ²'V&&ÆW3¢G'VRÒ’“°Ğ¢6öç7BFW67&—F–öâÒFö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖf–VÆCÒ&6†&7FW"æFW67&—F–öâ%Òr“²FW67&—F–öâçfÇVRÒ~ZKNX8şh¸ŞiNiÉş™{N‹é>XZ^y¨NK¸¾{¸Òs²FW67&—F–öâæF—7F6„WfVçB†æWrWfVçB‚v–çWBrÂ²'V&&ÆW3¢G'VRÒ’“°Ğ¢v—Bv—B‚‚’Óâ÷'G&—D¦ö'2ç6—¦RÓÓÒ“°Ğ¢6öç7Bg&ÖU&Wf—6–öâÒ76WB‡&ö¦V7Bæ6†&7FW'5³Òç÷'G&—D–B’ç&Wf—6–öã°Ğ¢v—B&W7F÷&TVF—F÷$†—7F÷'’‚Ó“°Ğ¢76W'B‡&ö¦V7Bæ6†&7FW'5³ÒæFW67&—F–öâÓÓÒöÆDFW67&—F–öâbb76WB‡&ö¦V7Bæ6†&7FW'5³Òç÷'G&—D–B’ç&Wf—6–öâÓÓÒg&ÖU&Wf—6–öâÂvÆFR÷'G&—B&W7VÇBv2GF6†VBFòw&öærVF—Br“°Ğ¢v—B&W7F÷&TVF—F÷$†—7F÷'’‚Ó“°Ğ¢76W'B‡&ö¥š®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍYXİ˜Ú\˜Xİ\œÖÌK™Ø[\TÜÙQœ˜[YHOOHÛœ˜[YH	‰ˆ\ÜÙ]
-›Ú™Xİ˜Ú\˜Xİ\œÖÌKœÜ˜Z]Y
-Kœ™]š\Ú[ÛˆOOH™]Ô™]š\Ú[Û‹	Ùœ˜[YH[™Ü˜Z]›İ™\İÜ™YÙÙ]\‰ÊNÃBˆ]ØZ]™\İÜ™QY]Ü’\İÜJJNÈ]ØZ]™\İÜ™QY]Ü’\İÜJJNÈ]ØZ]Ø]™J
-NÃBˆ™]\›ˆÈÚÎˆYKX[X[Ø\\™U[™ÎˆYKX[X[Ø\\™T™YÎˆYK\Ş[˜Ñœ˜[YU[™ÎˆYKÙ\\˜]Q\ØÜš\[Û•[™ÎˆYKBˆÜ˜Z]Ûİ[ˆ›Ú™Xİ˜\ÜÙ]Ë™š[\ŠHOˆK™Ù[™\˜]YÜ˜Z]	‰ˆK˜Ú\˜Xİ\’YOOH›Ú™Xİ˜Ú\˜Xİ\œÖÌKšY
-K›[™İNÃBŸCBƒBšYˆ
-™]ÈT“ÙX\˜Ú\˜[\ÊØØ][Û‹œÙX\˜Ú
-Kš\Ê	ÜÛ[ÚÙIÊJCBˆØš™Xİ˜\ÜÚYÛŠÚ[™İËÈ×İœ›TÛ[ÚÙP]]ÔØ]™Nˆ
+  const click = action => { const node = document.querySelector(`[data-action="${action}"]`); assert(node, `missing button: ${action}`); node.click(); };
+  const wait = async test => { for (let i = 0; i < 100; i++) { if (test()) return; await new Promise(r => setTimeout(r, 40)); } throw new Error('UI action timed out'); };
+  const undo = async () => { click('editor-undo'); await wait(() => !historyBusy); };
+  const redo = async () => { click('editor-redo'); await wait(() => !historyBusy); };
+  const panel = name => { document.querySelector(`[data-panel="${name}"]`).click(); };
+  try {
+    // This runner is only available with --smoke and operates on a disposable fixture.
+    selectedAct = 0; selectedStep = 0; activePanel = 'story'; renderSidebar(); renderInspector(); await updatePreview(); editorHistory.reset();
+    const text = step().text;
+    input('[data-field="step.text"]', 'æ’¤é”€æµ‹è¯•'); input('[data-field="step.text"]', 'æ’¤é”€æµ‹è¯•ç¬¬äºŒæ¬¡');
+    assert(editorHistory.status().undoCount === 1, 'typing did not merge');
+    await undo(); assert(step().text === text, 'text undo failed'); await redo(); assert(step().text === 'æ’¤é”€æµ‹è¯•ç¬¬äºŒæ¬¡', 'text redo failed'); results.push('è¿ç»­æ‰“å­—åˆå¹¶åŠæ–‡å­—æ¢å¤');
+    const node = input('[data-field="step.speaker"]', 'æµ‹è¯•åå­—');
+    node.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true, cancelable: true })); await wait(() => !historyBusy);
+    assert(step().speaker !== 'æµ‹è¯•åå­—', 'Ctrl+Z failed in input');
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, shiftKey: true, bubbles: true, cancelable: true })); await wait(() => !historyBusy);
+    assert(step().speaker === 'æµ‹è¯•åå­—', 'Ctrl+Shift+Z failed'); results.push('è¾“å…¥æ¡†å¿«æ·é”®');
+    click('duplicate-step'); const copyId = step().id; const count = act().steps.length;
+    click('delete-step'); assert(act().steps.length === count - 1, 'step delete failed');
+    await undo(); assert(step().id === copyId && act().steps.length === count, 'deleted step or selection not restored'); await redo(); assert(act().steps.length === count - 1, 'step delete redo failed'); results.push('åˆ é™¤å¯¹ç™½åŠé€‰ä¸­ä½ç½®æ¢å¤');
+    const actId = act().id, actJson = JSON.stringify(act()); click('delete-act'); assert(!project.acts.some(a => a.id === actId), 'act delete failed');
+    await undo(); assert(act().id === actId && JSON.stringify(act()) === actJson, 'whole act not restored'); results.push('æ•´å¹•åŠå…¨éƒ¨å¯¹ç™½æ¢å¤');
+    const order = project.acts.map(a => a.id).join(','); editorHistory.seal(); editorHistory.begin(); reorderStory('act', 0, 1, true);
+    assert(project.acts.map(a => a.id).join(',') !== order, 'reorder failed'); await undo(); assert(project.acts.map(a => a.id).join(',') === order, 'order undo failed'); await redo(); results.push('å‰§æƒ…æ‹–åŠ¨æ’åº');
+    panel('render'); const beforeBrightness = act().render.brightness; const beforeCount = editorHistory.status().undoCount;
+    const slider = document.querySelector('[data-render="brightness"]'); slider.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    input('[data-render="brightness"]', 120); input('[data-render="brightness"]', 140); input('[data-render="brightness"]', 160);
+    slider.dispatchEvent(new PointerEvent('pointerup', { bubbles: true })); assert(editorHistory.status().undoCount === beforeCount + 1, 'slider did not merge');
+    await undo(); assert(act().render.brightness === beforeBrightness, 'color undo failed'); await redo(); assert(act().render.brightness === 160, 'color redo failed'); results.push('æ»‘å—åˆå¹¶ä¸æ¯å¹•è°ƒè‰²');
+    panel('story'); const weather = act().weather.type; input('[data-weather="type"]', 'rain'); await undo(); assert(act().weather.type === weather, 'weather undo failed'); await redo(); assert(act().weather.type === 'rain', 'weather redo failed'); results.push('å¤©æ°”æ¢å¤');
+    panel('characters'); selectedCharacter = 0; renderSidebar(); renderInspector(); const name = project.characters[0].name;
+    input('[data-field="character.name"]', 'æ–°è§’è‰²åå­—'); await undo(); assert(project.characters[0].name === name, 'character name undo failed'); await redo();
+    click('delete-character'); await undo(); assert(project.characters[0].name === 'æ–°è§’è‰²åå­—', 'character delete undo failed'); results.push('äººç‰©æ”¹åå’Œåˆ é™¤');
+    panel('title'); const oldName = project.name; input('#project-name', 'æ–°æ¸¸æˆåå­—'); await undo(); assert(project.name === oldName, 'game title undo failed'); await redo(); results.push('æ ‡é¢˜è®¾ç½®');
+    panel('knowledge'); const book = project.knowledgeBooks[0]; assert(book, 'fixture needs a book'); const bookName = book.name;
+    input('[data-book-field="name"]', 'æ–°ä¹¦å'); await undo(); assert(project.knowledgeBooks[0].name === bookName, 'book undo failed'); await redo();
+    click('book-delete'); await undo(); assert(project.knowledgeBooks[0].name === 'æ–°ä¹¦å', 'book delete undo failed'); results.push('çŸ¥è¯†åº“ç¼–è¾‘ä¸åˆ é™¤');
+    panel('story'); click('event-add'); const eventId = act().id; input('[data-event-field="title"]', 'äº‹ä»¶æ–°æ ‡é¢˜'); await undo(); assert(act().event.title !== 'äº‹ä»¶æ–°æ ‡é¢˜', 'event undo failed'); await redo();
+    click('event-delete'); await undo(); assert(act().id === eventId && act().event.title === 'äº‹ä»¶æ–°æ ‡é¢˜', 'event restore failed'); results.push('ä¸–ç•Œäº‹ä»¶ç¼–è¾‘ä¸åˆ é™¤');
+    const query = project.characters[0].name; await library.click('search-open', {}); input('#replace-find', query); await library.click('search-find', {}); input('#replace-with', 'æ‰¹é‡æ–°åå­—');
+    click('search-replace'); assert(project.characters[0].name === 'æ‰¹é‡æ–°åå­—', 'replace failed'); click('search-undo'); await wait(() => !historyBusy); assert(project.characters[0].name === query, 'replace undo failed');
+    click('search-redo'); await wait(() => !historyBusy); assert(project.characters[0].name === 'æ‰¹é‡æ–°åå­—', 'replace redo failed'); await library.click('search-close', {}); results.push('æ‰¹é‡æ›¿æ¢ç»Ÿä¸€æ’¤é”€é‡åš');
+    // Check actual native PNG bytes, not just the portrait ID in the project.
+    const canvas = document.createElement('canvas'); canvas.width = canvas.height = 16; const paint = canvas.getContext('2d');
+    paint.fillStyle = '#ff0000'; paint.fillRect(0,0,16,16); const red = canvas.toDataURL();
+    const portraitCharacter = project.characters[0];
+    const first = await bridge('saveGeneratedPortrait', { dataUrl: red, characterId: portraitCharacter.id, name: portraitCharacter.name });
+    const firstRevision = first.revision;
+    await replaceAutoPortrait(portraitCharacter, first); portraitCharacter.portraitPoseKey = 'history-test-red'; markDirty({ derived: true });
+    editorHistory.seal(); editorHistory.begin(); paint.fillStyle = '#0000ff'; paint.fillRect(0,0,16,16); const blue = canvas.toDataURL();
+    const second = await bridge('saveGeneratedPortrait', { dataUrl: blue, characterId: portraitCharacter.id, name: portraitCharacter.name, previousRevision: first.revision });
+    Object.assign(asset(first.id), second); portraitCharacter.portraitPoseKey = 'history-test-blue'; markDirty({ label: 'é‡æ–°æ‹æ‘„å¤´åƒ' });
+    const imageBytes = async () => [...new Uint8Array(await (await fetch(assetUrl(asset(first.id)), { cache: 'no-store' })).arrayBuffer())].join(',');
+    const blueBytes = await imageBytes(); await undo(); const redBytes = await imageBytes(); assert(redBytes !== blueBytes && asset(first.id).revision === firstRevision, 'portrait file undo failed');
+    await redo(); assert(await imageBytes() === blueBytes && asset(first.id).revision === second.revision, 'portrait file redo failed'); results.push('çœŸå®å¤´åƒæ–‡ä»¶æ¢å¤');
+    // Test a delete after save, then restore, then redo and save again.
+    await save(); const removable = project.assets.find(a => a.id !== first.id && a.type === 'image'); assert(removable, 'fixture needs an image');
+    activeAssetType = 'image'; currentAssetFolder.image = ''; renderAssetDock();
+    document.querySelector(`[data-action="delete-asset"][data-asset-id="${removable.id}"]`).click(); assert(!asset(removable.id), 'asset delete failed'); await save();
+    await undo(); assert(asset(removable.id), 'deleted asset metadata not restored'); assert((await fetch(assetUrl(asset(removable.id)), { cache: 'no-store' })).ok, 'deleted asset file missing after save and undo');
+    await redo(); await save(); results.push('ä¿å­˜åæ’¤é”€ç´ æåˆ é™¤');
+    await undo(); panel('title'); input('#project-name', 'æ’¤é”€é‡åšéªŒè¯å·¥ç¨‹'); assert(!editorHistory.status().canRedo, 'new edit did not discard redo branch'); results.push('æ–°ä¿®æ”¹æ¸…ç©ºæ—§é‡åšåˆ†æ”¯');
+    // Final deletion lets the external ZIP/export check prove unused files/cache are excluded.
+    activeAssetType = 'image'; currentAssetFolder.image = ''; renderAssetDock(); document.querySelector(`[data-action="delete-asset"][data-asset-id="${removable.id}"]`).click(); await save();
+    panel('story'); selectedAct = 0; selectedStep = 0; renderSidebar(); renderInspector(); await updatePreview();
+    assert(!document.querySelector('[data-action="editor-undo"]').disabled, 'undo button incorrectly disabled');
+    const topbar = document.querySelector('.topbar'); assert(topbar.scrollWidth <= topbar.clientWidth + 2, 'topbar overflows'); results.push('å°çª—å£æŒ‰é’®å¸ƒå±€');
+    return { ok: true, checks: results, removedPath: removable.path, retainedPortrait: asset(first.id).path, history: editorHistory.status() };
+  } finally { window.confirm = originalConfirm; }
+}
 
-HOˆØ]™P]]ÔÛİ
+async function runPortraitHistorySmoke() {
+  const assert = (value, message) => { if (!value) throw new Error(message); };
+  const wait = async test => { for (let i = 0; i < 800; i++) { if (test()) return; await new Promise(r => setTimeout(r, 40)); } throw new Error('portrait test timed out'); };
+  await wait(() => portraitJobs.size === 0 && project.characters[0].portraitId);
+  activePanel = 'characters'; selectedCharacter = 0; renderSidebar(); renderInspector(); await updatePreview(); editorHistory.reset();
+  const item = project.characters[0], oldRevision = asset(item.portraitId).revision;
+  document.querySelector('[data-action="capture-character-portrait"]').click();
+  await wait(() => portraitJobs.size === 0 && asset(project.characters[0].portraitId).revision !== oldRevision);
+  const newRevision = asset(project.characters[0].portraitId).revision;
+  assert(editorHistory.status().undoCount === 1, 'manual portrait capture not one undo step');
+  await restoreEditorHistory(-1); assert(asset(project.characters[0].portraitId).revision === oldRevision, 'manual portrait undo failed');
+  await restoreEditorHistory(1); assert(asset(project.characters[0].portraitId).revision === newRevision, 'manual portrait redo failed');
+  const oldFrame = project.characters[0].galleryPoseFrame, oldDescription = project.characters[0].description;
+  const slider = document.querySelector('[data-gallery-adjust="galleryPoseFrame"]'); assert(Number(slider.max) > oldFrame, 'fixture needs an animated motion');
+  slider.value = Math.min(Number(slider.max), oldFrame + 20); slider.dispatchEvent(new Event('input', { bubbles: true })); slider.dispatchEvent(new Event('change', { bubbles: true }));
+  const description = document.querySelector('[data-field="character.description"]'); description.value = 'å¤´åƒæ‹æ‘„æœŸé—´è¾“å…¥çš„ä»‹ç»'; description.dispatchEvent(new Event('input', { bubbles: true }));
+  await wait(() => portraitJobs.size === 0);
+  const frameRevision = asset(project.characters[0].portraitId).revision;
+  await restoreEditorHistory(-1);
+  assert(project.characters[0].description === oldDescription && asset(project.characters[0].portraitId).revision === frameRevision, 'late portrait result was attached to wrong edit');
+  await restoreEditorHistory(-1);
+  assert(project.characters[0].galleryPoseFrame === oldFrame && asset(project.characters[0].portraitId).revision === newRevision, 'frame and portrait not restored together');
+  await restoreEditorHistory(1); await restoreEditorHistory(1); await save();
+  return { ok: true, manualCaptureUndo: true, manualCaptureRedo: true, asyncFrameUndo: true, separateDescriptionUndo: true,
+    portraitCount: project.assets.filter(a => a.generatedPortrait && a.characterId === project.characters[0].id).length };
+}
 
-K×İœ›TÛ[ÚÙTØ]™TÛİˆ[™^OˆØ]™TÛİ
-[™^
-KBˆ×İœ›TÛ[ÚÙSY[TÛ\Úˆ\Ş[˜È\ÙHOˆÂˆYˆ
-\ÙHOOH	ØYÙ[\^Y\‰ÊHÂˆÛÛœİ[™^\›Ú™Xİ˜XİË™š[™[™^
-OO˜K™˜Y˜]ÚY	‰˜KšÚ[™OOIÙ]™[	ÊNÂˆYŠ[™^
-]›İÈ™]È\œ›ÜŠ	ÙÙ[™\˜]Y˜Y›İ›İ[™[ˆ^Ü	ÊNÂˆ^Z[™Ï]YNÜ^PXİZ[™^Ü^Tİ\LÜ™\\™YXİKLNØ]ØZ]ÚİÔ^Tİ\
-
-NÂˆ]ØZ]™]È›ÛZ\ÙJOœÙ][Y[İ]
-‹L
-JNÂˆYŠİYÙQ\œ›ÜŸ\İYÙKÙX]\‹˜Xİ]™_İYÙKÙX]\”Ù][™ÜË\HOOIÜ˜Z[‰Ê]›İÈ™]È\œ›ÜŠ	ÙÙ[™\˜]YØÙ[™HÜˆÙX]\ˆ›İ^XX›IÊNÂˆYŠ]\ÚXËœ]\ÙY
-]›İÈ™]È\œ›ÜŠ	ÙÙ[™\˜]Y‘ÓHY›İ^IÊNÂˆ™]\›ˆÛÚÎYKXİœ›Ú™Xİ˜XİÖÚ[™^K›˜[YKÙ[™\˜]YX[ÙİYNœ›Ú™Xİ˜XİÖÚ[™^Kœİ\ÖÌK^ÙX]\œİYÙKÙX]\”Ù][™ÜË\K]\ÚXÔ^Z[™Îˆ[]\ÚXËœ]\ÙYØÙ[™Q\œ›ÜœİYÙQ\œ›ÜŸNÂˆBˆYˆ
-\ÙHOOH	ØYÙ[YY]Ü‰ÊHÂˆÛÛœİ7ÓMm¢G§²ÚîÆ­yĞperformance.now() - started };
+if (new URLSearchParams(location.search).has('smoke'))
+  Object.assign(window, { __vrmSmokeAutoSave: () => saveAutoSlot(), __vrmSmokeSaveSlot: index => saveSlot(index),
+    __vrmSmokeMenuPolish: async phase => {
+      if (phase === 'agent-player') {
+        const index=project.acts.findIndex(a=>a.draftBatchId&&a.kind!=='event');
+        if(index<0)throw new Error('generated draft not found in export');
+        playing=true;playAct=index;playStep=0;preparedAct=-1;await showPlayStep();
+        await new Promise(r=>setTimeout(r,2500));
+        if(stageError||!stage.weather.active||stage.weatherSettings.type!=='rain')throw new Error('generated scene or weather not playable');
+        if(music.paused)throw new Error('generated BGM did not play');
+        return {ok:true,act:project.acts[index].name,generatedDialogue:project.acts[index].steps[0].text,weather:stage.weatherSettings.type,musicPlaying:!music.paused,sceneError:stageError};
+      }
+      if (phase === 'agent-editor') {
+        const assert=(value,label)=>{if(!value)throw new Error(label);};
+        storyAssistant.render();
+        document.querySelector('#assistant-source-name').value='æ¸¯å£æ•…äº‹';
+        document.querySelector('#assistant-source-text').value='# æ¸¯å£çš„æ€¥æŠ¥\nç»¯éŸ³ï¼šæˆ‘ä»¬å¿…é¡»é©¬ä¸Šç¦»å¼€ï¼\næ¾„å¤ï¼šç­‰ä¸€ä¸‹ï¼Œæˆ‘è¿˜æ²¡æœ‰çœ‹å®Œä¿¡ã€‚\né›¨è¶Šä¸‹è¶Šå¤§ï¼Œæ¸¯å£çš„ç”µå°ä¼ æ¥æ¶ˆæ¯ã€‚';
+        await storyAssistant.click('assistant-source-paste');
+        const before=JSON.stringify(project),count=project.acts.length;
+        await storyAssistant.click('assistant-offline');
+        assert(document.querySelector('#assistant-preview').textContent.includes('æ²¡æœ‰ä½¿ç”¨ AI'),'offline helper is not labelled');
+        await storyAssistant.click('assistant-apply');
+        assert(project.acts.length>count,'draft not appended');
+        assert(project.assetFolders.filter(f=>f.type==='voice').every(f=>f.locked),'voice folders unprotected');
+        await restoreEditorHistory(-1);assert(JSON.stringify(project)===before,'draft undo did not restore source project');
+        await restoreEditorHistory(1);assert(project.acts.length>count,'draft redo failed');
+        await restoreEditorHistory(-1);
+        const context=await storyAssistant.call('get_project');
+        const stale=await storyAssistant.call('propose_draft',{expectedRevision:context.revision,draft:{schemaVersion:1,acts:[{name:'å†²çªæµ‹è¯•',steps:[{speaker:'æ—ç™½',text:'ä¸å¯è¦†ç›–'}]}]}});
+        project.name+=' Â· æœªä¿å­˜ä¿®æ”¹';markDirty({label:'æµ‹è¯•ä½œè€…åŒæ—¶ä¿®æ”¹'});
+        let blocked=false;try{await storyAssistant.call('apply_draft',{proposalId:stale.proposalId,expectedRevision:stale.revision});}catch{blocked=true;}
+        assert(blocked&&project.acts.length===count,'stale draft overwrote author edits');
+        storyAssistant.render();await storyAssistant.click('assistant-toggle');
+        assert(storyAssistant.isEnabled(),'native agent bridge not enabled');
+        await storyAssistant.click('assistant-toggle');assert(!storyAssistant.isEnabled(),'agent disconnect failed');
+        await storyAssistant.click('assistant-toggle');assert(storyAssistant.isEnabled(),'agent reconnect failed');
+        const restoredConnection=await bridge('init');storyAssistant.setConnection(restoredConnection.agent);
+        assert(storyAssistant.isEnabled(),'agent state lost on initialization');
+        await save();
+        return {ok:true,sourceImport:true,draftPreview:true,appendPreserved:true,undoRedo:true,staleWriteRejected:true,lockedVoiceFolders:true,agentEnabled:true};
+      }
+      if (phase === 'protected-editor') {
+        const badge = document.querySelector('.editor-feedback');
+        if (!badge || !feedbackGroup || badge.querySelector('strong').textContent !== feedbackGroup || !badge.textContent.includes('Bugåé¦ˆäº¤æµç¾¤')) throw new Error('feedback badge missing');
+        const rect = badge.getBoundingClientRect(), topbar = document.querySelector('.topbar');
+        if (rect.right > window.innerWidth || topbar.scrollWidth > topbar.clientWidth + 2) throw new Error('feedback badge toolbar overflow');
+        await save();
+        return { ok: true, feedbackGroup, badgeRight: rect.right, viewport: window.innerWidth, nativeBranding: true, saved: true };
+      }
+      if (phase.startsWith('mouth-')) return runMouthSmoke(phase);
+      if (phase === 'voices-player') {
+        playing = true; playAct = 0; playStep = 0; preparedAct = -1; await showPlayStep();
+        for (let n = 0; n < 100 && (voice.paused || !voice.duration); n++) await new Promise(r => setTimeout(r, 50));
+        if (asset(project.acts[0].steps[0].voiceId)?.type !== 'voice' || voice.paused || !voice.duration) throw new Error('exported character voice did not play');
+        const result = { ok: true, duration: voice.duration, src: voice.src, voiceType: asset(project.acts[0].steps[0].voiceId).type };
+        voice.pause(); return result;
+      }
+      if (phase === 'voices-editor') return runDialogueVoiceSmoke();
+      if (phase === 'history-editor') return runEditorHistorySmoke();
+      if (phase === 'history-portrait') return runPortraitHistorySmoke();
+      const assert = (condition, message) => { if (!condition) throw new Error(message); };
+      if (phase.startsWith('events-')) {
+        const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+        const waitFor = async predicate => { for (let n = 0; n < 100 && !predicate(); n++) await wait(100); assert(predicate(), 'scene did not finish loading'); };
+        const find = (type, burst = false) => project.acts.findIndex(a => isEvent(a) && a.event.type === type && Boolean(a.event.burst) === burst);
+        const open = async index => { closePlayerModal(); document.querySelector('#player-modal')?.remove();
+          playing = true; playAct = index; playStep = 0; preparedAct = -1; restoredEventRemaining = undefined; await showPlayStep(); };
+        const locked = () => {
+          const index = playAct;
+          next(); document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+          document.querySelector('#scene-bg').click(); events.confirm();
+          assert(playAct === index, 'forced reading bypassed');
+          assert(document.querySelector('[data-action="event-confirm"]').disabled, 'continue button not disabled');
+        };
+        const scene = () => {
+          assert(getComputedStyle(document.querySelector('#stage-canvas')).visibility === 'hidden', 'actor canvas still visible');
+          assert(getComputedStyle(document.querySelector('#dialogue')).visibility === 'hidden', 'dialogue still visible');
+          assert(getComputedStyle(document.querySelector('#scene-bg')).filter.includes('blur('), 'background not blurred');
+          assert(!stage.weather?.active && !stage.weather?.audible, 'weather leaked into event');
+        };
+        if (phase === 'events-editor') {
+          playing = false; mode = 'editor'; activePanel = 'story'; selectedAct = find('news'); renderEditor(); await wait(900);
+          assert(document.querySelector('[data-event-field="type"]'), 'event inspector missing');
+          const initial = project.acts.length;
+          await handleEventAction('event-add', {}); const addedId = act().id;
+          assert(isEvent(act()) && project.acts.length === initial + 1, 'event insertion failed');
+          await handleEventAction('event-duplicate', {});
+          assert(act().id !== addedId && project.acts.length === initial + 2, 'duplicate reused IDs');
+          project.acts.splice(selectedAct - 1, 2); selectedAct = find('news'); renderSidebar(); renderInspector(); await updatePreview();
+          assert(project.acts.length === initial, 'test cleanup failed');
+          const newsId = act().id; reorderStory('act', selectedAct, 0, false);
+          assert(project.acts[0].id === newsId && act().id === newsId, 'reorder lost selection');
+          reorderStory('act', 0, 1, true); assert(project.acts[1].id === newsId, 'reorder back failed');
+          const data = JSON.parse(JSON.stringify(project));
+          assert(data.acts.filter(isEvent).length === 4 && data.acts.find(a => a.event?.burst).event.declarations.length === 29, 'event data lost');
+          assert(!library.input(document.createElement('input')), 'unexpected library input');
+          markDirty(); await save();
+          return { ok: true, insertion: true, duplicateIds: true, serialization: true, events: 4 };
+        }
+        if (phase === 'events-news') {
+          playing = false; mode = 'player'; renderPlayer(); await wait(500);
+          const index = find('news'); await open(index); scene(); locked();
+          const started = performance.now();
+          await wait(300); assert(!music.paused && music.src.includes('atmosphere.wav'), 'event music did not play');
+          const master = audioSettings.master; audioSettings.master = 0; applyAudioSettings(); assert(music.volume === 0, 'event music mute failed'); audioSettings.master = master; applyAudioSettings();
+          renderSettingsModal(); const before = events.remaining(); await wait(1100);
+          assert(Math.abs(events.remaining() - before) < .12, 'timer kept running in settings');
+          assert(parseInt(getComputedStyle(document.querySelector('#player-modal')).zIndex) > parseInt(getComputedStyle(document.querySelector('#world-event')).zIndex), 'settings hidden behind event');
+          closePlayerModal(); await wait(250); locked();
+          autoPlay = true; scheduleAutoAdvance(project.acts[playAct].steps[0]); assert(!autoTimer, 'autoplay scheduled event skip'); autoPlay = false;
+          await wait(3400); assert(events.remaining() === 0 && !document.querySelector('[data-action="event-confirm"]').disabled, 'news did not unlock');
+          const result = { ok: true, requiredSeconds: 3, remaining: events.remaining(), pausedInSettings: true, resistedKeyboardAndAutoplay: true, elapsedMs: performance.now() - started };
           // Leave the newspaper onscreen for the native screenshot.
           return result;
         }
@@ -501,30 +3481,283 @@ JNÂˆYŠİYÙQ\œ›ÜŸ\İYÙKÙX]\‹˜Xİ]™_İYÙKÙX]\”Ù][™ÜË\HOOIÜ
           const d = events.diagnostics(); assert(d.received === 30, 'burst messages incomplete');
           assert(d.windows <= 8, 'burst windows unbounded');
           assert(document.querySelector('.war-message-count').textContent.includes('30 / 30'), 'message count wrong');
-          return { ok: true, received: d.received, liveWindows: d.windows, closeAllEnabled: !document.querySelector('[data-action="eYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬ÕÙ•¹Ğµ½¹™¥É´‰tœ¤¹‘¥Í…‰±•ôì4(€€€€€€€ô4(€€€€€€€¥˜€¡Á¡…Í”€ôôô€•Ù•¹ÑÌµµ…©½Èœ¤ì4(€€€€€€€€€…İ…¥Ğ½Á•¸¡™¥¹ µ…©½Èœ¤¤ìÍ•¹” ¤ì±½­• ¤ì4(€€€€€€€€€½¹ÍĞÍÑ…ÉÑ•€ôÁ•É™½Éµ…¹”¹¹½Ü ¤ì…İ…¥Ğİ…¥Ğ ĞÌÀÀ¤ì±½­• ¤ì4(€€€€€€€€€…ÍÍ•ÉĞ¡•Ù•¹ÑÌ¹É•µ…¥¹¥¹œ ¤€ø€Ğ°€µ…©½È…Ñ”Ñ½¼Í¡½ÉĞœ¤ì4(€€€€€€€€€…İ…¥Ğİ…¥Ğ ØÄÀÀ¤ì…ÍÍ•ÉĞ¡•Ù•¹ÑÌ¹É•µ…¥¹¥¹œ ¤€ôôô€À€˜˜€…‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È m‘…Ñ„µ…Ñ¥½¸ô‰•Ù•¹Ğµ½¹™¥É´‰tœ¤¹‘¥Í…‰±•°€µ…©½È‘¥¹½ĞÕ¹±½¬…™Ñ•È€ÄÀÍ•½¹‘Ìœ¤ì4(€€€€€€€€€…ÍÍ•ÉĞ¡‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ¹‰É½…‘…ÍĞµ½Áä‰±½­ÅÕ½Ñ”œ¤°€µ…©½ÈÅÕ½Ñ”µ¥ÍÍ¥¹œœ¤ì4(€€€€€€€€€É•ÑÕÉ¸ì½¬èÑÉÕ”°É•ÅÕ¥É•‘M•½¹‘Ìè€ÄÀ°•±…ÁÍ•‘5ÌèÁ•É™½Éµ…¹”¹¹½Ü ¤€´ÍÑ…ÉÑ•°É•Í¥ÍÑ•‘…É±å±½Í”èÑÉÕ”ôì4(€€€€€€€ô4(€€€€€€€¥˜€¡Á¡…Í”€ôôô€•Ù•¹ÑÌµÍ…Ù”œ¤ì4(€€€€€€€€€…İ…¥Ğ½Á•¸¡™¥¹ ¹•İÌœ¤¤ì…İ…¥Ğİ…¥Ğ äÔÀ¤ìÉ•¹‘•ÉM…Ù•5½‘…° Í…Ù”œ¤ì4(€€€€€€€€€½¹ÍĞ‰•™½É”€ô•Ù•¹ÑÌ¹É•µ…¥¹¥¹œ ¤°Í±½Ğ€ôÍ¹…ÁÍ¡½ÑM±½Ğ ¤ì4(€€€€€€€€€…ÍÍ•ÉĞ¡‰•™½É”€ø€À€˜˜Í±½Ğ¹•Ù•¹ÑI•µ…¥¹¥¹œ€ø€À€˜˜Í±½Ğ¹…Ñ%€ôôôÁÉ½©•Ğ¹…ÑÍmÁ±…åÑt¹¥°€•Ù•¹ĞÍ¹…ÁÍ¡½Ğµ¥ÍÍ¥¹œœ¤ì4(€€€€€€€€€½¹ÍĞÍ±½ÑÌ€ôÉ•…‘M…Ù•M±½ÑÌ ¤ìÍ±½ÑÍlÄİt€ôÍ±½Ğì±½…±MÑ½É…”¹Í•Ñ%Ñ•´¡Í…Ù•-•ä ¤°)M=8¹ÍÑÉ¥¹¥™ä¡Í±½ÑÌ¤¤ì4(€€€€€€€€€ÍÑ½ÁA±…ä ¤ì±½…‘M±½Ğ ÄÜ¤ì…İ…¥Ğİ…¥Ğ àÔÀ¤ì4(€€€€€€€€€…ÍÍ•ÉĞ¡•Ù•¹ÑÌ¹…Ñ¥Ù” ¤€˜˜•Ù•¹ÑÌ¹É•µ…¥¹¥¹œ ¤€ğô‰•™½É”€¬€¸ÀÔ€˜˜•Ù•¹ÑÌ¹É•µ…¥¹¥¹œ ¤€ø‰•™½É”€´€¸Ü°€Í…Ù•½Õ¹Ñ‘½İ¸¹½ĞÉ•ÍÑ½É•œ¤ì4(€€€€€€€€€±½­• ¤ì…İ…¥Ğİ…¥Ğ ÈØÀÀ¤ì½¹ÍĞ•Ù•¹Ñ%€ôÁÉ½©•Ğ¹…ÑÍmÁ±…åÑt¹¥ì•Ù•¹ÑÌ¹½¹™¥É´ ¤ì…İ…¥Ğİ…¥Ñ½È  ¤€ôø€…ÑÉ…¹Í¥Ñ¥½¹¥¹œ€˜˜€…•Ù•¹ÑÌ¹…Ñ¥Ù” ¤¤ì4(€€€€€€€€€…ÍÍ•ÉĞ¡±½…‘1¥™•Ñ¥µ•AÉ½É•ÍÌ£}4ÖÚ$z{-®éÜj×ÆÆW'”6ÆV#§G'VRÆV×G”67C§G'VRÆö–Ä6ö×F–&ÆS§G'VRÇÆ–W$VF–ôæD×WFS§G'VWÓ°Ğ¢ĞĞ¢76W'B„ö&¦V7Bæ†4÷vâ‡vVF†W$æÖW2ÇG—R’ÂwVæ¶æ÷vâvVF†W"r“°Ğ¢ÖöFSÒwÆ–W"s·&VæFW%Æ–W"‚“¶v—Bv—B‚“°Ğ¢&ö¦V7Bæ7G5³ÒçvVF†W#Öæ÷&ÖÆ—¦UvVF†W"‡²ââç&ö¦V7Bæ7G5³ÒçvVF†W"ÇG—RÆ–çFVç6—G“¢ãrÇv–æC¢ãbÆw&÷VæC¢ãƒ'Ò“°Ğ¢Æ––æs×G'VS·Æ”7CÓ·Æ•7FWÓ·&W&VD7CÒÓ¶v—B6†÷uÆ•7FW‚“¶v—Bv—B‚“°Ğ¢76W'B‡7FvRçvVF†W%6WGF–æw2çG—SÓÓ×G—Rbb7FvRçvVF†W"æ7F—fRÂwÆ–W"vVF†W"Ö—76–ærr“°Ğ¢6öç7BFW‡CÖFö7VÖVçBçVW'•6VÆV7F÷"‚r6F–ÆöwVR×FW‡Br“°Ğ¢76W'B‡'6T–çB†vWD6ö×WFVE7G–ÆR†Fö7VÖVçBçVW'•6VÆV7F÷"‚r6F–ÆöwVRr’’ç¤–æFW‚“ãÂwvVF†W"6÷fW'2F–ÆöwVRr“°Ğ¢&WGW&â¶ö³§G'VRÇG—RÇ'F–6ÆW3§7FvRçvVF†W"ç'F–6ÆW2ævVöÖWG'’æ–ç7Fæ6T6÷VçBÆFWF…FW7C§7FvRçvVF†W"ç'F–6ÆW2æÖFW&–ÂæFWF…FW7BÀĞ¢VF–ó§7FvRçvVF†W"æVF–&ÆRÆ6çf5f—6–&ÆS§7FvRæVÆVÖVçBç7G–ÆRçf—6–&–Æ—G“ÓÓÒwf—6–&ÆRrÇ7V'F—FÆS§FW‡BçFW‡D6öçFVçGÓ°Ğ¢ĞĞ¢–b‡†6RÓÓÒvÆ–'&'’×6V&6‚r’°Ğ¢6Æ÷6UÆ–W$ÖöFÂ‚“²ÖöFRÒvVF—F÷"s²&VæFW$VF—F÷"‚“°Ğ¢6öç7BöÆBÒ&ö¦V7Bæ6†&7FW'5³ÒææÖS°Ğ¢Fö7VÖVçBçVW'•6VÆV7F÷"‚r7FW‡B×6V&6‚r’çfÇVRÒöÆC°Ğ¢v—BÆ–'&'’æ6Æ–6²‚w6V&6‚Ö÷VârÂ·Ò“°Ğ¢76W'B†Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚rç6V&6‚×&W7VÇG2'F–6ÆRr’æÆVæwF‚âÂw6V&6‚f÷VæBæò&öÆRæÖRr“°Ğ¢Fö7VÖVçBçVW'•6VÆV7F÷"‚r7&WÆ6R×v—F‚r’çfÇVRÒ~h›˜xşiKYŞš¨ÎŠøs°Ğ¢v—BÆ–'&'’æ6Æ–6²‚w6V&6‚×&WÆ6RrÂ·Ò“°Ğ¢76W'B‡&ö¦Uš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍXİ˜Ú\˜Xİ\œÖÌK›˜[YHOOH	ù¢nzaãù¥.yd#zj£:+àIË	Ü™\XÙ[Y[˜Z[Y	ÊNÃBˆ]ØZ]Xœ˜\K˜ÛXÚÊ	ÜÙX\˜Ú][™ÉËßJNÃBˆ\ÜÙ\
-›Ú™Xİ˜Ú\˜Xİ\œÖÌK›˜[YHOOHÛ	İ[™È˜Z[Y	ÊNÃBˆ™]\›ˆÈÚÎˆYK™\XÙP[™[™ÎˆYHNÃBˆCBˆYˆ
-\ÙHOOH	ÛXœ˜\KYY]Ü‰ÊHÃBˆ]ØZ]Xœ˜\K˜ÛXÚÊ	ÜÙX\˜ÚXÛÜÙIËßJNÈXİ]™T[™[H	ÚÛ›İÛYÙIÎÈ™[™\”ÚYX˜\Š
-NÈ™[™\’[œÜXİÜŠ
-NÃBˆ\ÜÙ\
-Øİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KX›ÛÚËYšY[H[›ØÚĞXİY—IÊK	Ø›ÛÚÈY]ÜˆZ\ÜÚ[™ÉÊNÃBˆ™]\›ˆÈÚÎˆYK›ÛÚĞÛİ[ˆ›Ú™XİšÛ›İÛYÙP›ÛÚÜË›[™İNÃBˆCBˆYˆ
-\ÙHOOH	ÛXœ˜\K\Ú[‰ÊHÃBˆ[ÙHH	Ü^Y\‰ÎÈ™[™\”^Y\Š
-NÈ]ØZ]™]È›ÛZ\ÙJ™\ÛÛ™HOˆÙ][Y[İ]
-™\ÛÛ™KL
-JNÃBˆ›Üˆ
-]HHÈHÌ	‰ˆYØİ[Y[œ]Y\TÙ[XİÜŠ	ÈØXİ[ØY[™ÉÊK˜Û\ÜÓ\İ˜ÛÛZ[œÊ	ÚY[‰ÊNÈJÊÊH]ØZ]™]È›ÛZ\ÙJ™\ÛÛ™HOˆÙ][Y[İ]
-™\ÛÛ™KL
-JNÃBˆÛÛœİ›ÛÚĞ]ÛˆHØİ[Y[œ]Y\TÙ[XİÜŠ	ËšÛ›İÛYÙK]]KX]Û‰ÊNÃBˆÛÛœİ›İ[™ÈH›ÛÚĞ]Û‹™Ù]›İ[™[™ĞÛY[™Xİ
-
-NÃBˆÛÛœİXÛÛˆH›ÛÚĞ]Û‹œ]Y\TÙ[XİÜŠ	Üİ™ÉÊK™Ù]›İ[™[™ĞÛY[™Xİ
-
-NÃBˆ\ÜÙ\
-XÛÛ‹ÚYH	‰ˆXÛÛ‹šZYÚH	Ø›ÛÚÈXÛÛˆÛÛ\ÙY	ÊNÃBˆ\ÜÙ\
-Ù]ÛÛ\]Yİ[J›ÛÚĞ]ÛŠKœÚ[\‘]™[ÈOOH	Ø]]ÉË	Ø›ÛÚÈ]ÛˆØ[››İ™XÙZ]™HÛXÚÜÉÊNÃBˆ\ÜÙ\
-Øİ[Y[™[[Y[œ›ÛTÚ[
-›İ[™Ë›Y
-È›İ[™ËÚYÈ‹›İ[™ËÜ
-È›İ[™ËšZYÚÈŠOË˜ÛÜÙ\İ
-	ÖÙ]KXXİ[ÛHšÛ›İÛYÙK[Ü[ˆ—IÊHOOH›ÛÚĞ]Û‹	Ø›ÛÚÈ]Ûˆ\ÈÛİ™\™Y	ÊNÃBˆ›ÛÚĞ]7ÓMm¢G§²ÚîÆ­yŞ..portraitJobs.values()]);
+          return { ok: true, received: d.received, liveWindows: d.windows, closeAllEnabled: !document.querySelector('[data-action="event-confirm"]').disabled };
+        }
+        if (phase === 'events-major') {
+          await open(find('major')); scene(); locked();
+          const started = performance.now(); await wait(4300); locked();
+          assert(events.remaining() > 4, 'major gate too short');
+          await wait(6100); assert(events.remaining() === 0 && !document.querySelector('[data-action="event-confirm"]').disabled, 'major did not unlock after 10 seconds');
+          assert(document.querySelector('.broadcast-copy blockquote'), 'major quote missing');
+          return { ok: true, requiredSeconds: 10, elapsedMs: performance.now() - started, resistedEarlyClose: true };
+        }
+        if (phase === 'events-save') {
+          await open(find('news')); await wait(950); renderSaveModal('save');
+          const before = events.remaining(), slot = snapshotSlot();
+          assert(before > 0 && slot.eventRemaining > 0 && slot.actId === project.acts[playAct].id, 'event snapshot missing');
+          const slots = readSaveSlots(); slots[17] = slot; localStorage.setItem(saveKey(), JSON.stringify(slots));
+          stopPlay(); loadSlot(17); await wait(850);
+          assert(events.active() && events.remaining() <= before + .05 && events.remaining() > before - .7, 'saved countdown not restored');
+          locked(); await wait(2600); const eventId = project.acts[playAct].id; events.confirm(); await waitFor(() => !transitioning && !events.active());
+          assert(loadLifetimeProgress().completedEventIds.includes(eventId), 'event completion not stored');
+          assert(!loadLifetimeProgress().viewedDialogueIds.includes(slot.stepId), 'event counted as dialogue');
+          assert(!events.active() && !document.querySelector('.stage-frame').classList.contains('event-mode'), 'event overlay leaked into dialogue');
+          return { ok: true, savedRemaining: before, loadedRemainingPreserved: true, completedEventId: eventId, normalDialogueRestored: true };
+        }
+        if (phase === 'events-flow') {
+          const old = [...project.acts];
+          try {
+            const first = structuredClone(old[find('war')]), last = structuredClone(first); first.id = uid(); last.id = uid(); last.steps[0].id = uid();
+            project.acts = [first, old[0], last]; playing = false; await showTitleScene(true);
+            startPlay(); assert(isEvent(project.acts[playAct]) && events.active(), 'first event failed');
+            events.confirm(); await waitFor(() => !transitioning && playAct === 1 && !events.active()); assert(stage.weather?.active && stage.visibleRecords.size > 0, 'actors/weather not restored after event');
+            finishTyping(); next(); await wait(800); assert(playAct === 2 && events.active(), 'last event failed');
+            events.confirm(); await wait(900); assert(!playing && !events.active() && document.querySelector('.stage-frame').classList.contains('title-mode'), 'last event did not finish story');
+          } finally { project.acts = old; }
+          const stats = progressStatistics(); assert(stats.acts.length === 4 && stats.total === 4, 'events polluted chapter dialogue counts');
+          renderProgressModal(); assert(document.querySelectorAll('.chapter-card').length === 4, 'events shown as chapters');
+          closePlayerModal(); await wait(250); await open(find('news'));
+          return { ok: true, firstAndLastEvent: true, weatherRestored: true, chapterCards: stats.acts.length, dialogueTotal: stats.total };
+        }
+        if (phase === 'events-media') {
+          const index = find('major'); const e = project.acts[index].event;
+          const old = { ...e }, oldAssets = [...project.assets];
+          project.assets.push({ id: 'event-video-test', name: 'test-video.webm', type: 'video', path: 'assets/events/test-video.webm' });
+          try {
+            const response = await fetch(assetUrl(asset('event-video-test'))), data = await response.arrayBuffer();
+            assert(response.ok && data.byteLength > 100, `test video resource failed: ${response.status}, ${data.byteLength}`);
+            const expected = await (await fetch(window.__eventVideo)).arrayBuffer();
+            const prefix = Array.from(new Uint8Array(data).slice(0,12));
+            assert(data.byteLength === expected.byteLength && prefix.join() === Array.from(new Uint8Array(expected).slice(0,12)).join(), `video bytes changed: ${data.byteLength}/${expected.byteLength}, ${prefix}`);
+            e.videoId = 'event-video-test'; e.seId = e.bgmId; e.voiceId = e.bgmId;
+            playing = false; mode = 'player'; renderPlayer(); await wait(400); await open(index); await wait(250);
+            const video = document.querySelector('#world-event video');
+            assert(video?.readyState >= 2 && !video.paused && video.muted, `event video did not play (${data.byteLength} bytes; ${prefix}): ${document.querySelector('#world-event')?.dataset.mediaError || JSON.stringify({ready:video?.readyState,paused:video?.paused,ended:video?.ended,time:video?.currentTime,duration:video?.duration})}`);
+            assert(eventEffects.size === 1 && !voice.paused, 'event effect/narration did not play');
+            renderSettingsModal(); await wait(250); assert(video.paused, 'video did not pause in settings');
+            closePlayerModal(); await wait(250); assert(!video.paused, 'video did not resume');
+            stopPlay(); assert(video.paused && voice.paused && eventEffects.size === 0, 'event media kept playing after exit');
+            return { ok: true, videoPlayed: true, pausedAndResumed: true, narrationAndEffects: true, stoppedOnExit: true };
+          } finally { project.acts[index].event = old; project.assets = oldAssets; }
+        }
+      }
+      if (phase.startsWith('weather-')) {
+        const type = phase.slice(8);
+        const wait = () => new Promise(resolve => setTimeout(resolve, 1000));
+        if (type === 'depth') {
+          closePlayerModal(); playing=false; activePanel='story'; await stage.showCast([], '', false);
+          stage.setRenderSettings({...act().render,outline:0,paintEffect:'none',shadowEnabled:false});
+          stage.setWeather({...weatherDefaults,type:'rain',intensity:1}); await wait();
+          stage.renderer.render(stage.scene,stage.camera);
+          const gl=stage.renderer.getContext(), size={x:stage.renderer.domElement.width,y:stage.renderer.domElement.height};
+          const pixels=new Uint8Array(size.x*size.y*4);
+          gl.readPixels(0,0,size.x,size.y,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+          let visible=0;for(let i=3;i<pixels.length;i+=4) if(pixels[i]>8)visible++;
+          assert(visible>1000,'rain shader produced no visible particles');
+          assert(gl.getError()===gl.NO_ERROR,'weather GPU error');
+          await showTitleScene(true);
+          return {ok:true,rainPixels:visible,gpuDepthTest:true};
+        }
+        if (type === 'editor') {
+          stopPlay(); mode='editor'; selectedAct=0; selectedStep=0; activePanel='story'; renderEditor();
+          assert(project.acts.every(a => normalizeWeather(a.weather).type==='none'), 'legacy weather not disabled');
+          const picker=document.querySelector('[data-weather="type"]');
+          picker.value='rain'; picker.dispatchEvent(new Event('input',{bubbles:true})); await wait();
+          const strength=document.querySelector('[data-weather="intensity"]');
+          strength.value=75; strength.dispatchEvent(new Event('input',{bubbles:true}));
+          assert(act().weather.type==='rain' && act().weather.intensity===.75,'weather editor failed');
+          assert(stage.weather.particles.geometry.instanceCount>0 && stage.element.style.visibility==='visible','weather preview missing');
+          assert(!stage.weather.audible,'editor weather sound should be silent');
+          const firstId=act().id;
+          selectedAct=1; renderSidebar();renderInspector();await updatePreview();
+          assert(stage.weatherSettings.type==='none' && !stage.weather.active,'weather leaked into next act');
+          selectedAct=0;renderSidebar();renderInspector();await updatePreview();
+          assert(act().id===firstId && stage.weatherSettings.type==='rain','weather lost after act switch');
+          await save(); document.querySelector('.weather-editor')?.scrollIntoView({block:'start'}); await wait();
+          return {ok:true,independentActs:true,savedWeather:act().weather};
+        }
+        if (type==='lifecycle') {
+          const windOriginals=[...stage.weather.windJoints].map(([joint,original])=>({joint,power:original.power,dir:original.dir.clone()}));
+          await showTitleScene(false);
+          assert(!stage.weather.active && !stage.weather.audible,'weather leaked into title');
+          assert(windOriginals.every(({joint,power,dir})=>joint.settings.gravityPower===power && joint.settings.gravityDir.equals(dir)),'weather wind changed original model settings');
+          activePanel='characters'; await showCharacterEditorPreview();
+          assert(!stage.weather.active,'weather leaked into gallery');
+          activePanel='story'; hideCharacterEditorPreview();
+          await updatePreview();
+          setSceneWeather({...act(),weather:{...act().weather,type:'none'}});
+          await stage.showCast([], '',false);
+          setSceneWeather({...act(),weather:{...act().weather,type:'snow'}});
+          assert(stage.weather.active && stage.element.style.visibility==='visible','empty cast hid snow');
+          stage.setRenderSettings({...act().render,paintEffect:'oil',paintStrength:.65});
+          showBackground(asset(act().backgroundId));await wait();
+          assert(stage.paintEnabled && stage.weather.active,'oil mode lost weather');
+          stage.setRenderSettings(act().render);
+          await updatePreview();
+          const scene=project.acts[0]; scene.weather=normalizeWeather({...scene.weather,type:'rain'});
+          playing=true; playAct=0;playStep=0;preparedAct=-1;await showPlayStep();await wait();
+          assert(stage.weather.audible,'player ambient sound missing');
+          const master=audioSettings.master;
+          audioSettings.master=0; applyAudioSettings();assert(stage.weather.audio.volume===0 && stage.weather.audioLevel===0,'mute failed');
+          audioSettings.master=master;applyAudioSettings();stopPlay();
+          assert(!stage.weather.audible,'weather sound leaked after stop');
+          return {ok:true,titleAndGalleryClear:true,emptyCast:true,oilCompatible:true,playerAudioAndMute:true};
+        }
+        assert(Object.hasOwn(weatherNames,type),'unknown weather');
+        mode='player';renderPlayer();await wait();
+        project.acts[0].weather=normalizeWeather({...project.acts[0].weather,type,intensity:.7,wind:.6,ground:.82});
+        playing=true;playAct=0;playStep=0;preparedAct=-1;await showPlayStep();await wait();
+        assert(stage.weatherSettings.type===type && stage.weather.active,'player weather missing');
+        const text=document.querySelector('#dialogue-text');
+        assert(parseInt(getComputedStyle(document.querySelector('#dialogue')).zIndex)>0,'weather covers dialogue');
+        return {ok:true,type,particles:stage.weather.particles.geometry.instanceCount,depthTest:stage.weather.particles.material.depthTest,
+          audio:stage.weather.audible,canvasVisible:stage.element.style.visibility==='visible',subtitle:text.textContent};
+      }
+      if (phase === 'library-search') {
+        closePlayerModal(); mode = 'editor'; renderEditor();
+        const old = project.characters[0].name;
+        document.querySelector('#text-search').value = old;
+        await library.click('search-open', {});
+        assert(document.querySelectorAll('.search-results article').length > 0, 'search found no role name');
+        document.querySelector('#replace-with').value = 'æ‰¹é‡æ”¹åéªŒè¯';
+        await library.click('search-replace', {});
+        assert(project.characters[0].name === 'æ‰¹é‡æ”¹åéªŒè¯', 'replacement failed');
+        await library.click('search-undo', {});
+        assert(project.characters[0].name === old, 'undo failed');
+        return { ok: true, replaceAndUndo: true };
+      }
+      if (phase === 'library-editor') {
+        await library.click('search-close', {}); activePanel = 'knowledge'; renderSidebar(); renderInspector();
+        assert(document.querySelector('[data-book-field="unlockActId"]'), 'book editor missing');
+        return { ok: true, bookCount: project.knowledgeBooks.length };
+      }
+      if (phase === 'library-shelf') {
+        mode = 'player'; renderPlayer(); await new Promise(resolve => setTimeout(resolve,1000));
+        for (let i = 0; i < 70 && !document.querySelector('#act-loading').classList.contains('hidden'); i++) await new Promise(resolve => setTimeout(resolve,100));
+        const bookButton = document.querySelector('.knowledge-title-button');
+        const bounds = bookButton.getBoundingClientRect();
+        const icon = bookButton.querySelector('svg').getBoundingClientRect();
+        assert(icon.width >= 24 && icon.height >= 24, 'book icon collapsed');
+        assert(getComputedStyle(bookButton).pointerEvents === 'auto', 'book button cannot receive clicks');
+        assert(document.elementFromPoint(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2)?.closest('[data-action="knowledge-open"]') === bookButton, 'book button is covered');
+        bookButton.click();
+        await new Promise(resolve => setTimeout(resolve,300));
+        assert(document.querySelector('.book-library'), 'title book button did not open library');
+        assert(document.querySelector('.book-locked'), 'locked cover missing');
+        await library.click('book-read', { dataset: { index: '0' } });
+        assert(!document.querySelector('#book-reader'), 'locked PDF was opened');
+        await new Promise(resolve => setTimeout(resolve,1200));
+        return { ok: true, lockedBookBlocked: true, titleButtonHit: true, iconWidth: icon.width };
+      }
+      if (phase === 'library-reader') {
+        lifetimeProgress.viewedDialogueIds = project.acts[0].steps.map(line => line.id);
+        await library.openBook(0);
+        assert(document.querySelectorAll('.book-paper canvas').length === 2, 'PDF spread missing');
+        return { ok: true, pages: document.querySelector('#book-page-state').textContent };
+      }
+      if (phase === 'library-turn') {
+        await library.click('book-next', {});
+        assert(document.querySelector('#book-page-state').textContent.startsWith('3'), 'next spread failed');
+        await library.click('book-next', {});
+        assert(document.querySelector('#book-page-state').textContent.startsWith('5') && document.querySelectorAll('.book-paper canvas').length === 1, 'odd last page failed');
+        assert(document.querySelector('[data-action="book-next"]').disabled, 'last page next button enabled');
+        await library.click('book-prev', {});
+        await library.click('book-prev', {});
+        assert(document.querySelector('#book-page-state').textContent.startsWith('1'), 'previous spread failed');
+        return { ok: true, forwardAndBackward: true, oddLastPage: true };
+      }
+      if (phase === 'audio') {
+        assert(mode === 'player' && !playing, 'test must start on untouched title screen');
+        const titleButton = getComputedStyle(document.querySelector('#player-start [data-action="play"]'));
+        assert(titleButton.color === 'rgb(0, 0, 0)' && titleButton.backdropFilter.includes('blur(0px)'), 'title button must start clear with black text');
+        for (let i = 0; i < 50 && (music.paused || music.currentTime <= 0); i++) await new Promise(resolve => setTimeout(resolve,100));
+        assert(!music.paused && music.currentTime > 0 && music.src === assetUrl(asset(project.title.bgmId)), 'title music did not autoplay');
+        return { ok: true, titleMusicPlaying: true, time: music.currentTime };
+      }
+      if (phase === 'settings') {
+        document.querySelector('#player-start [data-action="settings"]').click();
+        const body = document.querySelector('.settings-body');
+        const box = document.querySelector('.settings-box');
+        assert(body && getComputedStyle(body).overflowY === 'auto', 'settings is not scrollable');
+        for (const node of body.querySelectorAll('.volume-line,.volume-line output,.field > span,p'))
+          assert(getComputedStyle(node).color === 'rgb(0, 0, 0)', 'settings text must be pure black');
+        assert(getComputedStyle(box).animationName === 'menu-panel-in', 'popup transition missing');
+        await new Promise(resolve => setTimeout(resolve,300));
+        body.scrollTop = body.scrollHeight;
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        const bounds = body.getBoundingClientRect();
+        const button = body.querySelector('[data-action="toggle-fullscreen"]').getBoundingClientRect();
+        assert(button.top >= bounds.top && button.bottom <= bounds.bottom + 1, 'fullscreen button still clipped after scrolling');
+        return { ok: true, scrolling: body.scrollHeight > body.clientHeight, fullscreenVisible: true, height: body.clientHeight };
+      }
+      if (['music','characters','chapters','saves','story'].includes(phase)) {
+        closePlayerModal();
+        await new Promise(resolve => setTimeout(resolve,200));
+        if (phase === 'chapters') renderProgressModal();
+        else if (phase === 'saves') renderSaveModal('load');
+        else if (phase === 'music' || phase === 'characters') {
+          galleryTab = phase; renderGalleryModal();
+        } else {
+          playing = true; playAct = 0; playStep = 0; preparedAct = -1;
+          await showPlayStep(); finishTyping();
+          const dialogue = getComputedStyle(document.querySelector('#dialogue'));
+          assert(dialogue.borderTopWidth === '0px' && dialogue.backgroundImage === 'none', 'default dialogue gained a frame');
+          assert(getComputedStyle(document.querySelector('.scene-quick-actions button')).backdropFilter.includes('blur('), 'bottom glass controls missing');
+          const subtitle = getComputedStyle(document.querySelector('#dialogue-text'));
+          assert(subtitle.color === 'rgb(255, 255, 255)' && subtitle.textShadow.includes('rgb(0, 0, 0)'), 'subtitle needs white text and black shadow');
+          return { ok: true, borderlessDialogue: true, glassControls: true };
+        }
+        await new Promise(resolve => setTimeout(resolve,500));
+        const panel = getComputedStyle(document.querySelector('#player-modal > .modal-box'));
+        assert(panel.backdropFilter.includes('blur'), 'glass modal missing');
+        return { ok: true, phase, glass: panel.backdropFilter };
+      }
+      closePlayerModal();
+      assert(document.querySelector('#player-modal')?.classList.contains('closing'), 'close transition missing');
+      await new Promise(resolve => setTimeout(resolve,200));
+      assert(!document.querySelector('#player-modal'), 'closed popup did not disappear');
+      document.querySelector('#player-start [data-action="gallery"]').click();
+      await new Promise(resolve => setTimeout(resolve,300));
+      assert(getComputedStyle(document.querySelector('.gallery-box')).animationName === 'menu-panel-in', 'gallery transition missing');
+      return { ok: true, closeAnimation: true, galleryAnimation: true };
+    },
+    __vrmSmokeChapters: async (phase, testCover = false) => {
+      const assert = (condition, message) => { if (!condition) throw new Error(message); };
+      if (phase === 'editor') {
+        assert(project.acts.length >= 2, 'fixture needs two chapters');
+        assert(project.acts[0].render !== project.acts[1].render, 'chapter settings share an object');
+        selectedAct = 0; activePanel = 'story'; renderSidebar(); renderInspector(); await updatePreview();
+        assert(document.querySelectorAll('.act-dialogues').length === 1, 'accordion did not fold');
+        if (testCover) {
+          const otherCover = project.acts[1].coverImageId;
+          await uploadActCover();
+          assert(asset(act().coverImageId)?.type === 'image' && project.acts[1].coverImageId === otherCover, 'cover upload failed or affected another chapter');
+        }
+        const original = project.acts[1].render.brightness;
+        activePanel = 'render'; renderSidebar(); renderInspector();
+        const slider = document.querySelector('[data-render="brightness"]');
+        slider.value = 135; slider.dispatchEvent(new Event('input', { bubbles: true }));
+        assert(project.acts[0].render.brightness === 135 && project.acts[1].render.brightness === original, 'color leaked to another chapter');
+        const warmth = document.querySelector('[data-render="temperature"]');
+        warmth.value = 35; warmth.dispatchEvent(new Event('input', { bubbles: true }));
+        assert(document.querySelector('#stage-canvas').style.filter.includes('scene-temperature'), 'model color filter not applied');
+        assert(document.querySelector('#scene-bg').style.filter === document.querySelector('#stage-canvas').style.filter, 'model and background color differ');
+        warmth.value = 0; warmth.dispatchEvent(new Event('input', { bubbles: true }));
+        selectedAct = 1; renderSidebar(); renderInspector(); await updatePreview();
+        assert(document.querySelector('#scene-bg').style.filter.includes(`brightness(${original}%)`), 'chapter switch kept previous color');
+        selectedAct = 0; activePanel = 'story'; renderSidebar(); renderInspector(); await updatePreview();
+        const restored = JSON.parse(JSON.stringify(project));
+        assert(restored.acts[0].render.brightness === 135 && restored.acts[0].coverImageId === project.acts[0].coverImageId, 'chapter fields lost on serialization');
+        await save();
+        return { ok: true, accordion: document.querySelectorAll('.act-dialogues').length, independentColors: restored.acts.map(a => a.render.brightness) };
+      }
+      if (phase === 'render') {
+        activePanel = 'render'; renderSidebar(); renderInspector(); await updatePreview();
+        return { ok: true, autoLight: act().render.autoLight };
+      }
+      if (phase === 'portraits') {
+        mode = 'editor'; selectedCharacter = 0; activePanel = 'characters'; renderEditor();
+        await Promise.all([...portraitJobs.values()]);
         const item = project.characters.find(character => character.modelId);
         assert(item, 'fixture needs a model');
         await ensureCharacterPortrait(item, true);
@@ -544,4 +3777,198 @@ NÃBˆ\ÜÙ\
         localStorage.removeItem(lifetimeKey()); renderPlayer();
         playing = true; playAct = 0; playStep = 0; await showPlayStep();
         renderProgressModal();
-        assert(document.querySYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Õ•±•Ñ½É±° œ¹¡…ÁÑ•Èµ…Éœ¤¹±•¹Ñ €ôôôÁÉ½©•Ğ¹…ÑÌ¹±•¹Ñ °€¡…ÁÑ•È…É‘Ìµ¥ÍÍ¥¹œœ¤ì4(€€€€€€€…ÍÍ•ÉĞ¡‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ¡…ÁÑ•Èµ…É´Äœ¤¹‘¥Í…‰±•°€Õ¹Ù¥Í¥Ñ•¡…ÁÑ•ÈÕ¹±½­•œ¤ì4(€€€€€€€Á±…åĞ€ô€ÄìÁ±…åMÑ•À€ô€Àì±½Í•A±…å•É5½‘…° ¤ì…İ…¥ĞÍ¡½İA±…åMÑ•À ¤ìÉ•¹‘•ÉAÉ½É•ÍÍ5½‘…° ¤ì4(€€€€€€€…ÍÍ•ÉĞ …‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ¡…ÁÑ•Èµ…É´Äœ¤¹‘¥Í…‰±•°€Ù¥Í¥Ñ•¡…ÁÑ•ÈÍÑ…å•±½­•œ¤ì4(€€€€€€€É•ÑÕÉ¸ì½¬èÑÉÕ”°…É‘ÌèÁÉ½©•Ğ¹…ÑÌ¹±•¹Ñ °ÁÉ½É•ÍÌèÁÉ½É•ÍÍMÑ…Ñ¥ÍÑ¥Ì ¤ôì4(€€€€€ô4(€€€€€½¹ÍĞ‰•™½É”€ôÁÉ½É•ÍÍMÑ…Ñ¥ÍÑ¥Ì ¤¹Í••¸ì4(€€€€€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œ¡…ÁÑ•Èµ…É´Àœ¤¹±¥¬ ¤ì4(€€€€€™½È€¡±•Ğ¤€ô€Àì¤€ğ€ÄÀÀ€˜˜ÑÉ…¹Í¥Ñ¥½¹¥¹œì¤¬¬¤…İ…¥Ğ¹•ÜAÉ½µ¥Í”¡É•Í½±Ù”€ôøÍ•ÑQ¥µ•½ÕĞ¡É•Í½±Ù”°€ÔÀ¤¤ì4(€€€€€…ÍÍ•ÉĞ¡Á±…åĞ€ôôô€À€˜˜Á±…åMÑ•À€ôôô€À€˜˜Á±…å¥¹œ€˜˜€…Í…Ù•5½‘…±5½‘”°€¡…ÁÑ•ÈÉ•Á±…ä™…¥±•œ¤ì4(€€€€€…ÍÍ•ÉĞ¡ÁÉ½É•ÍÍMÑ…Ñ¥ÍÑ¥Ì ¤¹Í••¸€ôôô‰•™½É”°€É•Á±…ä•É…Í•±¥™•Ñ¥µ”ÁÉ½É•ÍÌœ¤ì4(€€€€€…ÍÍ•ÉĞ¡‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÍ•¹”µ‰œœ¤¹ÍÑå±”¹™¥±Ñ•È¹¥¹±Õ‘•Ì ‰É¥¡Ñ¹•ÍÌ ÄÌÔ”¤œ¤°€É•Á±…äÕÍ•İÉ½¹œ¡…ÁÑ•È½±½Èœ¤ì4(€€€€€±•…ÉQåÁ¥¹œ ¤ì±•…ÉÕÑ½‘Ù…¹” ¤ì4(€€€€€É•ÑÕÉ¸ì½¬èÑÉÕ”°É•Á±…åĞèÁ±…åĞ°É•Á±…åMÑ•ÀèÁ±…åMÑ•À°±¥™•Ñ¥µ•M••¸è‰•™½É”ôì4(€€€ô4(€ô¤ì4)İ¥¹‘½Ü¹}}ÙÉµ¥…¹½ÍÑ¥Ì€ô€ ¤€ôø€¡ì4(€‘¥É•Ñ½Éä°4(€•‘¥Ñ½ÉÕÑ½M…Ù•5¥¹ÕÑ•Ìè•‘¥Ñ½ÉM•ÑÑ¥¹Ì¹…ÕÑ½M…Ù•5¥¹ÕÑ•Ì°4(€‘¥ÉÑä°4(€ÁÉ½©•ĞèÁÉ½©•Ğü¹¹…µ”°4(€µ½‘”°4(€µ½‘•±1½…‘•è	½½±•…¸¡ÍÑ…”ü¹ÙÉ´¤°4(€µ½‘•±%èÍÑ…”ü¹ÕÉÉ•¹Ñ5½‘•±%ñğ€œœ°4(€µ½Ñ¥½¹A±…å¥¹œè	½½±•…¸¡ÍÑ…”ü¹µ¥á•Èü¹}…Ñ¥½¹Ìü¹Í½µ”¡…Ñ¥½¸€ôø…Ñ¥½¸¹¥ÍIÕ¹¹¥¹œ ¤¤¤°4(€ÍÑ…•Ë}4ÖÚ$z{-®éÜj×Çfö–6UföÇVÖS¢fö–6RçföÇVÖPĞ¢ÆWFõÆĞ¢ÆWFô'WGFöåFW‡C¢Fö7VÖVçBçVW'•6VÆV7F÷"‚r6WFò×Æ’Ö'WGFöâr“òçFW‡D6öçFVçBÇÂrpĞ¢ÆvÆÆW'•F Ğ¢ÆvÆÆW'•vPĞ¢ÆvÆÆW'•F–ÆW3¢Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚rævÆÆW'’Ö–ÖvR×F–ÆRr’æÆVæwF€Ğ¢ÆvÆÆW'”Æö6¶VEF–ÆW3¢Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚rævÆÆW'’Ö–ÖvR×F–ÆRæÆö6¶VBr’æÆVæwF€Ğ¢ÆvÆÆW'”Æö6¶VEG&6·3¢Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚rævÆÆW'’×G&6²ÖÆ—7B'WGFöâæÆö6¶VBr’æÆVæwF€Ğ¢ÆvÆÆW'”6†&7FW%6VÆVC¢&ööÆVâ†Fö7VÖVçBçVW'•6VÆV7F÷"‚rævÆÆW'’Ö6†&7FW"×6VÂr’Ğ¢ÆvÆÆW'”Æ–v‡F&÷ƒ¢&ööÆVâ†Fö7VÖVçBçVW'•6VÆV7F÷"‚r6vÆÆW'’ÖÆ–v‡F&÷‚r’Ğ¢ÆvÆÆW'•7F÷'•F'3¢Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚rævÆÆW'’×7F÷'’×F'2'WGFöâr’æÆVæwF€Ğ¢ÆvÆÆW'•7F÷'”Æö6¶VC¢&ööÆVâ†Fö7VÖVçBçVW'•6VÆV7F÷"‚rævÆÆW'’×7F÷'’ÖÆö6¶VBr’Ğ¢ÆvÆÆW'”6†&7FW$–@Ğ¢ÆvÆÆW'•7F÷'”–æFW€Ğ¢ÆvÆÆW'”6†&7FW$ÆöFVC¢&ööÆVâ†vÆÆW'•7FvSòçg&ÒĞ¢ÆvÆÆW'•G&6´6÷VçC¢vÆÆW'•G&6·2‚’æÆVæwF€Ğ¢ÆvÆÆW'•G&6´–æFW€Ğ¢ÆvÆÆW'”×W6–5Æ––æs¢vÆÆW'”×W6–2çW6V@Ğ¢ÆvÆÆW'•&WVDöæPĞ¢ÇÆ”6†&7FW$Æ–æT6÷VçG0Ğ¢ÆFVWW7E6fT6÷VçG3¢FVWW7E6fR‚’ò6Æ÷DF–ÆöwVU&öw&W72†FVWW7E6fR‚’’æ6÷VçG2¢·ĞĞ¢ÇV–6´7F–öä÷&FW#¢²ââæFö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚rç66VæR×V–6²Ö7F–öç2¶FFÖ7F–öåÒr•ÒæÖ†æöFRÓâæöFRæFF6WBæ7F–öâĞ¢ÇV–6´7F–öä&÷GFö×3¢²ââæFö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚rç66VæR×V–6²Ö7F–öç2¶FFÖ7F–öåÒr•ÒæÖ†æöFRÓâÖF‚ç&÷VæB†æöFRævWD&÷VæF–æt6Æ–VçE&V7B‚’æ&÷GFöÒ’Ğ¢ÇFööäÖFW&–Ç3¢²âââ‡7FvSòæ7F—fU&V6÷&CòæÖFW&–Ç3òæ¶W—2‚’ÇÂµÒ•Òæf–ÇFW"†ÖFW&–ÂÓâÖFW&–Âæ—4ÕFööäÖFW&–Â’æÆVæwF€Ğ¢ÇFööäf7F÷#¢²âââ‡7FvSòæ7F—fU&V6÷&CòæÖFW&–Ç3òæ¶W—2‚’ÇÂµÒ•Òæf–æB†ÖFW&–ÂÓâÖFW&–Âæ—4ÕFööäÖFW&–Â“òç6†F–æuFööç”f7F÷"óòçVÆÀĞ¢ÆÖ&–VçD–çFVç6—G“¢7FvSòæÖ&–VçDÆ–v‡Còæ–çFVç6—G’óòçVÆÀĞ¢Æ¶W”–çFVç6—G“¢7FvSòæ¶W”Æ–v‡Còæ–çFVç6—G’óòçVÆÀĞ¢ÆW‡&W76–öå6Æ–FW'3¢Fö7VÖVçBçVW'•6VÆV7F÷$ÆÂ‚u¶FFÖW‡&W76–öåÒr’æÆVæwF€Ğ¢Æ†•vV–v‡C¢7FvSòçg&ÓòæW‡&W76–öäÖævW#òævWEfÇVR‚v†’r’óòçVÆÀĞ¢Ç7FW6—¦S¢7FW‚“òç6—¦RóòçVÆÀĞ¢Ç7FWöfg6WEƒ¢7FW‚“òæöfg6WE‚óòçVÆÀĞ¢Ç7FWöfg6WE“¢7FW‚“òæöfg6WE’óòçVÆÀĞ¢Ç7FWöfg6WE£¢7FW‚“òæöfg6WE¢óòçVÆÀĞ¢Ç6VÆV7FVE7FW Ğ¢Ç7FW6÷VçC¢7B‚“òç7FW2æÆVæwF‚ÇÂ Ğ¢Ç6VÆV7FVE7FW–C¢7FW‚“òæ–BÇÂrpĞ¢Ç&Wf–÷W57FW–C¢7B‚“òç7FW5·6VÆV7FVE7FWÒÓòæ–BÇÂrpĞ¢Ç&Wf–÷W57FW6—¦S¢7B‚“òç7FW5·6VÆV7FVE7FWÒÓòç6—¦RóòçVÆÀĞ¢Ç&Wf–÷W57FWöfg6WE“¢7B‚“òç7FW5·6VÆV7FVE7FWÒÓòæöfg6WE’óòçVÆÀĞ¢Ç6ÖT6†&7FW$5&Wf–÷W3¢6VÆV7FVE7FWâbb7FW‚“òæ6†&7FW$–BÓÓÒ7B‚“òç7FW5·6VÆV7FVE7FWÒÓòæ6†&7FW$–@Ğ¢ÇÆ”7@Ğ¢ÇÆ•7FW Ğ§Ò“°Ğ¦–æ—B‚“°Ğ
+        assert(document.querySelectorAll('.chapter-card').length === project.acts.length, 'chapter cards missing');
+        assert(document.querySelector('#chapter-card-1').disabled, 'unvisited chapter unlocked');
+        playAct = 1; playStep = 0; closePlayerModal(); await showPlayStep(); renderProgressModal();
+        assert(!document.querySelector('#chapter-card-1').disabled, 'visited chapter stayed locked');
+        return { ok: true, cards: project.acts.length, progress: progressStatistics() };
+      }
+      const before = progressStatistics().seen;
+      document.querySelector('#chapter-card-0').click();
+      for (let i = 0; i < 100 && transitioning; i++) await new Promise(resolve => setTimeout(resolve, 50));
+      assert(playAct === 0 && playStep === 0 && playing && !saveModalMode, 'chapter replay failed');
+      assert(progressStatistics().seen === before, 'replay erased lifetime progress');
+      assert(document.querySelector('#scene-bg').style.filter.includes('brightness(135%)'), 'replay used wrong chapter color');
+      clearTyping(); clearAutoAdvance();
+      return { ok: true, replayAct: playAct, replayStep: playStep, lifetimeSeen: before };
+    }
+  });
+window.__vrmDiagnostics = () => ({
+  directory,
+  editorAutoSaveMinutes: editorSettings.autoSaveMinutes,
+  dirty,
+  project: project?.name,
+  mode,
+  modelLoaded: Boolean(stage?.vrm),
+  modelId: stage?.currentModelId || '',
+  motionPlaying: Boolean(stage?.mixer?._actions?.some(action => action.isRunning())),
+  stageError,
+  expressions: stage?.expressions() || [],
+  dialogue: document.querySelector('#dialogue-text')?.textContent || '',
+  typing: Boolean(typingTimer),
+  textSpeed,
+  assetDockVisible: Boolean(document.querySelector('.asset-dock')?.getBoundingClientRect().height),
+  assetDockScrollHeight: document.querySelector('#asset-dock-body')?.scrollHeight || 0,
+  assetDockHeight: document.querySelector('#asset-dock-body')?.clientHeight || 0,
+  assetThumbnails: document.querySelectorAll('.asset-dock .asset-thumbnail').length,
+  speakerPortraitVisible: Boolean(document.querySelector('#speaker-portrait:not(.hidden)')),
+  speakerPortraitSrc: document.querySelector('#speaker-portrait img')?.getAttribute('src') || '',
+  characterPortraitIds: project?.characters.map(item => ({ id:item.id, modelId:item.modelId,
+    portraitId:item.portraitId, portraitSource:item.portraitSource, portraitPoseKey:item.portraitPoseKey,
+    galleryMotionId:item.galleryMotionId, galleryPoseFrame:item.galleryPoseFrame })) || [],
+  galleryFrameControl: (() => { const slider = document.querySelector('[data-gallery-adjust="galleryPoseFrame"]');
+    return slider ? { frame: Number(slider.value), max: Number(slider.max), disabled: slider.disabled,
+      number: Number(document.querySelector('[data-gallery-frame-number]')?.value),
+      label: document.querySelector('[data-gallery-output="galleryPoseFrame"]')?.textContent } : null; })(),
+  visibleActorIds: [...(stage?.visibleRecords.keys() || [])],
+  assets: project?.assets.length || 0
+  ,playing
+  ,playerStartClass: document.querySelector('#player-start')?.className || ''
+  ,playControlsClass: document.querySelector('#play-controls')?.className || ''
+  ,stageWidth: Math.round(document.querySelector('.stage-frame')?.getBoundingClientRect().width || 0)
+  ,stageHeight: Math.round(document.querySelector('.stage-frame')?.getBoundingClientRect().height || 0)
+  ,saveSlotCount: mode === 'player' ? readSaveSlots().length : 0
+  ,filledSaveSlots: mode === 'player' ? readSaveSlots().filter(Boolean).length : 0
+  ,visibleSaveSlots: document.querySelectorAll('.save-slot').length
+  ,autoSaveFilled: mode === 'player' ? Boolean(readSaveSlots()[0]?.auto) : false
+  ,autoSaveWriteDisabled: Boolean(document.querySelector('[data-action="save-slot"][data-index="0"]:disabled'))
+  ,manualSlotTwoDisabled: Boolean(document.querySelector('[data-action="save-slot"][data-index="1"]:disabled'))
+  ,toastText: document.querySelector('#toast')?.textContent || ''
+  ,lastClickAction: window.__lastClickAction || ''
+  ,playerAutoSaveActive: Boolean(playerAutoSaveTimer)
+  ,recentProjectCount: recentProjects.length
+  ,recentProjectButtons: document.querySelectorAll('[data-action="open-recent"]').length
+  ,lifetimeProgress: mode === 'player' ? loadLifetimeProgress() : null
+  ,event: events.diagnostics()
+  ,progressStats: mode === 'player' ? progressStatistics() : null
+  ,progressModalOpen: Boolean(document.querySelector('#player-modal.progress-modal'))
+  ,galleryImageCount: project?.assets.filter(item => item.type === 'image' && item.galleryImage !== false).length || 0
+  ,galleryCharacterPickerVertical: Boolean(document.querySelector('.gallery-character-picker') && getComputedStyle(document.querySelector('.gallery-character-picker')).flexDirection === 'column')
+  ,saveModalMode
+  ,transitioning
+  ,preparedAct
+  ,preloadedModels: stage?.modelCache?.size || 0
+  ,visibleModels: [...(stage?.visibleRecords?.values() || [])].filter(record => record.vrm.scene.visible).length
+  ,sceneModels: stage?.scene?.children.filter(node => !node.isLight).map(node => ({ name: node.name, visible: node.visible, type: node.type, uuid: node.uuid })) || []
+  ,castSlots: act()?.cast || {}
+  ,castSettings: act()?.castSettings || {}
+  ,visibleActors: [...(stage?.visibleRecords?.entries() || [])].map(([id, record]) => ({
+    id, x: record.anchor.position.x, y: record.anchor.position.y, z: record.anchor.position.z,
+    shadowGroundY: stage?.shadowGroundHeightAt(record.anchor.position.x, record.anchor.position.z) ?? null,
+    scale: record.anchor.scale.x,
+    yaw: record.anchor.rotation.y, motionPlaying: record.mixer._actions?.some(action => action.isRunning()) || false,
+    anchorPosition: record.anchor.position.toArray(), motionRootPosition: record.motionRoot.position.toArray(),
+    happy: record.vrm.expressionManager?.getValue('happy') ?? null,
+    expressionBlending: Boolean(record.expressionBlend),
+    positionBlending: Boolean(record.transformBlend),
+    motionId: record.currentMotionId,
+    motionOptions: record.currentMotionOptions,
+    actionTime: record.currentAction?.time ?? null,
+    actionDuration: record.currentAction?.getClip()?.duration ?? null,
+    actionPaused: record.currentAction?.paused ?? null,
+    currentMotionWeight: record.currentAction?.getEffectiveWeight() ?? null,
+    fadingMotionCount: record.fadeOutActions.length,
+    hipsLocalPosition: record.vrm.humanoid.getNormalizedBoneNode('hips')?.position.toArray() || null,
+    leftFootWorldY: record.vrm.humanoid.getNormalizedBoneNode('leftFoot')?.matrixWorld.elements[13] ?? null,
+    rightFootWorldY: record.vrm.humanoid.getNormalizedBoneNode('rightFoot')?.matrixWorld.elements[13] ?? null,
+    leftFootWorld: (() => { const e = record.vrm.humanoid.getNormalizedBoneNode('leftFoot')?.matrixWorld.elements; return e ? [e[12], e[13], e[14]] : null; })(),
+    rightFootWorld: (() => { const e = record.vrm.humanoid.getNormalizedBoneNode('rightFoot')?.matrixWorld.elements; return e ? [e[12], e[13], e[14]] : null; })(),
+    footLockActive: Boolean(record.footLock),
+    footIKResidual: [record.footLock?.left?.lastResidual ?? null, record.footLock?.right?.lastResidual ?? null]
+  }))
+  ,editorHistory: editorHistory.status()
+  ,actOrder: project?.acts.map(item => item.id) || []
+  ,stepOrder: act()?.steps.map(item => item.id) || []
+  ,assetFolders: project?.assetFolders || []
+  ,stepCastPositions: step()?.castPositions || {}
+  ,editorCharacterPreviewVisible: Boolean(document.querySelector('#character-preview:not(.hidden)'))
+  ,editorCharacterPreviewStoryTabs: document.querySelectorAll('#character-preview [data-action="preview-story"]').length
+  ,editorCharacterPreviewModel: stage?.currentModelId || ''
+  ,stepMotionOptions: step()?.motionOptions || {}
+  ,motionAdvancedClosed: [...document.querySelectorAll('.motion-advanced')].every(node => !node.open)
+  ,dialogueBottom: document.querySelector('#dialogue') ? getComputedStyle(document.querySelector('#dialogue')).bottom : ''
+  ,renderSettings: project?.render || {}
+  ,paintEffectActive: Boolean(stage?.paintEnabled && stage?.paintComposer)
+  ,weather: stage?.weatherSettings || normalizeWeather()
+  ,weatherParticles: stage?.weather?.particles.geometry.instanceCount || 0
+  ,weatherSound: Boolean(stage?.weather?.audible)
+  ,paintBackgroundReady: Boolean(stage?.paintBackgroundTexture)
+  ,paintPixelRatio: stage?.paintPixelRatio ?? null
+  ,averageFrameMs: stage?.averageFrameMs ?? null
+  ,shadowPlaneVisible: Boolean(stage?.shadowPlane?.visible)
+  ,shadowMapEnabled: Boolean(stage?.renderer?.shadowMap?.enabled)
+  ,shadowPlaneOpacity: stage?.shadowPlane?.material?.opacity ?? null
+  ,shadowLightPosition: stage?.shadowLight?.position?.toArray() || null
+  ,backgroundLightReady: Boolean(stage?.currentLightProfile)
+  ,outlineEnabled: Boolean(stage?.outlineEffect?.enabled)
+  ,renderPixelRatio: stage?.renderer?.getPixelRatio() || 0
+  ,keyLightColor: stage?.keyLight?.color?.getHexString() || ''
+  ,nextButtons: document.querySelectorAll('[data-action="next"]').length
+  ,currentScale: stage?.activeRecord?.anchor.scale.x || 0
+  ,currentX: stage?.activeRecord?.anchor.position.x || 0
+  ,currentY: stage?.activeRecord?.anchor.position.y || 0
+  ,currentZ: stage?.activeRecord?.anchor.position.z || 0
+  ,currentYaw: stage?.activeRecord?.anchor.rotation.y || 0
+  ,currentPitch: stage?.activeRecord?.anchor.rotation.x || 0
+  ,cameraY: stage?.camera?.position.y || 0
+  ,activePanel
+  ,title: project?.title || {}
+  ,titleMode: Boolean(document.querySelector('.stage-frame')?.classList.contains('title-mode'))
+  ,titleMenuItems: document.querySelectorAll('.title-bottom-menu > *').length
+  ,titleLogoImage: Boolean(document.querySelector('.title-logo-image'))
+  ,titleExpressionSliders: document.querySelectorAll('[data-title-expression]').length
+  ,titlePlayButtonHit: (() => {
+    const button = document.querySelector('#player-start:not(.hidden) [data-action="play"]');
+    if (!button) return false;
+    const rect = button.getBoundingClientRect();
+    return document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)?.closest('[data-action="play"]') === button;
+  })()
+  ,canvasVisible: document.querySelector('#stage-canvas')?.style.visibility !== 'hidden'
+  ,audioSettings
+  ,musicVolume: music.volume
+  ,musicPlaying: !music.paused && music.currentTime > 0
+  ,musicCurrentTime: music.currentTime
+  ,voiceVolume: voice.volume
+  ,autoPlay
+  ,autoButtonText: document.querySelector('#auto-play-button')?.textContent || ''
+  ,galleryTab
+  ,galleryPage
+  ,galleryTiles: document.querySelectorAll('.gallery-image-tile').length
+  ,galleryLockedTiles: document.querySelectorAll('.gallery-image-tile.locked').length
+  ,galleryLockedTracks: document.querySelectorAll('.gallery-track-list button.locked').length
+  ,galleryCharacterSealed: Boolean(document.querySelector('.gallery-character-seal'))
+  ,galleryLightbox: Boolean(document.querySelector('#gallery-lightbox'))
+  ,galleryStoryTabs: document.querySelectorAll('.gallery-story-tabs button').length
+  ,galleryStoryLocked: Boolean(document.querySelector('.gallery-story-locked'))
+  ,galleryCharacterId
+  ,galleryStoryIndex
+  ,galleryCharacterLoaded: Boolean(galleryStage?.vrm)
+  ,galleryTrackCount: galleryTracks().length
+  ,galleryTrackIndex
+  ,galleryMusicPlaying: !galleryMusic.paused
+  ,galleryRepeatOne
+  ,playCharacterLineCounts
+  ,deepestSaveCounts: deepestSave() ? slotDialogueProgress(deepestSave()).counts : {}
+  ,quickActionOrder: [...document.querySelectorAll('.scene-quick-actions [data-action]')].map(node => node.dataset.action)
+  ,quickActionBottoms: [...document.querySelectorAll('.scene-quick-actions [data-action]')].map(node => Math.round(node.getBoundingClientRect().bottom))
+  ,toonMaterials: [...(stage?.activeRecord?.materials?.keys() || [])].filter(material => material.isMToonMaterial).length
+  ,toonFactor: [...(stage?.activeRecord?.materials?.keys() || [])].find(material => material.isMToonMaterial)?.shadingToonyFactor ?? null
+  ,ambientIntensity: stage?.ambientLight?.intensity ?? null
+  ,keyIntensity: stage?.keyLight?.intensity ?? null
+  ,expressionSliders: document.querySelectorAll('[data-expression]').length
+  ,happyWeight: stage?.vrm?.expressionManager?.getValue('happy') ?? null
+  ,stepSize: step()?.size ?? null
+  ,stepOffsetX: step()?.offsetX ?? null
+  ,stepOffsetY: step()?.offsetY ?? null
+  ,stepOffsetZ: step()?.offsetZ ?? null
+  ,selectedStep
+  ,stepCount: act()?.steps.length || 0
+  ,selectedStepId: step()?.id || ''
+  ,previousStepId: act()?.steps[selectedStep - 1]?.id || ''
+  ,previousStepSize: act()?.steps[selectedStep - 1]?.size ?? null
+  ,previousStepOffsetY: act()?.steps[selectedStep - 1]?.offsetY ?? null
+  ,sameCharacterAsPrevious: selectedStep > 0 && step()?.characterId === act()?.steps[selectedStep - 1]?.characterId
+  ,playAct
+  ,playStep
+});
+init();

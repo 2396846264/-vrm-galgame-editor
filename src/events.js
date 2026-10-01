@@ -1,52 +1,157 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Õ•áÁ½ÉĞ½¹ÍĞ•Ù•¹Ñ9…µ•Ì€ôì¹•İÌè€Ÿ’â¢"³šZÃ¦^ìœ°İ…Èè€Ÿ–ºš"cšÚ#š¼œ°µ…©½Èè€Ÿ¦7–’Ÿ’ê/’îØœôì4)•áÁ½ÉĞ½¹ÍĞ•Ù•¹ÑM•½¹‘Ì€ôì¹•İÌè€Ì°İ…Èè€À°µ…©½Èè€ÄÀôì4)•áÁ½ÉĞ½¹ÍĞ¥ÍÙ•¹Ğ€ô¹½‘”€ôø¹½‘”ü¹­¥¹€ôôô€•Ù•¹Ğœì4)•áÁ½ÉĞ™Õ¹Ñ¥½¸¹½Éµ…±¥é•Ù•¹Ğ¡Ù…±Õ”€ôíô¤ì4(€½¹ÍĞÑåÁ”€ô=‰©•Ğ¹¡…Í=İ¸¡•Ù•¹Ñ9…µ•Ì°Ù…±Õ”¹ÑåÁ”¤€üÙ…±Õ”¹ÑåÁ”€è€¹•İÌœì4(€É•ÑÕÉ¸ìÑåÁ”°Ñ¥Ñ±”è€œœ°‰½‘äè€œœ°¥µ…•%è€œœ°Ù¥‘•½%è€œœ°‰…­É½Õ¹‘%è€œœ°‰µ%è€œœ°Í•%è€œœ°Ù½¥•%è€œœ°4(€€€Á…Á•É9…µ”è€Ÿ’â[V3šZÃ¦^ìœ°‘…Ñ”è€œœ°ÅÕ½Ñ”è€œœ°‰ÕÑÑ½¹Q•áĞè€ŸîŸî´œ°½Õ¹ÑÉåè€œœ°½Õ¹ÑÉåè€œœ°™±…%è€œœ°™±…	%è€œœ°4(€€€‰ÕÉÍĞè™…±Í”°‘•±…É…Ñ¥½¹Ìèmt°‰ÕÉÍÑ%¹Ñ•ÉÙ…°è€¸ÈÈ°€¸¸¹Ù…±Õ”°ÑåÁ”°4(€€€‰ÕÉÍÑ%¹Ñ•ÉÙ…°è5…Ñ ¹µ…à ¸ÄÈ°5…Ñ ¹µ¥¸ Ì°9Õµ‰•È¡Ù…±Õ”¹‰ÕÉÍÑ%¹Ñ•ÉÙ…°¤ñğ€¸ÈÈ¤¤°4(€€€‘•±…É…Ñ¥½¹ÌèÉÉ…ä¹¥ÍÉÉ…ä¡Ù…±Õ”¹‘•±…É…Ñ¥½¹Ì¤€üÙ…±Õ”¹‘•±…É…Ñ¥½¹Ì¹Í±¥” À°€Ôä¤¹µ…À¡É½Ü€ôø€¡ì½Õ¹ÑÉåè€œœ°½Õ¹ÑÉåè€œœ°™±…%è€œœ°™±…	%è€œœ°‰½‘äè€œœ°€¸¸¹É½Üô¤¤€èmtôì4)ô4)•áÁ½ÉĞ™Õ¹Ñ¥½¸¹•İÙ•¹Ğ¡¥°ÍÑ•Á%¤ì4(€É•ÑÕÉ¸ì¥°­¥¹è€•Ù•¹Ğœ°¹…µ”è€ŸšZÃ’ê/’îØœ°•Ù•¹Ğè¹½Éµ…±¥é•Ù•¹Ğ ¤°…ÍĞèíô°…ÍÑM•ÑÑ¥¹Ìèíô°4(€€€ÍÑ•ÁÌèmì¥èÍÑ•Á%°Ñ•áĞè€œœ°ÍÁ•…­•Èè€œœ°¡…É…Ñ•É%è€œœ°¡½¥•Ìèmtõtôì4)ô4)•áÁ½ÉĞ™Õ¹Ñ¥½¸É•…Ñ•Ù•¹ÑÌ¡Ñà¤ì4(€½¹ÍĞì•Í…Á”è•ÍŒ°…ÍÍ•ÑUÉ°ô€ôÑàì4(€½¹ÍĞ•å”€ô€œñÍÙœÙ¥•İ	½àôˆÀ€À€ÈĞ€ÈĞˆ…É¥„µ¡¥‘‘•¸ô‰ÑÉÕ”ˆøñÁ…Ñ ô‰4È€ÄÉÌÌ¸Ô´Ü€ÄÀ´Ü€ÄÀ€Ü€ÄÀ€Ü´Ì¸Ô€Ü´ÄÀ€İLÈ€ÄÈ€È€ÄÉhˆ¼øñ¥É±”àôˆÄÈˆäôˆÄÈˆÈôˆÌˆ¼øğ½ÍÙœøœì4(€±•ĞÍÑ…Ñ”€ô¹Õ±°°™É…µ”€ô€À°•¹•É…Ñ¥½¸€ô€Àì4(€½¹ÍĞ¥µ…”€ô€¡¥°…±Ğ°±…ÍÍ9…µ”€ô€œœ¤€ôøì4(€€€½»}4ÖÚ$z{-®éÜj×iKnX‹G·2ç6†÷vâ²ÒòG·2æWfVçBæFV6Æ&F–öç2æÆVæwF‚²ÒiÚkhhö¢rs°Ğ¢6öç7B'WGFöâÒ2ç&ö÷BçVW'•6VÆV7F÷"‚u¶FFÖ7F–öãÒ&WfVçBÖ6öæf—&Ò%Òr“°Ğ¢'WGFöâæF—6&ÆVBÒ2ç&VG’ÇÂ2ç&VÖ–æ–ærâ°Ğ¢6öç7BF–ÖW"Ò2ç&ö÷BçVW'•6VÆV7F÷"‚ræWfVçB×vF6‚r“°Ğ¢–b‡F–ÖW"’°Ğ¢F–ÖW"æ6Æ74Æ—7BçFövvÆR‚vf–æ—6†VBrÂ2ç&VÖ–æ–ærÃÒ“°Ğ¢F–ÖW"çVW'•6VÆV7F÷"‚w7âr’çFW‡D6öçFVçBÒ2ç&VG’ò~jÚ>YÊXxnZH~yK¾™Ú.(
-br¢2ç&VÖ–æ–ærâòG·W6VBò~i¨.XÂ+rr¢rwÒG´ÖF‚æ6V–Â‡2ç&VÖ–æ–ær—Òzy&¢~XúşKº^{º~{ºÒs°Ğ¢F–ÖW"çVW'•6VÆV7F÷"‚v’r’ç7G–ÆRçG&ç6f÷&ÒÒ66ÆU‚‚G·2çF÷FÂòÒ2ç&VÖ–æ–ærò2çF÷FÂ¢Ò–°Ğ¢ĞĞ¢g&ÖRÒ&WVW7Dæ–ÖF–öäg&ÖR‡F–6²“°Ğ¢ĞĞ¢7–æ2gVæ7F–öâ6†÷r†æöFRÂ&Wf–WrÒfÇ6RÂ&VÖ–æ–ær’°Ğ¢6æ6VÂ‚“°Ğ¢6öç7BFö¶VâÒvVæW&F–öã°Ğ¢6öç7BRÒæ÷&ÖÆ—¦TWfVçB†æöFRæWfVçB’ÂF÷FÂÒWfVçE6V6öæG5¶RçG—UÓ°Ğ¢6öç7B&6¶G&÷Ò7G‚ç&W&R†æöFRÂ&Wf–Wr“°Ğ¢6öç7B†÷7BÒFö7VÖVçBçVW'•6VÆV7F÷"‚rç7FvRÖg&ÖRr“°Ğ¢†÷7Bæ6Æ74Æ—7BæFB‚vWfVçBÖÖöFRr“°Ğ¢†÷7Bæ–ç6W'DF¦6VçD…DÔÂ‚v&Vf÷&VVæBrÂÇ6V7F–öâ–CÒ'v÷&ÆBÖWfVçB"6Æ73Ò'v÷&ÆBÖWfVçBWfVçBÒG¶RçG—WÒG·&Wf–WròvWfVçB×&Wf–Wrr¢rwÒ"&öÆSÒ&F–Æör"&–ÖÖöFÃÒ'G'VR"&–ÖÆ&VÃÒ"G¶W62†WfVçDæÖW5¶RçG—UÒ—Ò#ãÆF—b6Æ73Ò&WfVçB×F÷×FööÇ2#ãÇ7ãâG·&Wf–Wrò~K¨¾K»nš(NŠx‚r¢rwÓÂ÷7ããÆF—câG·&Wf–WrÇÂ7G‚çÆ–W"‚’òrr¢sÆ'WGFöâFFÖ7F–öãÒ'6fRÖvÖR#îZÙj3Âö'WGFöããÆ'WGFöâFFÖ7F–öãÒ&ÆöBÖvÖR#îŠû¾j3Âö'WGFöããÆ'WGFöâFFÖ7F–öãÒ'6WGF–æw2#îŠëî{ÚãÂö'WGFöãâwÒG·&Wf–Wròrr¢sÆ'WGFöâEš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.İy×¤èµ©hºÚn¶X§zÍX]KXXİ[ÛHœİÜ\^Hº/å9fç¹¨!úh¦Ø]Û‰ßOÙ]Ù]]ˆÛ\ÜÏH™]™[XÛÛ[‰ØÛÛ[
-J_OÙ]›Ûİ\ˆÛ\ÜÏH™]™[XXİ[ÛœÈ‰İİ[È]ˆÛ\ÜÏH™]™[]Ø]Úˆ›ÛOH[Y\ˆˆ\šXK[X™[H¹§ 9/cº)à¹ç"ù¥íºeí‰Ù^Y_OÜ[‰İİ[H9éäÜÜ[]OÚOÙ]Ù]˜ˆ	ÉßO]ÛˆÛ\ÜÏH™]™[XÛÛ™š\›Hˆ]KXXİ[ÛH™]™[XÛÛ™š\›Hˆ	İİ[È	Ù\ØX›Y	Èˆ	ÉßO‰Ù\ØÊK\HOOH	İØ\‰È	‰ˆK˜\œİÈ	ùalúeëyaj:`ê9­¢9 kÉÈˆK˜]Û•^	ùîéùîëIÊ_OØ]ÛÙ›Ûİ\ÜÙXİ[Û˜
-NÃBˆÛÛœİ›ÛİHØİ[Y[œ]Y\TÙ[XİÜŠ	ÈİÛÜ›Y]™[	ÊNÃBˆİ]HHÈ›ÙRYˆ›ÙKšY]™[ˆK›Ûİ™]šY]Ë™[XZ[š[™Îˆ[X™\‹š\Ñš[š]J™[XZ[š[™ÊHÈX]›X^
-X]›Z[Šİ[™[XZ[š[™ÊJHˆİ[ˆİ[™XYNˆK\HOOH	İØ\‰Ë\İˆ\™›Ü›X[˜ÙK››İÊ
-Kš\ÚX›U[YNˆÚİÛˆØš™Xİ\›Îˆ×KYYXPX›Üˆ™]ÈX›ÜÛÛ›Û\Š
-HNÂˆYˆ
-\™]šY]ÊHİ˜]Y[ÊJNÃBˆœ˜[YHH™\]Y\İ[š[X][Û‘œ˜[YJXÚÊNÃBˆÛÛœİØZ]ÈHË‹‹œ›Ûİœ]Y\TÙ[XİÜ[
-	Ú[YÉÊWK›X\
-[YÈOˆ[YË˜ÛÛ\]HÈ›ÛZ\ÙKœ™\ÛÛ™J
-Hˆ™]È›ÛZ\ÙJ™\ÛÛ™HOˆÈ[YË›Û›ØYH[YË›Û™\œ›ÜˆH™\ÛÛ™NÈJJNÃBˆÛÛœİšY[ÈH›Ûİœ]Y\TÙ[XİÜŠ	İšY[ÉÊNÃBˆYˆ
-šY[È	‰ˆšY[Ëœ™XYTİ]HŠHØZ]Ëœ\Ú
-™]È›ÛZ\ÙJ™\ÛÛ™HOˆÈšY[Ë˜Y]™[\İ[™\Š	ÛØYY]IË™\ÛÛ™KÈÛ˜ÙNˆYHJNÈšY[Ë˜Y]™[\İ[™\Š	Ù\œ›Ü‰Ë™\ÛÛ™KÈÛ˜ÙNˆYHJNÈJJNÃBˆ]ØZ]›ÛZ\ÙK˜[
-Ø˜XÚÙ›Ü›ÛZ\ÙKœ˜XÙJÔ›ÛZ\ÙK˜[
-ØZ]ÊK™]È›ÛZ\ÙJ™\ÛÛ™HOˆÙ][Y[İ]
-™\ÛÛ™KŒ
-JWJWJNÂˆYˆ
-Ù[™\˜][ÛˆOOHÚÙ[ˆ\İ]Hİ]Kœ›ÛİOOH›Ûİ
-H9×«h‘éì¶»§q«^uÈJJNÂˆBˆ]ØZ]™]È›ÛZ\ÙJ™\ÛÛ™HOˆÙ][Y[İ]
-™\ÛÛ™KX]ÚYYXJ	Ê™Y™\œË\™YXÙY[[İ[Ûˆ™YXÙJIÊK›X]Ú\ÈÈˆML
-JNÃBˆYˆ
-Ù[™\˜][ÛˆOOHÚÙ[ˆ\İ]Hİ]Kœ›ÛİOOH›Ûİ
-H™]\›ÃBˆİ]Kœ™XYHHYNÈİ]K›\İH\™›Ü›X[˜ÙK››İÊ
-NÃBˆ›Ûİœ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ[ÛH™]™[XÛÛ™š\›H—IÊK™\ØX›YHİ[ˆ	‰ˆİ]Kœ™[XZ[š[™ÈˆÃBˆCBˆ[˜İ[ÛˆÛÛ™š\›J
-HÃBˆYˆ
-\İ]OËœ™XYHİ]Kœ™[XZ[š[™Èˆİœ]\ÙY
-
-HØİ[Y[šY[ŠH™]\›ˆ˜[ÙNÃBˆYˆ
-İ]Kœ™]šY]ÊHÈİ]Kœ›Ûİœ]Y\TÙ[XİÜŠ	Ë™]™[XÛÛ™š\›IÊK^ÛÛ[H	úh¡:)â9îäù§gÈ0­È9cëúaãy¥¬:h¡:)â	ÎÈ™]\›ˆYNÈCBˆÛÛœİYHİ]K››ÙRYÃBˆØ[˜Ù[
-
-NÈİ™š[š\Ú
-Y
-NÈ™]\›ˆYNÃBˆCBˆ[˜İ[ÛˆØ[˜Ù[
-
-HÂˆÙ[™\˜][ÛŠÊÎÈØ[˜Ù[[š[X][Û‘œ˜[YJœ˜[YJNÂˆYˆ
-İ]H	‰ˆ\İ]Kœ™]šY]ÊHİ˜ÛX[]Y[ÏËŠ
-NÂˆİ]OË›YYXPX›Ü˜X›Ü
-
-NÂˆİ]OËœ›Ûİœ]Y\TÙ[XİÜŠ	İšY[ÉÊOËœ]\ÙJ
-NÂˆ›Üˆ
-ÛÛœİ\›Ùˆİ]OË›Øš™Xİ\›È×JHT“œ™]›ÚÙSØš™XİT“
-\›
-NÂˆØİ[Y[œ]Y\TÙ[XİÜŠ	ÈİÛÜ›Y]™[	ÊOËœ™[[İ™J
-NÃBˆØİ[Y[œ]Y\TÙ[XİÜŠ	ËœİYÙKYœ˜[YIÊOË˜Û\ÜÓ\İœ™[[İ™J	Ù]™[[[ÙIÊNÃBˆİ]HH[ÃBˆCBˆ™]\›ˆÈY]Ü‹ÚİËÛÛ™š\›KØ[˜Ù[™[XZ[š[™Îˆ
-
-HOˆİ]OËœ™[XZ[š[™ËXİ]™Nˆ
-
-HOˆ›ÛÛX[Šİ]JKBˆXYÛ›ÜİXÜÎˆ
-
-HOˆİ]HÈÈYˆİ]K››ÙRY\Nˆİ]K™]™[\K™[XZ[š[™Îˆİ]Kœ™[XZ[š[™Ë™XYNˆİ]Kœ™XYKBˆ™]šY]Îˆİ]Kœ™]šY]Ë™XÙZ]™Yˆİ]KœÚİÛˆ
-ÈKÚ[™İÜÎˆİ]Kœ›Ûİœ]Y\TÙ[XİÜ[
-	Ë™]™[XÜ	ÊK›[™İHˆ[NÃBŸCB
+export const eventNames = { news: 'ä¸€èˆ¬æ–°é—»', war: 'å®£æˆ˜æ¶ˆæ¯', major: 'é‡å¤§äº‹ä»¶' };
+export const eventSeconds = { news: 3, war: 0, major: 10 };
+export const isEvent = node => node?.kind === 'event';
+export function normalizeEvent(value = {}) {
+  const type = Object.hasOwn(eventNames, value.type) ? value.type : 'news';
+  return { type, title: '', body: '', imageId: '', videoId: '', backgroundId: '', bgmId: '', seId: '', voiceId: '',
+    paperName: 'ä¸–ç•Œæ–°é—»', date: '', quote: '', buttonText: 'ç»§ç»­', countryA: '', countryB: '', flagAId: '', flagBId: '',
+    burst: false, declarations: [], burstInterval: .22, ...value, type,
+    burstInterval: Math.max(.12, Math.min(3, Number(value.burstInterval) || .22)),
+    declarations: Array.isArray(value.declarations) ? value.declarations.slice(0, 59).map(row => ({ countryA: '', countryB: '', flagAId: '', flagBId: '', body: '', ...row })) : [] };
+}
+export function newEvent(id, stepId) {
+  return { id, kind: 'event', name: 'æ–°äº‹ä»¶', event: normalizeEvent(), cast: {}, castSettings: {},
+    steps: [{ id: stepId, text: '', speaker: '', characterId: '', choices: [] }] };
+}
+export function createEvents(ctx) {
+  const { escape: esc, assetUrl } = ctx;
+  const eye = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  let state = null, frame = 0, generation = 0;
+  const image = (id, alt, className = '') => {
+    const item = ctx.asset(id);
+    return item?.type === 'image' ? `<img class="${className}" src="${esc(assetUrl(item))}" alt="${esc(alt)}" draggable="false">` : '';
+  };
+  const control = (key, value, multiline = false, row = null) => {
+    const attr = `data-event-field="${key}"${row === null ? '' : ` data-event-row="${row}"`}`;
+    return multiline ? `<textarea ${attr}>${esc(value)}</textarea>` : `<input ${attr} value="${esc(value)}">`;
+  };
+  const choice = (key, value, type, empty, row = null) => `<select data-event-field="${key}"${row === null ? '' : ` data-event-row="${row}"`}><option value="">${empty}</option>${ctx.project().assets.filter(a => a.type === type).map(a => `<option value="${esc(a.id)}" ${a.id === value ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</select>`;
+  const field = (label, html) => `<label class="field"><span>${label}</span>${html}</label>`;
+  const upload = (key, type) => `<button data-action="event-upload" data-event-key="${key}" data-type="${type}">ä¸Šä¼ ç´ æ</button>`;
+  function editor(node) {
+    const e = node.event = normalizeEvent(node.event);
+    const countries = (row, index = null) => `<div class="event-country-editor">${field('å®£æˆ˜å›½åç§°', control('countryA', row.countryA, false, index))}${field('å®£æˆ˜å›½å›½æ——', choice('flagAId', row.flagAId, 'image', 'é€‰æ‹©å›½æ——å›¾ç‰‡', index))}${field('è¢«å®£æˆ˜å›½åç§°', control('countryB', row.countryB, false, index))}${field('è¢«å®£æˆ˜å›½å›½æ——', choice('flagBId', row.flagBId, 'image', 'é€‰æ‹©å›½æ——å›¾ç‰‡', index))}${field('è¡¥å……è¯´æ˜', control('body', row.body, true, index))}</div>`;
+    return `<div class="inspector-content event-editor"><h2>äº‹ä»¶è®¾ç½®</h2>
+      ${field('å‰§æƒ…åˆ—è¡¨ä¸­çš„åå­—', control('name', node.name))}
+      ${field('äº‹ä»¶ç±»å‹', `<select data-event-field="type">${Object.entries(eventNames).map(([key, name]) => `<option value="${key}" ${e.type === key ? 'selected' : ''}>${name}</option>`).join('')}</select>`)}
+      <p class="tip event-rule">${e.type === 'war' ? 'ç©å®¶å¯ä»¥ç«‹å³å…³é—­ï¼Œä¸ç”¨ç­‰å¾…ã€‚' : `ç©å®¶å¿…é¡»è§‚çœ‹ ${eventSeconds[e.type]} ç§’ã€‚çœ¼ç›å€’è®¡æ—¶ç»“æŸåæ‰å¯ä»¥ç»§ç»­ã€‚`}</p>
+      ${field('æ ‡é¢˜', control('title', e.title))}
+      ${e.type === 'news' ? `${field('æŠ¥çº¸åç§°', control('paperName', e.paperName))}${field('æ—¥æœŸ / åˆŠå·', control('date', e.date))}${field('æ–°é—»å†…å®¹ï¼ˆå»ºè®®çº¦ 100 å­—ï¼‰', control('body', e.body, true))}${field('æ–°é—»æ’å›¾', choice('imageId', e.imageId, 'image', 'ä¸æ”¾æ’å›¾'))}${upload('imageId', 'image')}` : ''}
+      ${e.type === 'war' ? `<label class="weather-toggle"><input type="checkbox" data-event-field="burst" ${e.burst ? 'checked' : ''}><span>è¿ç»­å¼¹å‡ºå¤šæ¡å®£æˆ˜æ¶ˆæ¯</span></label>${countries(e)}${e.burst ? `<h3>åç»­å®£æˆ˜æ¶ˆæ¯ï¼ˆæ€»è®¡æœ€å¤š 60 æ¡ï¼‰</h3><p class="tip">ä¸Šé¢çš„æ¶ˆæ¯å…ˆå‡ºç°ï¼Œä¸‹é¢çš„æ¶ˆæ¯æŒ‰é¡ºåºæ¥ç€å¼¹å‡ºã€‚ç©å®¶éšæ—¶å¯ä»¥å…³é—­å…¨éƒ¨çª—å£ã€‚</p>${field('æ¯æ¡æ¶ˆæ¯çš„é—´éš”ï¼ˆç§’ï¼‰', `<input type="number" data-event-field="burstInterval" min="0.12" max="3" step="0.02" value="${e.burstInterval}">`)}${e.declarations.map((row, index) => `<details class="event-row"><summary>ç¬¬ ${index + 2} æ¡ Â· ${esc(row.countryA || 'å®£æˆ˜å›½')} â†’ ${esc(row.countryB || 'è¢«å®£æˆ˜å›½')}</summary>${countries(row, index)}<button data-action="event-remove-row" data-index="${index}">åˆ é™¤è¿™ä¸€æ¡</button></details>`).join('')}<button data-action="event-add-row" ${e.declarations.length >= 59 ? 'disabled' : ''}>ï¼‹ æ·»åŠ å®£æˆ˜æ¶ˆæ¯</button>` : ''}<p class="tip">å›½æ——åœ¨ä¸‹æ–¹ç´ æåº“ä¸­å¯¼å…¥ï¼Œæ¨èæ¨ªå‘ PNG å›¾ç‰‡ã€‚</p>` : ''}
+      ${e.type === 'major' ? `${field('é‡å¤§äº‹ä»¶è¯´æ˜ï¼ˆå»ºè®® 100ï½200 å­—ï¼‰', control('body', e.body, true))}${field('ä¸»ç”»é¢å›¾ç‰‡', choice('imageId', e.imageId, 'image', 'ä¸æ”¾å›¾ç‰‡'))}${upload('imageId', 'image')}${field('ä¸»ç”»é¢è§†é¢‘ï¼ˆé€‰äº†è§†é¢‘å°±ä¼˜å…ˆæ˜¾ç¤ºï¼‰', choice('videoId', e.videoId, 'video', 'ä¸æ’­æ”¾è§†é¢‘'))}${upload('videoId', 'video')}${field('ç»“å°¾çŸ­å¥ / å¼•è¨€', control('quote', e.quote, true))}` : ''}
+      <hr><h3>å£°éŸ³ä¸èƒŒæ™¯</h3>${field('äº‹ä»¶èƒŒæ™¯éŸ³ä¹ï¼ˆå¾ªç¯ï¼‰', choice('bgmId', e.bgmId, 'audio', 'é™éŸ³'))}${upload('bgmId', 'audio')}${field('å¼€åœºéŸ³æ•ˆ', choice('seId', e.seId, 'audio', 'ä¸æ’­æ”¾éŸ³æ•ˆ'))}${field('æ’­æŠ¥è¯­éŸ³', choice('voiceId', e.voiceId, 'audio', 'ä¸æ’­æ”¾è¯­éŸ³'))}
+      ${field('èƒŒåæ¨¡ç³Šçš„èƒŒæ™¯', choice('backgroundId', e.backgroundId, 'image', 'æ²¿ç”¨å‰ä¸€å¹•èƒŒæ™¯'))}
+      ${field('ç»§ç»­æŒ‰é’®æ–‡å­—', control('buttonText', e.buttonText))}
+      <p class="tip">äº‹ä»¶æœŸé—´äººç‰©å’Œå¯¹ç™½éšè—ï¼Œå¤©æ°”æš‚åœã€‚æ’­æ”¾å®Œä¼šè¿›å…¥åé¢çš„å‰§æƒ…ã€‚</p>
+      <div class="inline-actions"><button data-action="event-preview">é‡æ–°é¢„è§ˆ</button><button data-action="event-duplicate">å¤åˆ¶äº‹ä»¶</button><button data-action="event-delete">åˆ é™¤äº‹ä»¶</button></div></div>`;
+  }
+  function warCard(e, index = 0, burst = false) {
+    return `<article class="event-crt ${burst ? 'event-crt-burst' : ''}" style="--stack:${index % 7};--side:${index % 3 - 1}"><div class="crt-case"><header><span>ç´§æ€¥é€šè®¯ / ${String(index + 1).padStart(2, '0')}</span><span class="crt-led">â— LIVE</span></header><div class="crt-screen"><div class="crt-flags"><div>${image(e.flagAId, e.countryA + 'å›½æ——')}<strong>${esc(e.countryA || 'å®£æˆ˜å›½')}</strong></div><b>â†’</b><div>${image(e.flagBId, e.countryB + 'å›½æ——')}<strong>${esc(e.countryB || 'è¢«å®£æˆ˜å›½')}</strong></div></div><h2>${esc(e.countryA || 'å®£æˆ˜å›½')}<br><em>å‘ ${esc(e.countryB || 'è¢«å®£æˆ˜å›½')} å®£æˆ˜</em></h2>${e.body ? `<p>${esc(e.body)}</p>` : ''}</div><footer><span>WORLD COMMUNICATION NETWORK</span><i></i></footer></div></article>`;
+  }
+  function content(e) {
+    if (e.type === 'news') return `<article class="event-paper"><div class="paper-masthead">${esc(e.paperName || 'ä¸–ç•Œæ–°é—»')}</div><div class="paper-dateline"><span>${esc(e.date || 'ç‰¹åˆ«æŠ¥é“')}</span><span>WORLD NEWS</span></div><div class="paper-content"><h1>${esc(e.title || 'æ–°é—»æ ‡é¢˜')}</h1>${image(e.imageId, 'æ–°é—»æ’å›¾', 'paper-picture')}<p>${esc(e.body || 'åœ¨äº‹ä»¶è®¾ç½®ä¸­å†™ä¸‹è¿™æ¡æ–°é—»ã€‚')}</p></div><div class="paper-end">â—†</div></article>`;
+    if (e.type === 'war') return `<div class="event-war-header"><small>BREAKING TRANSMISSION</small><h1>${esc(e.title || 'ä¸–ç•Œå±€åŠ¿çªå˜')}</h1><span class="war-message-count"></span></div><div class="event-war-stack ${e.burst ? 'burst' : ''}">${warCard(e, 0, e.burst)}</div>${e.burst ? `<details class="event-transmission-log"><summary>æŸ¥çœ‹å·²æ”¶åˆ°çš„æ¶ˆæ¯</summary><ol>${[e, ...e.declarations].map((row, i) => `<li data-transmission="${i}" ${i ? 'hidden' : ''}><strong>${String(i + 1).padStart(2, '0')} Â· ${esc(row.countryA || 'å®£æˆ˜å›½')} å‘ ${esc(row.countryB || 'è¢«å®£æˆ˜å›½')}å®£æˆ˜</strong>${row.body ? `<p>${esc(row.body)}</p>` : ''}</li>`).join('')}</ol></details>` : ''}`;
+    const video = ctx.asset(e.videoId);
+    return `<article class="event-broadcast"><header><span><i></i>ç‰¹åˆ«æŠ¥é“</span><span>${esc(e.date || 'WORLD BULLETIN')}</span></header><div class="broadcast-media">${video?.type === 'video' ? `<video src="${esc(assetUrl(video))}" muted playsinline preload="auto"></video>` : image(e.imageId, 'é‡å¤§äº‹ä»¶ä¸»ç”»é¢') || '<div class="broadcast-no-signal">WORLD BULLETIN</div>'}</div><div class="broadcast-copy"><h1>${esc(e.title || 'é‡å¤§äº‹ä»¶')}</h1><p>${esc(e.body || 'åœ¨äº‹ä»¶è®¾ç½®ä¸­å¡«å†™é‡å¤§äº‹ä»¶çš„å†…å®¹ã€‚')}</p>${e.quote ? `<blockquote>${esc(e.quote)}</blockquote>` : ''}</div></article>`;
+  }
+  function tick(now) {
+    const s = state;
+    if (!s) return;
+    const elapsed = Math.min(.1, Math.max(0, (now - s.last) / 1000));
+    s.last = now;
+    const paused = document.hidden || ctx.paused() || !s.ready;
+    if (!paused) {
+      s.remaining = Math.max(0, s.remaining - elapsed);
+      s.visibleTime += elapsed;
+      if (s.event.type === 'war' && s.event.burst) {
+        const rows = s.event.declarations;
+        while (s.shown < rows.length && s.visibleTime >= (s.shown + 1) * s.event.burstInterval) {
+          const target = document.querySelector('#world-event .event-war-stack');
+          const index = ++s.shown;
+          target?.insertAdjacentHTML('beforeend', warCard(rows[index - 1], index, true));
+          // Keep the foreground readable while retaining every received message in the log.
+          while (target?.children.length > 8) target.firstElementChild.remove();
+          const entry = s.root.querySelector(`[data-transmission="${index}"]`);
+          if (entry) entry.hidden = false;
+          ctx.cue?.();
+        }
+      }
+    }
+    const video = s.root.querySelector('video');
+    if (video) { if (paused) video.pause(); else if (video.paused && !video.ended) video.play().catch(() => {}); }
+    const count = s.root.querySelector('.war-message-count');
+    if (count) count.textContent = s.event.burst ? `å·²æ”¶åˆ° ${s.shown + 1} / ${s.event.declarations.length + 1} æ¡æ¶ˆæ¯` : '';
+    const button = s.root.querySelector('[data-action="event-confirm"]');
+    button.disabled = !s.ready || s.remaining > 0;
+    const timer = s.root.querySelector('.event-watch');
+    if (timer) {
+      timer.classList.toggle('finished', s.remaining <= 0);
+      timer.querySelector('span').textContent = !s.ready ? 'æ­£åœ¨å‡†å¤‡ç”»é¢â€¦' : s.remaining > 0 ? `${paused ? 'æš‚åœ Â· ' : ''}${Math.ceil(s.remaining)} ç§’` : 'å¯ä»¥ç»§ç»­';
+      timer.querySelector('i').style.transform = `scaleX(${s.total ? 1 - s.remaining / s.total : 1})`;
+    }
+    frame = requestAnimationFrame(tick);
+  }
+  async function show(node, preview = false, remaining) {
+    cancel();
+    const token = generation;
+    const e = normalizeEvent(node.event), total = eventSeconds[e.type];
+    const backdrop = ctx.prepare(node, preview);
+    const host = document.querySelector('.stage-frame');
+    host.classList.add('event-mode');
+    host.insertAdjacentHTML('beforeend', `<section id="world-event" class="world-event event-${e.type} ${preview ? 'event-preview' : ''}" role="dialog" aria-modal="true" aria-label="${esc(eventNames[e.type])}"><div class="event-top-tools"><span>${preview ? 'äº‹ä»¶é¢„è§ˆ' : ''}</span><div>${preview || !ctx.player() ? '' : '<button data-action="save-game">å­˜æ¡£</button><button data-action="load-game">è¯»æ¡£</button><button data-action="settings">è®¾ç½®</button>'}${preview ? '' : '<button data-action="stop-play">è¿”å›æ ‡é¢˜</button>'}</div></div><div class="event-content">${content(e)}</div><footer class="event-actions">${total ? `<div class="event-watch" role="timer" aria-label="æœ€ä½è§‚çœ‹æ—¶é—´">${eye}<span>${total} ç§’</span><div><i></i></div></div>` : ''}<button class="event-confirm" data-action="event-confirm" ${total ? 'disabled' : ''}>${esc(e.type === 'war' && e.burst ? 'å…³é—­å…¨éƒ¨æ¶ˆæ¯' : e.buttonText || 'ç»§ç»­')}</button></footer></section>`);
+    const root = document.querySelector('#world-event');
+    state = { nodeId: node.id, event: e, root, preview, remaining: Number.isFinite(remaining) ? Math.max(0, Math.min(total, remaining)) : total,
+      total, ready: e.type === 'war', last: performance.now(), visibleTime: 0, shown: 0, objectUrls: [], mediaAbort: new AbortController() };
+    if (!preview) ctx.audio(e);
+    frame = requestAnimationFrame(tick);
+    const waits = [...root.querySelectorAll('img')].map(img => img.complete ? Promise.resolve() : new Promise(resolve => { img.onload = img.onerror = resolve; }));
+    const video = root.querySelector('video');
+    if (video && video.readyState < 2) waits.push(new Promise(resolve => { video.addEventListener('loadeddata', resolve, { once: true }); video.addEventListener('error', resolve, { once: true }); }));
+    await Promise.all([backdrop, Promise.race([Promise.all(waits), new Promise(resolve => setTimeout(resolve, 6000))])]);
+    if (generation !== token || !state || state.root !== root) return;
+    if (video?.error) {
+      // Some WebView2 virtual-file responses cannot be sought by the media demuxer.
+      // A local blob supplies a complete seekable source without changing the project asset.
+      try {
+        const response = await fetch(video.src, { signal: state.mediaAbort.signal });
+        if (!response.ok) throw new Error('Video asset unavailable');
+        const data = await response.arrayBuffer();
+        if (generation !== token || !state || state.root !== root) return;
+        const type = ctx.asset(e.videoId)?.path?.toLowerCase().endsWith('.webm') ? 'video/webm' : 'video/mp4';
+        const url = URL.createObjectURL(new Blob([data], { type })); state.objectUrls.push(url);
+        const loaded = new Promise(resolve => { video.addEventListener('loadeddata', resolve, { once: true }); video.addEventListener('error', resolve, { once: true }); });
+        video.src = url; video.load();
+        await Promise.race([loaded, new Promise(resolve => setTimeout(resolve, 5000))]);
+      } catch { /* Show the readable error below if both sources fail. */ }
+    }
+    if (generation !== token || !state || state.root !== root) return;
+    for (const img of root.querySelectorAll('img')) if (!img.naturalWidth) { img.classList.add('event-media-missing'); img.alt = 'å›¾ç‰‡æœªèƒ½è¯»å–'; }
+    if (video?.error) {
+      root.dataset.mediaError = `${video.error.code}: ${video.error.message}`;
+      video.replaceWith(Object.assign(document.createElement('p'), { textContent: 'è§†é¢‘æœªèƒ½è¯»å–ï¼Œè¯·æ£€æŸ¥ç´ æã€‚' }));
+    }
+    await new Promise(resolve => setTimeout(resolve, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 550));
+    if (generation !== token || !state || state.root !== root) return;
+    state.ready = true; state.last = performance.now();
+    root.querySelector('[data-action="event-confirm"]').disabled = total > 0 && state.remaining > 0;
+  }
+  function confirm() {
+    if (!state?.ready || state.remaining > 0 || ctx.paused() || document.hidden) return false;
+    if (state.preview) { state.root.querySelector('.event-confirm').textContent = 'é¢„è§ˆç»“æŸ Â· å¯é‡æ–°é¢„è§ˆ'; return true; }
+    const id = state.nodeId;
+    cancel(); ctx.finish(id); return true;
+  }
+  function cancel() {
+    generation++; cancelAnimationFrame(frame);
+    if (state && !state.preview) ctx.cleanAudio?.();
+    state?.mediaAbort.abort();
+    state?.root.querySelector('video')?.pause();
+    for (const url of state?.objectUrls || []) URL.revokeObjectURL(url);
+    document.querySelector('#world-event')?.remove();
+    document.querySelector('.stage-frame')?.classList.remove('event-mode');
+    state = null;
+  }
+  return { editor, show, confirm, cancel, remaining: () => state?.remaining, active: () => Boolean(state),
+    diagnostics: () => state ? { id: state.nodeId, type: state.event.type, remaining: state.remaining, ready: state.ready,
+      preview: state.preview, received: state.shown + 1, windows: state.root.querySelectorAll('.event-crt').length } : null };
+}

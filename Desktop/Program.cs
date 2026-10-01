@@ -1,24 +1,367 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬ÕÕÍ¥¹œMåÍÑ•´¹Q•áĞ¹)Í½¸ì4)ÕÍ¥¹œMåÍÑ•´¹Q•áĞ¹)Í½¸¹9½‘•Ìì4)ÕÍ¥¹œMåÍÑ•´¹%<¹½µÁÉ•ÍÍ¥½¸ì4)ÕÍ¥¹œMåÍÑ•´¹M•ÕÉ¥Ñä¹ÉåÁÑ½É…Á¡äì4)ÕÍ¥¹œMåÍÑ•´¹Q•áĞì4)ÕÍ¥¹œMåÍÑ•´¹¥…¹½ÍÑ¥Ìì4)ÕÍ¥¹œ5¥É½Í½™Ğ¹]•ˆ¹]•‰Y¥•ÜÈ¹½É”ì4)ÕÍ¥¹œ5¥É½Í½™Ğ¹]•ˆ¹]•‰Y¥•ÜÈ¹]¥¹½ÉµÌì)ÕÍ¥¹œAÉ½Ñ•Ñ•‘i¥Á¥±”€ô%M¡…ÉÁ½‘”¹M¡…ÉÁi¥Á1¥ˆ¹i¥À¹i¥Á¥±”ì)ÕÍ¥¹œ%M¡…ÉÁ½‘”¹M¡…ÉÁi¥Á1¥ˆ¹i¥Àì(4)¹…µ•ÍÁ…”YI5…±…µ”ì4(4)¥¹Ñ•É¹…°ÍÑ…Ñ¥Œ±…ÍÌAÉ½É…´4)ì4(€€€mMQQ¡É•…‘t4(€€€ÁÉ¥Ù…Ñ”ÍÑ…Ñ¥ŒÙ½¥5…¥¸ ¤(€€€ì(€€€€€€€ÍÑÉ¥¹mt…ÉÌ€ô¹Ù¥É½¹µ•¹Ğ¹•Ñ½µµ…¹‘1¥¹•ÉÌ ¤ì(€€€€€€€¥¹Ğ¡•¬€ôÉÉ…ä¹%¹‘•á=˜¡…ÉÌ°ˆ´µ¡•¬µÁ…­…”µ¥¹Ñ•É¥Ñäˆ¤ì(€€€€€€€¥˜€¡¡•¬€øô€À€˜˜¡•¬€¬€È€ğ…ÉÌ¹1•¹Ñ ¤ì(€€€€€€€€€€€ÑÉäìAÉ½Ñ•Ñ•‘I•Í½ÕÉ•Ì¹Y•É¥™ä¡…ÉÍm¡•¬¬Åt¤ì¥±”¹]É¥Ñ•±±Q•áĞ¡…ÉÍm¡•¬¬Ét±)Í½¹M•É¥…±¥é•È¹M•É¥…±¥é”¡¹•Üí½¬õÑÉÕ•ô¤¤ìô(€€€€€€€€€€€…Ñ €¡á•ÁÑ¥½¸•à¤ì¥±”¹]É¥Ñ•±±Q•áĞ¡…ÉÍm¡•¬¬Ét±)Í½¹M•É¥…±¥é•È¹M•É¥…±¥é”¡¹•Üí½¬õ™…±Í”±•ÉÉ½Èõ•à¹5•ÍÍ…•ô¤¤ì¹Ù¥É½¹µ•¹Ğ¹á¥Ñ½‘”ôÈìô(€€€€€€€€€€€É•ÑÕÉ¸ì(€€€€€€€ô(€€€€€€€ÁÁ±¥…Ñ¥½¹½¹™¥ÕÉ…Ñ¥½¸¹%¹¥Ñ¥…±¥é” ¤ì4(€€€€€€€ÁÁ±¥…Ñ¥½¸¹IÕ¸¡¹•Ü‘¥Ñ½É]¥¹‘½Ü ¤¤ì4(€€€ô4)ô4(4)¥¹Ñ•É¹…°Í•…±•Á…ÉÑ¥…°±…ÍÌ‘¥Ñ½É]¥¹‘½Ü€è½É´)ì4(€€€ÁÉ¥Ù…Ñ”É•…‘½¹±ä]•‰Y¥•ÜÈİ•ˆ€ô¹•Ü ¤ì½¬€ô½­MÑå±”¹¥±°ôì4(€€€ÁÉ¥Ù…Ñ”É•…‘½¹±ä¥Ñ¥½¹…ÉäñÍÑÉ¥¹œ°€¡¥±•MÑÉ•…´MÑÉ•…´°ÍÑÉ¥¹œ%°ÍÑÉ¥¹œQåÁ”°ÍÑÉ¥¹œ9…µ”°ÍÑÉ¥¹œA…Ñ ¤ø‘É½ÁÁ•‘%µÁ½ÉÑÌ€ô¹•Ü ¤ì4(€€€ÁÉ¥Ù…Ñ”ÍÑÉ¥¹œüÁÉ½©•Ñ¥É•Ñ½Éäì4(€€€ÁÉ¥Ù…Ñ”ÍÑÉ¥¹œüÁÉ½©•ÑÉ¡¥Ù•A…Ñ ì4(€€€ÁÉ¥Ù…Ñ”ÍÑÉ¥¹œüÑ•µÁ½É…ÉåAÉ½©•Ñ¥É•Ñ½Éäì4(€€€ÁÉ¥Ù…Ñ”ÍÑÉ¥¹œüÍÑ…ÉÑÕÁAÉ½©•ÑA…Ñ ì4(€€€ÁÉ¥Ù…Ó}4ÖÚ$z{-®éÜj×6÷&UvV%f–Ws%W&Ö—76–öä¶–æBäWF÷Æ’b`Ğ¢‡&WVW7BåW&’å7F'G5v—F‚‚&‡GG3¢òöævÆvÖRò"’ÇÂ&WVW7BåW&’å7F'G5v—F‚‚&‡GG3¢ò÷&ö¦V7BævÆvÖRò"’’Ğ¢&WVW7Bå7FFRÒ6÷&UvV%f–Ws%W&Ö—76–öå7FFRäÆÆ÷s°Ğ¢Ó°Ğ¢vV"ä6÷&UvV%f–Ws"å6WGF–æw2ä&TFWeFööÇ4Væ&ÆVBÒÆ–W$ÖöFS°Ğ¢vV"ä6÷&UvV%f–Ws"å6WGF–æw2ä—57FGW4&$Væ&ÆVBÒfÇ6S°Ğ¢vV"ä6÷&UvV%f–Ws"å6WEf—'GVÄ†÷7DæÖUFôföÆFW$Ö–ær„†÷7BÂvV$F—&V7F÷'’Â6÷&UvV%f–Ws$†÷7E&W6÷W&6T66W74¶–æBäFVç”6÷'2“°Ğ¢–b‚Æ–W$ÖöFRbb7F'GW&ö¦V7EF‚ÒçVÆÂĞ¢°Ğ¢–b„F—&V7F÷'’äW†—7G2‡7F'GW&ö¦V7EF‚’bbf–ÆRäW†—7G2…F‚ä6öÖ&–æR‡7F'GW&ö¦V7EF‚Â'&ö¦V7Bæ§6öâ"’’Ğ¢&ö¦V7DF—&V7F÷'’Ò7F'GW&ö¦V7EFƒ°Ğ¢VÇ6RÆöD&6†—fR‡7F'GW&ö¦V7EF‚“°Ğ¢&VÖVÖ&W%&ö¦V7B‡7F'GW&ö¦V7EF‚“°Ğ¢ĞĞ¢–b‡&ö¦V7DF—&V7F÷'’ÒçVÆÂ’Ö&ö¦V7B‚“°Ğ¢vV"ä6÷&UvV%f–Ws"åvV$ÖW76vU&V6V—fVB³ÒöåvV$ÖW76vS°Ğ¢vV"ä6÷&UvV%f–Ws"äæf–vF–öå7F'F–ær³Ò…òÂR’ÓàĞ¢°Ğ¢–b‚RåW&’å7F'G5v—F‚‚B&‡GG3¢ò÷´†÷7GÒò"Â7G&–æt6ö×&—6öâä÷&F–æÄ–væ÷&T66R’Ğ¢Rä6æ6VÂÒG'VS°Ğ¢Ó°Ğ¢–b‡6Öö¶T&6RÒçVÆÂĞ¢vV"ä6÷&UvV%f–Ws"äæf–vF–öä6ö×ÆWFVB³Ò7–æ2…òÂò’ÓàĞ¢°Ğ¢–b‡6Öö¶U7F'FVB’&WGW&ã°Ğ¢6Öö¶U7F'FVBÒG'VS°Ğ¢š®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍX]ØZ][”Û[ÚÙP\Ş[˜Ê
-NÃBˆNÃBˆÙX‹”Ûİ\˜ÙHH™]È\šJ	šÎ‹ËŞĞ\ÜİKŞÊ^Y\“[ÙHÈœ^Y\‹š[ˆˆš[™^š[Š_^ÊÛ[ÚÙP˜\ÙHOH[ÈÜÛ[ÚÙOLHˆˆˆŠ_HŠNÃBˆCBˆØ]Ú
-^Ù\[Ûˆ^
-BˆÂˆYˆ
-Û[ÚÙP˜\ÙHOH[
-Hš[K•Üš]P[^
-Û[ÚÙP˜\ÙH
-È‹™\œ›Ü‹‹^“Y\ÜØYÙJNÂˆ[ÙHY\ÜØYÙP›Ş”ÚİÊ\Ë^“Y\ÜØYÙK¹¥è9¬åyd+ùbª‹Y\ÜØYÙP›Ş]ÛœË“ÒËY\ÜØYÙP›ŞXÛÛ‹‘\œ›ÜŠNÂˆÛÜÙJ
-NÃBˆCBˆCBƒBˆš]˜]H\Ş[˜È\ÚÈ[”Û[ÚÙP\Ş[˜Ê
-CBˆÃBˆCBˆÃBˆYˆ
-Û[ÚÙSÜ[‘\™XİÜHOH[
-CBˆÃBˆ]ØZ]\ÚË‘[^JML
-NÃBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜ÊBˆ™Øİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ[Û[Ü[‹\›Ú™XİIÊOË˜ÛXÚÊ
-HŠNÃBˆYˆ
-Û[ÚÙPÚ\˜Xİ\•ÛÊCBˆÃBˆ]ØZ]\ÚË‘[^JL
-NÃBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜ÊBˆ™Øİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]K\[™[XÚ\˜Xİ\œ×IÊOË˜ÛXÚÊ
-NÈØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ[Û\Ù[XİXÚ\˜Xİ\—VÙ]KZ[™^WŒW—IÊOË˜ÛXÚÊ
-HŠNÃBˆCBˆ]ØZ]\ÚË‘[^JÌ
-NÃBˆCBˆ[ÙCBˆÃBˆYˆ
-Û[ÚÙS™]Ğ\˜Ú]™JCBˆÃBˆ]ØZ]\ÚË‘[^JML
-NÃBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜ÊBˆ™Øİ[Y[œ]Y\TÙ[XİÜŠ	ÈÛ™]Ë[˜[YIÊK˜[YOIù­bú+åyc¢ùï*yméyê"÷ÓMm¢G§²ÚîÆ­yÑuerySelector('[data-render='+key+']'); if(input){input.value=value; input.dispatchEvent(new Event('input',{bubbles:true}));} }");
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.IO.Compression;
+using System.Security.Cryptography;
+using System.Text;
+using System.Diagnostics;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.WinForms;
+using ProtectedZipFile = ICSharpCode.SharpZipLib.Zip.ZipFile;
+using ICSharpCode.SharpZipLib.Zip;
+
+namespace VRMGalgame;
+
+internal static class Program
+{
+    [STAThread]
+    private static void Main()
+    {
+        string[] args = Environment.GetCommandLineArgs();
+        int check = Array.IndexOf(args,"--check-package-integrity");
+        if (check >= 0 && check + 2 < args.Length) {
+            try { ProtectedResources.Verify(args[check+1]); File.WriteAllText(args[check+2],JsonSerializer.Serialize(new {ok=true})); }
+            catch (Exception ex) { File.WriteAllText(args[check+2],JsonSerializer.Serialize(new {ok=false,error=ex.Message})); Environment.ExitCode=2; }
+            return;
+        }
+        ApplicationConfiguration.Initialize();
+        Application.Run(new EditorWindow());
+    }
+}
+
+internal sealed partial class EditorWindow : Form
+{
+    private readonly WebView2 web = new() { Dock = DockStyle.Fill };
+    private readonly Dictionary<string, (FileStream Stream, string Id, string Type, string Name, string Path)> droppedImports = new();
+    private string? projectDirectory;
+    private string? projectArchivePath;
+    private string? temporaryProjectDirectory;
+    private string? startupProjectPath;
+    private byte[]? loadedArchiveBytes;
+    private readonly bool playerMode;
+    private readonly string? smokeBase;
+    private readonly bool smokePlay;
+    private readonly bool smokeFastPlay;
+    private readonly string? smokeOpenDirectory;
+    private readonly bool smokeCharacterTwo;
+    private readonly bool smokeSaveSlots;
+    private readonly bool smokeControls;
+    private readonly bool smokeDuplicate;
+    private readonly bool smokeRender;
+    private readonly bool smokeCast;
+    private readonly bool smokeAdvance;
+    private readonly bool smokeIteration;
+    private readonly bool smokeBlend;
+    private readonly bool smokeStepCast;
+    private readonly bool smokeNewActCast;
+    private readonly bool smokeEmptyAct;
+    private readonly bool smokeTitle;
+    private readonly bool smokeTheme;
+    private readonly bool smokeAutoVolume;
+    private readonly bool smokeTitleMenus;
+    private readonly bool smokeGallery;
+    private readonly bool smokeGalleryLayout;
+    private readonly bool smokeGalleryProgress;
+    private readonly bool smokeRootMotion;
+    private readonly bool smokeMotionOptions;
+    private readonly bool smokeExternalPreview;
+    private readonly bool smokeCharacterPreview;
+    private readonly bool smokeDiscovery;
+    private readonly bool smokeRecent;
+    private readonly bool smokeImageImport;
+    private readonly bool smokeDepthShadow;
+    private readonly bool smokePortraits;
+    private readonly bool smokePortraitPose;
+    private readonly string? smokeFileOpsParent;
+    private readonly string? smokeArchiveParent;
+    private readonly bool smokeNewArchive;
+    private readonly bool smokeSaveTwice;
+    private readonly string? smokeImportFolderPath;
+    private readonly string? smokeAvatarFile;
+    private bool smokeStarted;
+    private bool fullscreen;
+    private Size windowedClientSize;
+    private readonly string appDirectory = AppContext.BaseDirectory;
+    private const string AppHost = "app.galgame";
+    private const string ProjectHost = "project.galgame";
+    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+    private static readonly Size[] PlayerResolutions =
+    [
+        new(640, 360), new(960, 540), new(1280, 720),
+        new(1600, 900), new(1920, 1080)
+    ];
+
+    public EditorWindow()
+    {
+        playerMode = File.Exists(Path.Combine(appDirectory, "game.config.json"));
+        if (playerMode) projectDirectory = Path.Combine(appDirectory, "game");
+        string[] arguments = Environment.GetCommandLineArgs();
+        if (!playerMode)
+        {
+            int index = Array.IndexOf(arguments, "--project");
+            if (index >= 0 && index + 1 < arguments.Length)
+                startupProjectPath = Path.GetFullPath(arguments[index + 1]);
+        }
+        int smokeIndex = Array.IndexOf(arguments, "--smoke");
+        smokePlay = arguments.Contains("--smoke-play");
+        smokeFastPlay = arguments.Contains("--smoke-fast-play");
+        smokeCharacterTwo = arguments.Contains("--smoke-character-two");
+        smokeSaveSlots = arguments.Contains("--smoke-save-slots");
+        smokeControls = arguments.Contains("--smoke-controls");
+        smokeDuplicate = arguments.Contains("--smoke-duplicate");
+        smokeRender = arguments.Contains("--smoke-render");
+        smokeCast = arguments.Contains("--smoke-cast");
+        smokeAdvance = arguments.Contains("--smoke-advance");
+        smokeIteration = arguments.Contains("--smoke-iteration");
+        smokeBlend = arguments.Contains("--smoke-blend");
+        smokeStepCast = arguments.Contains("--smoke-step-cast");
+        smokeNewActCast = arguments.Contains("--smoke-new-act-cast");
+        smokeEmptyAct = arguments.Contains("--smoke-empty-act");
+        smokeTitle = arguments.Contains("--smoke-title");
+        smokeTheme = arguments.Contains("--smoke-theme");
+        smokeAutoVolume = arguments.Contains("--smoke-auto-volume");
+        smokeTitleMenus = arguments.Contains("--smoke-title-menus");
+        smokeGallery = arguments.Contains("--smoke-gallery");
+        smokeGalleryLayout = arguments.Contains("--smoke-gallery-layout");
+        smokeGalleryProgress = arguments.Contains("--smoke-gallery-progress");
+        smokeRootMotion = arguments.Contains("--smoke-root-motion");
+        smokeMotionOptions = arguments.Contains("--smoke-motion-options");
+        smokeExternalPreview = arguments.Contains("--smoke-external-preview");
+        smokeCharacterPreview = arguments.Contains("--smoke-character-preview");
+        smokeDiscovery = arguments.Contains("--smoke-discovery");
+        smokeRecent = arguments.Contains("--smoke-recent");
+        smokeImageImport = arguments.Contains("--smoke-image-import");
+        smokeDepthShadow = arguments.Contains("--smoke-depth-shadow");
+        smokePortraits = arguments.Contains("--smoke-portraits");
+        smokePortraitPose = arguments.Contains("--smoke-portrait-pose");
+        smokeNewArchive = arguments.Contains("--smoke-new-archive");
+        smokeSaveTwice = arguments.Contains("--smoke-save-twice");
+        int smokeFileOpsIndex = Array.IndexOf(arguments, "--smoke-file-ops");
+        if (smokeFileOpsIndex >= 0 && smokeFileOpsIndex + 1 < arguments.Length)
+            smokeFileOpsParent = Path.GetFullPath(arguments[smokeFileOpsIndex + 1]);
+        int smokeArchiveIndex = Array.IndexOf(arguments, "--smoke-archive-ops");
+        if (smokeArchiveIndex >= 0 && smokeArchiveIndex + 1 < arguments.Length)
+            smokeArchiveParent = Path.GetFullPath(arguments[smokeArchiveIndex + 1]);
+        int smokeImportIndex = Array.IndexOf(arguments, "--smoke-import-folder");
+        if (smokeImportIndex >= 0 && smokeImportIndex + 1 < arguments.Length)
+            smokeImportFolderPath = Path.GetFullPath(arguments[smokeImportIndex + 1]);
+        int smokeAvatarIndex = Array.IndexOf(arguments, "--smoke-avatar");
+        if (smokeAvatarIndex >= 0 && smokeAvatarIndex + 1 < arguments.Length)
+            smokeAvatarFile = Path.GetFullPath(arguments[smokeAvatarIndex + 1]);
+        if (smokeIndex >= 0 && smokeIndex + 2 < arguments.Length)
+        {
+            if (!playerMode && arguments[smokeIndex + 1] != "-")
+                startupProjectPath = Path.GetFullPath(arguments[smokeIndex + 1]);
+            smokeBase = Path.GetFullPath(arguments[smokeIndex + 2]);
+        }
+        int smokeOpenIndex = Array.IndexOf(arguments, "--smoke-open");
+        if (smokeOpenIndex >= 0 && smokeOpenIndex + 2 < arguments.Length)
+        {
+            smokeOpenDirectory = Path.GetFullPath(arguments[smokeOpenIndex + 1]);
+            smokeBase = Path.GetFullPath(arguments[smokeOpenIndex + 2]);
+            projectDirectory = null;
+            startupProjectPath = null;
+        }
+        Text = playerMode ? "VRM Galgame" : "VRM Galgame ç¼–è¾‘å™¨";
+        if (playerMode)
+        {
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            windowedClientSize = GetAvailableResolutions()
+                .Where(size => size.Width <= 1280).LastOrDefault(new Size(640, 360));
+            ClientSize = windowedClientSize;
+        }
+        else
+        {
+            Width = 1500;
+            Height = 900;
+            MinimumSize = new Size(1024, 650);
+        }
+        StartPosition = FormStartPosition.CenterScreen;
+        Controls.Add(web);
+        Shown += async (_, _) => await InitializeWebAsync();
+        FormClosed += (_, _) => { StopAgentBridge(); CleanupTemporaryProject(); };
+    }
+
+    private async Task InitializeWebAsync()
+    {
+        try
+        {
+            string webDirectory = Path.Combine(appDirectory, "web");
+            if (!File.Exists(Path.Combine(webDirectory, "index.html")))
+                throw new Exception("ç¨‹åºæ–‡ä»¶ä¸å®Œæ•´ï¼šæ‰¾ä¸åˆ° web/index.htmlã€‚è¯·é‡æ–°è§£å‹å®Œæ•´å®‰è£…åŒ…ã€‚");
+            ProtectedResources.Verify(appDirectory);
+            var environment = await CoreWebView2Environment.CreateAsync(
+                userDataFolder: Environment.GetCommandLineArgs().Contains("--smoke-fresh-audio")
+                    ? Path.Combine(Path.GetTempPath(), "VRMGalgame", "AudioSmoke", Guid.NewGuid().ToString("N"))
+                    : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VRMGalgame", "WebView2"));
+            await web.EnsureCoreWebView2Async(environment);
+            await web.CoreWebView2.Profile.SetPermissionStateAsync(CoreWebView2PermissionKind.Autoplay,
+                $"https://{AppHost}", CoreWebView2PermissionState.Allow);
+            await web.CoreWebView2.Profile.SetPermissionStateAsync(CoreWebView2PermissionKind.Autoplay,
+                $"https://{ProjectHost}", CoreWebView2PermissionState.Allow);
+            web.CoreWebView2.PermissionRequested += (_, request) =>
+            {
+                if (request.PermissionKind == CoreWebView2PermissionKind.Autoplay &&
+                    (request.Uri.StartsWith("https://app.galgame/") || request.Uri.StartsWith("https://project.galgame/")))
+                    request.State = CoreWebView2PermissionState.Allow;
+            };
+            web.CoreWebView2.Settings.AreDevToolsEnabled = !playerMode;
+            web.CoreWebView2.Settings.IsStatusBarEnabled = false;
+            web.CoreWebView2.SetVirtualHostNameToFolderMapping(AppHost, webDirectory, CoreWebView2HostResourceAccessKind.DenyCors);
+            if (!playerMode && startupProjectPath != null)
+            {
+                if (Directory.Exists(startupProjectPath) && File.Exists(Path.Combine(startupProjectPath, "project.json")))
+                    projectDirectory = startupProjectPath;
+                else LoadArchive(startupProjectPath);
+                RememberProject(startupProjectPath);
+            }
+            if (projectDirectory != null) MapProject();
+            web.CoreWebView2.WebMessageReceived += OnWebMessage;
+            web.CoreWebView2.NavigationStarting += (_, e) =>
+            {
+                if (!e.Uri.StartsWith($"https://{AppHost}/", StringComparison.OrdinalIgnoreCase))
+                    e.Cancel = true;
+            };
+            if (smokeBase != null)
+                web.CoreWebView2.NavigationCompleted += async (_, _) =>
+                {
+                    if (smokeStarted) return;
+                    smokeStarted = true;
+                    await RunSmokeAsync();
+                };
+            web.Source = new Uri($"https://{AppHost}/{(playerMode ? "player.html" : "index.html")}{(smokeBase != null ? "?smoke=1" : "")}");
+        }
+        catch (Exception ex)
+        {
+            if (smokeBase != null) File.WriteAllText(smokeBase + ".error.txt", ex.Message);
+            else MessageBox.Show(this, ex.Message, "æ— æ³•å¯åŠ¨", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Close();
+        }
+    }
+
+    private async Task RunSmokeAsync()
+    {
+        try
+        {
+            if (smokeOpenDirectory != null)
+            {
+                await Task.Delay(150);
+                await web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelector('[data-action=open-project]')?.click()");
+                if (smokeCharacterTwo)
+                {
+                    await Task.Delay(1000);
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "document.querySelector('[data-panel=characters]')?.click(); document.querySelector('[data-action=select-character][data-index=\"1\"]')?.click()");
+                }
+                await Task.Delay(7000);
+            }
+            else
+            {
+                if (smokeNewArchive)
+                {
+                    await Task.Delay(150);
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "document.querySelector('#new-name').value='æµ‹è¯•å‹ç¼©å·¥ç¨‹'; document.querySelector('[data-action=new-project]').click()");
+                    await Task.Delay(1700);
+                    File.WriteAllText(smokeBase + ".new-archive.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})"));
+                }
+                if (smokeImportFolderPath != null)
+                {
+                    await Task.Delay(150);
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "document.querySelector('[data-action=import-folder-project]').click()");
+                    await Task.Delay(1700);
+                    File.WriteAllText(smokeBase + ".import-folder.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})"));
+                }
+                await Task.Delay(smokeFastPlay ? 50 : smokePlay || smokeSaveSlots || smokeGallery || smokeGalleryProgress ? 1500 : 7000);
+                if (smokeRecent && !playerMode)
+                {
+                    File.WriteAllText(smokeBase + ".recent-list.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify({count:document.querySelectorAll('[data-action=open-recent]').length, first:document.querySelector('[data-action=open-recent]')?.textContent})"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=open-recent]')?.click()");
+                    await Task.Delay(8500);
+                    File.WriteAllText(smokeBase + ".recent-open.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                }
+                if (smokeAvatarFile != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters"))
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=characters]')?.click(); document.querySelector('[data-action=add-character]')?.click(); document.querySelector('[data-action=upload-character-portrait]')?.click()");
+                    await Task.Delay(2500);
+                    File.WriteAllText(smokeBase + ".avatar-upload.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                    await Task.Delay(1500);
+                }
+                if (smokePortraitPose && !playerMode)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=characters]')?.click(); document.querySelector('[data-action=select-character][data-index=\"0\"]')?.click(); const motion=document.querySelector('[data-field=\"character.galleryMotionId\"]'); motion.value='preset-mixamo-017'; motion.dispatchEvent(new Event('input',{bubbles:true})); motion.dispatchEvent(new Event('change',{bubbles:true}))");
+                    string baseline = await web.CoreWebView2.ExecuteScriptAsync("window.__vrmDiagnostics().characterPortraitIds[0].portraitId");
+                    for (int attempt = 0; attempt < 45; attempt++)
+                    {
+                        await Task.Delay(1000);
+                        string current = await web.CoreWebView2.ExecuteScriptAsync("window.__vrmDiagnostics().characterPortraitIds[0].portraitId");
+                        if (current != baseline && current != "\"\"") break;
+                    }
+                    File.WriteAllText(smokeBase + ".pose-before.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    string beforeId = await web.CoreWebView2.ExecuteScriptAsync("window.__vrmDiagnostics().characterPortraitIds[0].portraitId");
+                    await web.CoreWebView2.ExecuteScriptAsync("const pose=document.querySelector('[data-gallery-adjust=galleryPoseFrame]'); pose.value=String(Math.min(40, Number(pose.max))); pose.dispatchEvent(new Event('input',{bubbles:true})); pose.dispatchEvent(new Event('change',{bubbles:true}))");
+                    for (int attempt = 0; attempt < 45; attempt++)
+                    {
+                        await Task.Delay(1000);
+                        string current = await web.CoreWebView2.ExecuteScriptAsync("window.__vrmDiagnostics().characterPortraitIds[0].portraitId");
+                        if (current != beforeId && current != "\"\"") break;
+                    }
+                    File.WriteAllText(smokeBase + ".pose-after.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using var poseStream = File.Create(smokeBase + ".pose-after.png");
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, poseStream);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                    await Task.Delay(1500);
+                }
+                if (smokePlay || smokeFastPlay || smokeSaveSlots || smokeAutoVolume)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "document.querySelector('[data-action=play]')?.click()");
+                    await Task.Delay(smokeFastPlay ? 100 : smokeSaveSlots ? 4000 : 9000);
+                    if (smokeSaveSlots)
+                    {
+                        await web.CoreWebView2.ExecuteScriptAsync(
+                            "localStorage.removeItem('vrm-save-slots-' + (window.__vrmProjectId || ''))");
+                        await web.CoreWebView2.ExecuteScriptAsync(
+                            "document.querySelector('[data-action=save-game]')?.click(); document.querySelector('[data-action=save-slot][data-index=\"1\"]')?.click(); document.querySelector('[data-action=close-modal]')?.click(); document.querySelector('.stage-frame')?.click(); document.querySelector('[data-action=save-game]')?.click(); document.querySelector('[data-action=save-slot][data-index=\"2\"]')?.click(); document.querySelector('[data-action=close-modal]')?.click(); document.querySelector('[data-action=stop-play]')?.click(); document.querySelector('[data-action=load-game]')?.click(); document.querySelector('[data-action=load-slot][data-index=\"2\"]')?.click(); document.querySelector('[data-action=load-game]')?.click()");
+                        await Task.Delay(2000);
+                    }
+                }
+                if (smokePortraits && playerMode)
+                {
+                    for (int stepIndex = 1; stepIndex <= 6; stepIndex++)
+                    {
+                        await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('.stage-frame')?.click()");
+                        await Task.Delay(2600);
+                        if (stepIndex >= 5)
+                            File.WriteAllText(smokeBase + $".player-step-{stepIndex}.json", await web.CoreWebView2.ExecuteScriptAsync(
+                                "JSON.stringify(window.__vrmDiagnostics())"));
+                    }
+                    using var playerPortraitStream = File.Create(smokeBase + ".player-portrait.png");
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, playerPortraitStream);
+                }
+                if (smokeControls)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "for (const [selector, value] of [['[data-adjust=size]','150'],['[data-adjust=offsetX]','0.5'],['[data-adjust=offsetY]','0.25'],['[data-expression=happy]','35']]) { const input=document.querySelector(selector); if(input){input.value=value; input.dispatchEvent(new Event('input',{bubbles:true}));} } document.querySelector('.inspector').scrollTop=600");
+                    await Task.Delay(1200);
+                }
+                if (smokeDuplicate)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "document.querySelector('[data-action=duplicate-step]')?.click(); for (const [selector, value] of [['[data-adjust=size]','250'],['[data-adjust=offsetY]','-4']]) { const input=document.querySelector(selector); if(input){input.value=value; input.dispatchEvent(new Event('input',{bubbles:true}));} }");
+                    await Task.Delay(1200);
+                }
+                if (smokeRender)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "document.querySelector('[data-panel=render]')?.click(); for (const [key,value] of [['antialias','high'],['style','anime'],['outline','1'],['autoLight','true']]) { const input=document.querySelector('[data-render='+key+']'); if(input){input.value=value; input.dispatchEvent(new Event('input',{bubbles:true}));} }");
                     await Task.Delay(2000);
                 }
                 if (smokeDepthShadow && !playerMode)
@@ -36,27 +379,292 @@ NÃBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜ÊBˆ
                           document.querySelector('[data-panel=render]')?.click();
                           const advanced = document.querySelector('.render-advanced');
                           if (advanced) advanced.open = true;
- YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Ô€€€€€€€€€€€€€€€€€€€€€€€€™½È€¡½¹ÍĞm­•ä°Ù…±Õ•t½˜mlÍ¡…‘½İ¹…‰±•œ°ÑÉÕ•t°lÍ¡…‘½İ¹±”œ°€œÔÔt°lÍ¡…‘½İ=Á…¥Ñäœ°€œÜÔut¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€€€½¹ÍĞ¥¹ÁÕĞ€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È m‘…Ñ„µÉ•¹‘•Èôœ€¬­•ä€¬€tœ¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€€€¥˜€ …¥¹ÁÕĞ¤½¹Ñ¥¹Õ”ì4(€€€€€€€€€€€€€€€€€€€€€€€€€€€¥˜€¡­•ä€ôôô€Í¡…‘½İ¹…‰±•œ¤¥¹ÁÕĞ¹¡•­•€ôÙ…±Õ”ì4(€€€€€€€€€€€€€€€€€€€€€€€€€€€•±Í”¥¹ÁÕĞ¹Ù…±Õ”€ôÙ…±Õ”ì4(€€€€€€€€€€€€€€€€€€€€€€€€€€€¥¹ÁÕĞ¹‘¥ÍÁ…Ñ¡Ù•¹Ğ¡¹•ÜÙ•¹Ğ ¥¹ÁÕĞœ°ì‰Õ‰‰±•ÌèÑÉÕ”ô¤¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€ô4(€€€€€€€€€€€€€€€€€€€€€€€ô¤ ¤4(€€€€€€€€€€€€€€€€€€€€€€€€ˆˆˆ¤ì4(€€€€€€€€€€€€€€€€€€€…İ…¥ĞQ…Í¬¹•±…ä ÈÔÀÀ¤ì4(€€€€€€€€€€€€€€€€€€€¥±”¹]É¥Ñ•±±Q•áĞ¡Íµ½­•	…Í”€¬€ˆ¹Í¡…‘½Üµ…™Ñ•È¹©Í½¸ˆ°…İ…¥Ğİ•ˆ¹½É•]•‰Y¥•ÜÈ¹á•ÕÑ•MÉ¥ÁÑÍå¹Œ ‰)M=8¹ÍÑÉ¥¹¥™ä¡İ¥¹‘½Ü¹}}ÙÉµ¥…¹½ÍÑ¥Ì ¤¤ˆ¤¤ì4(€€€€€€€€€€€€€€€€€€€ÕÍ¥¹œ€¡Ù…È¥µ…”€ô¥±”¹É•…Ñ”¡Íµ½­•	…Í”€¬€ˆ¹Í¡…‘½Üµ…™Ñ•È¹Á¹œˆ¤¤4(€€€€€€€€€€€€€€€€€€€€€€€…İ…¥Ğİ•ˆ¹½É•]•‰Y¥•ÜÈ¹…ÁÑÕÉ•AÉ•Ù¥•İÍå¹Œ¡½É•]•‰Y¥•ÜÉ…ÁÑÕÉ•AÉ•Ù¥•İ%µ…•½Éµ…Ğ¹A¹œ°¥µ…”¤ì4(€€€€€€€€€€€€€€€€€€€…İ…¥Ğİ•ˆ¹½É•]•‰Y¥•ÜÈ¹á•ÕÑ•MÉ¥ÁÑÍå¹Œ ˆ  ¤ôùí½¹ÍĞ¡•¥¡Ğõ‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È m‘…Ñ„µÉ•¹‘•ÈõÍ¡…‘½İ!•¥¡Ñtœ¤í¡•¥¡Ğ¹Ù…±Õ”ôœÄÌœí¡•¥¡Ğ¹‘¥ÍÁ…Ñ¡Ù•¹Ğ¡¹•ÜÙ•¹Ğ ¥¹ÁÕĞœ±í‰Õ‰‰±•ÌéÑÉÕ•ô¤¤íô¤ ¤ˆ¤ì4(€€€€€€€€€€€€€€€€€€€…İ…¥Ğİ•ˆ¹½É•]•‰Y¥•ÜÈ¹á•ÕÑ•MÉ¥ÁÑÍå¹Œ ‰‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È m‘…Ñ„µÉ•¹‘•ÈõÍ¡…‘½İ!•¥¡Ñtœ¤ü¹ÍÉ½±±%¹Ñ½Y¥•Ü¡í‰±½¬è•¹Ñ•Èô¤ˆ¤ì4(€€€€€€€€€€€€€€€€€€€…İ…¥ĞQ…Í¬¹•±…ä ØÀÀ¤ì4(€€€€€€€€€€€€€€€€€€€¥±”¹]É¥Ñ•±±Q•áĞ¡Íµ½­•	…Í”€¬€ˆ¹Í¡…‘½ÜµÉ…¥Í•¹©Í½¸ˆ°…İ…¥Ğß}4ÖÚ$z{-®éÜj×çWBrÇ¶'V&&ÆW3§G'VWÒ’“²Fö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öãÖ6Æ÷6RÖVF—F÷"×6WGF–æw5Òr’æ6Æ–6²‚“²v–æF÷rç&ö×CÒ‚“Óâ~kX¾Šù^XšşiÊÂs²Fö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öã×6fRÖ5Òr’æ6Æ–6²‚’"“°Ğ¢v—BF6²äFVÆ’ƒ#c“°Ğ¢f–ÆRåw&—FTÆÅFW‡B‡6Öö¶T&6R²"ç6fRÖ2æ§6öâ"Âv—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚$¥4ôâç7G&–æv–g’‡v–æF÷råõ÷g&ÔF–væ÷7F–72‚’’"’“°Ğ¢v—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚'v–æF÷rç&ö×CÒ‚“Óâ~kX¾Šù^ZûÎX{¢s²Fö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öãÖW‡÷'EÒr’æ6Æ–6²‚’"“°Ğ¢v—BF6²äFVÆ’ƒƒ“°Ğ¢f–ÆRåw&—FTÆÅFW‡B‡6Öö¶T&6R²"æW‡÷'Bæ§6öâ"Âv—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚$¥4ôâç7G&–æv–g’‡v–æF÷råõ÷g&ÔF–væ÷7F–72‚’’"’“°Ğ¢ĞĞ¢–b‡6Öö¶U6fUGv–6RbbÆ–W$ÖöFRĞ¢°Ğ¢6fU&ö¦V7B…&VE&ö¦V7B‚’“°Ğ¢6fU&ö¦V7B…&VE&ö¦V7B‚’“°Ğ¢f–ÆRåw&—FTÆÅFW‡B‡6Öö¶T&6R²"ç6fR×Gv–6RçG‡B"Â$ô²"“°Ğ¢ĞĞ¢–b‡6Öö¶T—FW&F–öâĞ¢°Ğ¢7G&–ær–æ—F–ÂÒv—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚$¥4ôâç7G&–æv–g’‡v–æF÷råõ÷g&ÔF–væ÷7F–72‚’’"“°Ğ¢f–ÆRåw&—FTÆÅFW‡B‡6Öö¶T&6R²"æ–æ—F–Âæ§6öâ"Â–æ—F–Â“°Ğ¢v—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚"" Ğ¢†gVæ7F–öâ‚’°Ğ¢gVæ7F–öâG&r†¶–æBÂ6÷W&6RÂF&vWB’°Ğ¢6öç7Eš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍH›İÜÈHË‹‹™Øİ[Y[œ]Y\TÙ[XİÜ[
-	ÖÙ]K[Ü™\‹ZÚ[™IÈ
-ÈÚ[™
-È	×IÊWNÃBˆÛÛœİ]U˜[œÙ™\ˆH™]È]U˜[œÙ™\Š
-NÃBˆ›İÜÖÜÛİ\˜ÙWK™\Ü]Ú]™[
-™]È˜YÑ]™[
-	Ù˜YÜİ\	ËØX˜›\ÎYK]U˜[œÙ™\ŸJJNÃBˆÛÛœİHH›İÜÖİ\™Ù]K™Ù]›İ[™[™ĞÛY[™Xİ
-
-KÜ
-ÈNÃBˆ›İÜÖİ\™Ù]K™\Ü]Ú]™[
-™]È˜YÑ]™[
-	Ù˜YÛİ™\‰ËØX˜›\ÎYKØ[˜Ù[X›NYK]U˜[œÙ™\‹ÛY[N_JJNÃBˆ›İÜÖİ\™Ù]K™\Ü]Ú]™[
-™]È˜YÑ]™[
-	Ù›Ü	ËØX˜›\ÎYKØ[˜Ù[X›NYK]U˜[œÙ™\‹ÛY[N_JJNÃBˆCBˆ˜YÊ	Üİ\	Ë‹
-NÃBˆ˜YÊ	ØXİ	ËK
-NÃBˆØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]K\[™[X\ÜÙ]×IÊK˜ÛXÚÊ
-NÃBˆÚ[™İËœ›Û\H
-Ë˜[YJHOˆ˜[YHOOH	ù¥¬9¥¡ù.í¹i.IÈÈ	ù­bú+åyb!¹îá	Èˆ	ùª(yg¢ùb!¹îá	ÎÃBˆØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ[ÛXYX\ÜÙ]Y›Û\—VÙ]K]\O]œ›WIÊK˜ÛXÚÊ
-NÃBˆÛÛœİ›Û\ˆHØİ[Y[œ]Y\TÙ[XİÜŠ	Ë˜\ÜÙ]Y›Û\–Ù]KY›Û\‹ZÙ^WN››İ
-Ù]KY›Û\‹ZÙ^OH[™š[Yœ›H—JIÊNÃBˆ›Û\‹œ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ[Û\™[˜[YKX\ÜÙ]Y›Û\—IÊK˜ÛXÚÊ
-NÃBˆÛÛœİš\œİ\ÜÙ]HØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KX\ÜÙ]Y›Û\—IÊNÃBˆš\œİ\ÜÙ]˜[YHH›Û\‹™]\Ù]™›Û\’Ù^NÃBˆš\œİ\ÜÙ]™\Ü]Ú]™[7ÓMm¢G§²ÚîÆ­yÓettings]').click();
+                          for (const [key, value] of [['shadowEnabled', true], ['shadowAngle', '55'], ['shadowOpacity', '75']]) {
+                            const input = document.querySelector('[data-render=' + key + ']');
+                            if (!input) continue;
+                            if (key === 'shadowEnabled') input.checked = value;
+                            else input.value = value;
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                          }
+                        })()
+                        """);
+                    await Task.Delay(2500);
+                    File.WriteAllText(smokeBase + ".shadow-after.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using (var image = File.Create(smokeBase + ".shadow-after.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("(()=>{const height=document.querySelector('[data-render=shadowHeight]');height.value='13';height.dispatchEvent(new Event('input',{bubbles:true}));})()");
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-render=shadowHeight]')?.scrollIntoView({block:'center'})");
+                    await Task.Delay(600);
+                    File.WriteAllText(smokeBase + ".shadow-raised.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using (var image = File.Create(smokeBase + ".shadow-raised.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.head.insertAdjacentHTML('beforeend','<style>.stage-frame::after{display:none!important}</style>')");
+                    using (var image = File.Create(smokeBase + ".shadow-no-fade.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("(()=>{const shadow=document.querySelector('[data-render=shadowEnabled]'); shadow.checked=false; shadow.dispatchEvent(new Event('input',{bubbles:true}));})()");
+                    await Task.Delay(250);
+                    using (var image = File.Create(smokeBase + ".shadow-off-no-fade.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("(()=>{const shadow=document.querySelector('[data-render=shadowEnabled]'); shadow.checked=true; shadow.dispatchEvent(new Event('input',{bubbles:true}));})()");
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=story]')?.click()");
+                    await Task.Delay(100);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelectorAll('[data-action=select-step]')[1]?.click()");
+                    await Task.Delay(100);
+                    await web.CoreWebView2.ExecuteScriptAsync("(()=>{const depth=document.querySelector('[data-adjust=offsetZ]'); if(depth){depth.value='0.4';depth.dispatchEvent(new Event('input',{bubbles:true}));}})()");
+                    await Task.Delay(1400);
+                    File.WriteAllText(smokeBase + ".speaker-depth.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=title]')?.click()");
+                    await Task.Delay(100);
+                    await web.CoreWebView2.ExecuteScriptAsync("(()=>{const depth=document.querySelector('[data-title-adjust=offsetZ]'); if(depth){depth.value='0.5';depth.dispatchEvent(new Event('input',{bubbles:true}));}})()");
+                    await Task.Delay(1400);
+                    File.WriteAllText(smokeBase + ".title-depth.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                    await Task.Delay(1500);
+                    File.WriteAllText(smokeBase + ".shadow-saved.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                }
+                if (smokeCast)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "document.querySelector('[data-panel=story]')?.click(); document.querySelector('.cast-editor')?.setAttribute('open',''); for (const [key,value] of [['left.size','160'],['left.yaw','35']]) { const input=[...document.querySelectorAll('[data-cast-adjust]')].find(node=>node.dataset.castAdjust===key); if(input){input.value=value; input.dispatchEvent(new Event('input',{bubbles:true}));} } const motion=document.querySelector('[data-cast-motion=left]'); if(motion?.options[1]){motion.value=motion.options[1].value;motion.dispatchEvent(new Event('input',{bubbles:true}));}");
+                    await Task.Delay(2000);
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "const input=[...document.querySelectorAll('[data-cast-expression]')].find(node=>node.dataset.castExpression==='left.happy'); if(input){input.value='55';input.dispatchEvent(new Event('input',{bubbles:true}));}");
+                    await Task.Delay(500);
+                }
+                if (smokeAdvance)
+                {
+                    for (int index = 0; index < 3; index++)
+                    {
+                        await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('.stage-frame')?.click()");
+                        await Task.Delay(1300);
+                    }
+                }
+                if (smokeRootMotion)
+                {
+                    File.WriteAllText(smokeBase + ".root-before.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await Task.Delay(800);
+                    File.WriteAllText(smokeBase + ".root-after.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await Task.Delay(3200);
+                    File.WriteAllText(smokeBase + ".root-long.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                }
+                if (smokeMotionOptions)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        (() => {
+                          document.querySelector('[data-action="select-step"][data-index="1"]')?.click();
+                          const set = (selector, value) => {
+                            const node = document.querySelector(selector);
+                            if (!node) throw new Error('æ‰¾ä¸åˆ°åŠ¨ä½œæµ‹è¯•æ§ä»¶ï¼š' + selector);
+                            node.value = value;
+                            node.dispatchEvent(new Event('input', { bubbles: true }));
+                          };
+                          set('[data-field="step.motionId"]', 'preset-mixamo-020');
+                          set('[data-motion-options="step"][data-motion-setting="loop"]', 'false');
+                          set('[data-motion-options="step"][data-motion-setting="startFrame"]', '5');
+                          set('[data-motion-options="step"][data-motion-setting="endFrame"]', '15');
+                          document.querySelector('.motion-advanced').open = true;
+                        })()
+                        """);
+                    await Task.Delay(1800);
+                    File.WriteAllText(smokeBase + ".motion-hold.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        (() => {
+                          const node = document.querySelector('[data-motion-options="step"][data-motion-setting="after"]');
+                          node.value = 'idle';
+                          node.dispatchEvent(new Event('input', { bubbles: true }));
+                        })()
+                        """);
+                    await Task.Delay(1800);
+                    File.WriteAllText(smokeBase + ".motion-idle.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                    await Task.Delay(1500);
+                    File.WriteAllText(smokeBase + ".motion-saved.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                }
+                if (smokeExternalPreview && !playerMode)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=play]')?.click()");
+                    await Task.Delay(4000);
+                    File.WriteAllText(smokeBase + ".preview-result.json",
+                        await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__lastPreviewGame || null)"));
+                }
+                if (smokeCharacterPreview && !playerMode)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=characters]')?.click(); document.querySelector('[data-action=select-character][data-index=\"1\"]')?.click()");
+                    await Task.Delay(1800);
+                    File.WriteAllText(smokeBase + ".character-preview.json",
+                        await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                }
+                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters"))
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=editor-settings]').click(); const interval=document.querySelector('#editor-auto-save-minutes'); interval.value='10'; interval.dispatchEvent(new Event('input',{bubbles:true})); document.querySelector('[data-action=close-editor-settings]').click(); window.prompt=()=> 'æµ‹è¯•å‰¯æœ¬'; document.querySelector('[data-action=save-as]').click()");
+                    await Task.Delay(2600);
+                    File.WriteAllText(smokeBase + ".save-as.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("window.prompt=()=> 'æµ‹è¯•å¯¼å‡º'; document.querySelector('[data-action=export]').click()");
+                    await Task.Delay(1800);
+                    File.WriteAllText(smokeBase + ".export.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                }
+                if (smokeSaveTwice && !playerMode)
+                {
+                    SaveProject(ReadProject());
+                    SaveProject(ReadProject());
+                    File.WriteAllText(smokeBase + ".save-twice.txt", "OK");
+                }
+                if (smokeIteration)
+                {
+                    string initial = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".initial.json", initial);
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        (function () {
+                          function drag(kind, source, target) {
+                            const rows = [...document.querySelectorAll('[data-order-kind=' + kind + ']')];
+                            const dataTransfer = new DataTransfer();
+                            rows[source].dispatchEvent(new DragEvent('dragstart', {bubbles:true, dataTransfer}));
+                            const y = rows[target].getBoundingClientRect().top + 1;
+                            rows[target].dispatchEvent(new DragEvent('dragover', {bubbles:true, cancelable:true, dataTransfer, clientY:y}));
+                            rows[target].dispatchEvent(new DragEvent('drop', {bubbles:true, cancelable:true, dataTransfer, clientY:y}));
+                          }
+                          drag('step', 2, 0);
+                          drag('act', 1, 0);
+                          document.querySelector('[data-panel=assets]').click();
+                          window.prompt = (_, value) => value === 'æ–°æ–‡ä»¶å¤¹' ? 'æµ‹è¯•åˆ†ç»„' : 'æ¨¡å‹åˆ†ç»„';
+                          document.querySelector('[data-action=add-asset-folder][data-type=vrm]').click();
+                          const folder = document.querySelector('.asset-folder[data-folder-key]:not([data-folder-key="unfiled:vrm"])');
+                          folder.querySelector('[data-action=rename-asset-folder]').click();
+                          const firstAsset = document.querySelector('[data-asset-folder]');
+                          firstAsset.value = folder.dataset.folderKey;
+                          firstAsset.dispatchEvent(new Event('input', {bubbles:true}));
+                        })();
+                        """);
+                    await Task.Delay(1200);
+                    string after = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".iteration.json", after);
+                }
+                if (smokeBlend)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=play]')?.click()");
+                    await Task.Delay(9000);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('.stage-frame')?.click()");
+                    await Task.Delay(150);
+                    string middle = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".blend-mid.json", middle);
+                    await Task.Delay(550);
+                    string final = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".blend-final.json", final);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('.stage-frame')?.click()");
+                    await Task.Delay(150);
+                    string backMiddle = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".blend-back-mid.json", backMiddle);
+                    await Task.Delay(550);
+                    string backFinal = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".blend-back-final.json", backFinal);
+                }
+                if (smokeStepCast)
+                {
+                    string before = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".cast-before.json", before);
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        (function () {
+                          const slot = document.querySelector('[data-step-cast]');
+                          if (!slot) throw new Error('No dialogue position selector');
+                          slot.value = slot.value === 'right' ? 'left' : 'right';
+                          slot.dispatchEvent(new Event('input', {bubbles:true}));
+                        })();
+                        """);
+                    await Task.Delay(1500);
+                    string after = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".cast-after.json", after);
+                }
+                if (smokeNewActCast)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        (function () {
+                          document.querySelector('[data-action=add-act]').click();
+                          const slots = [...document.querySelectorAll('[data-cast-slot]')];
+                          const actors = [...document.querySelectorAll('[data-panel=characters]')];
+                          const first = slots[0].options[1]?.value;
+                          const second = slots[1].options[2]?.value;
+                          slots[0].value = first;
+                          slots[0].dispatchEvent(new Event('input', {bubbles:true}));
+                          const middle = document.querySelector('[data-cast-slot=center]');
+                          middle.value = second;
+                          middle.dispatchEvent(new Event('input', {bubbles:true}));
+                        })();
+                        """);
+                    await Task.Delay(1200);
+                    string before = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".new-act-before.json", before);
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        (function () {
+                          for (const [key, value] of [['left.size','180'], ['left.offsetX','0.5'], ['left.offsetY','0.75'], ['left.yaw','45']]) {
+                            const input = [...document.querySelectorAll('[data-cast-adjust]')].find(node => node.dataset.castAdjust === key);
+                            if (!input) throw new Error('Missing slider: ' + key);
+                            input.value = value;
+                            input.dispatchEvent(new Event('input', {bubbles:true}));
+                          }
+                          const motion = document.querySelector('[data-cast-motion=left]');
+                          if (motion?.options[1]) {
+                            motion.value = motion.options[1].value;
+                            motion.dispatchEvent(new Event('input', {bubbles:true}));
+                          }
+                          const expression = document.querySelector('[data-cast-expression="left.happy"]');
+                          if (expression) {
+                            expression.value = '60';
+                            expression.dispatchEvent(new Event('input', {bubbles:true}));
+                          }
+                        })();
+                        """);
+                    await Task.Delay(1400);
+                    string after = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".new-act-after.json", after);
+                }
+                if (smokeEmptyAct)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=select-act][data-index=\"1\"]')?.click()");
+                    await Task.Delay(2200);
+                    string before = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".empty-before.json", before);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=add-act]')?.click()");
+                    await Task.Delay(1700);
+                    string after = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".empty-after.json", after);
+                }
+                if (smokeTitle)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        (function () {
+                          document.querySelector('[data-panel=title]').click();
+                          for (const [key, index] of [['modelId',1], ['logoImageId',1], ['motionId',1]]) {
+                            const select = document.querySelector('[data-title-field=' + key + ']');
+                            if (!select?.options[index]) throw new Error('Missing title asset ' + key);
+                            select.value = select.options[index].value;
+                            select.dispatchEvent(new Event('input', {bubbles:true}));
+                          }
+                          for (const [key,value] of [['size','200'], ['offsetX','0.5'], ['offsetY','-0.85'], ['yaw','25'], ['pitch','-20'], ['cameraAngle','35']]) {
+                            const slider = document.querySelector('[data-title-adjust=' + key + ']');
+                            if (!slider) throw new Error('Missing title slider ' + key);
+                            slider.value = value;
+                            slider.dispatchEvent(new Event('input', {bubbles:true}));
+                          }
+                        })();
+                        """);
+                    await Task.Delay(2400);
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        (function () {
+                          const slider = document.querySelector('[data-title-expression=happy]');
+                          if (!slider) throw new Error('Missing title expression slider');
+                          slider.value = '65';
+                          slider.dispatchEvent(new Event('input', {bubbles:true}));
+                        })();
+                        """);
+                    await Task.Delay(250);
+                    string titleResult = await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())");
+                    File.WriteAllText(smokeBase + ".title.json", titleResult);
+                }
+                if (smokeAutoVolume)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        (function () {
+                          document.querySelector('[data-action=settings]').click();
                           for (const [key,value] of [['master','70'], ['music','40'], ['voice','55']]) {
                             const slider = document.querySelector('[data-volume=' + key + ']');
                             if (!slider) throw new Error('Missing volume slider ' + key);
@@ -78,26 +686,209 @@ NÃBˆÛÛœİš\œİ\ÜÙ]HØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KX\
                     string menus = await web.CoreWebView2.ExecuteScriptAsync("""
                         (function () {
                           const hit = window.__vrmDiagnostics().titlePlayButtonHit;
-              YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Ô€€€€€€€€€€€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÁ±…å•ÈµÍÑ…ÉĞm‘…Ñ„µ…Ñ¥½¸õÍ•ÑÑ¥¹Ítœ¤¹±¥¬ ¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€½¹ÍĞÍ•ÑÑ¥¹Ì€ô	½½±•…¸¡‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÁ±…å•Èµµ½‘…°m‘…Ñ„µÙ½±Õµ”õµ…ÍÑ•Étœ¤¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÁ±…å•Èµµ½‘…°m‘…Ñ„µ…Ñ¥½¸õ±½Í”µµ½‘…±tœ¤¹±¥¬ ¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÁ±…å•ÈµÍÑ…ÉĞm‘…Ñ„µ…Ñ¥½¸õ…±±•Éåtœ¤¹±¥¬ ¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€½¹ÍĞ…±±•Éä€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½É±° œÁ±…å•Èµµ½‘…°€¹…±±•Éäµ¥µ…”µÑ¥±”œ¤¹±•¹Ñ ì4(€€€€€€€€€€€€€€€€€€€€€€€€€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÁ±…å•Èµµ½‘…°m‘…Ñ„µ…Ñ¥½¸õ±½Í”µµ½‘…±tœ¤¹±¥¬ ¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÁ±…å•ÈµÍÑ…ÉĞm‘…Ñ„µ…Ñ¥½¸õÁ±…äµÁÉ½É•ÍÍtœ¤¹±¥¬ ¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€½¹ÍĞÁÉ½É•ÍÌ€ôİ¥¹‘½Ü¹}}ÙÉµ¥…¹½ÍÑ¥Ì ¤¹ÁÉ½É•ÍÍMÑ…ÑÌì4(€€€€€€€€€€€€€€€€€€€€€€€€€½¹ÍĞ…ÑI½İÌ€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½É±° œÁ±…å•Èµµ½‘…°€¹ÁÉ½É•ÍÌµ…ĞµÉ½Üœ¤¹±•¹Ñ ì4(€€€€€€€€€€€€€€€€€€€€€€€€€½¹ÍĞ¡…É…Ñ•ÉI½İÌ€ô‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½É±° œÁ±…å•Èµµ½‘…°€¹ÁÉ½É•ÍÌµ¡…É…Ñ•ÈµÉ½Üœ¤¹±•¹Ñ ì4(€€€€€€€€€€€€€€€€€€€€€€€€€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È œÁ±…å•Èµµ½‘…°m‘…Ñ„µ…Ñ¥½¸õ±½Í”µµ½‘…±tœ¤¹±¥¬ ¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€É•ÑÕÉ¸)M=8¹ÍÑÉ¥¹¥™ä¡í¡¥Ğ±Í•ÑÑ¥¹Ì±…±±•Éä±ÁÉ½É•ÍÌ±…ÑI½İÌ±¡…É…Ñ•ÉI½İÌ±µ•¹Õ%Ñ•µÌé‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½É±° œÁ±…å•ÈµÍÑ…ÉĞ€¹Ñ¥Ñ±”µ‰½ÑÑ½´µµ•¹Ô‰ÕÑÑ½¸œ¤¹±•¹Ñ¡ô¤ì4(€€€€€€€€€€€€€€€€€€€€€€€ô¤ ¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€ˆˆˆ¤ì4(€€€€€€€€€€€€€€€€€€€¥±”¹]É¥Ñ•±±Q•áĞ¡Íµ½­•	…Í”€¬€ˆ¹µ•¹ÕÌ¹©Í½¸ˆ°µ•¹ÕÌ¤ì4(€€€€€€€€€€€€€€€€€€€…İ…¥Ğİ•ˆ»}4ÖÚ$z{-®éÜj×6²äFVÆ’ƒ“°Ğ¢v—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚&Fö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öã×6fRÖvÖUÒr’æ6Æ–6²‚“¶Fö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öã×6fR×6Æ÷EÕ¶FFÖ–æFWƒÕÂ#%Â%Òr’æ6Æ–6²‚“¶Fö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öãÖ6Æ÷6RÖÖöFÅÒr’æ6Æ–6²‚“¶Fö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öã×7F÷×Æ•Òr’æ6Æ–6²‚’"“°Ğ¢v—BF6²äFVÆ’ƒƒ“°Ğ¢v—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚&Fö7VÖVçBçVW'•6VÆV7F÷"‚r7Æ–W"×7F'B¶FFÖ7F–öãÖvÆÆW'•Òr’æ6Æ–6²‚“¶Fö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öãÖvÆÆW'’×F%Õ¶FF×F#Ö6†&7FW'5Òr’æ6Æ–6²‚“¶Fö7VÖVçBçVW'•6VÆV7F÷"‚u¶FFÖ7F–öãÖvÆÆW'’×7F÷'•Õ¶FFÖ–æFWƒÕÂ#Â%Òr“òæ6Æ–6²‚’"“°Ğ¢f–ÆRåw&—FTÆÅFW‡B‡6Öö¶T&6R²"çVæÆö6¶VBæ§6öâ"Âv—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚$¥4ôâç7G&–æv–g’‡v–æF÷råõ÷g&ÔF–væ÷7F–72‚’’"’“°Ğ¢f–ÆRåw&—FTÆÅFW‡B‡6Öö¶T&6R²"ç6Æ÷G2æ§6öâ"Âv—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚$¥4ôâç7G&–æv–g’„¥4ôâç'6R†Æö6Å7F÷&vRævWD—FVÒ‚wg&Ò×6fR×6Æ÷G2Òr²‡v–æF÷råõ÷g&Õ&ö¦V7D–BÇÂrr’’’’"’“°Ğ¢ĞĞ¢–b‡6Öö¶TF—66÷fW'’bbÆ–W$ÖöFRĞ¢°Ğ¢v—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚&Fö7VÖVçBçVW'•6VÆV7F÷"‚r7Æ–W"×7F'B¶FFÖ7F–öãÖvÆÆW'•Òr“òæ6Æ–6²‚’"“°Ğ¢f–ÆRåw&—FTÆÅFW‡B‡6Öö¶T&6R²"ævÆÆW'’Ö&Vf÷&Ræ§6öâ"Âv—BvV"ä6÷&UvV%f–Ws"äW†V7WFU67&—D7–æ2‚$¥4ôâç7G&–æv–g’‡v–æF÷råõ÷g&ÔF–væ÷7F–72‚’’"’“°Ğ¢W6–ær‡f"–ÖvRÒf–ÆRä7&VFR‡6Öö¶T%š®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍX\ÙH
-È‹™Ø[\KX™Y›Ü™Kœ™ÈŠJCBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹Ø\\™T™]šY]Ğ\Ş[˜ÊÛÜ™UÙX•šY]ÌØ\\™T™]šY]Ò[XYÙQ›Ü›X]”™Ë[XYÙJNÃBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜Ê™Øİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ[ÛYØ[\K]X—VÙ]K]X[]\ÚX×IÊOË˜ÛXÚÊ
-HŠNÃBˆš[K•Üš]P[^
-Û[ÚÙP˜\ÙH
-È‹›]\ÚXËX™Y›Ü™KšœÛÛˆ‹]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜Ê’”ÓÓ‹œİš[™ÚYJÚ[™İË—×İœ›QXYÛ›ÜİXÜÊ
-JHŠJNÃBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜Ê™Øİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ[ÛYØ[\K]X—VÙ]K]XXÚ\˜Xİ\œ×IÊOË˜ÛXÚÊ
-NÈØİ[Y[œ]Y\TÙ[XİÜ[
-	ÖÙ]KXXİ[ÛYØ[\KXÚ\˜Xİ\—IÊVÌWOË˜ÛXÚÊ
-HŠNÃBˆš[K•Üš]P[^
-Û[ÚÙP˜\ÙH
-È‹˜Ú\˜Xİ\‹X™Y›Ü™KšœÛÛˆ‹]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜Ê’”ÓÓ‹œİš[™ÚYJÚ[™İË—×İœ›QXYÛ›ÜİXÜÊ
-JHŠJNÃBˆ\Ú[™È
-˜\ˆ[XYÙHHš[KÜ™X]JÛ[ÚÙP˜\ÙH
-È‹˜Ú\˜Xİ\‹X™Y›Ü™Kœ™ÈŠJCBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹Ø\\™T™]šY]Ğ\Ş[˜ÊÛÜ™UÙX•šY]ÌØ\\™T™]šY]Ò[XYÙQ›Ü›X]”™Ë[XYÙJNÃBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜Ê™Øİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ[ÛXÛÜÙK[[Ù[IÊOË˜ÛXÚÊ
-NÈØİ[Y[œ]Y\TÙ[XİÜŠ	ÈÜ^Y\‹\İ\Ù]KXXİ[Û\^WIÊOË˜ÛXÚÊ
-HŠNÃBˆ]ØZ]\ÚË‘[^JŒ
-NÃBˆ]ØZ]ÙX‹ÛÜ™UÙX•šY]Ì‹‘^Xİ]TØÜš\\Ş[˜Ê™Øİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ[Û\Ø]™KYØ[YWIÊOË˜ÛXÚÊ
-HŠNÃBˆš[K•Üš]P[^
-Û[ÚÙP˜\ÙH
-È‹œØ]™KX™Y›Ü™KšœÛÛˆ‹]ØZ]÷ÓMm¢G§²ÚîÆ­yÔ=new Uint8Array(arrays.reduce((n,a)=>n+a.length,0));let offset=0;for(const array of arrays){out.set(array,offset);offset+=array.length;}return out;};
+                          document.querySelector('#player-start [data-action=settings]').click();
+                          const settings = Boolean(document.querySelector('#player-modal [data-volume=master]'));
+                          document.querySelector('#player-modal [data-action=close-modal]').click();
+                          document.querySelector('#player-start [data-action=gallery]').click();
+                          const gallery = document.querySelectorAll('#player-modal .gallery-image-tile').length;
+                          document.querySelector('#player-modal [data-action=close-modal]').click();
+                          document.querySelector('#player-start [data-action=play-progress]').click();
+                          const progress = window.__vrmDiagnostics().progressStats;
+                          const actRows = document.querySelectorAll('#player-modal .progress-act-row').length;
+                          const characterRows = document.querySelectorAll('#player-modal .progress-character-row').length;
+                          document.querySelector('#player-modal [data-action=close-modal]').click();
+                          return JSON.stringify({hit,settings,gallery,progress,actRows,characterRows,menuItems:document.querySelectorAll('#player-start .title-bottom-menu button').length});
+                        })();
+                        """);
+                    File.WriteAllText(smokeBase + ".menus.json", menus);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('#player-start [data-action=play-progress]').click()");
+                    using (var image = File.Create(smokeBase + ".progress.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('#player-modal [data-action=close-modal]').click(); document.querySelector('#player-start [data-action=play]').click()");
+                    await Task.Delay(3500);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=stop-play]')?.click(); document.querySelector('#player-start [data-action=play-progress]')?.click()");
+                    File.WriteAllText(smokeBase + ".progress-after.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics().progressStats)"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('#player-modal [data-action=close-modal]').click(); document.querySelector('#player-start [data-action=play]').click()");
+                    await Task.Delay(1800);
+                    for (int index = 0; index < 6; index++)
+                    {
+                        await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('.stage-frame')?.click()");
+                        await Task.Delay(900);
+                    }
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=stop-play]')?.click(); document.querySelector('#player-start [data-action=play-progress]')?.click()");
+                    File.WriteAllText(smokeBase + ".progress-complete.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics().progressStats)"));
+                }
+                if (smokeImageImport && !playerMode)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=assets]')?.click()");
+                    File.WriteAllText(smokeBase + ".images-before.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify({included:window.__vrmDiagnostics().galleryImageCount, checks:document.querySelectorAll('[data-gallery-image]').length})"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=import][data-type=image]')?.click()");
+                    File.WriteAllText(smokeBase + ".import-choice.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify({visible:Boolean(document.querySelector('#image-import-modal')),defaultChecked:document.querySelector('#image-import-gallery')?.checked})"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=cancel-image-import]')?.click(); const check=document.querySelector('[data-gallery-image]'); if(check){check.checked=false;check.dispatchEvent(new Event('input',{bubbles:true}));}");
+                    File.WriteAllText(smokeBase + ".images-excluded.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify({included:window.__vrmDiagnostics().galleryImageCount,firstChecked:document.querySelector('[data-gallery-image]')?.checked})"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                    await Task.Delay(1600);
+                    File.WriteAllText(smokeBase + ".images-saved.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify({included:window.__vrmDiagnostics().galleryImageCount,dirty:window.__vrmDiagnostics().dirty})"));
+                }
+                if (smokeGallery && playerMode)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('#player-start [data-action=gallery]').click()");
+                    File.WriteAllText(smokeBase + ".images.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using (var image = File.Create(smokeBase + ".images.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-page][data-index=\"1\"]')?.click()");
+                    File.WriteAllText(smokeBase + ".page-two.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-page][data-index=\"0\"]')?.click()");
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-image]')?.click()");
+                    File.WriteAllText(smokeBase + ".large-image.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-image-close]')?.click();document.querySelector('[data-action=gallery-tab][data-tab=music]')?.click()");
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-track]')?.click()");
+                    await Task.Delay(800);
+                    File.WriteAllText(smokeBase + ".music.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using (var image = File.Create(smokeBase + ".music.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await Task.Delay(4400);
+                    File.WriteAllText(smokeBase + ".music-next.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-repeat]')?.click()");
+                    await Task.Delay(4400);
+                    File.WriteAllText(smokeBase + ".music-repeat.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-tab][data-tab=characters]')?.click()");
+                    await Task.Delay(2300);
+                    File.WriteAllText(smokeBase + ".characters.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-story][data-index=\"1\"]')?.click()");
+                    File.WriteAllText(smokeBase + ".story.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using (var image = File.Create(smokeBase + ".first-character.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelectorAll('[data-action=gallery-character]')[1]?.click()");
+                    await Task.Delay(2200);
+                    using (var image = File.Create(smokeBase + ".second-character.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelectorAll('[data-action=gallery-character]')[2]?.click()");
+                    await Task.Delay(2200);
+                    using (var image = File.Create(smokeBase + ".third-character.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                }
+                if (smokeGalleryProgress)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("localStorage.removeItem('vrm-save-slots-' + (window.__vrmProjectId || ''));document.querySelector('#player-start [data-action=play]').click()");
+                    await Task.Delay(4500);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save-game]').click();document.querySelector('[data-action=save-slot][data-index=\"1\"]').click();document.querySelector('[data-action=close-modal]').click()");
+                    File.WriteAllText(smokeBase + ".first-save.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('.stage-frame').click()");
+                    await Task.Delay(1100);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save-game]').click();document.querySelector('[data-action=save-slot][data-index=\"2\"]').click();document.querySelector('[data-action=close-modal]').click();document.querySelector('[data-action=stop-play]').click()");
+                    await Task.Delay(1800);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('#player-start [data-action=gallery]').click();document.querySelector('[data-action=gallery-tab][data-tab=characters]').click();document.querySelector('[data-action=gallery-story][data-index=\"1\"]')?.click()");
+                    File.WriteAllText(smokeBase + ".unlocked.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    File.WriteAllText(smokeBase + ".slots.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(JSON.parse(localStorage.getItem('vrm-save-slots-' + (window.__vrmProjectId || ''))))"));
+                }
+                if (smokeDiscovery && playerMode)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('#player-start [data-action=gallery]')?.click()");
+                    File.WriteAllText(smokeBase + ".gallery-before.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using (var image = File.Create(smokeBase + ".gallery-before.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-tab][data-tab=music]')?.click()");
+                    File.WriteAllText(smokeBase + ".music-before.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=gallery-tab][data-tab=characters]')?.click(); document.querySelectorAll('[data-action=gallery-character]')[1]?.click()");
+                    File.WriteAllText(smokeBase + ".character-before.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    using (var image = File.Create(smokeBase + ".character-before.png"))
+                        await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, image);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=close-modal]')?.click(); document.querySelector('#player-start [data-action=play]')?.click()");
+                    await Task.Delay(4200);
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save-game]')?.click()");
+                    File.WriteAllText(smokeBase + ".save-before.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__vrmSmokeAutoSave?.(); document.querySelector('[data-action=save-slot][data-index=\"0\"]')?.click(); document.querySelector('[data-action=save-slot][data-index=\"1\"]')?.click()");
+                    await Task.Delay(350);
+                    File.WriteAllText(smokeBase + ".manual-click.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    File.WriteAllText(smokeBase + ".save-after.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=close-modal]')?.click(); document.querySelector('.stage-frame')?.click()");
+                    await Task.Delay(1200);
+                    File.WriteAllText(smokeBase + ".progress-before-load.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("window.confirm = () => true; document.querySelector('[data-action=load-game]')?.click(); document.querySelector('[data-action=load-slot][data-index=\"1\"]')?.click()");
+                    await Task.Delay(1200);
+                    File.WriteAllText(smokeBase + ".progress-after-load.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=stop-play]')?.click(); document.querySelector('#player-start [data-action=gallery]')?.click()");
+                    await Task.Delay(500);
+                    File.WriteAllText(smokeBase + ".gallery-after.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                }
+            }
+            if (smokeTheme && !playerMode)
+            {
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=toggle-editor-theme]')?.click()");
+                await Task.Delay(200);
+                File.WriteAllText(smokeBase + ".theme.json", await web.CoreWebView2.ExecuteScriptAsync(
+                    "JSON.stringify({theme:document.body.dataset.editorTheme, saved:JSON.parse(localStorage.getItem('vrm-editor-settings') || '{}').theme, background:getComputedStyle(document.querySelector('.editor')).backgroundColor, spinnerDots:document.querySelectorAll('#act-loading .loading-spinner i').length, spinnerText:document.querySelector('#act-loading')?.textContent.trim()})"));
+            }
+            if (smokeGalleryLayout && playerMode)
+            {
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('#player-start [data-action=gallery]')?.click(); document.querySelector('[data-action=gallery-tab][data-tab=characters]')?.click()");
+                await Task.Delay(1800);
+                File.WriteAllText(smokeBase + ".gallery-layout.json", await web.CoreWebView2.ExecuteScriptAsync(
+                    "JSON.stringify({portraitNameCount:document.querySelectorAll('.gallery-character-portrait .gallery-character-name').length,detailName:document.querySelector('.gallery-detail-name')?.textContent,detailFont:getComputedStyle(document.querySelector('.gallery-detail-name')).fontFamily,loaded:document.fonts.check('16px \"HarmonyOS Sans SC\"'),fontCredit:document.querySelector('.font-credit')?.textContent || ''})"));
+            }
+            if (smokePortraits && !playerMode)
+            {
+                for (int attempt = 0; attempt < 45; attempt++)
+                {
+                    string ready = await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics()?.characterPortraitIds?.every(x=>!x.modelId||(x.portraitId&&x.portraitPoseKey)))");
+                    if (ready.Contains("true")) break;
+                    await Task.Delay(2000);
+                }
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                await Task.Delay(2500);
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=story]')?.click(); document.querySelector('[data-action=select-step][data-index=\"1\"]')?.click()");
+                await Task.Delay(5000);
+                File.WriteAllText(smokeBase + ".portrait-story.json", await web.CoreWebView2.ExecuteScriptAsync(
+                    "JSON.stringify(window.__vrmDiagnostics())"));
+                using var portraitStream = File.Create(smokeBase + ".portrait-story.png");
+                await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, portraitStream);
+                for (int stepIndex = 5; stepIndex <= 6; stepIndex++)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync($"document.querySelector('[data-action=select-step][data-index=\"{stepIndex}\"]')?.click()");
+                    await Task.Delay(2500);
+                    File.WriteAllText(smokeBase + $".portrait-step-{stepIndex}.json", await web.CoreWebView2.ExecuteScriptAsync(
+                        "JSON.stringify(window.__vrmDiagnostics())"));
+                }
+            }
+            if (Environment.GetCommandLineArgs().Contains("--smoke-menu-polish"))
+            {
+                ClientSize = new Size(960, 540);
+                var menuPhases = new List<string> { "audio", "settings", "gallery" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-glass")) menuPhases.AddRange(new[] { "music", "characters", "chapters", "saves", "story" });
+                if (Environment.GetCommandLineArgs().Contains("--smoke-library")) menuPhases.AddRange(new[] { "library-search", "library-editor", "library-shelf", "library-reader", "library-turn" });
+                if (Environment.GetCommandLineArgs().Contains("--smoke-weather")) menuPhases = new List<string> { "weather-editor", "weather-lifecycle", "weather-rain", "weather-snow", "weather-wind", "weather-sunny", "weather-cloudy", "weather-depth" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-events")) menuPhases = new List<string> { "events-editor", "events-news", "events-war", "events-burst", "events-major", "events-save", "events-flow" };
+                if (playerMode) menuPhases.Remove("events-editor");
+                if (Environment.GetCommandLineArgs().Contains("--smoke-history")) menuPhases = new List<string> { "history-editor" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-history-portrait")) menuPhases = new List<string> { "history-portrait" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-mouth")) menuPhases = new List<string> { playerMode ? "mouth-player" : "mouth-editor" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-protected")) menuPhases = new List<string> { "protected-editor" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-agent")) menuPhases = new List<string> { "agent-editor" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-agent-player")) menuPhases = new List<string> { "agent-player" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-voices")) menuPhases = new List<string> { playerMode ? "voices-player" : "voices-editor" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-event-media"))
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("""
+                        window.__eventVideo = null;
+                        (async () => {
+                          const canvas=document.createElement('canvas'); canvas.width=640;canvas.height=360;
+                          const context=canvas.getContext('2d'), chunks=[];
+                          const encoder=new VideoEncoder({output:chunk=>{const data=new Uint8Array(chunk.byteLength);chunk.copyTo(data);chunks.push({time:chunk.timestamp/1000,key:chunk.type==='key',data});},error:e=>{throw e;}});
+                          encoder.configure({codec:'vp8',width:640,height:360,bitrate:400000,framerate:10,hardwareAcceleration:'prefer-software'});
+                          for(let i=0;i<25;i++){
+                            context.fillStyle='#18231f';context.fillRect(0,0,640,360);context.fillStyle='#d8dfd5';context.font='30px sans-serif';context.fillText('WORLD BULLETIN / VIDEO',70,160);context.fillRect(70,205,i*16,5);
+                            const frame=new VideoFrame(canvas,{timestamp:i*100000,duration:100000});encoder.encode(frame,{keyFrame:i===0});frame.close();
+                          }
+                          await encoder.flush();encoder.close();
+                          const join=arrays=>{const out=new Uint8Array(arrays.reduce((n,a)=>n+a.length,0));let offset=0;for(const array of arrays){out.set(array,offset);offset+=array.length;}return out;};
                           const size=n=>{let width=1;while(n>=2**(7*width)-1)width++;const out=new Uint8Array(width);for(let i=width-1;i>=0;i--){out[i]=n%256;n=Math.floor(n/256);}out[0]|=1<<(8-width);return out;};
                           const tag=(id,data)=>join([Uint8Array.from(id),size(data.length),data]);
                           const number=n=>{const result=[];do{result.unshift(n%256);n=Math.floor(n/256);}while(n);return Uint8Array.from(result);};
@@ -105,26 +896,369 @@ HŠNÃBˆš[K•Üš]P[^
                           const duration=new Uint8Array(8);new DataView(duration.buffer).setFloat64(0,2500);
                           const header=group([0x1a,0x45,0xdf,0xa3],[uint([0x42,0x86],1),uint([0x42,0xf7],1),uint([0x42,0xf2],4),uint([0x42,0xf3],8),str([0x42,0x82],'webm'),uint([0x42,0x87],2),uint([0x42,0x85],2)]);
                           const info=group([0x15,0x49,0xa9,0x66],[uint([0x2a,0xd7,0xb1],1000000),tag([0x44,0x89],duration),str([0x4d,0x80],'Event media test'),str([0x57,0x41],'Event media test')]);
-                          const tracks=group([0x16,0x54,0xae,0x6b],[group([0xae],[uint([0xd7],1),uint([0x73,0xc5],1),uint([0x83],1),str([0x86],'V_VP8'),uint([0x23,0xe3,0x83],100000000),group([0xe0],[uintYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬Ô¡lÁáˆÁt°ØĞÀ¤±Õ¥¹Ğ¡lÁá‰…t°ÌØÀ¥t¥t¥t¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€½¹ÍĞ±ÕÍÑ•ÈõÉ½ÕÀ¡lÁàÅ˜°ÁàĞÌ°ÁáˆØ°ÁàÜÕt±mÕ¥¹Ğ¡lÁá”İt°À¤°¸¸¹¡Õ¹­Ì¹µ…À¡¡Õ¹¬ôùÑ…œ¡lÁá„Ít±©½¥¸¡mU¥¹ĞáÉÉ…ä¹™É½´¡lÁààÄ°¡¡Õ¹¬¹Ñ¥µ”øøà¤˜ÈÔÔ±¡Õ¹¬¹Ñ¥µ”˜ÈÔÔ±¡Õ¹¬¹­•äüÁààÀèÁt¤±¡Õ¹¬¹‘…Ñ…t¤¤¥t¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€½¹ÍĞÙ¥‘•¼õ©½¥¸¡m¡•…‘•È±U¥¹ĞáÉÉ…ä¹™É½´¡lÁàÄà°ÁàÔÌ°ÁààÀ°ÁàØÜ°Áá™™t¤±¥¹™¼±ÑÉ…­Ì±±ÕÍÑ•Ét¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€€½¹ÍĞÉ•…‘•Èõ¹•Ü¥±•I•…‘•È ¤í½¹ÍĞ‘½¹”õ¹•ÜAÉ½µ¥Í”¡É•Í½±Ù”ôùÉ•…‘•È¹½¹±½…õÉ•Í½±Ù”¤íÉ•…‘•È¹É•…‘Í…Ñ…UI0¡¹•Ü	±½ˆ¡mÙ¥‘•½t±íÑåÁ”èÙ¥‘•¼½İ•‰´ô¤¤í…İ…¥Ğ‘½¹”íİ¥¹‘½Ü¹}}•Ù•¹ÑY¥‘•¼õÉ•…‘•È¹É•ÍÕ±Ğì4(€€€€€€€€€€€€€€€€€€€€€€€ô¤ ¤¹…Ñ ¡”ôùİ¥¹‘½Ü¹}}•Ù•¹ÑY¥‘•¼ô•ÉÉ½Èèœ­”¹µ•ÍÍ…”¤ì4(€€€€€€€€€€€€€€€€€€€€€€€€ˆˆˆ¤ì4(€€€€€€€€€€€€€€€€€€€ÍÑÉ¥¹œÙ¥‘•½)Í½¸€ô€‰¹Õ±°ˆì4(€€€€€€€€€€€€€€€€€€€™½È€¡¥¹Ğ…ÑÑ•µÁĞ€ô€Àì…ÑÑ•µÁĞ€ğ€ØÀ€˜˜Ù¥‘•½)Í½¸€ôô€‰¹Õ±°ˆì…ÑÑ•µÁĞ¬¬¤4(€€€€€€€€€€€€€€€€€€€ì4(€€€€€€€€€€€€€€€€€€€€€€€…İ…¥ĞQ…Í¬¹•±…ä ÄÀÀ¤ì4(€€€€€€€€€€€€€€€€€€€€€€€Ù¥‘•½)Í½¸€ô…İ…¥Ğİ•ˆ¹½É•]•‰Y¥•ÜÈ¹á•ÕÑ•MÉ¥ÁÑÍå¹Œ ‰İ¥¹‘½Ü¹}}•Ù•¹ÑY¥‘•¼ˆ¤ì4(€€€€€€€€€€€€€€€€€€€ô4(€€€€€€€€€€€€€€€€€€€ÍÑÉ¥¹œÙ¥‘•½…Ñ„€ô)Í½¹M•É¥…±¥é•È¹•Í•É¥…±¥é”ñÍÑÉ¥¹œø¡Ù¥‘•½)Í½¸¤€üüÑ¡É½Ü¹•Üá•ÁÑ¥½¸ ‹šÖ/¢¾W¢¦ŠGšr«Rš"@ˆ¤ì4(€€€€€€€€€€€€€€€€€€€¥˜€ …Ù¥‘•½…Ñ„¹MÑ…ÉÑÍ]¥Ñ  ‰‘…Ñ„éÙ¥‘•¼½İ•‰´í‰…Í”ØĞ°ˆ¤¤Ñ¡É½Ü¹•Üá•ÁÑ¥½¸¡Ù¥‘•½…Ñ„¤ì4(€€€€€€€€€€€€€€€€€€€ÍÑÉ¥¹œÙ¥‘•½A…Ñ €ôA…Ñ ¹½µ‰¥¹”¡ÁÉ½©•Ñ¥É•Ñ½Éä€üüÑ¡É½Ü¹•Üá•ÁÑ¥½¸ ‹šÖ/¢¾W–Ş—¢/šr«š&O–ò ˆ¤°€‰…ÍÍ•ÑÌˆ°€‰•Ù•¹ÑÌˆ°€‰Ñ•ÍĞµÙ¥‘•¼¹İ•‰´ˆ¤ì4(€€€€€€€€€€€€€€€€€€€¥É•Ñ½Éä¹É•…Ñ•¥É•Ñ½Éä¡A…Ñ ¹•Ñ¥É•Ó}4ÖÚ$z{-®éÜj×â‚’óò""’ÀĞ¢'&Wf–WtvÖR"v†VâÆ–W$ÖöFRÓâv—B&Wf–WtvÖT7–æ2‡–ÆöCõ²'&ö¦V7B%Ò’ÀĞ¢&–×÷'DF–ÆöwVUfö–6R"v†VâÆ–W$ÖöFRÓâ–×÷'DF–ÆöwVUfö–6R‡–ÆöCõ²'&ö¦V7B%ÒÂ–ÆöCõ²&7D–B%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""Â–ÆöCõ²&F–ÆöwVT–B%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""’ÀĞ¢&÷&væ—¦TF–ÆöwVUfö–6W2"v†VâÆ–W$ÖöFRÓâ÷&væ—¦TF–ÆöwVUfö–6W2‡–ÆöCõ²'&ö¦V7B%Ò’ÀĞ¢&–×÷'D76WB"v†VâÆ–W$ÖöFRÓâ–×÷'D76WG2‡–ÆöCõ²'G—R%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""Â–ÆöCõ²'6–ævÆR%ÓòävWEfÇVSÆ&ööÃâ‚’óòfÇ6R’ÀĞ¢&–×÷'D76WD6‡Væ²"v†VâÆ–W$ÖöFRÓâ–×÷'D76WD6‡Væ²‡–ÆöB’ÀĞ¢'6fTvVæW&FVE÷'G&—B"v†VâÆ–W$ÖöFRÓâ6fTvVæW&FVE÷'G&—B‡–ÆöCõ²&FFW&Â%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""Â–ÆöCõ²&6†&7FW$–B%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""Â–ÆöCõ²&æÖR%ÓòävWEfÇVSÇ7G&–æsâ‚’óò.Šy.ˆ›""Â–ÆöCõ²'&Wf–÷W5&Wf—6–öâ%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""’ÀĞ¢&÷&væ—¦TvVæW&FVE÷'G&—B"v†VâÆ–W$ÖöFRÓâ÷&væ—¦TvVæW&FVE÷'G&—B‡–ÆöCõ²'F‚%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""Â–ÆöCõ²&6†&7FW$–B%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""Â–ÆöCõ²&æÖR%ÓòävWEfÇVSÇ7G&–æsâ‚’óò.Šy.ˆ›""’ÀĞ¢'&W7F÷&T†—7F÷'”76WG2"v†VâÆ–W$ÖöFRÓâ&W7F÷&T†—7F÷'”76WG2‡–ÆöCõ²'&ö¦V7B%Ò’ÀĞ¢&FVÆWFT76WB"v†VâÆ–W$ÖöFRÓâFVÆWFT76WB‡–ÆöCõ²'F‚%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""’ÀĞ¢&W‡÷'DvÖR"v†VâÆ–W$ÖöFRÓâW‡÷'DvÖR‡–ÆöCõ²&föÆFW$æÖR%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""’ÀĞ¥š®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍHœÙ]Ú[™İÔ™\ÛÛ][ÛˆˆÚ[ˆ^Y\“[ÙHOˆÙ]Ú[™İÔ™\ÛÛ][ÛŠ^[ØYÖÈ˜[YH—OË‘Ù]˜[YOİš[™ÏŠ
-HÏÈˆŠKBˆœÙ][ØÜ™Y[ˆˆÚ[ˆ^Y\“[ÙHOˆÙ][ØÜ™Y[Š^[ØYÖÈ˜[YH—OË‘Ù]˜[YO›ÛÛŠ
-HÏÈ˜[ÙJKBˆ™^]Ø[YHˆÚ[ˆ^Y\“[ÙHOˆ^]Ø[YJ
-KBˆÈOˆ›İÈ™]È^Ù\[ÛŠ¹odùbcy¤ãy/g9.#ycëùå*ŠCBˆNÃBˆÙ[™
-™]ÈÈYÚÈHYK]HJNÃBˆCBˆØ]Ú
-^Ù\[Ûˆ^
-CBˆÃBˆÙ[™
-™]ÈÈYÚÈH˜[ÙK\œ›ÜˆH^“Y\ÜØYÙHJNÃBˆCBˆ]ØZ]\ÚËÛÛ\]Y\ÚÎÃBˆCBƒBˆš]˜]HØš™Xİ^]Ø[YJ
-CBˆÃBˆ™YÚ[’[›ÚÙJ™]ÈXİ[ÛŠÛÜÙJJNÃBˆ™]\›ˆ™]ÈÈÛÜÚ[™ÈHYHNÃBˆCBƒBˆš]˜]H›ÚYÙ[™
-Øš™Xİ˜[YJHOˆÙX‹ÛÜ™UÙX•šY]Ì‹”ÜİÙX“Y\ÜØYÙP\ÒœÛÛŠœÛÛ”Ù\šX[^™\‹”Ù\šX[^™J˜[YJJNÃBƒBˆš]˜]HØš™XİÙ]›Ú™Xİ[™›Ê
-HOˆ™]ÃBˆÃBˆ[ÙHH^Y\“[ÙHÈœ^Y\ˆˆˆ™Y]Üˆ‹Bˆ\™XİÜHH›Ú™Xİ\˜Ú]™T]ÏÈ›Ú™Xİ\™XİÜKBˆ™XÙ[›Ú™XİÈH^Y\“[ÙHÈ×Hˆ™XY™XÙ[›Ú™XİÊ
-Kˆ™YY˜XÚÑÜ›İ\H^Y\“[ÙHÈˆˆˆ›İXİYZ[ÛÛœİ[Ë‘™YY˜XÚÑÜ›İ\
+                          const tracks=group([0x16,0x54,0xae,0x6b],[group([0xae],[uint([0xd7],1),uint([0x73,0xc5],1),uint([0x83],1),str([0x86],'V_VP8'),uint([0x23,0xe3,0x83],100000000),group([0xe0],[uint([0xb0],640),uint([0xba],360)])])]);
+                          const cluster=group([0x1f,0x43,0xb6,0x75],[uint([0xe7],0),...chunks.map(chunk=>tag([0xa3],join([Uint8Array.from([0x81,(chunk.time>>8)&255,chunk.time&255,chunk.key?0x80:0]),chunk.data])))]);
+                          const video=join([header,Uint8Array.from([0x18,0x53,0x80,0x67,0xff]),info,tracks,cluster]);
+                          const reader=new FileReader();const done=new Promise(resolve=>reader.onload=resolve);reader.readAsDataURL(new Blob([video],{type:'video/webm'}));await done;window.__eventVideo=reader.result;
+                        })().catch(e=>window.__eventVideo='error:'+e.message);
+                        """);
+                    string videoJson = "null";
+                    for (int attempt = 0; attempt < 60 && videoJson == "null"; attempt++)
+                    {
+                        await Task.Delay(100);
+                        videoJson = await web.CoreWebView2.ExecuteScriptAsync("window.__eventVideo");
+                    }
+                    string videoData = JsonSerializer.Deserialize<string>(videoJson) ?? throw new Exception("æµ‹è¯•è§†é¢‘æœªç”Ÿæˆ");
+                    if (!videoData.StartsWith("data:video/webm;base64,")) throw new Exception(videoData);
+                    string videoPath = Path.Combine(projectDirectory ?? throw new Exception("æµ‹è¯•å·¥ç¨‹æœªæ‰“å¼€"), "assets", "events", "test-video.webm");
+                    Directory.CreateDirectory(Path.GetDirectoryName(videoPath)!);
+                    File.WriteAllBytes(videoPath, Convert.FromBase64String(videoData.Split(',')[1]));
+                    File.Copy(videoPath, smokeBase + ".test-video.webm", true);
+                    menuPhases = new List<string> { "events-media" };
+                }
+                foreach (string phase in menuPhases)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__polishResult=null; window.__vrmSmokeMenuPolish(" + JsonSerializer.Serialize(phase) + ").then(r=>window.__polishResult=r).catch(e=>window.__polishResult={error:e.message})");
+                    string polishResult = "null";
+                    for (int attempt = 0; attempt < ((phase.StartsWith("history-") || phase.StartsWith("voices-") || phase.StartsWith("mouth-")) ? 600 : 240) && polishResult == "null"; attempt++)
+                    {
+                        await Task.Delay(100);
+                        polishResult = await web.CoreWebView2.ExecuteScriptAsync("window.__polishResult");
+                    }
+                    File.WriteAllText(smokeBase + ".menu-" + phase + ".json", polishResult);
+                    using var polishImage = File.Create(smokeBase + ".menu-" + phase + ".png");
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, polishImage);
+                    if (polishResult == "null" || polishResult.Contains("\"error\"")) throw new Exception(polishResult);
+                }
+                if (!playerMode && (Environment.GetCommandLineArgs().Contains("--smoke-library") || Environment.GetCommandLineArgs().Contains("--smoke-weather") || Environment.GetCommandLineArgs().Contains("--smoke-events") || Environment.GetCommandLineArgs().Contains("--smoke-history") || Environment.GetCommandLineArgs().Contains("--smoke-voices") || Environment.GetCommandLineArgs().Contains("--smoke-mouth") || Environment.GetCommandLineArgs().Contains("--smoke-protected")))
+                {
+                    var bookProject = ReadProject() ?? throw new Exception("PDF æµ‹è¯•å·¥ç¨‹ç¼ºå¤±");
+                    if (Environment.GetCommandLineArgs().Contains("--smoke-pdf"))
+                    {
+                        var importedBooks = JsonSerializer.SerializeToNode(ImportAssets("pdf", true))?.AsArray();
+                        foreach (var importedBook in importedBooks ?? new JsonArray()) bookProject["assets"]!.AsArray().Add(importedBook?.DeepClone());
+                        SaveProject(bookProject);
+                    }
+                    BuildGame(smokeBase + ".export", bookProject);
+                }
+            }
+            if (Environment.GetCommandLineArgs().Contains("--smoke-chapters"))
+            {
+                var chapterPhases = new List<string> { "editor", "render", "player", "replay" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-portrait-reuse")) chapterPhases.Add("portraits");
+                foreach (string phase in chapterPhases)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__chapterResult=null; window.__vrmSmokeChapters(" + JsonSerializer.Serialize(phase) + "," + (smokeAvatarFile != null ? "true" : "false") + ").then(r=>window.__chapterResult=r).catch(e=>window.__chapterResult={error:e.message})");
+                    string phaseResult = "null";
+                    for (int attempt = 0; attempt < 100 && phaseResult == "null"; attempt++)
+                    {
+                        await Task.Delay(100);
+                        phaseResult = await web.CoreWebView2.ExecuteScriptAsync("window.__chapterResult");
+                    }
+                    File.WriteAllText(smokeBase + ".chapters-" + phase + ".json", phaseResult);
+                    using var chapterImage = File.Create(smokeBase + ".chapters-" + phase + ".png");
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, chapterImage);
+                    if (phaseResult.Contains("\"error\"")) throw new Exception(phaseResult);
+                    if (phase == "editor")
+                    {
+                        var savedChapter = ReadProject()?["acts"]?[0];
+                        if (savedChapter?["render"]?["brightness"]?.GetValue<int>() != 135) throw new Exception("Chapter settings not saved");
+                        if (smokeFileOpsParent != null) ExportGame("ç« èŠ‚åŠŸèƒ½éªŒè¯æ¸¸æˆ");
+                    }
+                }
+            }
+            if (Environment.GetCommandLineArgs().Contains("--smoke-agent"))
+                for(int n=0;n<120 && !File.Exists(smokeBase+".agent-done");n++) await Task.Delay(500);
+            string result = await web.CoreWebView2.ExecuteScriptAsync(
+                "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})");
+            File.WriteAllText(smokeBase + ".json", result);
+            if (projectArchivePath != null && projectDirectory != null)
+            {
+                string? firstAsset = ReadProject()?["assets"]?.AsArray().FirstOrDefault()?["path"]?.GetValue<string>();
+                string? firstPath = firstAsset == null ? null : Path.Combine(projectDirectory, firstAsset.Replace('/', Path.DirectorySeparatorChar));
+                string url = firstAsset == null ? "" : "https://project.galgame/" + string.Join('/', firstAsset.Split('/').Select(Uri.EscapeDataString));
+                await web.CoreWebView2.ExecuteScriptAsync(
+                    "fetch(" + JsonSerializer.Serialize(url) + ").then(r=>window.__testFetch=JSON.stringify({status:r.status,url:r.url})).catch(e=>window.__testFetch=String(e))");
+                await Task.Delay(500);
+                string browserFetch = await web.CoreWebView2.ExecuteScriptAsync("window.__testFetch || 'pending'");
+                File.WriteAllText(smokeBase + ".archive-debug.txt",
+                    $"workspace={projectDirectory}\nasset={firstPath}\nexists={File.Exists(firstPath)}\nfetch={browserFetch}");
+            }
+            using var stream = File.Create(smokeBase + ".png");
+            await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, stream);
+            if (smokeSaveSlots)
+                await web.CoreWebView2.ExecuteScriptAsync(
+                    "localStorage.removeItem('vrm-save-slots-' + (window.__vrmProjectId || ''))");
+        }
+        catch (Exception ex)
+        {
+            File.WriteAllText(smokeBase + ".error.txt", ex.ToString());
+        }
+        finally { Close(); }
+    }
 
-KˆYÙ[H^Y\“[ÙHÈ[ˆÙ]YÙ[ÛÛ›™Xİ[ÛŠ
-Kˆ›Ú™XİH™XY›Ú™Xİ
+    private void MapProject()
+    {
+        if (projectDirectory == null) return;
+        web.CoreWebView2.SetVirtualHostNameToFolderMapping(
+            ProjectHost, projectDirectory, CoreWebView2HostResourceAccessKind.Allow);
+    }
 
-KBˆÚ[™İÔ™\ÛÛ][ÛˆH	İÚ[™İÙYÛY[Ú^™K•ÚY^İÚ[™İÙYÛY[Ú^™K’ZYÚH‹Bˆ]˜Z[X›T™\ÛÛ][ÛœÈHÙ]]˜Z[X›T™\ÛÛ][ÛœÊ
-K”Ù[Xİ
-Ú^™HOˆ	ÜÚ^™K•ÚY^ÜÚ^™K’ZYÚHŠK•Ğ\œ˜^J
-KBˆ[ØÜ™Y[ƒBˆNÃBƒBˆš]˜]Hİ]XÈÚ^™V×H÷ÓMm¢G§²ÚîÆ­yÒ.LocalApplicationData),
+    private async void OnWebMessage(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
+    {
+        if (!e.Source.StartsWith($"https://{AppHost}/", StringComparison.OrdinalIgnoreCase)) return;
+        string id = "";
+        try
+        {
+            JsonNode message = JsonNode.Parse(e.WebMessageAsJson) ?? throw new Exception("æ¶ˆæ¯ä¸ºç©º");
+            id = message["id"]?.GetValue<string>() ?? "";
+            string action = message["action"]?.GetValue<string>() ?? "";
+            JsonNode? payload = message["payload"];
+            object? data = action switch
+            {
+                "init" => GetProjectInfo(),
+                "setAgentEnabled" when !playerMode => SetAgentEnabled(payload?["enabled"]?.GetValue<bool>() ?? false),
+                "agentReply" when !playerMode => ReceiveAgentReply(payload),
+                "pickStoryDocuments" when !playerMode => PickStoryDocuments(),
+                "pickDraftPlan" when !playerMode => PickDraftPlan(),
+                "pickDraftAssets" when !playerMode => PickDraftAssets(),
+                "agentReadDocument" when !playerMode => ReadStoryDocument(payload?["path"]?.GetValue<string>() ?? ""),
+                "agentImportAssets" when !playerMode => ImportDraftAssets(payload?["paths"]?.AsArray().Select(p=>p?.GetValue<string>() ?? "").ToArray() ?? []),
+                "agentExportGame" when !playerMode => ExportAgentGame(payload),
+                "newProject" when !playerMode => NewProject(payload?["name"]?.GetValue<string>() ?? "æ–°æ¸¸æˆ"),
+                "openProject" when !playerMode => OpenProject(),
+                "openRecentProject" when !playerMode => OpenRecentProject(payload?["path"]?.GetValue<string>() ?? ""),
+                "importFolderProject" when !playerMode => ImportFolderProject(),
+                "saveProject" when !playerMode => SaveProject(payload?["project"], payload?["obsoletePortraitPaths"]?.AsArray().Select(node => node?.GetValue<string>() ?? "")),
+                "saveProjectAs" when !playerMode => SaveProjectAs(payload?["project"], payload?["name"]?.GetValue<string>() ?? ""),
+                "previewGame" when !playerMode => await PreviewGameAsync(payload?["project"]),
+                "importDialogueVoice" when !playerMode => ImportDialogueVoice(payload?["project"], payload?["actId"]?.GetValue<string>() ?? "", payload?["dialogueId"]?.GetValue<string>() ?? ""),
+                "organizeDialogueVoices" when !playerMode => OrganizeDialogueVoices(payload?["project"]),
+                "importAsset" when !playerMode => ImportAssets(payload?["type"]?.GetValue<string>() ?? "", payload?["single"]?.GetValue<bool>() ?? false),
+                "importAssetChunk" when !playerMode => ImportAssetChunk(payload),
+                "saveGeneratedPortrait" when !playerMode => SaveGeneratedPortrait(payload?["dataUrl"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "è§’è‰²", payload?["previousRevision"]?.GetValue<string>() ?? ""),
+                "organizeGeneratedPortrait" when !playerMode => OrganizeGeneratedPortrait(payload?["path"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "è§’è‰²"),
+                "restoreHistoryAssets" when !playerMode => RestoreHistoryAssets(payload?["project"]),
+                "deleteAsset" when !playerMode => DeleteAsset(payload?["path"]?.GetValue<string>() ?? ""),
+                "exportGame" when !playerMode => ExportGame(payload?["folderName"]?.GetValue<string>() ?? ""),
+                "setWindowResolution" when playerMode => SetWindowResolution(payload?["value"]?.GetValue<string>() ?? ""),
+                "setFullscreen" when playerMode => SetFullscreen(payload?["value"]?.GetValue<bool>() ?? false),
+                "exitGame" when playerMode => ExitGame(),
+                _ => throw new Exception("å½“å‰æ“ä½œä¸å¯ç”¨")
+            };
+            Send(new { id, ok = true, data });
+        }
+        catch (Exception ex)
+        {
+            Send(new { id, ok = false, error = ex.Message });
+        }
+        await Task.CompletedTask;
+    }
+
+    private object ExitGame()
+    {
+        BeginInvoke(new Action(Close));
+        return new { closing = true };
+    }
+
+    private void Send(object value) => web.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(value));
+
+    private object GetProjectInfo() => new
+    {
+        mode = playerMode ? "player" : "editor",
+        directory = projectArchivePath ?? projectDirectory,
+        recentProjects = playerMode ? [] : ReadRecentProjects(),
+        feedbackGroup = playerMode ? "" : ProtectedBuildConstants.FeedbackGroup(),
+        agent = playerMode ? null : GetAgentConnection(),
+        project = ReadProject(),
+        windowResolution = $"{windowedClientSize.Width}x{windowedClientSize.Height}",
+        availableResolutions = GetAvailableResolutions().Select(size => $"{size.Width}x{size.Height}").ToArray(),
+        fullscreen
+    };
+
+    private static Size[] GetAvailableResolutions()
+    {
+        Rectangle area = Screen.PrimaryScreen?.WorkingArea ?? new Rectangle(0, 0, 1280, 720);
+        return PlayerResolutions.Where(size => size.Width + 24 <= area.Width && size.Height + 62 <= area.Height).ToArray();
+    }
+
+    private object SetWindowResolution(string value)
+    {
+        if (fullscreen) throw new Exception("è¯·å…ˆé€€å‡ºå…¨å±ï¼Œå†è°ƒæ•´çª—å£å¤§å°ã€‚");
+        Size requested = GetAvailableResolutions()
+            .FirstOrDefault(size => $"{size.Width}x{size.Height}" == value);
+        if (requested == Size.Empty) throw new Exception("è¿™ä¸ªçª—å£å¤§å°ä¸é€‚åˆå½“å‰å±å¹•ï¼Œè¯·é€‰åˆ—è¡¨é‡Œçš„å¤§å°ã€‚");
+        windowedClientSize = requested;
+        ClientSize = windowedClientSize;
+        CenterToScreen();
+        return new { windowResolution = value, fullscreen };
+    }
+
+    private object SetFullscreen(bool value)
+    {
+        if (fullscreen == value) return new { windowResolution = $"{windowedClientSize.Width}x{windowedClientSize.Height}", fullscreen };
+        if (value)
+        {
+            windowedClientSize = ClientSize;
+            FormBorderStyle = FormBorderStyle.None;
+            WindowState = FormWindowState.Maximized;
+        }
+        else
+        {
+            WindowState = FormWindowState.Normal;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            ClientSize = windowedClientSize;
+            CenterToScreen();
+        }
+        fullscreen = value;
+        return new { windowResolution = $"{windowedClientSize.Width}x{windowedClientSize.Height}", fullscreen };
+    }
+
+    private JsonNode? ReadProject()
+    {
+        if (projectDirectory == null) return null;
+        string file = Path.Combine(projectDirectory, "project.json");
+        return File.Exists(file) ? JsonNode.Parse(File.ReadAllText(file)) : null;
+    }
+
+    private object? NewProject(string requestedName)
+    {
+        string name = SafeName(requestedName);
+        string? archive = ChooseArchiveDestination(name, "é€‰æ‹©æ–°å·¥ç¨‹åŒ…çš„ä¿å­˜ä½ç½®");
+        if (archive == null) return null;
+        ValidatePresetMotions();
+        string directory = CreateWorkspace();
+        Directory.CreateDirectory(Path.Combine(directory, "assets"));
+        var presetAssets = CopyPresetMotions(directory);
+        CleanupTemporaryProject();
+        temporaryProjectDirectory = directory;
+        projectDirectory = directory;
+        projectArchivePath = archive;
+        RememberProject(archive);
+        MapProject();
+        return new { directory = archive, presetAssets };
+    }
+
+    private string? ChooseArchiveDestination(string name, string title)
+    {
+        if (smokeArchiveParent != null)
+        {
+            Directory.CreateDirectory(smokeArchiveParent);
+            string testPath = Path.Combine(smokeArchiveParent, name + ".vrmg");
+            if (File.Exists(testPath)) throw new Exception("åŒåå·¥ç¨‹åŒ…å·²å­˜åœ¨ï¼Œè¯·æ¢ä¸€ä¸ªåå­—ã€‚");
+            return testPath;
+        }
+        using var dialog = new SaveFileDialog
+        {
+            Title = title, Filter = "VRM Galgame å·¥ç¨‹åŒ… (*.vrmg)|*.vrmg",
+            DefaultExt = "vrmg", AddExtension = true, FileName = name + ".vrmg",
+            OverwritePrompt = false
+        };
+        if (dialog.ShowDialog(this) != DialogResult.OK) return null;
+        string path = Path.GetFullPath(dialog.FileName);
+        if (File.Exists(path)) throw new Exception("åŒåå·¥ç¨‹åŒ…å·²å­˜åœ¨ï¼Œè¯·æ¢ä¸€ä¸ªåå­—æˆ–ä¿å­˜ä½ç½®ã€‚");
+        return path;
+    }
+
+    private static string CreateWorkspace()
+    {
+        string path = Path.Combine(Path.GetTempPath(),
+            "VRMGalgame", "Workspaces", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(path);
+        return path;
+    }
+
+    private void CleanupTemporaryProject()
+    {
+        string? old = temporaryProjectDirectory;
+        temporaryProjectDirectory = null;
+        loadedArchiveBytes = null;
+        if (old == null) return;
+        try { Directory.Delete(old, recursive: true); }
+        catch { /* A still-loading model may hold a file briefly; stale workspaces can be removed later. */ }
+    }
+
+    private void LoadArchive(string path)
+    {
+        path = Path.GetFullPath(path);
+        if (!File.Exists(path) || !new[] { ".vrmg", ".zip" }.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase))
+            throw new Exception("è¯·é€‰æ‹© .vrmg å·¥ç¨‹åŒ…ï¼›æ—§ç‰ˆæ–‡ä»¶å¤¹è¯·ç”¨â€œå¯¼å…¥æ—§å·¥ç¨‹â€ã€‚");
+        string workspace = CreateWorkspace();
+        byte[]? archiveBytes = null;
+        try
+        {
+            // Common-size projects are read into memory first, so the original package is never kept open.
+            using (Stream stream = new FileInfo(path).Length <= 512L * 1024 * 1024
+                ? new MemoryStream(archiveBytes = File.ReadAllBytes(path), writable: false)
+                : File.OpenRead(path))
+            using (var archive = new ProtectedZipFile(stream) { Password = ProtectedBuildConstants.ArchivePassword() })
+            {
+                var entries = archive.Cast<ZipEntry>().ToArray();
+                if (entries.Length > 20000 || entries.Any(entry => entry.Size < 0) || entries.Sum(entry => entry.Size) > 30L * 1024 * 1024 * 1024)
+                    throw new Exception("å·¥ç¨‹åŒ…å†…å®¹è¿‡å¤§æˆ–æ–‡ä»¶æ•°é‡è¿‡å¤šã€‚");
+                if (!entries.Any(entry => entry.IsFile && entry.Name == "project.json"))
+                    throw new Exception("å·¥ç¨‹åŒ…ä¸­æ‰¾ä¸åˆ° project.jsonã€‚");
+                string root = Path.GetFullPath(workspace) + Path.DirectorySeparatorChar;
+                var extracted = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var entry in entries)
+                {
+                    string relative = entry.Name.Replace('\\','/');
+                    string target = Path.GetFullPath(Path.Combine(workspace,relative.Replace('/',Path.DirectorySeparatorChar)));
+                    if (!target.StartsWith(root,StringComparison.OrdinalIgnoreCase) || !extracted.Add(target))
+                        throw new Exception("å·¥ç¨‹åŒ…æ–‡ä»¶è·¯å¾„æ— æ•ˆæˆ–é‡å¤ã€‚");
+                    if (!entry.IsFile) { Directory.CreateDirectory(target); continue; }
+                    Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                    using var input = archive.GetInputStream(entry);
+                    using var output = File.Create(target);
+                    input.CopyTo(output);
+                    if (output.Length != entry.Size) throw new Exception("å·¥ç¨‹åŒ…æ–‡ä»¶é•¿åº¦æ— æ•ˆã€‚");
+                }
+            }
+            JsonNode? project = JsonNode.Parse(File.ReadAllText(Path.Combine(workspace, "project.json")));
+            if (project is not JsonObject) throw new Exception("å·¥ç¨‹å†…å®¹æ— æ•ˆã€‚");
+        }
+        catch
+        {
+            try { Directory.Delete(workspace, recursive: true); } catch { }
+            throw;
+        }
+        CleanupTemporaryProject();
+        temporaryProjectDirectory = workspace;
+        projectDirectory = workspace;
+        projectArchivePath = path;
+        loadedArchiveBytes = archiveBytes;
+    }
+
+    private void RefreshArchiveMemory()
+    {
+        loadedArchiveBytes = projectArchivePath != null && new FileInfo(projectArchivePath).Length <= 512L * 1024 * 1024
+            ? File.ReadAllBytes(projectArchivePath) : null;
+    }
+
+    private static void WriteArchive(string directory, string path)
+    {
+        string temp = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            var activeAssets = ProjectAssetPaths(directory);
+            using (var archive = new ZipOutputStream(File.Create(temp)) { Password = ProtectedBuildConstants.ArchivePassword(), UseZip64 = UseZip64.Dynamic })
+            {
+                archive.SetLevel(1);
+                foreach (string file in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))
+                {
+                    if (file.EndsWith(".bak", StringComparison.OrdinalIgnoreCase) || file.EndsWith(".tmp", StringComparison.OrdinalIgnoreCase)) continue;
+                    string relative = Path.GetRelativePath(directory, file).Replace('\\', '/');
+                    if (IncludeProjectFile(relative, activeAssets)) {
+                        var entry = new ZipEntry(relative) { AESKeySize = 256, IsUnicodeText = true, Size = new FileInfo(file).Length, DateTime = File.GetLastWriteTime(file) };
+                        archive.PutNextEntry(entry);
+                        using (var input = File.OpenRead(file)) input.CopyTo(archive);
+                        archive.CloseEntry();
+                    }
+                }
+            }
+            if (File.Exists(path))
+            {
+                string backupRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "VRMGalgame", "Backups");
                 Directory.CreateDirectory(backupRoot);
                 string key = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Path.GetFullPath(path))));
@@ -152,33 +1286,396 @@ KBˆ[ØÜ™Y[ƒBˆNÃBƒBˆš]˜]Hİ]XÈÚ^™V×H÷ÓMm¢G§²ÚîÆ­yÒ.Loca
             ?? throw new Exception("é¢„åˆ¶åŠ¨ä½œæ¸…å•æ— æ•ˆã€‚");
         string destination = Path.Combine(directory, "assets", "motion", "é¢„åˆ¶åŠ¨ä½œ");
         Directory.CreateDirectory(destination);
-        var aYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíãM5N‹Z–‹­¦ëeŠw¬ÕÍÍ•ÑÌ€ô¹•Ü1¥ÍĞñ½‰©•Ğø ¤ì4(€€€€€€€™½É•… €¡)Í½¹9½‘”ü•¹ÑÉä¥¸µ…¹¥™•ÍĞ¤4(€€€€€€€ì4(€€€€€€€€€€€ÍÑÉ¥¹œ™¥±•¹…µ”€ô•¹ÑÉäıl‰™¥±”‰tü¹•ÑY…±Õ”ñÍÑÉ¥¹œø ¤€üü€ˆˆì4(€€€€€€€€€€€ÍÑÉ¥¹œ¥€ô•¹ÑÉäıl‰¥‰tü¹•ÑY…±Õ”ñÍÑÉ¥¹œø ¤€üü€ˆˆì4(€€€€€€€€€€€ÍÑÉ¥¹œ¹…µ”€ô•¹ÑÉäıl‰¹…µ”‰tü¹•ÑY…±Õ”ñÍÑÉ¥¹œø ¤€üü€ˆˆì4(€€€€€€€€€€€¥˜€¡™¥±•¹…µ”€„ôA…Ñ ¹•Ñ¥±•9…µ”¡™¥±•¹…µ”¤ñğ€…™¥±•¹…µ”¹¹‘Í]¥Ñ  ˆ¹™‰àˆ°MÑÉ¥¹½µÁ…É¥Í½¸¹=É‘¥¹…±%¹½É•…Í”¤4(€€€€€€€€€€€€€€€ñğÍÑÉ¥¹œ¹%Í9Õ±±=É]¡¥Ñ•MÁ…”¡¥¤ñğÍÑÉ¥¹œ¹%Í9Õ±±=É]¡¥Ñ•MÁ…”¡¹…µ”¤¤4(€€€€€€€€€€€€€€€Ñ¡É½Ü¹•Üá•ÁÑ¥½¸ ‹¦Š–"Û–*£’ösšâ–6W¦3šr'š^ƒšV#šZ’îÛ–B7ˆ¤ì4(€€€€€€€€€€€ÍÑÉ¥¹œÍ½ÕÉ”€ôA…Ñ ¹½µ‰¥¹”¡Í½ÕÉ•¥É•Ñ½Éä°™¥±•¹…µ”¤ì4(€€€€€€€€€€€¥˜€ …¥±”¹á¥ÍÑÌ¡Í½ÕÉ”¤¤Ñ¡É½Ü¹•Üá•ÁÑ¥½¸ ‹–º'¢–2òë–ÂG–*£’ös¾òií™¥±•¹…µ•ôˆ¤ì4(€€€€€€€€€€€¥±”¹½Áä¡Í½ÕÉ”°A…Ñ ¹½µ‰¥¹”¡‘•ÍÑ¥¹…Ñ¥½¸°™¥±•¹…µ”¤¤ì4(€€€€€€€€€€€…ÍÍ•ÑÌ¹‘¡¹•Üì¥°¹…µ”°Á…Ñ €ô€‰…ÍÍ•ÑÌ½µ½Ñ¥½¸¿¦Š–"Û–*£’öp½í™¥±•¹…µ•ôˆ°ÑåÁ”€ô€‰µ½Ñ¥½¸ˆ°™½±‘•É%€ô€‰ÁÉ•Í•Ğµµ½Ñ¥½¸µ™½±‘•Èˆô¤ì4(€€€€€€€ô4(€€€€€€€É•ÑÕÉ¸…ÍÍ•ÑÌì4(€€€ô4(4(€€€ÁÉ¥Ù…Ñ”Ù½¥Y…±¥‘…Ñ•AÉ•Í•Ñ5½Ñ¥½¹Ì ¤4(€€€ì4(€€€€€€€ÍÑÉ¥¹œÍ½ÕÉ•¥É•Ñ½Éä€ôA…Ñ ¹½µ‰¥¹”¡…ÁÁ¥É•Ñ½Éä°€‰ÁÉ•Í•Ğµµ½Ñ¥½¹Ìˆ¤ì4(€€€€€€€ÍÑÉ¥¹œµ…¹¥™•ÍÑA…Ñ €ôA…Ñ ¹½µ‰¥¹”¡Í½ÕÉ•¥É•Ñ½Éä°€‰µ…¹¥™•ÍĞ¹©Í½¸ˆ¤ì4(€€€€€€€¥˜€ …¥±”¹á¥ÍÑÌ¡µ…¹¥™•ÍÑA…Ñ ¤¤Ñ¡É½Ü¹•Üá•ÁÑ¥½¸ ‹–º'¢–2òë–ÂG¦Š–"Û–*£’ös¾ò3¢¾ß¦7šZÃ¢–:/–º3šVÓšZ’îÛ–’çˆ¤ì4(€€€€€€€Ù…Èµ…¹¥™•ÍĞ€ô)Í½¹9½‘”¹A…ÉÍ”¡¥±”¹I•…‘±±Q•áĞ¡µ…¹¥™•ÍÑA…Ñ ¤¤ü¹ÍÉÉ…ä ¤4(€€€€€€€€€€€€üüÑ¡É½Ü¹•Üá•ÁÑ¥½¸ ‹¦Š–"Û–*£’ösšâ–6Wš^ƒšV#ˆ¤ì4(ƒ}4ÖÚ$z{-®éÜj×Ê8""“°Ğ¢7G&–ær6†&7FW$–BÒÆ–æU²&6†&7FW$–B%ÓòävWEfÇVSÇ7G&–æsâ‚’óò"#°Ğ¢f"6†&7FW"Ò&ö¦V7E²&6†&7FW'2%Óòä4'&’‚’äf—'7D÷$FVfVÇB†—FVÒÓâ—FVÓõ²&–B%ÓòävWEfÇVSÇ7G&–æsâ‚’ÓÒ6†&7FW$–B“°Ğ¢–b‡7G&–ærä—4çVÆÄ÷%v†—FU76R†6†&7FW$–B’ÇÂ6†&7FW"ÓÒçVÆÂ’F‡&÷ræWrW†6WF–öâ‚.Šû~XX˜hº‹ùXú^Zûy›Şy¨NŠy.ˆ›.8""“°Ğ¢7G&–ærFW‡BÒÆ–æU²'FW‡B%ÓòävWEfÇVSÇ7G&–æsâ‚’óò"#°Ğ¢–b‡7G&–ærä—4çVÆÄ÷%v†—FU76R‡FW‡B’’F‡&÷ræWrW†6WF–öâ‚.Šû~XXZ¾XiZûy›ŞXh^ZëûÈÎXhŞKˆ®KÊ˜XŞ™û>8""“°Ğ¢7G&–ær6÷W&6S°Ğ¢7G&–æuµÒ&w2ÒVçf—&öæÖVçBävWD6öÖÖæDÆ–æT&w2‚“²–çBFW7D–æFW‚Ò'&’ä–æFW„öb†&w2Â"Ò×6Öö¶R×fö–6RÖf–ÆR"“°Ğ¢–b‡6Öö¶T&6RÒçVÆÂbbFW7D–æFW‚ãÒbbFW7D–æFW‚²Â&w2äÆVæwF‚’6÷W&6RÒF‚ävWDgVÆÅF‚†&w5·FW7D–æFW‚²Ò“°Ğ¢VÇ6PĞ¢°Ğ¢W6–ærf"F–ÆörÒæWr÷Väf–ÆTF–Æör²F—FÆRÒ.K‹®‹ùXú^Zûy›ŞKˆ®KÊ˜XŞ™û2"Âf–ÇFW"Ò.˜XŞ™û>ih~K»gÂ¢æ×3²¢çvc²¢æövr"Â×VÇF—6VÆV7BÒfÇ6RÓ°Ğ¢–b†F–Æörå6†÷tF–Æör‡F†—2’ÒF–Æöu&W7VÇBäô²’&WGW&âçVÆÃ°Ğ¢6÷W&6RÒF–Æöräf–ÆTæÖS°Ğ¢ĞĞ¢7G&–ærW‡FVç6–öâÒF‚ävWDW‡FVç6–öâ‡6÷W&6R’åFôÆ÷vW$–çf&–çB‚“°Ğ¢–b‚æWuµÒ²"æ×2"Â"çvb"Â"æövr"Òä6öçF–ç2†W‡FVç6–öâ’’F‡&÷ræWrW†6WF–öâ‚.˜XŞ™û>Xú®iJşhÈÕ>8tn8ôt~8""“°Ğ¢7G&–ær–BÒwV–BäæWtwV–B‚’åFõ7G&–ær‚$â"“°Ğ¢7G&–ær&VÆF—fRÒB&76WG2÷fö–6R÷µfö–6T6†&7FW$¶W’†6†&7FW$–B—Ò÷¶–G×¶W‡FVç6–öçÒ#°Ğ¢7G&–ærF&vWBÒF‚ä6öÖ&–æR‡&ö¦V7DEš®x§‚ÚîÆ­yÚ.¶›­¢¸ Šv¥¶‰Ê.Ş4ÓTèµ©hºÚn¶X§zÍZ\™XİÜK™[]]™K”™\XÙJ	ËÉË]‘\™XİÜTÙ\\˜]ÜÚ\ŠJNÃBˆ\™XİÜKÜ™X]Q\™XİÜJ]‘Ù]\™XİÜS˜[YJ\™Ù]
-HJNÈš[KÛÜJÛİ\˜ÙK\™Ù]
-NÃBˆ™]\›ˆ™]ÈÈY\HH›ÚXÙH‹˜[YHH^ÜšYÚ[˜[˜[YHH]‘Ù]š[S˜[YJÛİ\˜ÙJK]H™[]]™KBˆÚ\˜Xİ\’YX[ÙİYRY›Û\’YH˜Ú\˜Xİ\‹]›ÚXÙKHˆ
-ÈÚ\˜Xİ\’YØ[\S]\ÚXÈH˜[ÙHNÃBˆCBƒBˆš]˜]HØš™XİÜ™Ø[š^™QX[ÙİYU›ÚXÙ\ÊœÛÛ“›ÙOÈ›Ú™Xİ
-CBˆÃBˆYˆ
-›Ú™Xİ\™XİÜHOH[›Ú™Xİ\È›İœÛÛ“Øš™Xİ
-H›İÈ™]È^Ù\[ÛŠº+íùab9¢dùo 9méyê"øà ˆŠNÃBˆİš[™È›ÛİH]‘Ù][]
-]ÛÛXš[™J›Ú™Xİ\™XİÜK˜\ÜÙ]ÈŠJH
-È]‘\™XİÜTÙ\\˜]ÜÚ\ÃBˆ˜\ˆ\]\ÈH™]È\İØš™XİŠ
-NÈ˜\ˆØ\›š[™ÜÈH™]È\İİš[™ÏŠ
-NÃBˆ›Ü™XXÚ
-˜\ˆ][H[ˆ›Ú™XİÈ˜\ÜÙ]È—OË\Ğ\œ˜^J
-HÏÈ™]ÈœÛÛ\œ˜^J
-JCBˆÃBˆYˆ
-][OÖÈ\H—OË‘Ù]˜[YOİš[™ÏŠ
-HOH›ÚXÙHŠHÛÛ[YNÃBˆİš[™ÈYH][VÈšY—OË‘Ù]˜[YOİš[™ÏŠ
-HÏÈˆ‹Ú\˜Xİ\’YH][VÈ˜Ú\˜Xİ\’Y—OË‘Ù]˜[YOİš[™ÏŠ
-HÏÈˆÃBˆYˆ
-İš[™Ë’\Ó[Ü•Ú]TÜXÙJY
-Hİš[™Ë’\Ó[Ü•Ú]TÜXÙJÚ\˜Xİ\’Y
-JH›İÈ™]È^Ù\[ÛŠºaczgìùï.¹l$y¢`9lgº)äº"l¸à ˆŠNÃBˆİš[™È›Û\’YH˜Ú\˜Xİ\‹]›ÚXÙKHˆ
-ÈÚ\˜Xİ\’YÃBˆ˜\ˆ›Û\ˆH›Ú™XİÈ˜\ÜÙ]›Û\œÈ—OË\Ğ\œ˜^J
-K‘š\œİÜ‘Y˜][
-›Û\ˆOˆ›Û\ÖÈšY—OË‘Ù]˜[YOİš[™ÏŠ
-HOH›Û\’Y	‰ˆ›Û\ÖÈ\H—OË‘Ù]˜[YOİš[™ÏŠ
-HOH›ÚXÙHŠNÃBˆYˆ
-›Û\ˆOH[][VÈ™›Û\’Y—OË‘Ù]˜[YwÓMm¢G§²ÚîÆ­yĞout _))
+        var assets = new List<object>();
+        foreach (JsonNode? entry in manifest)
+        {
+            string filename = entry?["file"]?.GetValue<string>() ?? "";
+            string id = entry?["id"]?.GetValue<string>() ?? "";
+            string name = entry?["name"]?.GetValue<string>() ?? "";
+            if (filename != Path.GetFileName(filename) || !filename.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase)
+                || string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(name))
+                throw new Exception("é¢„åˆ¶åŠ¨ä½œæ¸…å•é‡Œæœ‰æ— æ•ˆæ–‡ä»¶åã€‚");
+            string source = Path.Combine(sourceDirectory, filename);
+            if (!File.Exists(source)) throw new Exception($"å®‰è£…åŒ…ç¼ºå°‘åŠ¨ä½œï¼š{filename}");
+            File.Copy(source, Path.Combine(destination, filename));
+            assets.Add(new { id, name, path = $"assets/motion/é¢„åˆ¶åŠ¨ä½œ/{filename}", type = "motion", folderId = "preset-motion-folder" });
+        }
+        return assets;
+    }
+
+    private void ValidatePresetMotions()
+    {
+        string sourceDirectory = Path.Combine(appDirectory, "preset-motions");
+        string manifestPath = Path.Combine(sourceDirectory, "manifest.json");
+        if (!File.Exists(manifestPath)) throw new Exception("å®‰è£…åŒ…ç¼ºå°‘é¢„åˆ¶åŠ¨ä½œï¼Œè¯·é‡æ–°è§£å‹å®Œæ•´æ–‡ä»¶å¤¹ã€‚");
+        var manifest = JsonNode.Parse(File.ReadAllText(manifestPath))?.AsArray()
+            ?? throw new Exception("é¢„åˆ¶åŠ¨ä½œæ¸…å•æ— æ•ˆã€‚");
+        foreach (JsonNode? entry in manifest)
+        {
+            string filename = entry?["file"]?.GetValue<string>() ?? "";
+            if (filename != Path.GetFileName(filename) || !filename.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase)
+                || !File.Exists(Path.Combine(sourceDirectory, filename)))
+                throw new Exception($"å®‰è£…åŒ…ç¼ºå°‘é¢„åˆ¶åŠ¨ä½œï¼š{filename}");
+        }
+    }
+
+    private object DeleteAsset(string relative)
+    {
+        if (projectDirectory == null) throw new Exception("è¯·å…ˆæ‰“å¼€å·¥ç¨‹ã€‚");
+        string root = Path.GetFullPath(Path.Combine(projectDirectory, "assets")) + Path.DirectorySeparatorChar;
+        string target = Path.GetFullPath(Path.Combine(projectDirectory, relative.Replace('/', Path.DirectorySeparatorChar)));
+        if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase)) throw new Exception("åªèƒ½åˆ é™¤å½“å‰å·¥ç¨‹é‡Œçš„ç´ æã€‚");
+        if (File.Exists(target)) File.Delete(target);
+        return new { deleted = true };
+    }
+
+    private object? OpenProject()
+    {
+        if (smokeOpenDirectory != null)
+        {
+            if (File.Exists(smokeOpenDirectory)) LoadArchive(smokeOpenDirectory);
+            else { projectDirectory = smokeOpenDirectory; projectArchivePath = null; }
+            RememberProject(smokeOpenDirectory);
+            MapProject();
+            return GetProjectInfo();
+        }
+        using var dialog = new OpenFileDialog
+        {
+            Title = "æ‰“å¼€ VRM Galgame å·¥ç¨‹åŒ…",
+            Filter = "VRM Galgame å·¥ç¨‹åŒ… (*.vrmg;*.zip)|*.vrmg;*.zip|æ‰€æœ‰æ–‡ä»¶ (*.*)|*.*"
+        };
+        if (dialog.ShowDialog(this) != DialogResult.OK) return null;
+        LoadArchive(dialog.FileName);
+        RememberProject(dialog.FileName);
+        MapProject();
+        return GetProjectInfo();
+    }
+
+    private static string RecentProjectsFile => Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "VRMGalgame", "recent-projects.json");
+
+    private static string[] ReadRecentProjects()
+    {
+        try
+        {
+            var paths = JsonSerializer.Deserialize<string[]>(File.ReadAllText(RecentProjectsFile)) ?? [];
+            return paths.Where(path => File.Exists(path) || Directory.Exists(path))
+                .Distinct(StringComparer.OrdinalIgnoreCase).Take(10).ToArray();
+        }
+        catch { return []; }
+    }
+
+    private static void RememberProject(string path)
+    {
+        string full = Path.GetFullPath(path);
+        string[] recent = [full, .. ReadRecentProjects().Where(item =>
+            !string.Equals(item, full, StringComparison.OrdinalIgnoreCase)).Take(9)];
+        string filename = RecentProjectsFile;
+        Directory.CreateDirectory(Path.GetDirectoryName(filename)!);
+        string temp = filename + ".tmp";
+        File.WriteAllText(temp, JsonSerializer.Serialize(recent));
+        File.Move(temp, filename, overwrite: true);
+    }
+
+    private object OpenRecentProject(string path)
+    {
+        string full = Path.GetFullPath(path);
+        if (!ReadRecentProjects().Contains(full, StringComparer.OrdinalIgnoreCase))
+            throw new Exception("è¿™ä¸ªå·¥ç¨‹ä¸åœ¨æœ€è¿‘æ‰“å¼€åˆ—è¡¨ä¸­ï¼Œæˆ–æ–‡ä»¶å·²è¢«ç§»åŠ¨ã€‚è¯·é‡æ–°é€‰æ‹©å·¥ç¨‹åŒ…ã€‚");
+        if (Directory.Exists(full) && File.Exists(Path.Combine(full, "project.json")))
+        {
+            CleanupTemporaryProject();
+            projectDirectory = full;
+            projectArchivePath = null;
+        }
+        else LoadArchive(full);
+        RememberProject(full);
+        MapProject();
+        return GetProjectInfo();
+    }
+
+    private object? ImportFolderProject()
+    {
+        string source;
+        if (smokeImportFolderPath != null) source = smokeImportFolderPath;
+        else
+        {
+            using var dialog = new FolderBrowserDialog
+            { Description = "é€‰æ‹©æ—§ç‰ˆå·¥ç¨‹æ–‡ä»¶å¤¹ï¼ˆé‡Œé¢æœ‰ project.jsonï¼‰", UseDescriptionForTitle = true };
+            if (dialog.ShowDialog(this) != DialogResult.OK) return null;
+            source = Path.GetFullPath(dialog.SelectedPath);
+        }
+        if (!File.Exists(Path.Combine(source, "project.json")))
+            throw new Exception("æ‰€é€‰æ–‡ä»¶å¤¹æ²¡æœ‰ project.jsonï¼Œä¸æ˜¯æ—§ç‰ˆå·¥ç¨‹ã€‚");
+        JsonNode? content = JsonNode.Parse(File.ReadAllText(Path.Combine(source, "project.json")));
+        if (content is not JsonObject) throw new Exception("æ—§ç‰ˆå·¥ç¨‹å†…å®¹æ— æ•ˆã€‚");
+        string? archive = ChooseArchiveDestination(SafeName(content["name"]?.GetValue<string>() ?? Path.GetFileName(source)), "å°†æ—§å·¥ç¨‹ä¿å­˜ä¸ºå·¥ç¨‹åŒ…");
+        if (archive == null) return null;
+        string workspace = CreateWorkspace();
+        try
+        {
+            CopyDirectory(source, workspace);
+            WriteArchive(workspace, archive);
+        }
+        catch
+        {
+            try { Directory.Delete(workspace, recursive: true); } catch { }
+            throw;
+        }
+        CleanupTemporaryProject();
+        temporaryProjectDirectory = workspace;
+        projectDirectory = workspace;
+        projectArchivePath = archive;
+        RememberProject(archive);
+        RefreshArchiveMemory();
+        MapProject();
+        return GetProjectInfo();
+    }
+
+    private object SaveProject(JsonNode? project, IEnumerable<string>? obsoletePortraitPaths = null)
+    {
+        if (projectDirectory == null) throw new Exception("è¯·å…ˆæ–°å»ºæˆ–æ‰“å¼€å·¥ç¨‹ã€‚");
+        if (project is not JsonObject) throw new Exception("å·¥ç¨‹å†…å®¹æ— æ•ˆã€‚");
+        project["version"] = 1;
+        string file = Path.Combine(projectDirectory, "project.json");
+        string temp = file + ".tmp";
+        string backup = file + ".bak";
+        File.WriteAllText(temp, project.ToJsonString(JsonOptions));
+        if (File.Exists(file)) File.Replace(temp, file, backup);
+        else File.Move(temp, file);
+        if (obsoletePortraitPaths != null)
+        {
+            var usedPaths = project["assets"]?.AsArray().Select(node => node?["path"]?.GetValue<string>() ?? "").ToHashSet(StringComparer.OrdinalIgnoreCase) ?? new HashSet<string>();
+            foreach (string obsolete in obsoletePortraitPaths)
+                if (!usedPaths.Contains(obsolete)) DeleteAsset(obsolete);
+        }
+        if (projectArchivePath != null)
+        {
+            WriteArchive(projectDirectory, projectArchivePath);
+            RefreshArchiveMemory();
+            RememberProject(projectArchivePath);
+        }
+        return new { directory = projectArchivePath ?? projectDirectory };
+    }
+
+    private object? SaveProjectAs(JsonNode? project, string requestedName)
+    {
+        if (projectDirectory == null || project is not JsonObject) throw new Exception("è¯·å…ˆæ‰“å¼€æœ‰æ•ˆçš„å·¥ç¨‹ã€‚");
+        if (string.IsNullOrWhiteSpace(requestedName)) throw new Exception("å·¥ç¨‹åå­—ä¸èƒ½ä¸ºç©ºã€‚");
+        string name = SafeName(requestedName);
+        string? destination = ChooseArchiveDestination(name, "é€‰æ‹©å‰¯æœ¬å·¥ç¨‹åŒ…çš„ä¿å­˜ä½ç½®");
+        if (destination == null) return null;
+        string source = Path.GetFullPath(projectDirectory);
+        if (destination.StartsWith(source + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            throw new Exception("æ–°å·¥ç¨‹åŒ…ä¸èƒ½æ”¾åœ¨æ—§å·¥ç¨‹æ–‡ä»¶å¤¹é‡Œé¢ã€‚");
+        string workspace = projectArchivePath == null ? CreateWorkspace() : source;
+        if (workspace != source) CopyDirectory(source, workspace);
+        project["name"] = requestedName.Trim();
+        project["version"] = 1;
+        File.WriteAllText(Path.Combine(workspace, "project.json"), project.ToJsonString(JsonOptions));
+        WriteArchive(workspace, destination);
+        if (workspace != source)
+        {
+            CleanupTemporaryProject();
+            temporaryProjectDirectory = workspace;
+            projectDirectory = workspace;
+        }
+        projectArchivePath = destination;
+        RememberProject(destination);
+        RefreshArchiveMemory();
+        MapProject();
+        return new { directory = destination };
+    }
+
+    private static string VoiceCharacterKey(string characterId) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(characterId))).ToLowerInvariant()[..32];
+
+    private object? ImportDialogueVoice(JsonNode? project, string actId, string dialogueId)
+    {
+        if (projectDirectory == null || project is not JsonObject) throw new Exception("è¯·å…ˆæ‰“å¼€å·¥ç¨‹ã€‚");
+        var act = project["acts"]?.AsArray().FirstOrDefault(item => item?["id"]?.GetValue<string>() == actId && item?["kind"]?.GetValue<string>() != "event");
+        var line = act?["steps"]?.AsArray().FirstOrDefault(item => item?["id"]?.GetValue<string>() == dialogueId);
+        if (line == null) throw new Exception("é…éŸ³å¿…é¡»ä»å¯¹åº”çš„å¯¹ç™½ä¸Šä¼ ã€‚");
+        string characterId = line["characterId"]?.GetValue<string>() ?? "";
+        var character = project["characters"]?.AsArray().FirstOrDefault(item => item?["id"]?.GetValue<string>() == characterId);
+        if (string.IsNullOrWhiteSpace(characterId) || character == null) throw new Exception("è¯·å…ˆé€‰æ‹©è¿™å¥å¯¹ç™½çš„è§’è‰²ã€‚");
+        string text = line["text"]?.GetValue<string>() ?? "";
+        if (string.IsNullOrWhiteSpace(text)) throw new Exception("è¯·å…ˆå¡«å†™å¯¹ç™½å†…å®¹ï¼Œå†ä¸Šä¼ é…éŸ³ã€‚");
+        string source;
+        string[] args = Environment.GetCommandLineArgs(); int testIndex = Array.IndexOf(args, "--smoke-voice-file");
+        if (smokeBase != null && testIndex >= 0 && testIndex + 1 < args.Length) source = Path.GetFullPath(args[testIndex + 1]);
+        else
+        {
+            using var dialog = new OpenFileDialog { Title = "ä¸ºè¿™å¥å¯¹ç™½ä¸Šä¼ é…éŸ³", Filter = "é…éŸ³æ–‡ä»¶|*.mp3;*.wav;*.ogg", Multiselect = false };
+            if (dialog.ShowDialog(this) != DialogResult.OK) return null;
+            source = dialog.FileName;
+        }
+        string extension = Path.GetExtension(source).ToLowerInvariant();
+        if (!new[] { ".mp3", ".wav", ".ogg" }.Contains(extension)) throw new Exception("é…éŸ³åªæ”¯æŒ MP3ã€WAVã€OGGã€‚");
+        string id = Guid.NewGuid().ToString("N");
+        string relative = $"assets/voice/{VoiceCharacterKey(characterId)}/{id}{extension}";
+        string target = Path.Combine(projectDirectory, relative.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(Path.GetDirectoryName(target)!); File.Copy(source, target);
+        return new { id, type = "voice", name = text, originalName = Path.GetFileName(source), path = relative,
+            characterId, dialogueId, folderId = "character-voice-" + characterId, galleryMusic = false };
+    }
+
+    private object OrganizeDialogueVoices(JsonNode? project)
+    {
+        if (projectDirectory == null || project is not JsonObject) throw new Exception("è¯·å…ˆæ‰“å¼€å·¥ç¨‹ã€‚");
+        string root = Path.GetFullPath(Path.Combine(projectDirectory, "assets")) + Path.DirectorySeparatorChar;
+        var updates = new List<object>(); var warnings = new List<string>();
+        foreach (var item in project["assets"]?.AsArray() ?? new JsonArray())
+        {
+            if (item?["type"]?.GetValue<string>() != "voice") continue;
+            string id = item["id"]?.GetValue<string>() ?? "", characterId = item["characterId"]?.GetValue<string>() ?? "";
+            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(characterId)) throw new Exception("é…éŸ³ç¼ºå°‘æ‰€å±è§’è‰²ã€‚");
+            string folderId = "character-voice-" + characterId;
+            var folder = project["assetFolders"]?.AsArray().FirstOrDefault(folder => folder?["id"]?.GetValue<string>() == folderId && folder?["type"]?.GetValue<string>() == "voice");
+            if (folder == null || item["folderId"]?.GetValue<string>() != folderId) throw new Exception("é…éŸ³å¿…é¡»æ”¾åœ¨è§’è‰²çš„ä¸“å±æ–‡ä»¶å¤¹ã€‚");
+            string relative = (item["path"]?.GetValue<string>() ?? "").Replace('\\', '/');
+            string source = Path.GetFullPath(Path.Combine(projectDirectory, relative.Replace('/', Path.DirectorySeparatorChar)));
+            if (!source.StartsWith(root, StringComparison.OrdinalIgnoreCase)) throw new Exception("é…éŸ³æ–‡ä»¶è·¯å¾„æ— æ•ˆã€‚");
+            string extension = Path.GetExtension(source).ToLowerInvariant();
+            if (!new[] { ".mp3", ".wav", ".ogg" }.Contains(extension)) throw new Exception("é…éŸ³æ–‡ä»¶æ ¼å¼æ— æ•ˆã€‚");
+            string targetPrefix = $"assets/voice/{VoiceCharacterKey(characterId)}/";
+            if (relative.StartsWith(targetPrefix, StringComparison.OrdinalIgnoreCase)) continue;
+            if (!File.Exists(source)) { warnings.Add(item["name"]?.GetValue<string>() ?? id); continue; }
+            string filename = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(id))).ToLowerInvariant()[..32] + extension;
+            string targetRelative = targetPrefix + filename;
+            string target = Path.Combine(projectDirectory, targetRelative.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+            if (!File.Exists(target)) File.Copy(source, target);
+            updates.Add(new { id, path = targetRelative });
+        }
+        return new { assets = updates, warnings };
+    }
+
+    private object? ImportAssets(string type, bool single = false)
+    {
+        if (projectDirectory == null) throw new Exception("è¯·å…ˆæ–°å»ºæˆ–æ‰“å¼€å·¥ç¨‹ã€‚");
+        if (type == "voice") throw new Exception("é…éŸ³ä¸èƒ½ä»ç´ æåº“å¯¼å…¥ï¼Œè¯·åˆ°å¯¹åº”å¯¹ç™½ä¸Šä¼ ã€‚");
+        var extensions = new Dictionary<string, string[]>(StringComparer.Ordinal)
+        {
+            ["vrm"] = [".vrm"],
+            ["motion"] = [".vrma", ".fbx"],
+            ["image"] = [".png", ".jpg", ".jpeg", ".webp"],
+            ["audio"] = [".mp3", ".wav", ".ogg"],
+            ["video"] = [".mp4", ".webm"],
+            ["pdf"] = [".pdf"]
+        };
+        if (!extensions.TryGetValue(type, out var allowed)) throw new Exception("ä¸æ”¯æŒçš„ç´ æç±»å‹ã€‚");
+        string[] sources;
+        int smokePdfIndex = Array.IndexOf(Environment.GetCommandLineArgs(), "--smoke-pdf");
+        if (type == "pdf" && smokePdfIndex >= 0 && smokePdfIndex + 1 < Environment.GetCommandLineArgs().Length)
+            sources = [Path.GetFullPath(Environment.GetCommandLineArgs()[smokePdfIndex + 1])];
+        else if (type == "image" && single && smokeAvatarFile != null) sources = [smokeAvatarFile];
+        else
+        {
+            using var dialog = new OpenFileDialog
+            {
+                Title = "é€‰æ‹©è¦å¯¼å…¥çš„ç´ æ",
+                Filter = $"æ”¯æŒçš„æ–‡ä»¶|{string.Join(';', allowed.Select(x => "*" + x))}|æ‰€æœ‰æ–‡ä»¶|*.*",
+                Multiselect = !single
+            };
+            if (dialog.ShowDialog(this) != DialogResult.OK) return null;
+            sources = dialog.FileNames;
+        }
+        string targetDirectory = Path.Combine(projectDirectory, "assets", type);
+        Directory.CreateDirectory(targetDirectory);
+        var results = new List<object>();
+        foreach (string source in sources)
+        {
+            string extension = Path.GetExtension(source).ToLowerInvariant();
+            if (!allowed.Contains(extension)) throw new Exception($"ä¸æ”¯æŒ {extension} æ–‡ä»¶ã€‚");
+            string id = Guid.NewGuid().ToString("N");
+            string filename = id + extension;
+            string target = Path.Combine(targetDirectory, filename);
+            File.Copy(source, target);
+            results.Add(new { id, type, name = Path.GetFileName(source), path = $"assets/{type}/{filename}" });
+        }
+        return results;
+    }
+
+    private object? ImportAssetChunk(JsonNode? payload)
+    {
+        if (projectDirectory == null) throw new Exception("è¯·å…ˆæ–°å»ºæˆ–æ‰“å¼€å·¥ç¨‹ã€‚");
+        string transferId = payload?["transferId"]?.GetValue<string>() ?? "";
+        string type = payload?["type"]?.GetValue<string>() ?? "";
+        string name = Path.GetFileName(payload?["name"]?.GetValue<string>() ?? "");
+        string command = payload?["command"]?.GetValue<string>() ?? "";
+        if (transferId.Length is < 1 or > 80) throw new Exception("æ‹–å…¥æ–‡ä»¶æ ‡è¯†æ— æ•ˆã€‚");
+        if (command == "abort")
+        {
+            if (droppedImports.Remove(transferId, out var aborted))
+            {
+                aborted.Stream.Dispose();
+                File.Delete(Path.Combine(projectDirectory, aborted.Path.Replace('/', Path.DirectorySeparatorChar)));
+            }
+            return null;
+        }
+        if (command == "start")
+        {
+            var extensions = new Dictionary<string, string[]>(StringComparer.Ordinal)
+            {
+                ["vrm"] = [".vrm"], ["motion"] = [".vrma", ".fbx"],
+                ["image"] = [".png", ".jpg", ".jpeg", ".webp"],
+                ["audio"] = [".mp3", ".wav", ".ogg"], ["video"] = [".mp4", ".webm"]
+            };
+            if (!extensions.TryGetValue(type, out var allowed) || !allowed.Contains(Path.GetExtension(name).ToLowerInvariant()))
+                throw new Exception($"â€œ{name}â€ä¸æ˜¯å½“å‰æ ‡ç­¾æ”¯æŒçš„ç´ æã€‚");
+            if (droppedImports.ContainsKey(transferId)) throw new Exception("æ–‡ä»¶æ­£åœ¨å¯¼å…¥ã€‚");
+            string id = Guid.NewGuid().ToString("N");
+            string relative = $"assets/{type}/{id}{Path.GetExtension(name).ToLowerInvariant()}";
+            string target = Path.Combine(projectDirectory, relative.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+            droppedImports.Add(transferId, (new FileStream(target, FileMode.CreateNew, FileAccess.Write), id, type, name, relative));
+            return null;
+        }
+        if (!droppedImports.TryGetValue(transferId, out var current)) throw new Exception("æ‹–å…¥æ–‡ä»¶å·²ç»ä¸­æ–­ï¼Œè¯·é‡æ–°æ‹–å…¥ã€‚");
+        if (command == "append")
+        {
+            byte[] chunk = Convert.FromBase64String(payload?["base64"]?.GetValue<string>() ?? "");
+            if (chunk.Length > 512 * 1024) throw new Exception("æ–‡ä»¶ç‰‡æ®µå¤ªå¤§ã€‚");
+            current.Stream.Write(chunk);
+            return null;
+        }
+        if (command == "finish")
+        {
+            current.Stream.Dispose();
+            droppedImports.Remove(transferId);
+            return new { id = current.Id, type = current.Type, name = current.Name, path = current.Path };
+        }
+        throw new Exception("ä¸æ”¯æŒçš„æ–‡ä»¶å¯¼å…¥æ“ä½œã€‚");
+    }
+
+    private object OrganizeGeneratedPortrait(string relative, string characterId, string name)
+    {
+        if (projectDirectory == null) throw new Exception("è¯·å…ˆæ‰“å¼€å·¥ç¨‹ã€‚");
+        string root = Path.GetFullPath(Path.Combine(projectDirectory, "assets")) + Path.DirectorySeparatorChar;
+        string source = Path.GetFullPath(Path.Combine(projectDirectory, relative.Replace('/', Path.DirectorySeparatorChar)));
+        if (!source.StartsWith(root, StringComparison.OrdinalIgnoreCase)) throw new Exception("åªèƒ½æ•´ç†å·¥ç¨‹é‡Œçš„å¤´åƒã€‚");
+        return SaveGeneratedPortrait("data:image/png;base64," + Convert.ToBase64String(File.ReadAllBytes(source)), characterId, name);
+    }
+
+    private object SaveGeneratedPortrait(string dataUrl, string characterId, string name, string previousRevision = "")
+    {
+        if (projectDirectory == null) throw new Exception("è¯·å…ˆæ–°å»ºæˆ–æ‰“å¼€å·¥ç¨‹ã€‚");
+        const string prefix = "data:image/png;base64,";
+        if (!dataUrl.StartsWith(prefix, StringComparison.Ordinal)) throw new Exception("å¤´åƒå›¾ç‰‡æ ¼å¼ä¸æ­£ç¡®ã€‚");
+        byte[] bytes = Convert.FromBase64String(dataUrl[prefix.Length..]);
+        if (bytes.Length < 32 || bytes.Length > 12_000_000 || !bytes.AsSpan(0, 8).SequenceEqual(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }))
+            throw new Exception("å¤´åƒå›¾ç‰‡æ— æ•ˆæˆ–å¤ªå¤§ã€‚");
+        if (string.IsNullOrWhiteSpace(characterId)) throw new Exception("å¤´åƒç¼ºå°‘è§’è‰²ç¼–å·ã€‚");
+        string key = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(characterId))).ToLowerInvariant()[..32];
+        string id = "auto-portrait-" + key;
+        string folder = Path.Combine(projectDirectory, "assets", "image", "è‡ªåŠ¨è§’è‰²å¤´åƒ");
+        Directory.CreateDirectory(folder);
+        string target = Path.Combine(folder, key + ".png");
+        string revision = Guid.NewGuid().ToString("N");
+        string historyFolder = Path.Combine(projectDirectory, ".editor-history", "portraits");
+        Directory.CreateDirectory(historyFolder);
+        if (File.Exists(target) && Guid.TryParseExact(previousRevision, "N", out _))
         {
             string previous = Path.Combine(historyFolder, key + "-" + previousRevision + ".png");
             if (!File.Exists(previous)) File.Copy(target, previous);
@@ -201,4 +1698,158 @@ HOH›ÚXÙHŠNÃBˆYˆ
             string revision = item["revision"]?.GetValue<string>() ?? "";
             string characterId = item["characterId"]?.GetValue<string>() ?? "";
             if (!Guid.TryParseExact(revision, "N", out _) || string.IsNullOrWhiteSpace(characterId)) continue;
-            string target = Path.GetFullPath(Path.Combine(projectDirectoYªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíßNµN‹Z–‹­¦ëeŠw¬ÕÉä°€¡¥Ñ•µl‰Á…Ñ ‰tü¹•ÑY…±Õ”ñÍÑÉ¥¹œø ¤€üü€ˆˆ¤¹I•Á±…” œ¼œ°A…Ñ ¹¥É•Ñ½ÉåM•Á…É…Ñ½É¡…È¤¤¤ì4(€€€€€€€€€€€¥˜€ …Ñ…É•Ğ¹MÑ…ÉÑÍ]¥Ñ ¡É½½Ğ°MÑÉ¥¹½µÁ…É¥Í½¸¹=É‘¥¹…±%¹½É•…Í”¤¤Ñ¡É½Ü¹•Üá•ÁÑ¥½¸ ‹–’Ó–?¢Ş¿–úš^ƒšV#ˆ¤ì4(€€€€€€€€€€€ÍÑÉ¥¹œ­•ä€ô½¹Ù•ÉĞ¹Q½!•áMÑÉ¥¹œ¡M!ÈÔØ¹!…Í¡…Ñ„¡¹½‘¥¹œ¹UQà¹•Ñ	åÑ•Ì¡¡…É…Ñ•É%¤¤¤¹Q½1½İ•É%¹Ù…É¥…¹Ğ ¥l¸¸ÌÉtì4(€€€€€€€€€€€ÍÑÉ¥¹œÍ½ÕÉ”€ôA…Ñ ¹½µ‰¥¹”¡ÁÉ½©•Ñ¥É•Ñ½Éä°€ˆ¹•‘¥Ñ½Èµ¡¥ÍÑ½Éäˆ°€‰Á½ÉÑÉ…¥ÑÌˆ°­•ä€¬€ˆ´ˆ€¬É•Ù¥Í¥½¸€¬€ˆ¹Á¹œˆ¤ì4(€€€€€€€€€€€¥˜€¡¥±”¹á¥ÍÑÌ¡Í½ÕÉ”¤¤½Á¥•Ì¹‘ ¡Í½ÕÉ”°Ñ…É•Ğ¤¤ì4(€€€€€€€ô4(€€€€€€€™½É•… €¡Ù…È½Áä¥¸½Á¥•Ì¤ì¥É•Ñ½Éä¹É•…Ñ•¥É•Ñ½Éä¡A…Ñ ¹•Ñ¥É•Ñ½Éå9…µ”¡½Áä¹Q…É•Ğ¤„¤ì¥±”¹½Áä¡½Áä¹M½ÕÉ”°½Áä¹Q…É•Ğ°ÑÉÕ”¤ìô4(€€€€€€€É•ÑÕÉ¸¹•ÜìÉ•ÍÑ½É•€ô½Á¥•Ì¹½Õ¹Ğôì4(€€€ô4(4(€€€ÁÉ¥Ù…Ñ”ÍÑ…Ñ¥Œ!…Í¡M•ĞñÍÑÉ¥¹œøAÉ½©•ÑÍÍ•ÑA…Ñ¡Ì¡ÍÑÉ¥¹œ‘¥É•Ñ½Éä¤4(€€€ì4(€€€€€€€Ù…ÈÁÉ½©•Ğ€ô)Í½¹9½‘”¹A…ÉÍ”¡¥±”¹I•…‘±±Q•áĞ¡A…Ñ ¹½µ‰¥¹”¡‘¥É•Ñ½Éä°€‰ÁÉ½©•Ğ¹©Í½¸ˆ¤¤¤ì4(€€€€€€€É•ÑÕÉ¸ÁÉ½©•Ğıl‰…ÍÍ•ÑÌ‰tü¹ÍÉÉ…ä ¤¹M•±•Ğ¡¥Ñ•´€ôø€¡¥Ñ•´ıl‰Á…Ñ ‰tü¹•ÑY…±Õ”ñÍÑÉ¥¹œø ¤€üü€ˆˆ¤¹I•Á±…” qpœ°€œ¼œ¤¤4(€€€€€€€€€€€€¹Q½!…Í¡M•Ğ¡MÑÉ¥¹½µÁ…É•È¹=É‘¥¹…±%¹½É•…Í”¤€üü¹•Ü!…Í¡M•ĞñÍÑÉ¥¹œø¡MÑÉ¥¹½µÁ…É•È¹=É‘¥¹…±%¹½É•…Í”¤ì4(€€€ô4(4(€€€ÁÉ¥Ù…Ñ”ÍÑ…Ñ¥Œ‰½½°%¹±Õ‘•AÉ½©•Ñ¥±”¡ÍÑÉ¥¹œÉ•±…Ñ¥Ù”°!…Í¡M•ĞñÍÑÉ¥¹œø…ÍÍ•ÑÌ¤4(€€€ì4(€€€€€€€¥˜€¡É•±…Ñ¥Ù”¹MÑ…ÉÑÍ]¥Ñ  ˆ¹•‘¥Ñ½Èµ¡¥ÍÑ½Éä¼ˆ°MÑÉ¥¹½µÁ…É¥Í½¸¹=É‘¥¹…±%¹½É•…Í”¤¤É•ÑÕÉ¸™…±Í”ì4(€€€€€€€¥˜€¡É•±…Ñ¥Ù”¹¹‘Í]¥Ñ  ˆ¹‰…¬ˆ°MÑÉ¥¹½µÁ…É¥Í½¸¹=É‘¥¹…±%¹½É•…Í”¤ñğÉ•±…Ñ¥Ù”¹¹‘Í]¥Ñ  ˆ¹ÑµÀˆ°MÑÉ¥¹½µÁ…É¥Í½¸¹=É‘¥¹…³m:ÖÚ$z{-®éÜj×÷'’Â'vV""’ÂF‚ä6öÖ&–æR†FW7F–æF–öâÂ'vV""’“°¢f–ÆRä6÷’…F‚ä6öÖ&–æR†F—&V7F÷'’Â'vV"æ–çFVw&—G’æ§6öâ"’ÅF‚ä6öÖ&–æR†FW7F–æF–öâÂ'vV"æ–çFVw&—G’æ§6öâ"’“°¢6÷”7W'&VçE&ö¦V7B‡&ö¦V7DF—&V7F÷'’ÂF‚ä6öÖ&–æR†FW7F–æF–öâÂ&vÖR"’“°Ğ¢f"Æ–W%&ö¦V7CÖvÖU&ö¦V7BäFVW6ÆöæR‚“°¢–b‡Æ–W%&ö¦V7B—2§6öäö&¦V7BÆ–W$ö&¦V7B—Æ–W$ö&¦V7Bå&VÖ÷fR‚&WF†÷&–ær"“°¢f–ÆRåw&—FTÆÅFW‡B…F‚ä6öÖ&–æR†FW7F–æF–öâÂ&vÖR"Â'&ö¦V7Bæ§6öâ"’ÂÆ–W%&ö¦V7BåFô§6öå7G&–ær„§6öä÷F–öç2’“°¢f–ÆRåw&—FTÆÅFW‡B…F‚ä6öÖ&–æR†FW7F–æF–öâÂ&vÖRæ6öæf–ræ§6öâ"’Â'·Ò"“°Ğ¢ĞĞ Ğ¢&—fFR7FF–2fö–B6÷”F—&V7F÷'’‡7G&–ær6÷W&6RÂ7G&–ærFW7F–æF–öâĞ¢°Ğ¢F—&V7F÷'’ä7&VFTF—&V7F÷'’†FW7F–æF–öâ“°Ğ¢f÷&V6‚‡7G&–ærf–ÆR–âF—&V7F÷'’ävWDf–ÆW2‡6÷W&6R’Ğ¢f–ÆRä6÷’†f–ÆRÂF‚ä6öÖ&–æR†FW7F–æF–öâÂF‚ävWDf–ÆTæÖR†f–ÆR’’“°Ğ¢f÷&V6‚‡7G&–ærföÆFW"–âF—&V7F÷'’ävWDF—&V7F÷&–W2‡6÷W&6R’Ğ¢–b‚F‚ävWDf–ÆTæÖR†föÆFW"’äWVÇ2‚"æVF—F÷"Ö†—7F÷'’"Â7G&–æt6ö×&—6öâä÷&F–æÄ–væ÷&T66R’Ğ¢6÷”F—&V7F÷'’†föÆFW"ÂF‚ä6öÖ&–æR†FW7F–æF–öâÂF‚ävWDf–ÆTæÖR†föÆFW"’’“°Ğ¢ĞĞ Ğ¢&—fFR7FF–27G&–ær6fTæÖR‡7G&–ærfÇVRĞ¢°Ğ¢7G&–ær6ÆVæVBÒæWr‡fÇVRåG&–Ò‚’åv†W&R†2ÓâF‚ävWD–çfÆ–Df–ÆTæÖT6†'2‚’ä6öçF–ç2†2’’åFô'&’‚’“°Ğ¢6ÆVæVBÒ6ÆVæVBåG&–Ò‚’åG&–Ò‚râr“°Ğ¢–b†6ÆVæVBäÆVæwF‚âc’6ÆVæVBÒ6ÆVæVE²âãcÓ°Ğ¢&WGW&â7G&–ærä—4çVÆÄ÷%v†—FU76R†6ÆVæVB’ò.ikk‹hˆò"¢6ÆVæVC°Ğ¢ĞĞ§ĞĞ
+            string target = Path.GetFullPath(Path.Combine(projectDirectory, (item["path"]?.GetValue<string>() ?? "").Replace('/', Path.DirectorySeparatorChar)));
+            if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase)) throw new Exception("å¤´åƒè·¯å¾„æ— æ•ˆã€‚");
+            string key = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(characterId))).ToLowerInvariant()[..32];
+            string source = Path.Combine(projectDirectory, ".editor-history", "portraits", key + "-" + revision + ".png");
+            if (File.Exists(source)) copies.Add((source, target));
+        }
+        foreach (var copy in copies) { Directory.CreateDirectory(Path.GetDirectoryName(copy.Target)!); File.Copy(copy.Source, copy.Target, true); }
+        return new { restored = copies.Count };
+    }
+
+    private static HashSet<string> ProjectAssetPaths(string directory)
+    {
+        var project = JsonNode.Parse(File.ReadAllText(Path.Combine(directory, "project.json")));
+        return project?["assets"]?.AsArray().Select(item => (item?["path"]?.GetValue<string>() ?? "").Replace('\\', '/'))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase) ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static bool IncludeProjectFile(string relative, HashSet<string> assets)
+    {
+        if (relative.StartsWith(".editor-history/", StringComparison.OrdinalIgnoreCase)) return false;
+        if (relative.EndsWith(".bak", StringComparison.OrdinalIgnoreCase) || relative.EndsWith(".tmp", StringComparison.OrdinalIgnoreCase)) return false;
+        return !relative.StartsWith("assets/", StringComparison.OrdinalIgnoreCase) || assets.Contains(relative);
+    }
+
+    private static void CopyCurrentProject(string source, string destination)
+    {
+        var assets = ProjectAssetPaths(source);
+        foreach (string file in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories))
+        {
+            string relative = Path.GetRelativePath(source, file).Replace('\\', '/');
+            if (!IncludeProjectFile(relative, assets)) continue;
+            string target = Path.Combine(destination, relative.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(Path.GetDirectoryName(target)!); File.Copy(file, target);
+        }
+    }
+
+    private object? ExportGame(string requestedName)
+    {
+        if (projectDirectory == null || !File.Exists(Path.Combine(projectDirectory, "project.json")))
+            throw new Exception("è¯·å…ˆä¿å­˜å·¥ç¨‹ï¼Œå†å¯¼å‡ºæ¸¸æˆã€‚");
+        if (string.IsNullOrWhiteSpace(requestedName)) throw new Exception("å¯¼å‡ºæ–‡ä»¶å¤¹åå­—ä¸èƒ½ä¸ºç©ºã€‚");
+        string parent;
+        if (smokeFileOpsParent != null) parent = smokeFileOpsParent;
+        else
+        {
+            using var dialog = new FolderBrowserDialog { Description = "é€‰æ‹©æ¸¸æˆå¯¼å‡ºä½ç½®", UseDescriptionForTitle = true, ShowNewFolderButton = true };
+            if (dialog.ShowDialog(this) != DialogResult.OK) return null;
+            parent = dialog.SelectedPath;
+        }
+        string destination = Path.Combine(parent, SafeName(requestedName));
+        if (Directory.Exists(destination)) throw new Exception("å¯¼å‡ºæ–‡ä»¶å¤¹å·²å­˜åœ¨ã€‚è¯·é€‰ä¸€ä¸ªæ–°ä½ç½®ï¼Œé¿å…è¦†ç›–æ—§ç‰ˆæœ¬ã€‚");
+        if (Path.GetFullPath(destination).StartsWith(Path.GetFullPath(projectDirectory) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            throw new Exception("å¯¼å‡ºä½ç½®ä¸èƒ½æ”¾åœ¨å·¥ç¨‹æ–‡ä»¶å¤¹é‡Œé¢ï¼Œè¯·é€‰æ‹©åˆ«çš„ä½ç½®ã€‚");
+        JsonNode gameProject = ReadProject() ?? throw new Exception("å·¥ç¨‹æ–‡ä»¶æ— æ³•è¯»å–ã€‚");
+        BuildGame(destination, gameProject);
+        return new { directory = destination, executable = Path.Combine(destination, "VRMGalgame.exe") };
+    }
+
+    private async Task<object> PreviewGameAsync(JsonNode? snapshot)
+    {
+        if (projectDirectory == null || snapshot == null) throw new Exception("è¯·å…ˆæ‰“å¼€å·¥ç¨‹ã€‚");
+        string root = Path.Combine(Path.GetTempPath(), "VRMGalgame", "Previews");
+        Directory.CreateDirectory(root);
+        string destination = Path.Combine(root, "preview-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + "-" + Guid.NewGuid().ToString("N")[..8]);
+        try
+        {
+            JsonNode projectCopy = snapshot.DeepClone();
+            await Task.Run(() => BuildGame(destination, projectCopy));
+            string executable = Path.Combine(destination, "VRMGalgame.exe");
+            var start = new ProcessStartInfo(executable) { WorkingDirectory = destination, UseShellExecute = true };
+            if (smokeBase != null)
+            {
+                start.ArgumentList.Add("--smoke");
+                start.ArgumentList.Add("-");
+                start.ArgumentList.Add(smokeBase + ".preview-child");
+                start.ArgumentList.Add(smokeDiscovery ? "--smoke-discovery" : smokeTitleMenus ? "--smoke-title-menus" : smokeGallery ? "--smoke-gallery" : "--smoke-play");
+            }
+            Process process = Process.Start(start) ?? throw new Exception("ä¸´æ—¶æ¸¸æˆç¨‹åºæœªèƒ½å¯åŠ¨ã€‚");
+            process.EnableRaisingEvents = true;
+            process.Exited += (_, _) =>
+            {
+                process.Dispose();
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(1500);
+                    for (int attempt = 0; attempt < 3; attempt++)
+                    {
+                        try { DeletePreviewDirectory(root, destination); return; }
+                        catch (IOException) { await Task.Delay(2000); }
+                        catch (UnauthorizedAccessException) { await Task.Delay(2000); }
+                    }
+                });
+            };
+            return new { directory = destination, executable };
+        }
+        catch
+        {
+            try { DeletePreviewDirectory(root, destination); } catch { /* ç•™ç»™ç³»ç»Ÿä¸´æ—¶ç›®å½•æ¸…ç† */ }
+            throw;
+        }
+    }
+
+    private static void DeletePreviewDirectory(string root, string destination)
+    {
+        string allowed = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        string target = Path.GetFullPath(destination);
+        if (!target.StartsWith(allowed, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("ä¸´æ—¶ç›®å½•è·¯å¾„æ— æ•ˆã€‚");
+        if (Directory.Exists(target)) Directory.Delete(target, recursive: true);
+    }
+
+    private void BuildGame(string destination, JsonNode gameProject)
+    {
+        if (projectDirectory == null) throw new Exception("å·¥ç¨‹å°šæœªæ‰“å¼€ã€‚");
+        foreach (JsonNode? item in gameProject["assets"]?.AsArray() ?? new JsonArray())
+        {
+            string relative = item?["path"]?.GetValue<string>() ?? "";
+            string full = Path.GetFullPath(Path.Combine(projectDirectory, relative.Replace('/', Path.DirectorySeparatorChar)));
+            if (!full.StartsWith(Path.GetFullPath(projectDirectory) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) || !File.Exists(full))
+                throw new Exception($"å·¥ç¨‹ç´ æç¼ºå¤±æˆ–è·¯å¾„æ— æ•ˆï¼š{relative}");
+        }
+        Directory.CreateDirectory(destination);
+        foreach (string filename in new[] { "VRMGalgame.exe", "WebView2Loader.dll" })
+        {
+            string source = Path.Combine(appDirectory, filename);
+            if (!File.Exists(source)) throw new Exception($"ç¨‹åºæ–‡ä»¶ä¸å®Œæ•´ï¼š{filename}");
+            File.Copy(source, Path.Combine(destination, filename));
+        }
+        CopyDirectory(Path.Combine(appDirectory, "web"), Path.Combine(destination, "web"));
+        File.Copy(Path.Combine(appDirectory,"web.integrity.json"),Path.Combine(destination,"web.integrity.json"));
+        CopyCurrentProject(projectDirectory, Path.Combine(destination, "game"));
+        var playerProject=gameProject.DeepClone();
+        if(playerProject is JsonObject playerObject)playerObject.Remove("authoring");
+        File.WriteAllText(Path.Combine(destination, "game", "project.json"), playerProject.ToJsonString(JsonOptions));
+        File.WriteAllText(Path.Combine(destination, "game.config.json"), "{}");
+    }
+
+    private static void CopyDirectory(string source, string destination)
+    {
+        Directory.CreateDirectory(destination);
+        foreach (string file in Directory.GetFiles(source))
+            File.Copy(file, Path.Combine(destination, Path.GetFileName(file)));
+        foreach (string folder in Directory.GetDirectories(source))
+            if (!Path.GetFileName(folder).Equals(".editor-history", StringComparison.OrdinalIgnoreCase))
+                CopyDirectory(folder, Path.Combine(destination, Path.GetFileName(folder)));
+    }
+
+    private static string SafeName(string value)
+    {
+        string cleaned = new(value.Trim().Where(c => !Path.GetInvalidFileNameChars().Contains(c)).ToArray());
+        cleaned = cleaned.Trim().Trim('.');
+        if (cleaned.Length > 60) cleaned = cleaned[..60];
+        return string.IsNullOrWhiteSpace(cleaned) ? "æ–°æ¸¸æˆ" : cleaned;
+    }
+}

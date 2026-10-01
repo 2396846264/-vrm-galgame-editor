@@ -1,1 +1,187 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíß¿xN‹Z–‹­¦ëeŠw¬ÕÕÍ¥¹œMåÍÑ•´¹%<¹A¥Á•Ìì)ÕÍ¥¹œMåÍÑ•´¹Q•áĞì)ÕÍ¥¹œMåÍÑ•´¹Q•áĞ¹)Í½¸ì)ÕÍ¥¹œMåÍÑ•´¹Q•áĞ¹)Í½¸¹9½‘•Ìì)ÕÍ¥¹œMåÍÑ•´¹aµ°ì)ÕÍ¥¹œMåÍÑ•´¹aµ°¹1¥¹Äì)ÕÍ¥¹œMåÍÑ•´¹M•ÕÉ¥Ñä¹ÉåÁÑ½É…Á¡äì()¹…µ•ÍÁ…”YI5…±…µ”ì)¥¹Ñ•É¹…°Í•…±•Á…ÉÑ¥…°±…ÍÌ‘¥Ñ½É]¥¹‘½Ü)ì(€€€ÁÉ¥Ù…Ñ”…¹•±±…Ñ¥½¹Q½­•¹M½ÕÉ”ü…•¹Ñ…¹•±±…Ñ¥½¸ì(€€€ÁÉ¥Ù…Ñ”9…µ•‘A¥Á•M•ÉÙ•ÉMÑÉ•…´ü…•¹ÑA¥Á”ì(€€€ÁÉ¥Ù…Ñ”ÍÑÉ¥¹œü…•¹ÑM•ÍÍ¥½¹¥±”ì(€€€ÁÉ¥Ù…Ñ”É•…‘½¹±ä¥Ñ¥½¹…ÉäñÍÑÉ¥¹œ°Q…Í­½µÁ±•Ñ¥½¹M½ÕÉ”ñ)Í½¹9½‘”üøø…•¹ÑI•Á±¥•Ì€ô¹•Ü ¤ì(€€€ÁÉ¥Ù…Ñ”ÍÑ…Ñ¥ŒÉ•…‘½¹±ä!…Í¡M•ĞñÍÑÉ¥¹œø•¹Ñ=Á•É…Ñ¥½¹Ì€ôl‰•Ñ}ÁÉ½©•Ğˆ°‰•Ñ}…Ğˆ°‰•Ñ}Í½ÕÉ”ˆ°‰É•…‘}‘½Õµ•¹Ğˆ°‰¥µÁ½ÉÑ}…ÍÍ•ÑÌˆ°‰Í•Ñ}…ÍÍ•Ñ}Ñ…Ìˆ°‰ÁÉ½Á½Í•}‘É…™Ğˆ°‰…ÁÁ±å}‘É…™Ğˆ°‰Õ¹‘¼ˆ°‰É•‘¼ˆ°‰Í…Ù”ˆ°‰ÁÉ•Ù¥•Üˆ°‰•áÁ½ÉÑ}…µ”‰tì((€€€ÁÉ¥Ù…Ñ”)Í½¹9½‘”ü•Ñ•¹Ñ½¹¹•Ñ¥½¸ ¤(€€€ì(€€€€€€€¥˜¡…•¹ÑM•ÍÍ¥½¹¥±”ôõ¹Õ±±ñğ…¥±”¹á¥ÍÑÌ¡…•¹ÑM•ÍÍ¥½¹¥±”¤¥É•ÑÕÉ¸¹Õ±°ì(€€€€€€€Ù…È¥¹™¼õ)Í½¹9½‘”¹A…ÉÍ”¡¥±”¹I•…‘±±Q•áĞ¡…•¹ÑM•ÍÍ¥½¹¥±”¤¤ì(€€€€€€€¥˜¡¥¹™¼¥Ì)Í½¹=‰©•Ğ¼¥½l‰•¹…‰±•‰tõÑÉÕ”ì(€€€€€€€É•ÑÕÉ¸¥¹™¼ì(€€€ô((€€€ÁÉ¥Ù…Ñ”½‰©•ĞM•Ñ•¹Ñ¹…‰±•¡‰½½°•¹…‰±•¤(€€€ì(€€€€€€€MÑ½Á•¹Ñ	É¥‘” ¤ì(€€€€€€€¥˜€ …•¹…‰±•¤É•ÑÕÉ¸¹•Üí•¹…‰±•õ™…±Í•ôì(€€€€€€€ÍÑÉ¥¹œ½µµ…¹õA…Ñ ¹½µ‰¥¹”¡…ÁÁ¥É•Ñ½Éä°‰YI5…±…µ”¹•¹Ğ¹•á”ˆ¤ì(€€€€€€€¥˜€ …¥±”¹á¥ÍÑÌ¡½µµ…¹¤¤Ñ¡É½Ü¹•Üá•ÁÑ¥½¸ ‹òë–ÂD•¹Ğƒ¢/–ê?¾ò3¢¾ß¦7šZÃ¢–:/–º3šVÓ–º'¢–2ˆ¤ì(€€€€€€€ÍÑÉ¥¹œÍ•ÍÍ¥½¹%õÕ¥¹9•İÕ¥ ¤¹Q½MÑÉ¥¹œ ‰8ˆ¤°Á¥Á•9…µ”ô‰ÙÉ´µ…±…µ”´ˆ­Í•ÍÍ¥½¹%ì(€€€€€€€ÍÑÉ¥¹œÍ•ÍÍ¥½¹ÌõA…Ñ ¹½µ‰¥¹”¡¹Ù¥É½¹µ•¹Ğ¹•Ñ½±‘•ÉA…Ñ ¡¹Ù¥É½¹µ•¹Ğ¹MÁ•¥…±½±‘•È¹1½…±ÁÁ±¥…Ñ¥½¹…Ñ„§nıâÚ$z{-®éÜj×§¶bäæÖWÒ"“°¢f"6÷–VCÖæWrÆ—7CÇ7G&–æsâ‚“·f"&W7VÇG3ÖæWrÆ—7CÆö&¦V7Câ‚“°¢G'¢°¢f÷&V6‚‡f"b–âf–ÆW2¢°¢7G&–ærW‡FVç6–öãÖbäW‡FVç6–öâåFôÆ÷vW$–çf&–çB‚’ÇG—S×G—W5¶W‡FVç6–öåÒÆ–CÔwV–BäæWtwV–B‚’åFõ7G&–ær‚$â"“°¢7G&–ær&VÆF—fSÒB&76WG2÷·G—WÒ÷¶–G×¶W‡FVç6–öçÒ"ÇF&vWCÕF‚ä6öÖ&–æR‡&ö¦V7DF—&V7F÷'’Ç&VÆF—fRå&WÆ6R‚ròrÅF‚äF—&V7F÷'•6W&F÷$6†"’“°¢F—&V7F÷'’ä7&VFTF—&V7F÷'’…F‚ävWDF—&V7F÷'”æÖR‡F&vWB’“¶6÷–VBäFB‡F&vWB“´f–ÆRä6÷’†bägVÆÄæÖRÇF&vWB“°¢&W7VÇG2äFB†æWr¶–BÇG—RÆæÖSÖbäæÖRÇFƒ×&VÆF—fRÇFw3Ô'&’äV×G“Ç7G&–æsâ‚—Ò“°¢Ğ¢Ğ¢6F6‡¶f÷&V6‚‡f"b–â6÷–VB––b„f–ÆRäW†—7G2†b’”f–ÆRäFVÆWFR†b“·F‡&÷s·Ğ¢&WGW&â&W7VÇG3°¢Ğ¢&—fFRö&¦V7BW‡÷'DvVçDvÖR„§6öäæöFSò–ÆöB¢°¢–b‡&ö¦V7DF—&V7F÷'“ÓÖçVÆÇÇÇ–ÆöCõ²'&ö¦V7B%Ò—2æ÷B§6öäö&¦V7B—F‡&÷ræWrW†6WF–öâ‚.Šû~XXh™>[È[z^zˆ¾8""“°¢7G&–ærFW7F–æF–öãÕF‚ävWDgVÆÅF‚‡–ÆöE²&F—&V7F÷'’%ÓòävWEfÇVSÇ7G&–æsâ‚’óò""“°¢–b†FW7F–æF–öâå7F'G5v—F‚…F‚ävWDgVÆÅF‚‡&ö¦V7DF—&V7F÷'’’µF‚äF—&V7F÷'•6W&F÷$6†"Å7G&–æt6ö×&—6öâä÷&F–æÄ–væ÷&T66R’—F‡&÷ræWrW†6WF–öâ‚.ZûÎX{®KØŞ{ÚîKˆŞˆ;ŞiKîYÊ[z^zˆ¾ih~K»nZK˜xÎ™Ú.8""“°¢–b„F—&V7F÷'’äW†—7G2†FW7F–æF–öâ—ÇÄf–ÆRäW†—7G2†FW7F–æF–öâ’—F‡&÷ræWrW†6WF–öâ‚.ZûÎX{®KØŞ{Úî[{.{¸şZÙYÊûÈÎŠû~hÈ~Zé®KˆKŠ®iky¨Nih~K»nZK8""“°¢'V–ÆDvÖR†FW7F–æF–öâÇ“°¢&WGW&âæWr¶F—&V7F÷'“ÖFW7F–æF–öçÓ°¢Ğ§Ğ
+using System.IO.Pipes;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Xml;
+using System.Xml.Linq;
+using System.Security.Cryptography;
+
+namespace VRMGalgame;
+internal sealed partial class EditorWindow
+{
+    private CancellationTokenSource? agentCancellation;
+    private NamedPipeServerStream? agentPipe;
+    private string? agentSessionFile;
+    private readonly Dictionary<string, TaskCompletionSource<JsonNode?>> agentReplies = new();
+    private static readonly HashSet<string> AgentOperations = ["get_project","get_act","get_source","read_document","import_assets","set_asset_tags","propose_draft","apply_draft","undo","redo","save","preview","export_game"];
+
+    private JsonNode? GetAgentConnection()
+    {
+        if(agentSessionFile==null||!File.Exists(agentSessionFile))return null;
+        var info=JsonNode.Parse(File.ReadAllText(agentSessionFile));
+        if(info is JsonObject o)o["enabled"]=true;
+        return info;
+    }
+
+    private object SetAgentEnabled(bool enabled)
+    {
+        StopAgentBridge();
+        if (!enabled) return new {enabled=false};
+        string command=Path.Combine(appDirectory,"VRMGalgame.Agent.exe");
+        if (!File.Exists(command)) throw new Exception("ç¼ºå°‘ Agent ç¨‹åºï¼Œè¯·é‡æ–°è§£å‹å®Œæ•´å®‰è£…åŒ…ã€‚");
+        string sessionId=Guid.NewGuid().ToString("N"), pipeName="vrm-galgame-"+sessionId;
+        string sessions=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"VRMGalgame","AgentSessions");
+        Directory.CreateDirectory(sessions);
+        agentSessionFile=Path.Combine(sessions,sessionId+".json");
+        var metadata=new {sessionId,pipeName,command,pid=Environment.ProcessId,started=DateTimeOffset.UtcNow};
+        File.WriteAllText(agentSessionFile,JsonSerializer.Serialize(metadata));
+        agentCancellation=new CancellationTokenSource();
+        _=RunAgentPipeAsync(pipeName,agentCancellation.Token);
+        return new {enabled=true,sessionId,command,pid=Environment.ProcessId};
+    }
+    private void StopAgentBridge()
+    {
+        agentCancellation?.Cancel();agentPipe?.Dispose();agentPipe=null;
+        agentCancellation?.Dispose();agentCancellation=null;
+        foreach(var waiting in agentReplies.Values) waiting.TrySetException(new Exception("Agent æ¥å£å·²ç»æ–­å¼€ã€‚"));
+        agentReplies.Clear();
+        if(agentSessionFile!=null) {try{File.Delete(agentSessionFile);}catch(IOException){}agentSessionFile=null;}
+    }
+    private async Task RunAgentPipeAsync(string name,CancellationToken token)
+    {
+        // One operation at a time, and only clients running as this Windows user.
+        while(!token.IsCancellationRequested)
+        {
+            NamedPipeServerStream? current=null;
+            try
+            {
+                using var pipe=new NamedPipeServerStream(name,PipeDirection.InOut,1,PipeTransmissionMode.Byte,PipeOptions.Asynchronous|PipeOptions.CurrentUserOnly);
+                agentPipe=pipe;
+                current=pipe;
+                await pipe.WaitForConnectionAsync(token);
+                using var reader=new StreamReader(pipe,new UTF8Encoding(false),false,4096,true);
+                using var writer=new StreamWriter(pipe,new UTF8Encoding(false),4096,true){AutoFlush=true};
+                string? line=await reader.ReadLineAsync(token);
+                if(line==null)continue;
+                JsonNode? result;
+                try
+                {
+                    if(line.Length>24*1024*1024)throw new Exception("è¯·æ±‚å¤ªå¤§ï¼Œè¯·åˆ†æ‰¹ç¼–æ’ã€‚");
+                    var request=JsonNode.Parse(line) ?? throw new Exception("è¯·æ±‚ä¸ºç©ºã€‚");
+                    string operation=request["name"]?.GetValue<string>() ?? "";
+                    if(!AgentOperations.Contains(operation))throw new Exception("è¯¥æ“ä½œæ²¡æœ‰å¼€æ”¾ç»™ Agentã€‚");
+                    if(token.IsCancellationRequested)throw new OperationCanceledException();
+                    result=await InvokeAgentFrontend(operation,request["arguments"] ?? new JsonObject(),token);
+                    await writer.WriteLineAsync(JsonSerializer.Serialize(new {ok=true,data=result}));
+                }
+                catch(Exception ex){await writer.WriteLineAsync(JsonSerializer.Serialize(new {ok=false,error=ex.Message}));}
+            }
+            catch(OperationCanceledException){break;}
+            catch(ObjectDisposedException){break;}
+            catch(IOException){if(token.IsCancellationRequested)break;}
+            finally {if(ReferenceEquals(agentPipe,current))agentPipe=null;}
+        }
+    }
+    private async Task<JsonNode?> InvokeAgentFrontend(string name,JsonNode args,CancellationToken token)
+    {
+        string id=Guid.NewGuid().ToString("N");
+        var reply=new TaskCompletionSource<JsonNode?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        // This loop starts on the form thread; WebView messages and replies share it.
+        agentReplies[id]=reply;
+        try
+        {
+            Send(new {agentRequest=new {id,name,arguments=args}});
+            return await reply.Task.WaitAsync(TimeSpan.FromMinutes(2),token);
+        }
+        finally {agentReplies.Remove(id);}
+    }
+    private object ReceiveAgentReply(JsonNode? payload)
+    {
+        string id=payload?["id"]?.GetValue<string>() ?? "";
+        if(agentReplies.TryGetValue(id,out var waiting))
+        {
+            if(payload?["ok"]?.GetValue<bool>()==true)waiting.TrySetResult(payload["data"]?.DeepClone());
+            else waiting.TrySetException(new Exception(payload?["error"]?.GetValue<string>() ?? "ç¼–è¾‘å™¨æ“ä½œå¤±è´¥ã€‚"));
+        }
+        return new {received=true};
+    }
+    private object? PickStoryDocuments()
+    {
+        using var dialog=new OpenFileDialog{Title="å¯¼å…¥å°è¯´ã€å‰§æœ¬æˆ–å¤§çº²",Filter="æ•…äº‹æ–‡æœ¬|*.txt;*.md;*.docx",Multiselect=true};
+        if(dialog.ShowDialog(this)!=DialogResult.OK)return null;
+        return dialog.FileNames.Select(ReadStoryDocument).ToArray();
+    }
+    private static object ReadStoryDocument(string path)
+    {
+        path=Path.GetFullPath(path);var file=new FileInfo(path);
+        if(!file.Exists||file.Length>64*1024*1024)throw new Exception("æ•…äº‹æ–‡ä»¶ä¸å­˜åœ¨æˆ–è¶…è¿‡ 64 MBã€‚");
+        string extension=file.Extension.ToLowerInvariant(),text;
+        if(extension==".docx")
+        {
+            using var archive=System.IO.Compression.ZipFile.OpenRead(path);
+            var entry=archive.GetEntry("word/document.xml") ?? throw new Exception("è¿™ä¸æ˜¯æœ‰æ•ˆçš„ Word æ–‡æ¡£ã€‚");
+            if(entry.Length>32*1024*1024)throw new Exception("Word æ­£æ–‡å¤ªå¤§ï¼Œè¯·æŒ‰ç« èŠ‚æ‹†åˆ†ã€‚");
+            using var stream=entry.Open();using var reader=XmlReader.Create(stream,new XmlReaderSettings{DtdProcessing=DtdProcessing.Prohibit,XmlResolver=null,MaxCharactersInDocument=32*1024*1024});
+            XNamespace ns="http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+            var xml=XDocument.Load(reader);
+            text=string.Join("\n",xml.Descendants(ns+"p").Select(p=>string.Concat(p.Descendants().Select(n=>n.Name==ns+"t"?n.Value:n.Name==ns+"tab"?"\t":n.Name==ns+"br"?"\n":""))));
+        }
+        else if(extension is ".txt" or ".md")
+        {
+            byte[] bytes=File.ReadAllBytes(path);
+            if(bytes.Length>=2&&(bytes[0]==0xff&&bytes[1]==0xfe||bytes[0]==0xfe&&bytes[1]==0xff))
+            {using var r=new StreamReader(new MemoryStream(bytes),Encoding.UTF8,true);text=r.ReadToEnd();}
+            else
+            {
+                try{text=new UTF8Encoding(false,true).GetString(bytes).TrimStart('\ufeff');}
+                catch(DecoderFallbackException){Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);text=Encoding.GetEncoding("GB18030",EncoderFallback.ExceptionFallback,DecoderFallback.ExceptionFallback).GetString(bytes);}
+            }
+        }
+        else throw new Exception("æ•…äº‹æ–‡æœ¬æ”¯æŒ TXTã€Markdownã€DOCXï¼›å…¶ä»–æ ¼å¼è¯·å…ˆå¯¼å‡ºä¸ºæ–‡æœ¬ã€‚");
+        if(string.IsNullOrWhiteSpace(text))throw new Exception("æ–‡æ¡£æ²¡æœ‰å¯è¯»å–çš„æ­£æ–‡ã€‚");
+        if(text.Length>2000000)throw new Exception("å•ä¸ªæ•…äº‹è¶…è¿‡ 200 ä¸‡å­—ï¼Œè¯·æŒ‰ç« èŠ‚æ‹†åˆ†ã€‚");
+        return new {name=file.Name,text};
+    }
+    private object? PickDraftPlan()
+    {
+        using var dialog=new OpenFileDialog{Title="å¯¼å…¥ Agent ç¼–æ’çš„ç²—ç¨¿",Filter="ç²—ç¨¿ JSON|*.json"};
+        if(dialog.ShowDialog(this)!=DialogResult.OK)return null;
+        if(new FileInfo(dialog.FileName).Length>16*1024*1024)throw new Exception("ç²—ç¨¿æ–‡ä»¶å¤ªå¤§ï¼Œè¯·åˆ†æ‰¹ç”Ÿæˆã€‚");
+        return JsonNode.Parse(File.ReadAllText(dialog.FileName)) ?? throw new Exception("ç²—ç¨¿ä¸ºç©ºã€‚");
+    }
+    private object? PickDraftAssets()
+    {
+        using var dialog=new OpenFileDialog{Title="æ‰¹é‡å¯¼å…¥ç²—ç¨¿æ‰€éœ€ç´ æï¼ˆé…éŸ³è¯·åœ¨å¯¹ç™½ä¸Šä¼ ï¼‰",Filter="æ¨¡å‹ã€èƒŒæ™¯ã€åŠ¨ä½œã€éŸ³ä¹ã€è§†é¢‘|*.vrm;*.vrma;*.fbx;*.png;*.jpg;*.jpeg;*.webp;*.mp3;*.wav;*.ogg;*.mp4;*.webm",Multiselect=true};
+        return dialog.ShowDialog(this)==DialogResult.OK?ImportDraftAssets(dialog.FileNames):null;
+    }
+    private object ImportDraftAssets(string[] paths)
+    {
+        if(projectDirectory==null)throw new Exception("è¯·å…ˆæ‰“å¼€å·¥ç¨‹ã€‚");
+        if(paths.Length is <1 or >500)throw new Exception("ä¸€æ¬¡éœ€è¦å¯¼å…¥ 1ï½500 ä¸ªç´ æã€‚");
+        var types=new Dictionary<string,string>{[".vrm"]="vrm",[".vrma"]="motion",[".fbx"]="motion",[".png"]="image",[".jpg"]="image",[".jpeg"]="image",[".webp"]="image",[".mp3"]="audio",[".wav"]="audio",[".ogg"]="audio",[".mp4"]="video",[".webm"]="video"};
+        var files=paths.Select(p=>new FileInfo(Path.GetFullPath(p))).ToArray();
+        foreach(var f in files)if(!f.Exists||!types.ContainsKey(f.Extension.ToLowerInvariant())||f.Length>2L*1024*1024*1024)throw new Exception($"ç´ æä¸æ”¯æŒã€æ‰¾ä¸åˆ°æˆ–è¶…è¿‡ 2 GBï¼š{f.Name}");
+        var copied=new List<string>();var results=new List<object>();
+        try
+        {
+            foreach(var f in files)
+            {
+                string extension=f.Extension.ToLowerInvariant(),type=types[extension],id=Guid.NewGuid().ToString("N");
+                string relative=$"assets/{type}/{id}{extension}",target=Path.Combine(projectDirectory,relative.Replace('/',Path.DirectorySeparatorChar));
+                Directory.CreateDirectory(Path.GetDirectoryName(target)!);copied.Add(target);File.Copy(f.FullName,target);
+                results.Add(new {id,type,name=f.Name,path=relative,tags=Array.Empty<string>()});
+            }
+        }
+        catch{foreach(var f in copied)if(File.Exists(f))File.Delete(f);throw;}
+        return results;
+    }
+    private object ExportAgentGame(JsonNode? payload)
+    {
+        if(projectDirectory==null||payload?["project"] is not JsonObject p)throw new Exception("è¯·å…ˆæ‰“å¼€å·¥ç¨‹ã€‚");
+        string destination=Path.GetFullPath(payload["directory"]?.GetValue<string>() ?? "");
+        if(destination.StartsWith(Path.GetFullPath(projectDirectory)+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new Exception("å¯¼å‡ºä½ç½®ä¸èƒ½æ”¾åœ¨å·¥ç¨‹æ–‡ä»¶å¤¹é‡Œé¢ã€‚");
+        if(Directory.Exists(destination)||File.Exists(destination))throw new Exception("å¯¼å‡ºä½ç½®å·²ç»å­˜åœ¨ï¼Œè¯·æŒ‡å®šä¸€ä¸ªæ–°çš„æ–‡ä»¶å¤¹ã€‚");
+        BuildGame(destination,p);
+        return new {directory=destination};
+    }
+}
