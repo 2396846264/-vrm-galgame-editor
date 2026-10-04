@@ -1,0 +1,38 @@
+import * as THREE from 'three';
+import {GLTFExporter} from 'three/addons/exporters/GLTFExporter.js';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {join} from 'node:path';
+import {createEnvironment} from '../src/environment-schema.js';
+import {emptyDialogueCast} from '../src/dialogue-cast.js';
+globalThis.FileReader=class {async readAsArrayBuffer(blob){this.result=await blob.arrayBuffer();this.onloadend?.();} async readAsDataURL(blob){this.result=`data:${blob.type};base64,${Buffer.from(await blob.arrayBuffer()).toString('base64')}`;this.onloadend?.();}};
+const directory=process.argv[2];if(!directory)throw Error('Output directory required');await mkdir(join(directory,'assets'),{recursive:true});
+const scene=new THREE.Group(),olive=new THREE.MeshStandardMaterial({color:'#547358',roughness:.72}),dark=new THREE.MeshStandardMaterial({color:'#283334',roughness:.8});
+const box=(parent,w,h,d,x,y,z,material=olive)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);m.position.set(x,y,z);parent.add(m);return m;};
+box(scene,.9,.22,1.3,0,.5,.2);box(scene,.24,.12,1.8,-.35,.25,1);box(scene,.24,.12,1.8,.35,.25,1);
+for(const x of [-.65,.65]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,.15,24),dark);wheel.rotation.z=Math.PI/2;wheel.position.set(x,.5,.35);scene.add(wheel);}
+const turret=new THREE.Group();turret.name='Turret';turret.position.y=.85;scene.add(turret);box(turret,1.1,.8,.13,0,.1,.1);
+const barrel=new THREE.Group();barrel.name='Barrel';turret.add(barrel);
+const tube=new THREE.Mesh(new THREE.CylinderGeometry(.12,.18,1.7,20),olive);tube.rotation.x=Math.PI/2;tube.position.set(0,.15,-.8);barrel.add(tube);
+const muzzle=new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.22,20),dark);muzzle.rotation.x=Math.PI/2;muzzle.position.set(0,.15,-1.7);barrel.add(muzzle);
+const flash=new THREE.Mesh(new THREE.SphereGeometry(.35,12,8),new THREE.MeshBasicMaterial({color:'#ffc843'}));flash.name='Flash';flash.position.set(0,.15,-1.9);flash.scale.setScalar(.001);barrel.add(flash);
+const fire=new THREE.AnimationClip('开火与后坐',1.5,[new THREE.VectorKeyframeTrack('Barrel.position',[0,.08,.5,1.5],[0,0,0,0,0,.3,0,0,.25,0,0,0]),new THREE.VectorKeyframeTrack('Flash.scale',[0,.05,.13,.22,1.5],[.001,.001,.001,1,1,1,.5,.5,.5,.001,.001,.001,.001,.001,.001])]);
+const aim=new THREE.AnimationClip('炮管左右转动',2,[new THREE.QuaternionKeyframeTrack('Turret.quaternion',[0,.5,1,1.5,2],[0,-.3,0,.3,0].flatMap(angle=>new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),angle).toArray()))]);
+const exporter=new GLTFExporter();
+await writeFile(join(directory,'assets/animated-cannon.glb'),Buffer.from(await exporter.parseAsync(scene,{binary:true,animations:[fire,aim]})));
+await writeFile(join(directory,'assets/static-cannon.glb'),Buffer.from(await exporter.parseAsync(scene,{binary:true})));
+const rate=22050,count=Math.floor(rate*.4),wav=Buffer.alloc(44+count*2);wav.write('RIFF');wav.writeUInt32LE(wav.length-8,4);wav.write('WAVEfmt ',8);wav.writeUInt32LE(16,16);wav.writeUInt16LE(1,20);wav.writeUInt16LE(1,22);wav.writeUInt32LE(rate,24);wav.writeUInt32LE(rate*2,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);wav.write('data',36);wav.writeUInt32LE(count*2,40);
+let seed=23;for(let i=0;i<count;i++){seed=(Math.imul(seed,1664525)+1013904223)>>>0;const t=i/rate,noise=(seed/2**32*2-1),v=(Math.sin(t*2*Math.PI*(80-40*t))*.6+noise*.4)*Math.exp(-t*15)*.65;wav.writeInt16LE(Math.round(v*32767),44+i*2);}await writeFile(join(directory,'assets/boom.wav'),wav);
+const render={antialias:'standard',style:'original',outline:0,autoLight:true,lightStrength:.6,shadowEnabled:true,shadowAngle:0,shadowOpacity:.45,shadowHeight:0,paintEffect:'none',paintStrength:.65};
+const template={version:1,render,title:{logoImageId:'__none__',bgmId:'',backgroundId:'',cameraAngle:0},ui:{clickSoundId:''},knowledgeBooks:[],environmentSchemaVersion:1,dialogueCastVersion:1,
+  acts:[{bgmId:'',backgroundId:'',coverImageId:'',render:{...render,brightness:100,contrast:100,saturation:100,temperature:0,hue:0},weather:{type:'none'},steps:[]}]};
+template.id='scene-animation-example-v012';template.name='GLB场景动画与开火示例';template.characters=[];template.assetFolders=[];template.environmentLibrary={folders:[],assignments:{}};
+template.assets=[{id:'cannon',type:'sceneModel',name:'带开火动作的小炮',path:'assets/animated-cannon.glb'},{id:'static-cannon',type:'sceneModel',name:'静态小炮（没有动画）',path:'assets/static-cannon.glb'},{id:'boom',type:'audio',name:'开火测试声',path:'assets/boom.wav'}];
+const env=createEnvironment('双炮动画场景');env.id='env-animated';env.camera={position:[5,3,6],target:[0,.65,0],fov:38};env.background='#b5cfe0';env.nodes[0].color='#7f927a';
+for(const [id,x] of [['cannon-left',-1.5],['cannon-right',1.5]])env.nodes.push({id,name:id==='cannon-left'?'左边的小炮':'右边的小炮',kind:'model',assetId:'cannon',parentId:null,position:[x,0,0],rotation:[0,0,0],scale:[1,1,1]});
+const plain=structuredClone(env);plain.id='env-static';plain.name='静态模型场景';plain.nodes=plain.nodes.filter(n=>n.id!=='cannon-right');plain.nodes.at(-1).assetId='static-cannon';
+template.environments=[env,plain];template.title={...template.title,actors:[],environmentId:env.id,authorNote:'用程序创建的测试模型：开火后坐与左右转动。'};
+const cue={nodeId:'cannon-left',assetId:'cannon',clipIndex:0,clipName:'开火与后坐',enabled:true,delaySeconds:1,soundId:'boom'};
+const line=(id,text,cues=[])=>({id,text,characterId:'',speaker:'动画演示',voiceId:'',seId:'',choices:[],cast:emptyDialogueCast(),sceneAnimations:cues});
+const act={...template.acts[0],id:'act-animation',name:'01 · 延迟开火',environmentId:env.id,steps:[line('fire-line','这一句出现 1 秒后，左边的小炮会播放开火动作，同时发出测试声音。',[cue]),line('quiet-line','这一句不播放动画。切句会取消上一句的动作和声音。'),line('aim-line','这一句让右边的小炮左右转动，不播放声音。',[{...cue,nodeId:'cannon-right',clipIndex:1,clipName:'炮管左右转动',delaySeconds:0,soundId:''}])]};
+template.acts=[act,{...act,id:'act-static',name:'02 · 无动画的场景',environmentId:plain.id,steps:[line('static-line','这里只有静态 GLB，对话设置里不会出现“场景动画”按钮。')]}];
+await writeFile(join(directory,'project.json'),JSON.stringify(template,null,2));console.log(JSON.stringify({ok:true,directory,clips:2,animatedInstances:2,staticScene:true}));

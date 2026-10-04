@@ -1,28 +1,20 @@
-# 0.0.11 · 修复 Mixamo 动作姿势
+# 0.0.12 · GLB 场景动画、对白触发与声音
 
-导入 Mixamo 的跪姿瞄准动作时，旧版会额外改变 FBX 手臂角度，并把第一帧的腰部高度抬回站姿。本版修复这两处动作转换问题，保留作者的物品绑定设置。
+环境里的 GLB 现在可以播放自带动画。每一句对白分别设置动作、是否播放、延迟秒数和声音，适合大炮后坐、开门、机械转动等场景。
 
-- FBX 使用正确的骨骼绑定基准，避免重复修正手臂、手掌角度。
-- FBX / VRM 保留跪姿、坐姿的初始腰部高度。
-- 保留另一类导出文件的局部骨骼方向，以及手掌、手指的物品跟随。
-- 旧工程、逐句人物设置、多人标题与环境编辑器继续可用。
+- 读取 GLB 内实际存在的动画；本幕没有动画模型时自动隐藏按钮。
+- “场景动画”小窗：勾选播放、选择动作、输入延迟、选择声音、试播与保存。
+- 相同模型的多个物体分别设置，不占人物位置。
+- 声音提前加载，在动作开始时播放；游戏菜单同时暂停动作、计时和声音。
+- 切句时取消旧的延迟动作和声音，恢复模型原始姿势。
+- 支持撤销、重做、复制对白、工程压缩包和独立游戏。
 
-实际核对同一人物的跪姿瞄准、敬礼和坐姿鼓掌动作。瞄准动作的 1,312 个旋转关键点，最大差异小于 0.001 度。Windows 实际渲染、物品绑定及 11 组源码检查通过。
+**[完整图文说明](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/GLB场景动画_v0.0.12.md)**
 
-**[完整图文说明](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/Mixamo动作修复_v0.0.11.md)**
+![动画设置窗口](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v012/animation-settings.png)
 
-修复前：
+![小炮动画实际播放](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v012/cannon-playback.png)
 
-![旧版手臂姿势](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v011/editor-before.png)
+Windows 编辑器、工程重新打开、独立游戏实际验证通过，包含真实音频播放与暂停。12 组源码检查通过。完整解压新版后打开原工程即可。
 
-修复后，同一 FBX 人物与同一段动作：
-
-![修复后的 FBX 动作](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v011/fbx-after.png)
-
-VRM 也保留跪姿高度：
-
-![VRM 动作](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v011/vrm-after.png)
-
-完整解压新版，打开原工程即可，已有动作无需重新下载。若以前为了错误姿势调整过枪的位置，动作恢复后可在角色页重新微调。另一只手仍需配合合适的持物动作。
-
-程序包不附带示例人物、武器或第三方动作文件。
+模型需要事先包含动画；静态 GLB 不会自动生成开火动作。本次不包含粒子烟雾或物理碰撞。程序包不附带第三方人物与模型文件。

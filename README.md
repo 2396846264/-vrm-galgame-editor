@@ -1,16 +1,24 @@
-# VRM Galgame 编辑器 · 公开版 0.0.11
+# VRM Galgame 编辑器 · 公开版 0.0.12
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.11** 修复 Mixamo 动作的手臂角度与跪姿、坐姿高度，保留物品绑定、逐句登场、多人标题和可编辑 3D 环境。
+把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.12** 加入 GLB 场景动画、逐句触发、延迟和声音设置，保留 Mixamo 动作修复、物品绑定、逐句登场、多人标题和可编辑 3D 环境。
 
 **第一次使用？先看 [图文说明书](docs/新手说明书.md)。** 它从下载、准备素材到导出游戏一步一步讲清楚。
 
 ## 下载
 
-到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.11-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
+到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.12-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
 
 > 公开包不附带示例人物、背景、Mixamo 动作或故事工程。下列图片是**示例与效果图**，展示做出来可以是什么样子；请使用自己有权使用的素材。
+
+## 0.0.12 更新：GLB 场景动画
+
+在每句对白中设置环境模型的动作、是否播放、延迟时间和声音。本幕没有带动画的 GLB 时自动隐藏按钮。支持试播、撤销、工程保存和独立游戏。
+
+**[打开完整图文说明](docs/GLB场景动画_v0.0.12.md)**
+
+![场景动画设置](docs/images/v012/animation-settings.png)
 
 ## 0.0.11 更新：Mixamo 动作修复
 

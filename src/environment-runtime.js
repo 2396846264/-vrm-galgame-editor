@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {validateEnvironment} from './environment-schema.js';
+import {SceneAnimationPlayer} from './scene-animations.js';
 const url=a=>`https://project.galgame/${a.path.split('/').map(encodeURIComponent).join('/')}${a.revision?'?v='+encodeURIComponent(a.revision):''}`;
 export function disposeTree(root) {
   const geometries=new Set(),materials=new Set(),textures=new Set();
@@ -9,19 +10,20 @@ export function disposeTree(root) {
   geometries.forEach(v=>v.dispose());materials.forEach(v=>v.dispose());textures.forEach(v=>{v.dispose();v.source?.data?.close?.();});
 }
 export class EnvironmentRuntime {
-  constructor(scene){this.scene=scene;this.root=null;this.request=0;this.key='';this.objects=new Map();}
+  constructor(scene,loader=new GLTFLoader()){this.scene=scene;this.loader=loader;this.root=null;this.request=0;this.key='';this.environmentId='';this.objects=new Map();this.animations=new SceneAnimationPlayer();}
   async load(env,assets) {
-    const key=env?JSON.stringify(env):'';if(key===this.key)return this.objects;
     const token=++this.request;
+    const key=env?JSON.stringify([env,env.nodes.filter(n=>n.assetId).map(n=>{const a=assets.find(a=>a.id===n.assetId);return [a?.id,a?.path,a?.revision];})]):'';if(key===this.key)return this.objects;
     if(!env){this.clear(false);this.key='';return this.objects;}
     validateEnvironment(env,assets);
-    const root=new THREE.Group(), objects=new Map();
+    const root=new THREE.Group(), objects=new Map(),models=new Map();
     try {
       // Sequential decode bounds peak memory and makes cleanup deterministic.
       for(const n of env.nodes){
         let object=new THREE.Group();root.add(object);
         if(n.kind==='ground'){object.add(new THREE.Mesh(new THREE.PlaneGeometry(n.width,n.height),new THREE.MeshStandardMaterial({color:n.color||'#b7bfae',roughness:1,side:THREE.DoubleSide})));object.children[0].receiveShadow=true;object.children[0].castShadow=true;}else if(n.kind==='model'){
-          const gltf=await new GLTFLoader().loadAsync(url(assets.find(a=>a.id===n.assetId)));object.add(gltf.scene);
+          const gltf=await this.loader.loadAsync(url(assets.find(a=>a.id===n.assetId)));object.add(gltf.scene);
+          if(gltf.animations?.length)models.set(n.id,{nodeId:n.id,assetId:n.assetId,name:n.name||'GLB 模型',root:gltf.scene,clips:gltf.animations,mixer:new THREE.AnimationMixer(gltf.scene)});
           gltf.scene.traverse(o=>{if(o.isMesh){o.castShadow=n.castShadow!==false;o.receiveShadow=true;}});
         }else if(n.kind==='light'){
           const light=new THREE.PointLight(n.color,n.intensity,n.distance,2);light.castShadow=n.castShadow===true;light.shadow.mapSize.set(512,512);light.shadow.normalBias=.02;object.add(light);
@@ -38,9 +40,9 @@ export class EnvironmentRuntime {
       }
       for(const n of env.nodes)if(n.parentId)objects.get(n.parentId).add(objects.get(n.id));
       if(token!==this.request){disposeTree(root);return this.objects;}
-      this.clear(false);this.root=root;this.objects=objects;this.key=key;this.scene.add(root);return objects;
+      this.clear(false);this.root=root;this.objects=objects;this.key=key;this.environmentId=env.id;this.animations=new SceneAnimationPlayer(models);this.scene.add(root);return objects;
     }catch(error){disposeTree(root);throw error;}
   }
-  update(camera){if(!this.root)return;this.root.updateWorldMatrix(true,true);const position=camera.getWorldPosition(new THREE.Vector3());this.root.traverse(o=>{if(o.userData.environmentSky)o.position.copy(o.parent.worldToLocal(position.clone()));});}
-  clear(cancel=true){if(cancel)this.request++;if(this.root){this.scene.remove(this.root);disposeTree(this.root);}this.root=null;this.objects=new Map();this.key='';}
+  update(camera,delta=0,paused=false){if(!this.root)return;this.animations.update(delta,paused);this.root.updateWorldMatrix(true,true);const position=camera.getWorldPosition(new THREE.Vector3());this.root.traverse(o=>{if(o.userData.environmentSky)o.position.copy(o.parent.worldToLocal(position.clone()));});}
+  clear(cancel=true){if(cancel)this.request++;this.animations.dispose();if(this.root){this.scene.remove(this.root);disposeTree(this.root);}this.root=null;this.objects=new Map();this.key='';this.environmentId='';this.animations=new SceneAnimationPlayer();}
 }

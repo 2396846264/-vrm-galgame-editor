@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import {createSceneAnimationDialog} from './scene-animation-dialog.js';
+import {normalizeSceneAnimations} from './scene-animations.js';
 import {migrateTitleActors,newTitleActor} from './title-actors.js';
 import {migrateDialogueCast, emptyDialogueCast, copyDialogueCast, setDialogueActor} from './dialogue-cast.js';
 import {availablePropBones,propBoneLabels,propBone} from './character-props.js';
@@ -359,6 +361,7 @@ function titleMarkup(interactive) {
   return `${interactive ? '<button class="knowledge-title-button" data-action="knowledge-open" title="知识库" aria-label="打开知识库"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5C8 2 3 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-3-2-7-1-10 1Z"/><path d="M12 5v15"/></svg></button>' : ''}${project.title.logoImageId === '__none__' ? '' : `<div class="title-logo-region">${logoMarkup}</div>`}<nav class="title-bottom-menu">${menu}</nav>`;
 }
 async function showTitleScene(interactive = false) {
+  cancelSceneAnimations();
   stage?.stopTalking();
   events.cancel();
   eventMusicActive = false;
@@ -369,6 +372,7 @@ async function showTitleScene(interactive = false) {
   frame?.classList.add('title-mode');
   showBackground(null);
   if (interactive && asset(project.title.logoImageId)) rememberDiscovery('image', project.title.logoImageId);
+  stage.sceneAnimationsPaused=()=>Boolean(saveModalMode||document.hidden);
   stage.setRenderSettings(project.render);
   stage.setBackgroundLighting(asset(project.title.backgroundId));
   stage.setCameraAngle(project.title.cameraAngle);
@@ -419,6 +423,56 @@ async function applyEnvironmentCommit(message){
   }catch(error){await bridge('environmentCommitReply',{session:message.session,ok:false,error:error.message});}
 }
 let environmentBaselines=new Map();
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeSceneAnimations=async phase=>{
+  const assert=(value,message)=>{if(!value)throw Error(message);};
+  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const click=selector=>{const el=document.querySelector(selector);assert(el,`missing ${selector}`);el.click();};
+  const field=(row,key,value)=>{const el=document.querySelector(`[data-scene-row="${row}"] [data-scene-field="${key}"]`);assert(el,'missing modal field');if(el.type==='checkbox')el.checked=value;else el.value=String(value);el.dispatchEvent(new Event('input',{bubbles:true}));};
+  const barrel=id=>stage.environmentRuntime.objects.get(id)?.getObjectByName('Barrel');
+  if(phase==='editor'){
+    activePanel='story';selectedAct=1;selectedStep=0;renderSidebar();renderInspector();await updatePreview();
+    assert(!document.querySelector('[data-action="edit-scene-animations"]'),'static scene must hide button');
+    selectedAct=0;renderSidebar();renderInspector();await updatePreview();
+    assert(sceneAnimationCatalog().length===2,'detect both animated instances');assert(sceneAnimationCatalog()[0].clips.length===2,'detect two clips');
+    editorHistory.reset();const before=JSON.stringify(step().sceneAnimations);
+    click('[data-action="edit-scene-animations"]');field(0,'delaySeconds',2);click('[data-scene-preview]');
+    for(let i=0;i<100&&!stage.environmentRuntime.animations.pending.length;i++)await wait(50);
+    assert(stage.environmentRuntime.animations.pending[0].delaySeconds===2,'trial uses draft delay');
+    click('[data-scene-close]');assert(JSON.stringify(step().sceneAnimations)===before,'cancel changed project');assert(stage.environmentRuntime.animations.sounds.length===0,'cancel trial sound');
+    click('[data-action="edit-scene-animations"]');field(0,'enabled',true);field(0,'delaySeconds',1);field(0,'soundId','boom');field(1,'enabled',false);click('[data-scene-save]');
+    assert(step().sceneAnimations[0].delaySeconds===1&&step().sceneAnimations[0].soundId==='boom','save selected settings');
+    assert(step().sceneAnimations.length===2&&!step().sceneAnimations[1].enabled,'retain disabled object');
+    await restoreEditorHistory(-1);assert(JSON.stringify(step().sceneAnimations)===before,'undo settings');await restoreEditorHistory(1);assert(step().sceneAnimations.length===2,'redo settings');
+    click('[data-action="duplicate-step"]');assert(JSON.stringify(step().sceneAnimations)===JSON.stringify(act().steps[0].sceneAnimations),'duplicate settings');await restoreEditorHistory(-1);
+    selectedAct=0;selectedStep=0;renderSidebar();renderInspector();await updatePreview();click('[data-action="edit-scene-animations"]');
+    return {ok:true,phase,staticButtonHidden:true,animatedInstances:2,clips:sceneAnimationCatalog()[0].clips,modalCancel:true,saveUndoRedo:true,duplicate:true,cues:step().sceneAnimations};
+  }
+  if(phase==='archive-export'){
+    sceneAnimationDialog.close(false);stage.environmentRuntime.animations.stop();await save();
+    const archive=await bridge('saveProjectAs',{project:structuredClone(project),name:'GLB动画开火示例'});
+    const game=await bridge('exportGame',{folderName:'直接试玩'});return {ok:true,phase,archive,game};
+  }
+  if(phase==='reopen'){
+    activePanel='story';selectedAct=0;selectedStep=0;renderSidebar();renderInspector();await updatePreview();
+    assert(sceneAnimationCatalog().length===2,'archive clips');assert(step().sceneAnimations[0].soundId==='boom'&&step().sceneAnimations[0].delaySeconds===1,'archive settings');
+    click('[data-action="edit-scene-animations"]');return {ok:true,phase,cues:step().sceneAnimations,catalog:sceneAnimationCatalog()};
+  }
+  sceneAnimationDialog.close(false);playing=true;playAct=0;playStep=0;preparedAct=-1;await showPlayStep();
+  const player=stage.environmentRuntime.animations;
+  assert(player.pending.length===1,'start pending cue');await wait(350);assert(player.active.length===0&&player.sounds.length===0,'no early motion or sound');
+  const elapsed=player.pending[0].elapsed;saveModalMode='settings';await wait(400);assert(Math.abs(player.pending[0].elapsed-elapsed)<.15,'player menu must pause delay');saveModalMode='';
+  let reached=false;for(let i=0;i<80;i++){await wait(25);if(player.active.length){reached=true;break;}}assert(reached,'delayed animation never starts');assert(player.sounds.length===1,'sound did not start with animation');
+  await wait(120);assert(barrel('cannon-left').position.z>.1,'actual barrel recoil missing');assert(barrel('cannon-right').position.z===0,'second instance moved incorrectly');
+  const effect=[...activeEffects].find(sound=>sound.src.includes('boom.wav'));assert(effect&&!effect.paused&&effect.currentTime>0,'actual audio did not play: '+JSON.stringify({error:window.__lastEffectError,effects:[...activeEffects].map(s=>({src:s.src,time:s.currentTime,paused:s.paused,ended:s.ended,state:s.readyState,error:s.error?.code}))}));
+  const audioTime=effect.currentTime,recoil=barrel('cannon-left').position.z;saveModalMode='settings';await wait(250);
+  assert(effect.paused&&Math.abs(effect.currentTime-audioTime)<.1,'menu must pause actual audio');assert(Math.abs(barrel('cannon-left').position.z-recoil)<.04,'menu must pause animated model');saveModalMode='';await wait(60);
+  const initialSounds=player.sounds.length;playStep=1;await showPlayStep();assert(player.sounds.length===0&&player.active.length===0,'next line cancellation');assert(barrel('cannon-left').position.z===0,'next line restores pose');
+  playStep=0;await showPlayStep();await wait(150);playStep=1;await showPlayStep();await wait(1200);assert(player.sounds.length===0&&player.active.length===0,'late fire leaked into next line');
+  playStep=2;await showPlayStep();await wait(250);const turret=stage.environmentRuntime.objects.get('cannon-right').getObjectByName('Turret');assert(Math.abs(turret.quaternion.y)>.02,'second clip not playing');assert(player.sounds.length===0,'silent clip played sound');
+  playAct=1;playStep=0;await showPlayStep();assert(stage.environmentRuntime.animations.catalog().length===0,'switch static scene clips');
+  playAct=0;playStep=0;await showPlayStep();for(let i=0;i<80;i++){await wait(25);if(stage.environmentRuntime.animations.active.length)break;}await wait(100);
+  return {ok:true,phase,delayedStart:true,menuPause:true,actualAudioPlayed:true,actualAudioPaused:true,synchronizedSound:initialSounds===1,barrelRecoil:barrel('cannon-left').position.z,independentInstances:true,nextLineCancellation:true,lateSoundCancelled:true,secondClip:true,staticSceneSwitch:true,exported:mode==='player'};
+};
 if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeMixamo=async phase=>{
  const assert=(ok,message)=>{if(!ok)throw Error(message);};
  const actor=project.characters.find(c=>phase==='vrm'?asset(c.modelId)?.type==='vrm':isFbxModel(c.modelId));
@@ -643,6 +697,52 @@ async function editEnvironment(owner){
   for(const e of project.environments)if(!environmentBaselines.has(e.id))environmentBaselines.set(e.id,JSON.stringify(e));
   const result=await bridge('openEnvironment',{projectId:project.id,environment:structuredClone(env),environments:structuredClone(project.environments),environmentLibrary:structuredClone(project.environmentLibrary||{folders:[],assignments:{}}),referenceSettings:structuredClone(owner===project.title?{}:(step()?.cast||owner.steps?.[0]?.cast||{})),referenceMultiple:Object.values(step()?.cast||owner.steps?.[0]?.cast||{}).filter(s=>s.characterId).length>1,assets:structuredClone(project.assets)});if(result.created)environmentBaselines=new Map(project.environments.map(e=>[e.id,JSON.stringify(e)]));
 }
+function sceneAnimationCatalog() {
+  const runtime=stage?.environmentRuntime;
+  return activePanel==='story' && step() && runtime && runtime.environmentId===act()?.environmentId ? runtime.animations.catalog() : [];
+}
+function sceneAnimationKey(owner,current) { return JSON.stringify([project.id,owner?.id,owner?.environmentId,current?.id,current?.sceneAnimations||[]]); }
+function refreshSceneAnimationButton() {
+  const host=document.querySelector('#scene-animation-controls');if(!host)return;
+  const catalog=sceneAnimationCatalog();
+  host.innerHTML=catalog.length?`<button class="scene-animation-trigger" data-action="edit-scene-animations">场景动画 · ${catalog.length} 个物体</button><p class="tip">设置这一句是否播放动画、延迟和声音。</p>`:'';
+}
+let sceneSoundRequest=0;
+function cancelSceneAnimations(){sceneSoundRequest++;stage?.environmentRuntime.animations.stop();}
+function prepareSceneAnimationSound(id){
+  const item=asset(id);if(item?.type!=='audio')return Promise.resolve(null);
+  const sound=new Audio(assetUrl(item));sound.preload='auto';
+  return new Promise(resolve=>{
+    let timer;const ready=()=>{clearTimeout(timer);sound.removeEventListener('canplay',ready);sound.removeEventListener('error',ready);resolve(sound);};
+    sound.addEventListener('canplay',ready,{once:true});sound.addEventListener('error',ready,{once:true});timer=setTimeout(ready,5000);sound.load();
+  });
+}
+function sceneAnimationSound(id,preparedSound) {
+  const sound=playEffect(id,preparedSound);if(!sound)return null;
+  let stopped=false,resume=false;
+  return {stop(){stopped=true;sound.pause();sound.currentTime=0;activeEffects.delete(sound);},
+    pause(){resume=!sound.paused&&!sound.ended;sound.pause();},resume(){if(!stopped&&resume)sound.play().catch(()=>{});resume=false;}};
+}
+async function playSceneAnimations(owner,current,{sound=false,force=false,cues=current?.sceneAnimations}={}) {
+  const runtime=stage?.environmentRuntime;if(!runtime||runtime.environmentId!==owner?.environmentId)return;
+  const key=sceneAnimationKey(owner,current);if(!force&&runtime.animations.key===key)return;
+  cues=normalizeSceneAnimations(cues,runtime.animations.catalog(),project.assets);
+  const token=++sceneSoundRequest;runtime.animations.stop();const prepared=new Map();
+  if(sound){
+    await Promise.all((Array.isArray(cues)?cues:[]).filter(c=>c?.enabled&&c.soundId).map(async cue=>{prepared.set(cue.nodeId,await prepareSceneAnimationSound(cue.soundId));}));
+    if(token!==sceneSoundRequest||runtime!==stage?.environmentRuntime||runtime.environmentId!==owner?.environmentId){for(const effect of prepared.values())if(effect){effect.pause();effect.removeAttribute('src');effect.load();}return;}
+  }
+  runtime.animations.play(cues,project.assets,{key,sound:sound?(id,nodeId)=>sceneAnimationSound(id,prepared.get(nodeId)):null,force:true});
+}
+const sceneAnimationDialog=createSceneAnimationDialog({
+  save(cues,owner){
+    if(act()?.id!==owner.actId||step()?.id!==owner.stepId){toast('对白已切换，请重新打开动画设置。',true);return;}
+    editorHistory.seal();editorHistory.begin();step().sceneAnimations=cues;
+    markDirty({label:'设置本句场景动画'});refreshSceneAnimationButton();playSceneAnimations(act(),step(),{force:true});toast('已保存本句的场景动画');
+  },
+  preview(cues,owner){if(act()?.id===owner.actId&&step()?.id===owner.stepId)playSceneAnimations(act(),step(),{cues,sound:true,force:true});},
+  stop(restore){cancelSceneAnimations();if(restore&&!playing&&activePanel==='story')playSceneAnimations(act(),step(),{force:true});}
+});
 async function showEnvironment(owner){const env=project.environments?.find(e=>e.id===owner?.environmentId);await stage.setEnvironment(env,project.assets);return Boolean(env);}
 const isFbxModel=id=>asset(id)?.type==='fbxCharacter';
 const actorModels=()=>project.assets.filter(a=>['vrm','fbxCharacter'].includes(a.type));
@@ -833,6 +933,7 @@ async function restoreEditorHistory(direction) {
     const entry = editorHistory.peek(direction);
     if (!entry) return false;
     await bridge('restoreHistoryAssets', { project: entry.project });
+    sceneAnimationDialog.close(false);
     stopEditorVoicePreview(); events.cancel(); previewRequest++; titleRequest++;
     project = entry.project;
     const view = entry.view;
@@ -958,6 +1059,7 @@ function renderRecentProjectsModal() {
       ${recentProjects.length ? recentProjectButtons() : '<p>还没有打开过工程包。</p>'}</div></div>`);
 }
 function renderEditor() {
+  sceneAnimationDialog.close(false);cancelSceneAnimations();
   events.cancel();
   stage?.destroy();
   if (activePanel === 'assets') activePanel = 'story';
@@ -999,6 +1101,7 @@ function renderEditor() {
     }
     toast(message, true);
   });
+  stage.sceneAnimationsPaused=()=>Boolean(saveModalMode||document.hidden);
   stage.setRenderSettings(project.render);
   applyEditorTheme();
   updateHistoryButtons();
@@ -1344,6 +1447,7 @@ ${!isFbxModel(character(actorId)?.modelId) ? `<div class="field"><span>这一句
     </div></details>`;
 }
 function renderInspector() {
+  sceneAnimationDialog.close(false);
   if (activePanel === 'knowledge') { library.editor(); return; }
   const body = document.querySelector('#inspector-body');
   if (isEvent(act()) && ['story', 'render'].includes(activePanel)) { body.innerHTML = events.editor(act()); return; }
@@ -1439,6 +1543,7 @@ function renderInspector() {
       ${castSlots.map(slot => castEditor(currentAct, slot)).join('')}
       ${dialogueVoiceField(current)}
       ${field('本句音效', select('step.seId', byType('audio'), current.seId, '无音效'))}
+      <div id="scene-animation-controls"></div>
       <div class="inline-actions">${button('复制本句', 'duplicate-step')}${button('上移', 'move-up')}${button('下移', 'move-down')}${button('删除', 'delete-step', 'class="danger"')}</div>
       <hr><div class="section-heading">选择分支 ${button('＋ 选项', 'add-choice')}</div>
       ${current.choices.map((choice,index) => `<div class="choice-editor">
@@ -1450,6 +1555,7 @@ function renderInspector() {
   renderExpressionControls();
   renderCastExpressionControls();
   refreshMotionHints();
+  refreshSceneAnimationButton();
 }
 function renderCastExpressionControls() {
   if (!stage || !act()) return;
@@ -1503,6 +1609,7 @@ function renderExpressionControls() {
 async function updatePreview() {
   if (!stage || !project || playing) return;
   const request = ++previewRequest;
+  if(activePanel!=='story'||stage.environmentRuntime.animations.key!==sceneAnimationKey(act(),step()))cancelSceneAnimations();
   if (activePanel === 'characters') {
     events.cancel();
     await showCharacterEditorPreview();
@@ -1532,6 +1639,8 @@ async function updatePreview() {
   applySceneColor(chapterRender(currentAct, project.render));
   stage.setBackgroundLighting(null);
   await showEnvironment(currentAct);
+  if(request!==previewRequest||playing)return;
+  refreshSceneAnimationButton();
   document.querySelector('#stage-caption').textContent = currentAct?.name || '没有幕';
   const placeholder = document.querySelector('#stage-placeholder');
   setStagePlaceholder(placeholder, current ? '此句没有 VRM 角色' : '这一幕还没有人物', Boolean(modelAsset));
@@ -1546,6 +1655,7 @@ async function updatePreview() {
     setStagePlaceholder(placeholder, '', true);
   renderExpressionControls();
   renderCastExpressionControls();
+  if(activePanel==='story')playSceneAnimations(currentAct,current);
 }
 function eventBackdrop(node) {
   const index = project.acts.indexOf(node);
@@ -1553,6 +1663,7 @@ function eventBackdrop(node) {
   return { chapter: previous, backgroundId: node.event.backgroundId || previous?.backgroundId || project.title.backgroundId || '' };
 }
 async function prepareEventScene(node) {
+  cancelSceneAnimations();
   clearTyping(); clearAutoAdvance(); titleRequest++; previewRequest++;
   document.querySelector('.stage-frame')?.classList.remove('title-mode');
   document.querySelector('#player-start')?.classList.add('hidden');
@@ -1861,17 +1972,17 @@ function startTyping(value, characterId = project.acts[playAct]?.steps[playStep]
     }
   }, 1000 / textSpeed);
 }
-function playEffect(id) {
+function playEffect(id,preparedSound) {
   const item = asset(id);
-  if (!item) return false;
-  const sound = new Audio(assetUrl(item));
+  if (!item || item.type!=='audio') return false;
+  const sound = preparedSound || new Audio(assetUrl(item));
   sound.volume = audioSettings.master * audioSettings.effects;
   activeEffects.add(sound);
   const remove = () => activeEffects.delete(sound);
   sound.addEventListener('ended', remove, { once: true });
   sound.addEventListener('error', remove, { once: true });
-  sound.play().catch(remove);
-  return true;
+  sound.play().catch(error=>{if(new URLSearchParams(location.search).has('smoke'))window.__lastEffectError={id,message:error.message,name:error.name,code:sound.error?.code,src:sound.src};remove();});
+  return sound;
 }
 function playButtonClick() {
   if (playEffect(project?.ui?.clickSoundId)) return;
@@ -1944,6 +2055,8 @@ function updateAutoButton() {
   button.setAttribute('aria-pressed', String(autoPlay));
 }
 async function showPlayStep() {
+  sceneAnimationDialog.close(false);
+  cancelSceneAnimations();
   const request = ++playRequest;
   clearAutoAdvance();
   clearTyping();
@@ -1979,6 +2092,7 @@ async function showPlayStep() {
     applySceneColor(chapterRender(currentAct, project.render));
     stage.setBackgroundLighting(null);
     await showEnvironment(currentAct);
+    if(request!==playRequest||!playing)return;
     await displayActStep(currentAct, current);
     if (request !== playRequest || !playing) return;
     if (mode === 'player') for (const id of stage.visibleRecords.keys())
@@ -1987,6 +2101,8 @@ async function showPlayStep() {
     showBackground(null);
     await ensureCharacterPortrait(character(current.characterId));
     if (request !== playRequest || !playing) return;
+    await playSceneAnimations(currentAct,current,{sound:true,force:true});
+    if(request!==playRequest||!playing)return;
     showDialogue(current.speaker || character(current.characterId)?.name || '旁白', current.text, true, current.characterId);
     recordViewedDialogue(current);
     if (leavingEvent) transitionMusic(currentAct.bgmId); else setMusic(currentAct.bgmId);
@@ -2035,6 +2151,8 @@ function startPlay() {
   showPlayStep();
 }
 function stopPlay() {
+  sceneAnimationDialog.close(false);
+  cancelSceneAnimations();
   events.cancel(); restoredEventRemaining = undefined; musicFadeToken++;
   playing = false;
   clearInterval(playerAutoSaveTimer);
@@ -2538,6 +2656,7 @@ async function showCharacterEditorPreview() {
   if (!portrait) return;
   if(bindingMode)frame.insertBefore(stage.element,overlay);else portrait.appendChild(stage.element);
   stage.resize();
+  stage.sceneAnimationsPaused=()=>Boolean(saveModalMode||document.hidden);
   stage.setRenderSettings(project.render);
   if(!bindingMode){if(item.props?.length)stage.setCameraAngle(0);else stage.setPortraitCamera();}
   await stage.show(asset(item.modelId), asset(item.galleryMotionId), {}, 'center',
@@ -2702,6 +2821,7 @@ function renderPlayer() {
     }
     toast(message, true);
   });
+  stage.sceneAnimationsPaused=()=>Boolean(saveModalMode||document.hidden);
   stage.setRenderSettings(project.render);
   showTitleScene(true);
 }
@@ -2723,6 +2843,7 @@ document.addEventListener('click', async event => {
   const action = node.dataset.action;
   if (new URLSearchParams(location.search).has('smoke')) window.__lastClickAction = action;
   try {
+    if(action==='edit-scene-animations'){const catalog=sceneAnimationCatalog();sceneAnimationDialog.open({catalog,assets:project.assets,cues:step()?.sceneAnimations,owner:{actId:act()?.id,stepId:step()?.id}});return;}
     if (action.startsWith('assistant-')) { await storyAssistant.click(action,node); return; }
     if (action === 'upload-dialogue-voice') { await uploadDialogueVoice(); return; }
     if (action === 'preview-dialogue-voice' || action === 'preview-voice-asset') { await previewDialogueVoice(action === 'preview-dialogue-voice' ? step()?.voiceId : node.dataset.assetId); return; }

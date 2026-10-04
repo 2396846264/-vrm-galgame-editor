@@ -326,7 +326,7 @@ export class VRMStage {
       record.vrm.update(delta);
       this.characterProps.update(record);
     }
-    this.environmentRuntime.update(this.camera);this.updateShadowGround();
+    this.environmentRuntime.update(this.camera,delta,Boolean(this.sceneAnimationsPaused?.()));this.updateShadowGround();
     this.weather?.update(delta);
     if (this.paintEnabled && this.paintComposer) this.paintComposer.render(delta);
     else if (this.outlineEffect.enabled) this.outlineEffect.render(this.scene, this.camera);

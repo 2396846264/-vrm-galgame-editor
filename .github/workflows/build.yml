@@ -45,3 +45,4 @@ jobs:
           node scripts/test-dialogue-cast-props.mjs
           node scripts/test-title-actors.mjs
           node scripts/test-mixamo-fbx.mjs
+          node scripts/test-scene-animations.mjs

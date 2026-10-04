@@ -1,0 +1,40 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {SceneAnimationPlayer,normalizeSceneAnimations} from '../src/scene-animations.js';
+import {EnvironmentRuntime} from '../src/environment-runtime.js';
+import {createEnvironment} from '../src/environment-schema.js';
+
+const asset={id:'cannon',type:'sceneModel',path:'assets/cannon.glb'},audio={id:'boom',type:'audio',path:'assets/boom.wav'},assets=[asset,audio];
+const make=(nodeId='one')=>{
+  const root=new THREE.Group(), barrel=new THREE.Object3D();barrel.name='barrel';root.add(barrel);
+  const clip=new THREE.AnimationClip('fire',1,[new THREE.NumberKeyframeTrack('barrel.position[z]',[0,.5,1],[0,-1,0])]);
+  return {nodeId,assetId:'cannon',name:nodeId,root,barrel,clips:[clip,new THREE.AnimationClip('empty',0,[])],mixer:new THREE.AnimationMixer(root)};
+};
+const a=make(),b=make('two'),player=new SceneAnimationPlayer(new Map([['one',a],['two',b]]));
+const cue={nodeId:'one',assetId:'cannon',clipIndex:0,clipName:'fire',enabled:true,delaySeconds:2,soundId:'boom'};
+assert.equal(player.catalog().length,2);assert.equal(player.catalog()[0].clips.length,1);
+assert.equal(normalizeSceneAnimations([cue,{...cue},{...cue,nodeId:'missing'},{...cue,nodeId:'two',clipName:'replaced'}],player.catalog(),assets).length,1);
+assert.equal(normalizeSceneAnimations([{...cue,soundId:'cannon',delaySeconds:-10}],player.catalog(),assets)[0].soundId,'');
+assert.equal(normalizeSceneAnimations([{...cue,assetId:'replaced'}],player.catalog(),assets).length,0);
+let sounds=0,stops=0,pauses=0,resumes=0;
+const sound=()=>{sounds++;return {stop(){stops++;},pause(){pauses++;},resume(){resumes++;}};};
+player.play([cue],assets,{key:'line1',sound});player.update(1);assert.equal(a.barrel.position.z,0);assert.equal(sounds,0);
+player.play([cue],assets,{key:'line1',sound});assert.equal(player.pending[0].elapsed,1,'preview refresh must not restart');
+player.update(5,true);assert.equal(player.pending[0].elapsed,1,'paused delay');
+player.update(1);assert.equal(sounds,1);player.update(.5);assert.equal(a.barrel.position.z,-1);
+player.update(1,true);assert.equal(pauses,1);assert.equal(a.barrel.position.z,-1);player.update(.5);assert.equal(resumes,1);assert.equal(a.barrel.position.z,0);
+player.stop();assert.equal(stops,1);assert.equal(a.barrel.position.z,0);
+player.play([{...cue,delaySeconds:0}],assets,{sound});player.update(.25);assert.equal(a.barrel.position.z,-.5);
+player.play([{...cue,enabled:false}],assets,{sound});assert.equal(a.barrel.position.z,0,'new line restores original pose');assert.equal(player.pending.length,0);
+const before=sounds;player.play([cue],assets,{sound});player.update(.5);player.stop();player.update(10);assert.equal(sounds,before,'cancelled delays must never play');
+player.play([{...cue,delaySeconds:0},{...cue,nodeId:'two',delaySeconds:1}],assets,{sound});player.update(.5);assert.equal(a.barrel.position.z,-1);assert.equal(b.barrel.position.z,0);player.update(.75);assert.equal(b.barrel.position.z,-.5);player.dispose();assert.equal(b.barrel.position.z,0);
+
+const scene=new THREE.Scene(),env=createEnvironment('test');env.id='A';env.nodes=[{id:'one',name:'Cannon',kind:'model',assetId:'cannon',parentId:null,position:[0,0,0],rotation:[0,0,0],scale:[1,1,1]}];
+let loads=0,finish;
+const runtime=new EnvironmentRuntime(scene,{async loadAsync(){loads++;const model=make();return {scene:model.root,animations:loads===2?[]:model.clips};}});
+await runtime.load(env,assets);assert.equal(runtime.animations.catalog().length,1);await runtime.load(env,assets);assert.equal(loads,1,'cached load');
+await runtime.load({...env,id:'static'},assets);assert.equal(runtime.animations.catalog().length,0,'static GLB has no button catalog');
+await runtime.load(env,assets);runtime.loader={loadAsync(){return new Promise(resolve=>{finish=resolve;});}};
+const other=runtime.load({...env,id:'B'},assets);await runtime.load(env,assets);finish({scene:make().root,animations:[]});await other;assert.equal(runtime.environmentId,'A','cached scene selection invalidates stale load');
+runtime.clear();assert.equal(scene.children.length,0);assert.equal(runtime.animations.catalog().length,0);
+console.log(JSON.stringify({ok:true,checks:['actual animation mixer','clip detection','distinct model instances','delayed sound','idempotent preview','pause and resume','next-line cancellation','reset pose','stale references','static GLB','scene switch race','cleanup']}));
