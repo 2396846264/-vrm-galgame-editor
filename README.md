@@ -1,14 +1,14 @@
-# VRM Galgame 编辑器 · 源码更新 0.0.9
+# VRM Galgame 编辑器 · 公开版 0.0.9
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.8** 包含本地 **v0.7.29** 的功能。
+把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.9** 在原有功能上加入可编辑 3D 环境和 Mixamo FBX 人物。
 
 **第一次使用？先看 [图文说明书](docs/新手说明书.md)。** 它从下载、准备素材到导出游戏一步一步讲清楚。
 
 ## 下载
 
-到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.8-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
+到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.9-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
 
 > 公开包不附带示例人物、背景、Mixamo 动作或故事工程。下列图片是**示例与效果图**，展示做出来可以是什么样子；请使用自己有权使用的素材。
 
