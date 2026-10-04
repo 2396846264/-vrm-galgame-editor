@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {migrateTitleActors,newTitleActor} from '../src/title-actors.js';
+let serial=0;const next=()=>`actor-${++serial}`;
+const old={modelId:'fbx',motionId:'sit',motionOptions:{loop:false,after:'hold'},size:2.15,offsetX:1.85,offsetY:-.5,offsetZ:-2.4,yaw:10,pitch:15,expressionWeights:{happy:.2},logoImageId:'',cameraAngle:12,bgmId:'music'};
+migrateTitleActors(old,next);assert.equal(old.actors.length,1);assert.equal(old.actors[0].size,2.15);assert.equal(old.actors[0].offsetZ,-2.4);assert.equal(old.actors[0].motionOptions.loop,false);assert(!('modelId' in old));assert.equal(old.cameraAngle,12);assert.equal(old.logoImageId,'');
+const saved=JSON.stringify(old);migrateTitleActors(old,next);assert.equal(JSON.stringify(old),saved);
+old.actors.push(newTitleActor(next(),'vrm'),newTitleActor(next(),'fbx'));old.actors[1].offsetZ=.01;old.actors[1].props.push('gun');old.actors[1].expressionWeights.happy=.9;
+assert.equal(old.actors[0].offsetZ,-2.4);assert.deepEqual(old.actors[2].props,[]);assert.deepEqual(old.actors[2].expressionWeights,{});
+const reloaded=JSON.parse(JSON.stringify(old));migrateTitleActors(reloaded,next);assert.deepEqual(reloaded,old);
+const empty={logoImageId:'__none__'};migrateTitleActors(empty,next);assert.deepEqual(empty.actors,[]);assert.equal(empty.logoImageId,'__none__');
+const duplicate={actors:[{id:'same',modelId:'fbx'},{id:'same',modelId:'fbx'},{modelId:'vrm'}]};migrateTitleActors(duplicate,next);assert.equal(new Set(duplicate.actors.map(a=>a.id)).size,3);
+console.log('Title actors: legacy appearance, independent actors, duplicate models, empty logo and reopen passed.');

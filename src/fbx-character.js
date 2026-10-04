@@ -1,6 +1,10 @@
 ﻿
 import * as THREE from 'three';
 const names={Hips:'hips',Spine:'spine',Spine1:'chest',Spine2:'upperChest',Neck:'neck',Head:'head',LeftShoulder:'leftShoulder',LeftArm:'leftUpperArm',LeftForeArm:'leftLowerArm',LeftHand:'leftHand',RightShoulder:'rightShoulder',RightArm:'rightUpperArm',RightForeArm:'rightLowerArm',RightHand:'rightHand',LeftUpLeg:'leftUpperLeg',LeftLeg:'leftLowerLeg',LeftFoot:'leftFoot',RightUpLeg:'rightUpperLeg',RightLeg:'rightLowerLeg',RightFoot:'rightFoot'};
+for(const side of ['Left','Right'])for(const [source,target]of [['Thumb','Thumb'],['Index','Index'],['Middle','Middle'],['Ring','Ring'],['Pinky','Little']]){
+ const joints=source==='Thumb'?['Metacarpal','Proximal','Distal']:['Proximal','Intermediate','Distal'];
+ joints.forEach((joint,index)=>{names[side+'Hand'+source+(index+1)]=side.toLowerCase()+target+joint;});
+}
 const canonical=n=>n.replace(/^.*mixamorig:?/i,'').replace(/^[^:]*:/,'');
 export function createFbxActor(scene){
  let hasMesh=false;scene.traverse(o=>{if(o.isSkinnedMesh)hasMesh=true;});if(!hasMesh)throw Error('此 FBX 只有骨骼或动作，没有人物身体，请导入带蒙皮的人物 FBX');

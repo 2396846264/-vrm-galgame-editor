@@ -1,4 +1,4 @@
-# VRM Galgame Editor · 0.0.7
+# VRM Galgame Editor · 0.0.10
 
 [简体中文](../README.md) · [English](README.en.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
@@ -6,7 +6,9 @@
 
 A Windows editor for creating visual novels with 3D VRM characters. Arrange characters, dialogue, motion, backgrounds, and audio; preview the scene in a separate window; then export a playable game. The image above is a **feature illustration**, not a screenshot.
 
-**0.0.8 is the latest public release** and includes the local v0.7.29 features. The previous public downloads remain available. This public edition does not bundle VRM models, Mixamo motions, or the sample story's assets. Import assets you have permission to use.
+Version 0.0.10 adds bone-bound GLB props, independent actors per dialogue, multiple title characters and a blank Logo option. See the [illustrated guide in Chinese](物品绑定与多人标题_v0.0.10.md).
+
+![0.0.10](images/v010/title-actors.png)
 
 The new Story Assistant can read TXT, Markdown, and DOCX source material through a connected MCP or CLI Agent, then propose characters, acts, dialogue, assets, motion, music, weather, and news events for review. It never silently changes the project: proposals are previewed first and can be undone as one batch. The package also includes `VRMGalgame.Agent.exe`.
 

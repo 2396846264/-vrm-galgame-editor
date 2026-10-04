@@ -42,3 +42,5 @@ jobs:
           node scripts/test-environment-camera.mjs
           node scripts/test-environment-operations.mjs
           node scripts/test-vrm-thumbnail.mjs
+          node scripts/test-dialogue-cast-props.mjs
+          node scripts/test-title-actors.mjs

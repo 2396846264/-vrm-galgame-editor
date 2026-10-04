@@ -502,7 +502,7 @@ internal sealed partial class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".character-preview.json",
                         await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
-                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters"))
+                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props"))
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=editor-settings]').click(); const interval=document.querySelector('#editor-auto-save-minutes'); interval.value='10'; interval.dispatchEvent(new Event('input',{bubbles:true})); document.querySelector('[data-action=close-editor-settings]').click(); window.prompt=()=> '测试副本'; document.querySelector('[data-action=save-as]').click()");
                     await Task.Delay(2600);
@@ -1032,6 +1032,20 @@ internal sealed partial class EditorWindow : Form
                     await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, shot);
                 await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
                 await Task.Delay(1200);
+            }
+            if (Environment.GetCommandLineArgs().Contains("--smoke-props"))
+            {
+                string[] phases = Environment.GetCommandLineArgs().Contains("--smoke-props-reopen")
+                    ? new[] { "reopen" } : Environment.GetCommandLineArgs().Contains("--smoke-props-player") ? new[] { "player-props" } : Environment.GetCommandLineArgs().Contains("--smoke-props-export") ? new[] { "archive-export" } : new[] { "fbx-binding", "vrm-binding", "model-switch", "dialogue-visible", "one-shot", "dialogue-hidden", "dialogue-roster", "title-multi", "finger-bindings", "binding-view", "binding-view-exit" };
+                foreach (string phase in phases)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__propCheck=null;window.__vrmSmokeProps(" + JsonSerializer.Serialize(phase) + ").then(r=>window.__propCheck=r).catch(e=>window.__propCheck={error:e.message})");
+                    string check="null";
+                    for(int i=0;i<600;i++){check=await web.CoreWebView2.ExecuteScriptAsync("window.__propCheck");if(check!="null")break;await Task.Delay(100);}
+                    File.WriteAllText(smokeBase + "." + phase + ".json",check);
+                    using(var shot=File.Create(smokeBase+"."+phase+".png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);
+                    if(check.Contains("\"error\""))break;
+                }
             }
             string result = await web.CoreWebView2.ExecuteScriptAsync(
                 "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})");

@@ -1,3 +1,5 @@
+import {BindingView} from './binding-view.js';
+import {CharacterProps} from './character-props.js';
 ﻿import * as THREE from 'three';
 import {fitEnvironmentShadow,environmentShadowBounds} from './environment-shadows.js';
 import {EnvironmentRuntime} from './environment-runtime.js';
@@ -226,6 +228,7 @@ export class VRMStage {
       paintEffect: 'none', paintStrength: 0.65 };
     this.setRenderSettings(this.renderSettings);
     this.element.appendChild(this.renderer.domElement);
+    this.bindingView=new BindingView(this.camera,this.renderer.domElement);
     this.loader = new GLTFLoader();
     this.loader.register(parser => new VRMLoaderPlugin(parser));
     this.loader.register(parser => new VRMAnimationLoaderPlugin(parser));
@@ -240,6 +243,7 @@ export class VRMStage {
     this.mixer = null;
     this.activeRecord = null;
     this.visibleRecords = new Map();
+    this.characterProps = new CharacterProps(assetUrl);
     this.backgroundProfiles = new Map();
     this.currentModelId = null;
     this.currentMotionId = undefined;
@@ -320,6 +324,7 @@ export class VRMStage {
       this.applyFootLock(record);
       this.weather?.applyWind(record);
       record.vrm.update(delta);
+      this.characterProps.update(record);
     }
     this.environmentRuntime.update(this.camera);this.updateShadowGround();
     this.weather?.update(delta);
@@ -328,6 +333,7 @@ export class VRMStage {
     else this.renderer.render(this.scene, this.camera);
   }
   destroy() {
+    this.bindingView.dispose();
     this.running = false;
     this.weather?.dispose();
     cancelAnimationFrame(this.frame);
@@ -343,7 +349,14 @@ export class VRMStage {
   loadModel(modelAsset, actorKey = modelAsset?.id) {
     if (!modelAsset) return Promise.resolve(null);
     const existing = this.modelCache.get(actorKey);
-    if (existing) return existing;
+    if (existing?.modelAssetId === modelAsset.id) return existing;
+    if (existing) existing.then(record => {
+      if (!record) return;
+      record.propToken=(record.propToken||0)+1;
+      for(const p of record.attachedProps?.values()||[])p.root.removeFromParent();
+      record.mixer.stopAllAction();record.anchor.removeFromParent();VRMUtils.deepDispose(record.vrm.scene);
+      if(this.visibleRecords.get(actorKey)===record)this.visibleRecords.delete(actorKey);
+    }).catch(()=>{});
     const generation = this.cacheGeneration;
     const task = (modelAsset.type === 'fbxCharacter' ? this.fbxLoader.loadAsync(assetUrl(modelAsset)).then(fbx => ({scene:fbx,userData:{vrm:createFbxActor(fbx)}})) : this.loader.loadAsync(assetUrl(modelAsset))).then(gltf => {
       if (generation !== this.cacheGeneration) {
@@ -413,6 +426,7 @@ export class VRMStage {
       if (this.modelCache.get(actorKey) === task) this.modelCache.delete(actorKey);
       throw error;
     });
+    task.modelAssetId=modelAsset.id;
     this.modelCache.set(actorKey, task);
     return task;
   }
@@ -443,7 +457,7 @@ export class VRMStage {
   }
   prepareClip(modelAsset, motionAsset, actorKey = modelAsset?.id) {
     if (!modelAsset || !motionAsset) return Promise.resolve(null);
-    const key = `${actorKey}:${motionAsset.id}`;
+    const key = `${actorKey}:${modelAsset.id}:${motionAsset.id}`;
     const existing = this.clipCache.get(key);
     if (existing) return existing;
     const generation = this.cacheGeneration;
@@ -479,7 +493,7 @@ export class VRMStage {
     (await Promise.allSettled([...pairs.values()].map(pair => this.prepareClip(pair.modelAsset, pair.motionAsset, pair.actorKey)))).forEach(report);
   }
   async show(modelAsset, motionAsset, expressionWeights = {}, position = 'center', transform = {}, actorKey = modelAsset?.id,
-    motionOptions = {}, playbackKey = '') {
+    motionOptions = {}, playbackKey = '', propSettings = {}) {
     this.stopTalking();
     const request = ++this.requestNumber;
     try {
@@ -505,6 +519,7 @@ export class VRMStage {
         record.vrm.update(0);
         record.vrm.scene.visible = true;
         this.visibleRecords.set(actorKey, record);
+        await this.characterProps.sync(record,propSettings.bindings||[],propSettings.visibleIds||[],propSettings.assets||[],()=>request===this.requestNumber);
       }
       this.element.style.visibility = record || this.environmentRuntime.root || this.weather?.active ? 'visible' : 'hidden';
       this.currentModelId = modelId;
@@ -544,8 +559,8 @@ export class VRMStage {
         const record = entry.record;
         if (!record) continue;
         const speaking = entry.actorKey === speaker?.actorKey;
-        record.returnMotionAsset = entry.motionAsset || null;
-        record.returnMotionClip = entry.baseClip || null;
+        record.returnMotionAsset = entry.returnToIdle ? null : entry.motionAsset || null;
+        record.returnMotionClip = entry.returnToIdle ? null : entry.baseClip || null;
         this.poseRecord(record, entry.clip, speaking ? speaker.motionAsset : entry.motionAsset, smooth,
           speaking ? speaker.motionOptions : entry.motionOptions,
           speaking ? speaker.playbackKey : entry.playbackKey);
@@ -557,6 +572,8 @@ export class VRMStage {
         this.dimRecord(record, speakingRecord ? (speaking ? 1 : 0.65) : 1);
         record.vrm.update(0);
         record.vrm.scene.visible = true;
+        await this.characterProps.sync(record,entry.props||[],entry.visiblePropIds||[],entry.assets||[],()=>request===this.requestNumber);
+        if(request!==this.requestNumber)return;
       }
       this.element.style.visibility = next.size || this.environmentRuntime.root || this.weather?.active ? 'visible' : 'hidden';
       this.activeRecord = speakingRecord || null;
@@ -843,6 +860,7 @@ export class VRMStage {
       this.renderer.aaMode = quality;
       this.renderer.outputColorSpace = THREE.SRGBColorSpace;
       this.element.replaceChild(this.renderer.domElement, previous.domElement);
+      if(this.bindingView){this.bindingView.dispose();this.bindingView=new BindingView(this.camera,this.renderer.domElement);}
       this.paintComposer?.dispose();
       this.paintComposer = null;
       this.paintPass = null;
@@ -1121,6 +1139,7 @@ export class VRMStage {
     for (const task of this.motionCache.values()) task.then(source => {
       if (source) VRMUtils.deepDispose(source.scene || source.fbx);
     }).catch(() => {});
+    this.characterProps.clear();
     this.modelCache.clear();
     this.motionCache.clear();
     this.clipCache.clear();

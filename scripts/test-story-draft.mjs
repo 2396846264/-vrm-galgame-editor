@@ -8,15 +8,15 @@ const original=structuredClone(project);
 const draft={schemaVersion:1,title:'粗稿',characters:[{name:'绯音',description:'引路人'},{name:'澄夏',description:'不要覆盖'}],acts:[{name:'港口',backgroundId:'bg',bgmId:'music',weather:'rain',steps:[{speaker:'绯音',text:'快走！',motionId:'motion',emotion:'surprised'},{speaker:'澄夏',text:'稍等。'},{speaker:'旁白',text:'雨越下越大。'}]},{kind:'event',name:'急报',event:{type:'war',title:'战争爆发',body:'远方消息',countryA:'甲国',countryB:'乙国'}}]};
 const history=createEditorHistory({project:()=>project,selection:()=>({})});history.reset();
 const compiled=compileDraft(draft,project,id);assert.equal(compiled.characters.length,1);assert.equal(compiled.characters[0].modelId,'model');assert.equal(compiled.acts[0].weather.type,'rain');assert.equal(compiled.acts[0].render.autoLight,true);
-assert.equal(compiled.acts[0].steps[0].motionId,'motion');assert.equal(compiled.acts[0].steps[0].voiceId,'');assert.deepEqual(project,original);
+assert.equal(Object.values(compiled.acts[0].steps[0].cast).find(s=>s.characterId===compiled.acts[0].steps[0].characterId).motionId,'motion');assert.equal(compiled.acts[0].steps[0].voiceId,'');assert.deepEqual(project,original);
 history.begin();applyCompiledDraft(project,compiled,'batch');syncDialogueVoices(project);history.commit({label:'采用粗稿'});
 assert.equal(project.acts.length,3);assert.equal(project.characters.find(c=>c.id==='old').description,'作者介绍');assert(project.assetFolders.find(f=>f.characterId===compiled.characters[0].id)?.locked);assert.equal(history.status().undoCount,1);
 let entry=history.peek(-1);project=entry.project;history.accept(entry.target);assert.deepEqual(project,original);
 entry=history.peek(1);project=entry.project;history.accept(entry.target);assert.equal(project.acts.length,3);
 for(const mutate of [d=>d.acts[0].backgroundId='missing',d=>d.acts[0].bgmId='model',d=>d.acts[0].steps[0].emotion='evil',d=>d.acts[0].steps[0].text='',d=>d.schemaVersion=3,d=>d.acts=[],d=>d.characters.push({name:'绯音'}),d=>d.acts[0].cast=['绯音','绯音']]){const bad=structuredClone(draft);mutate(bad);assert.throws(()=>compileDraft(bad,project,id));}
 const crowd=compileDraft({schemaVersion:1,acts:[{name:'人群',steps:['甲','乙','丙','丁','甲'].map(speaker=>({speaker,text:'你好'}))}]},original,id);
-assert.equal(crowd.acts.length,2);assert(crowd.acts.every(a=>new Set(Object.values(a.cast).filter(Boolean)).size<=3));
-for(const act of crowd.acts)for(const line of act.steps)assert(Object.values(act.cast).includes(line.characterId));
+assert.equal(crowd.acts.length,1);
+for(const act of crowd.acts)for(const line of act.steps){assert(Object.values(line.cast).some(s=>s.characterId===line.characterId));assert(new Set(Object.values(line.cast).map(s=>s.characterId).filter(Boolean)).size<=3);}
 const offline=splitTextDraft('# 第一章\n绯音：我们走吧。\n港口起了风。',original);assert.equal(offline.acts[0].steps[0].speaker,'绯音');assert.equal(offline.acts[0].steps[1].speaker,'旁白');assert.match(offline.notes[0],/没有使用 AI/);
 const unknown=compileDraft({schemaVersion:1,acts:[{name:'无素材',steps:[{speaker:'小雪',text:'你好'}]}]},original,id);assert(unknown.notes.some(n=>n.includes('小雪')));
-assert(!JSON.stringify(draftContext(project)).includes('path'));console.log('PASS: playable draft compilation, real asset validation, speaker/cast alignment, three-actor splitting, existing story preservation, locked voice folders, atomic undo/redo, missing assets, offline honest labeling');
+assert(!JSON.stringify(draftContext(project)).includes('path'));console.log('PASS: playable draft compilation, real asset validation, speaker/cast alignment, three actors per dialogue without splitting acts, existing story preservation, locked voice folders, atomic undo/redo, missing assets, offline honest labeling');

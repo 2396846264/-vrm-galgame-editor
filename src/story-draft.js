@@ -1,3 +1,4 @@
+import {legacyDialogueCast,migrateDialogueCast} from './dialogue-cast.js';
 // The same validated draft format is used by the assistant panel and live Agent tools.
 // No model-supplied IDs, paths, scripts or existing project objects are trusted.
 export const draftVersion = 1;
@@ -111,36 +112,21 @@ export function compileDraft(value, project, id = () => crypto.randomUUID().repl
   });
   if (!acts.length) throw new Error('粗稿至少需要一个幕或事件。');
   for (const role of additions) if (!role.modelId) missing.add(`角色“${role.name}”还需要绑定 VRM 模型；暂时仍可显示名字和对白。`);
-  // This renderer supports three actors per act. Split a crowded scene at the
-  // fourth speaker instead of silently leaving that speaker's model offstage.
-  const playable=[];
-  for (const act of acts) {
-    if(act.kind==='event'){playable.push(act);continue;}
-    let segment={...act,steps:[],cast:{left:'',center:'',right:''}}, part=1;
+  // Every dialogue has its own three places. A new speaker can replace an
+  // occupied place without forcing a fourth character into another act.
+  for(const act of acts){
+    if(act.kind==='event')continue;
+    const roster={...act.cast};
     for(const line of act.steps){
-      let slot=slots.find(s=>segment.cast[s]===line.characterId);
-      if(line.characterId&&!slot){
-        slot=!segment.cast[line.position]?line.position:slots.find(s=>!segment.cast[s]);
-        if(!slot){
-          playable.push(segment);part++;
-          segment={...act,id:id(),name:`${act.name} · ${part}`,steps:[],cast:{left:'',center:'',right:''}};
-          slot=line.position;
-          missing.add(`“${act.name}”有超过三位说话人物，已拆成连续小幕，请检查上场安排。`);
-        }
-        segment.cast[slot]=line.characterId;
+      if(line.characterId && !Object.values(roster).includes(line.characterId)){
+        const place=!roster[line.position]?line.position:slots.find(s=>!roster[s])||line.position;
+        roster[place]=line.characterId;
       }
-      if(line.characterId)line.position=slot;
-      segment.steps.push(line);
+      line.cast=legacyDialogueCast({...act,cast:roster},line);
     }
-    // Explicit cast entries may include silent actors; fill remaining places.
-    for(const [preferred,roleId] of Object.entries(act.cast)){
-      if(!roleId||Object.values(segment.cast).includes(roleId))continue;
-      const slot=!segment.cast[preferred]?preferred:slots.find(s=>!segment.cast[s]);
-      if(slot)segment.cast[slot]=roleId;
-    }
-    playable.push(segment);
   }
-  if(playable.length>500)throw new Error('粗稿拆分后超过 500 幕，请分批生成。');
+  migrateDialogueCast({characters:additions,acts});
+  const playable=acts;
   return { title:text(draft.title,'游戏名称',200),characters:additions,acts:playable,notes:[...missing],lineCount,eventCount:acts.filter(a=>a.kind==='event').length };
 }
 export function applyCompiledDraft(project, compiled, batchId) {

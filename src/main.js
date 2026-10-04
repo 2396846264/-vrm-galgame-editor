@@ -1,3 +1,7 @@
+import * as THREE from 'three';
+import {migrateTitleActors,newTitleActor} from './title-actors.js';
+import {migrateDialogueCast, emptyDialogueCast, copyDialogueCast, setDialogueActor} from './dialogue-cast.js';
+import {availablePropBones,propBoneLabels,propBone} from './character-props.js';
 import './style.css';
 import './skin.css';
 import './layout.css';
@@ -35,10 +39,11 @@ let selectedAct = 0;
 let selectedStep = 0;
 let selectedCharacter = 0;
 let activePanel = 'story';
+let propPreviewMode=false,selectedBindingPropId='';
 const openAssetFolders = new Set(['unfiled:vrm', 'unfiled:motion', 'unfiled:image', 'unfiled:audio', 'unfiled:video']);
 let dockInitializedProjectId = '';
 let activeAssetType = 'image';
-const currentAssetFolder = { image: '', vrm: '', fbxCharacter: '', motion: '', audio: '', voice: '', video: '' };
+const currentAssetFolder = { image: '', vrm: '', fbxCharacter: '', sceneModel: '', motion: '', audio: '', voice: '', video: '' };
 let draggingStory = null;
 let playing = false;
 let playAct = 0;
@@ -246,7 +251,7 @@ const transformOf = entry => ({
 const modelForStep = entry => asset(character(entry?.characterId)?.modelId);
 const castSlots = ['left', 'center', 'right'];
 const castSlotLabels = { left: '左侧', center: '中间', right: '右侧' };
-const castSettingsOf = (currentAct, slot) => currentAct?.castSettings?.[slot] || {};
+const castSettingsOf = (currentAct, slot) => step()?.cast?.[slot] || {};
 const motionOptionsOf = holder => holder?.motionOptions || {};
 function motionAdvanced(holder, scope) {
   const settings = motionOptionsOf(holder);
@@ -282,14 +287,13 @@ async function refreshMotionHints() {
       motion = asset(step()?.motionId);
       model = modelForStep(step());
       actorKey = step()?.characterId || model?.id;
-    } else if (scope === 'title') {
-      motion = asset(project.title.motionId);
-      model = asset(project.title.modelId);
-      actorKey = `title:${project.title.modelId || 'empty'}`;
+    } else if (scope.startsWith('titleActor:')) {
+      const actor=project.title.actors.find(item=>item.id===scope.slice(11));
+      motion=asset(actor?.motionId); model=asset(actor?.modelId); actorKey=`title:${actor?.id}`;
     } else if (scope.startsWith('cast:')) {
       const slot = scope.slice(5);
       motion = asset(castSettingsOf(act(), slot).motionId);
-      actorKey = act()?.cast?.[slot];
+      actorKey = step()?.cast?.[slot]?.characterId;
       model = asset(character(actorKey)?.modelId);
     }
     if (!motion) { hint.textContent = '第 1 帧是动作开头，结束帧留空会播到最后。'; continue; }
@@ -308,62 +312,37 @@ async function refreshMotionHints() {
   }
 }
 function castAssignments(currentAct, speakingStep) {
-  const slots = { ...currentAct?.cast };
-  const seen = new Set();
-  const actors = castSlots.flatMap(baseSlot => {
-    const actorKey = slots[baseSlot];
-    if (!actorKey || seen.has(actorKey)) return [];
-    seen.add(actorKey);
-    return [{ actorKey, baseSlot }];
-  });
-  const occupied = new Set();
-  for (const actor of actors) {
-    const wanted = speakingStep?.castPositions?.[actor.actorKey];
-    actor.position = castSlots.includes(wanted) && !occupied.has(wanted) ? wanted : null;
-    if (actor.position) occupied.add(actor.position);
-  }
-  for (const actor of actors) {
-    if (actor.position) continue;
-    actor.position = !occupied.has(actor.baseSlot) ? actor.baseSlot : castSlots.find(slot => !occupied.has(slot));
-    occupied.add(actor.position);
-  }
-  return actors;
+  return castSlots.flatMap(slot => {const settings=speakingStep?.cast?.[slot];return settings?.characterId?[{actorKey:settings.characterId,baseSlot:slot,position:slot}]:[];});
 }
-function castForAct(currentAct, speakingStep) {
-  return castAssignments(currentAct, speakingStep).flatMap(({ actorKey, baseSlot, position }) => {
-    const modelAsset = asset(character(actorKey)?.modelId);
-    if (!modelAsset) return [];
-    const settings = castSettingsOf(currentAct, baseSlot);
-    return [{ actorKey, modelAsset, position, transform: transformOf(settings),
-      expressionWeights: settings.expressionWeights || {}, motionAsset: asset(settings.motionId),
-      motionOptions: motionOptionsOf(settings), playbackKey: `act:${currentAct.id}:${actorKey}` }];
+function castForAct(currentAct, speakingStep = currentAct?.steps?.[0]) {
+  return castAssignments(currentAct, speakingStep).flatMap(({actorKey,position}) => {
+    const actor=character(actorKey),modelAsset=asset(actor?.modelId),settings=speakingStep.cast[position];
+    return modelAsset?[{actorKey,modelAsset,position,transform:transformOf(settings),expressionWeights:settings.expressionWeights||{},motionAsset:asset(settings.motionId),motionOptions:motionOptionsOf(settings),playbackKey:`step:${speakingStep.id}:${actorKey}`,props:actor.props||[],visiblePropIds:settings.props||[],assets:project.assets,returnToIdle:true}]:[];
   });
 }
 async function displayActStep(currentAct, current) {
-  const cast = castForAct(currentAct, current);
-  if (cast.length > 0) {
-    const speakingEntry = cast.find(entry => entry.actorKey === current?.characterId);
-    const base = speakingEntry?.transform || transformOf(null);
-    const moment = transformOf(current);
-    await stage.showCast(cast, speakingEntry ? {
-      actorKey: current.characterId, modelAsset: modelForStep(current),
-      motionAsset: asset(current.motionId) || speakingEntry?.motionAsset,
-      motionOptions: current.motionId ? motionOptionsOf(current) : speakingEntry?.motionOptions,
-      playbackKey: current.motionId ? `step:${current.id}` : speakingEntry?.playbackKey,
-      expressionWeights: { ...(speakingEntry?.expressionWeights || {}), ...expressionWeightsOf(current) },
-      transform: { size: base.size * moment.size / defaultSize,
-        offsetX: base.offsetX + moment.offsetX, offsetY: base.offsetY + moment.offsetY,
-        offsetZ: base.offsetZ + moment.offsetZ,
-        yaw: base.yaw + moment.yaw }
-    } : null, playing);
-  } else {
-    await stage.show(null, null, {}, 'center', transformOf(null), '', {}, '');
-  }
+  const cast=castForAct(currentAct,current),speaker=cast.find(entry=>entry.actorKey===current?.characterId);
+  await stage.showCast(cast,speaker||null,playing);
 }
 const adjustmentSlider = (key, label, value, min, max, stepSize, display) =>
   `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-adjust-output="${key}">${display}</output></label>`;
 const titleSlider = (key, label, value, min, max, stepSize, display) =>
   `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-title-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-title-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-title-output="${key}">${display}</output></label>`;
+function titleActorEditor(actor,index){
+  const role=character(actor.characterId);
+  const transforms=[['size','大小',50,500,5],['offsetX','左右位置',-10,10,.01],['offsetY','上下位置',-10,10,.01],['offsetZ','前后位置',-100,100,.01],['yaw','左右转身',-120,120,1],['pitch','上下转角',-60,60,1]];
+  return `<details class="title-actor-editor" open><summary>人物 ${index+1} · ${escape(asset(actor.modelId)?.name||'未选择模型')}</summary>
+    ${field('人物模型',`<select data-title-actor-id="${actor.id}" data-title-actor-field="modelId">${options(actorModels(),actor.modelId,'不显示人物')}</select>`)}
+    ${field('使用角色及其物品',`<select data-title-actor-id="${actor.id}" data-title-actor-field="characterId">${options(project.characters.filter(c=>c.modelId),actor.characterId,'直接使用模型')}</select>`)}
+    ${field('人物动作',`<select data-title-actor-id="${actor.id}" data-title-actor-field="motionId">${options(byType('motion'),actor.motionId,'保持站立')}</select>`)}
+    ${motionAdvanced(actor,`titleActor:${actor.id}`)}
+    ${transforms.map(([key,label,min,max,step])=>{const value=key==='size'?Math.round(actor.size*100):actor[key];return `<label class="adjustment depth-adjustment"><span>${label}${key==='size'?' (%)':''}</span><input type="range" data-title-actor-id="${actor.id}" data-title-actor-adjust="${key}" min="${min}" max="${max}" step="any" value="${value}"><input class="depth-number" type="number" data-title-actor-id="${actor.id}" data-title-actor-adjust="${key}" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}精确数值"></label>`;}).join('')}
+    ${role?.modelId===actor.modelId?(role.props||[]).map(prop=>`<label class="motion-option-row"><span>显示 ${escape(prop.name)}</span><input type="checkbox" data-title-actor-id="${actor.id}" data-title-actor-prop="${prop.id}" ${actor.props.includes(prop.id)?'checked':''}></label>`).join(''):''}
+    ${actor.modelId&&!isFbxModel(actor.modelId)?`<h3>人物表情</h3><div data-title-actor-expressions="${actor.id}" class="expression-controls"></div>`:''}
+    ${button('删除这个标题人物','delete-title-actor',`data-id="${actor.id}"`)}
+  </details>`;
+}
+
 function titleMarkup(interactive) {
   const logo = asset(project.title.logoImageId);
   const logoMarkup = logo
@@ -377,7 +356,7 @@ function titleMarkup(interactive) {
   const menu = items.map(([label, action]) => interactive
     ? `<button type="button" data-action="${action}" ${action === 'continue-game' && !hasSave ? 'disabled' : ''}>${label}</button>`
     : `<span>${label}</span>`).join('');
-  return `${interactive ? '<button class="knowledge-title-button" data-action="knowledge-open" title="知识库" aria-label="打开知识库"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5C8 2 3 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-3-2-7-1-10 1Z"/><path d="M12 5v15"/></svg></button>' : ''}<div class="title-logo-region">${logoMarkup}</div><nav class="title-bottom-menu">${menu}</nav>`;
+  return `${interactive ? '<button class="knowledge-title-button" data-action="knowledge-open" title="知识库" aria-label="打开知识库"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5C8 2 3 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-3-2-7-1-10 1Z"/><path d="M12 5v15"/></svg></button>' : ''}${project.title.logoImageId === '__none__' ? '' : `<div class="title-logo-region">${logoMarkup}</div>`}<nav class="title-bottom-menu">${menu}</nav>`;
 }
 async function showTitleScene(interactive = false) {
   stage?.stopTalking();
@@ -389,7 +368,7 @@ async function showTitleScene(interactive = false) {
   const frame = document.querySelector('.stage-frame');
   frame?.classList.add('title-mode');
   showBackground(null);
-  if (interactive && project.title.logoImageId) rememberDiscovery('image', project.title.logoImageId);
+  if (interactive && asset(project.title.logoImageId)) rememberDiscovery('image', project.title.logoImageId);
   stage.setRenderSettings(project.render);
   stage.setBackgroundLighting(asset(project.title.backgroundId));
   stage.setCameraAngle(project.title.cameraAngle);
@@ -403,16 +382,21 @@ async function showTitleScene(interactive = false) {
   const placeholder = document.querySelector('#stage-placeholder');
   if (placeholder) placeholder.style.display = 'none';
   const loading = document.querySelector('#act-loading');
-  if (project.title.modelId) loading?.classList.remove('hidden');
-  await stage.show(asset(project.title.modelId), asset(project.title.motionId),
-    project.title.expressionWeights || {}, 'center', transformOf(project.title), `title:${project.title.modelId || 'empty'}`,
-    motionOptionsOf(project.title), 'title');
+  const entries = (project.title.actors || []).filter(item=>asset(item.modelId)).map(item=>{
+    const role=character(item.characterId);
+    return {actorKey:`title:${item.id}`,modelAsset:asset(item.modelId),motionAsset:asset(item.motionId),
+      motionOptions:motionOptionsOf(item),expressionWeights:item.expressionWeights,position:'center',transform:transformOf(item),
+      props:role?.modelId===item.modelId?role.props||[]:[],visiblePropIds:item.props,assets:project.assets,
+      returnToIdle:true,playbackKey:`title:${item.id}:${item.motionId}`};
+  });
+  if (entries.length) loading?.classList.remove('hidden');
+  await stage.showCast(entries, null, false);
   if (request === titleRequest && !playing) {
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     if (request === titleRequest && !playing) loading?.classList.add('hidden');
   }
-  if (interactive && project.title.modelId)
-    for (const item of project.characters.filter(item => item.modelId === project.title.modelId))
+  if (interactive)
+    for (const item of project.characters.filter(item => entries.some(entry=>entry.modelAsset.id===item.modelId)))
       rememberDiscovery('character', item.id);
   if (!interactive && activePanel === 'title') refreshMotionHints();
   if (!interactive && activePanel === 'title') renderTitleExpressionControls();
@@ -435,6 +419,164 @@ async function applyEnvironmentCommit(message){
   }catch(error){await bridge('environmentCommitReply',{session:message.session,ok:false,error:error.message});}
 }
 let environmentBaselines=new Map();
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeProps=async phase=>{
+ const assert=(ok,message)=>{if(!ok)throw Error(message);};
+ const fbx=project.characters.find(c=>isFbxModel(c.modelId)),vrm=project.characters.find(c=>asset(c.modelId)?.type==='vrm');
+ const gun=asset('test-gun');assert(fbx&&vrm&&gun,'Missing prop fixture');
+ const make=(character)=>({id:'held-'+character.id,name:'测试冲锋枪',assetId:gun.id,bone:'rightHand',position:[0,0,0],rotation:[0,90,0],scale:[1,1,1]});
+ const display=async()=>{renderSidebar();renderInspector();await updatePreview();};
+ if(phase==='fbx-binding'||phase==='vrm-binding'){
+   const actor=phase==='fbx-binding'?fbx:vrm;actor.props=[make(actor)];selectedCharacter=project.characters.indexOf(actor);activePanel='characters';await display();
+   const base=`[data-prop-transform="${actor.props[0].id}"][data-vector=position][data-axis="0"]`;
+   const coarse=document.querySelector(base+'[data-mode=coarse]'),fine=document.querySelector(base+'[data-mode=fine]');
+   assert(coarse&&fine,'Missing coarse/fine controls');coarse.value='.2';coarse.dispatchEvent(new Event('input',{bubbles:true}));
+   fine.value='1';fine.dispatchEvent(new Event('input',{bubbles:true}));fine.dispatchEvent(new Event('change',{bubbles:true}));
+   assert(Math.abs(actor.props[0].position[0]-.201)<1e-8 && fine.value==='0','Fine position increment failed');
+   for(const [kind,axis,base,expected]of [['rotation',0,0,.1],['scale',2,1,1.001]]){
+     const selector=`[data-prop-transform="${actor.props[0].id}"][data-vector="${kind}"][data-axis="${axis}"]`;
+     const c=document.querySelector(selector+'[data-mode=coarse]'),f=document.querySelector(selector+'[data-mode=fine]');
+     c.value=String(base);c.dispatchEvent(new Event('input',{bubbles:true}));f.value='1';f.dispatchEvent(new Event('input',{bubbles:true}));f.dispatchEvent(new Event('change',{bubbles:true}));
+     assert(Math.abs(actor.props[0][kind][axis]-expected)<1e-8,kind+' fine adjustment failed');
+   }
+
+   await updatePreview();document.querySelector('.prop-editor').scrollIntoView({block:'start'});const record=stage.visibleRecords.get(`gallery:${actor.id}`),prop=record.attachedProps.get(actor.props[0].id);
+   assert(prop.root.parent===prop.bone && prop.bone.isBone,'Prop not attached to a bone');
+   for(const select of document.querySelectorAll('[data-prop-field=bone]')){
+     const value=select.value;select.innerHTML=availablePropBones(record).map(b=>`<option value="${escape(b.value)}">${escape(b.label)}</option>`).join('');select.value=value;
+   }
+   return {ok:true,actor:asset(actor.modelId).type,position:actor.props[0].position,coarseFineControls:true,bone:prop.bone.name,attachmentParent:true,worldPosition:prop.root.getWorldPosition(new THREE.Vector3()).toArray()};
+ }
+ if(phase==='model-switch'){
+   const original=fbx.modelId;selectedCharacter=project.characters.indexOf(fbx);activePanel='characters';fbx.modelId=vrm.modelId;await display();
+   assert(!stage.visibleRecords.get(`gallery:${fbx.id}`).vrm.isFbx,'Switch to VRM kept the FBX rig');
+   fbx.modelId=original;await display();assert(stage.visibleRecords.get(`gallery:${fbx.id}`).vrm.isFbx,'Switch back to FBX kept the VRM rig');
+   assert(stage.visibleRecords.get(`gallery:${fbx.id}`).attachedProps.size===1,'Binding lost after model replacement');return {ok:true,modelReplacement:true};
+ }
+ if(phase==='dialogue-visible'){
+   activePanel='story';selectedAct=0;selectedStep=0;
+   const cast=emptyDialogueCast();cast.left={characterId:fbx.id,size:1.15,motionId:'walk-test',props:[fbx.props[0].id]};cast.center={characterId:vrm.id,size:1.15,motionId:'',props:[vrm.props[0].id]};
+   act().steps=[{id:'prop-one',characterId:fbx.id,text:'我现在拿着冲锋枪。物品会跟着手上的动作移动。',speaker:'',cast,choices:[],voiceId:''}];
+   await display();assert(!document.querySelector('[data-field="step.position"]')&&!document.querySelector('[data-field="step.motionId"]')&&!document.querySelector('[data-adjust]'),'Duplicate dialogue controls remain');
+   const record=stage.visibleRecords.get(fbx.id),prop=record.attachedProps.get(fbx.props[0].id),before=prop.root.getWorldPosition(new THREE.Vector3());
+   await new Promise(resolve=>setTimeout(resolve,750));const after=prop.root.getWorldPosition(new THREE.Vector3());
+   assert(prop.root.parent===prop.bone,'Animated prop parent changed');assert(before.distanceTo(after)>.001,'Prop did not move with body animation');
+   const first=JSON.stringify(step().cast),second=structuredClone(step());second.id='prop-two';second.characterId=vrm.id;second.text='这一句可以收起枪，也可以更换同一幕中的人物。';act().steps.push(second);
+   return {ok:true,actors:stage.visibleRecords.size,animatedMovement:before.distanceTo(after),gunVisibleOnFbx:record.attachedProps.size,gunVisibleOnVrm:stage.visibleRecords.get(vrm.id).attachedProps.size,first};
+ }
+ if(phase==='one-shot'){
+   selectedStep=0;activePanel='story';step().cast.left.motionOptions={loop:false,startFrame:1,endFrame:2,after:'idle'};await display();
+   await new Promise(resolve=>setTimeout(resolve,450));assert(stage.visibleRecords.get(fbx.id).currentMotionId===null,'Single action did not return to idle');
+   step().cast.left.motionOptions={};await updatePreview();return {ok:true,afterActionIdle:true};
+ }
+ if(phase==='dialogue-hidden'){
+   selectedStep=1;activePanel='story';await display();const first=JSON.stringify(act().steps[0].cast);
+   const toggle=document.querySelector(`[data-cast-prop=left][data-prop-id="${fbx.props[0].id}"]`);toggle.checked=false;toggle.dispatchEvent(new Event('input',{bubbles:true}));
+   const offset=document.querySelector('[data-cast-adjust="left.offsetZ"][type=number]');offset.value='.03';offset.dispatchEvent(new Event('input',{bubbles:true}));
+   await updatePreview();assert(JSON.stringify(act().steps[0].cast)===first,'Second dialogue changed first dialogue');
+   assert(stage.visibleRecords.get(fbx.id).attachedProps.size===0,'Hidden gun is still visible');assert(stage.visibleRecords.get(vrm.id).attachedProps.size===1,'Other character gun was hidden');
+   return {ok:true,dialoguesIndependent:true,hiddenOnFbx:true,visibleOnVrm:true,secondDepth:step().cast.left.offsetZ};
+ }
+ if(phase==='dialogue-roster'){
+   const extra=project.characters.find(c=>c.modelId && c!==fbx && c!==vrm);assert(extra,'Missing third actor');
+   const line={id:'prop-three',characterId:fbx.id,text:'同一幕的下一句换了在场人物。',cast:emptyDialogueCast(),choices:[],voiceId:''};line.cast.left.characterId=extra.id;line.cast.center.characterId=fbx.id;
+   act().steps.push(line);selectedStep=2;await display();assert(stage.visibleRecords.has(extra.id)&&stage.visibleRecords.has(fbx.id)&&!stage.visibleRecords.has(vrm.id),'Previous roster leaked into new dialogue');
+   assert(stage.visibleRecords.get(fbx.id).attachedProps.size===0,'Previous gun visibility leaked');
+   const empty={id:'prop-four',characterId:fbx.id,text:'人物可以在场外说话，这一句的舞台没有人物。',cast:emptyDialogueCast(),choices:[],voiceId:''};act().steps.push(empty);selectedStep=3;await display();assert(stage.visibleRecords.size===0,'Empty stage has a ghost actor');
+   await save();return {ok:true,rosterReplacement:true,noGhostActor:true,saved:true,stepCount:act().steps.length};
+ }
+ if(phase==='title-multi'){
+   const extra=project.characters.find(c=>c.modelId&&c!==fbx&&c!==vrm);assert(extra,'Missing third title model');
+   project.title.actors=[fbx,vrm,extra,fbx].map((role,index)=>({...newTitleActor('title-test-'+index,role.modelId,index),characterId:role.id,offsetX:[-1.1,-.4,.4,1.1][index],offsetY:0,offsetZ:index===3?-.4:0,size:1.05,motionId:'idle',props:role===fbx||role===vrm?[role.props[0].id]:[]}));
+   project.title.cameraAngle=0;activePanel='title';await display();
+   const dropdown=document.querySelector('[data-title-field=logoImageId]');assert(dropdown.querySelector('[value="__none__"]'),'Missing blank logo choice');
+   dropdown.value='__none__';dropdown.dispatchEvent(new Event('input',{bubbles:true}));await updatePreview();
+   assert(!document.querySelector('.title-logo-region')&&!document.querySelector('#project-name'),'Blank title panel remains');
+   assert(stage.visibleRecords.size===4,'Title did not load four actors');
+   const a=stage.visibleRecords.get('title:title-test-0'),b=stage.visibleRecords.get('title:title-test-3');assert(a.vrm.scene!==b.vrm.scene&&a.anchor!==b.anchor,'Repeated FBX model shares its transform');
+   const before=JSON.stringify(project.title.actors[0]);const z=document.querySelector('[data-title-actor-id="title-test-1"][data-title-actor-adjust=offsetZ][type=number]');z.value='.03';z.dispatchEvent(new Event('input',{bubbles:true}));await updatePreview();
+   assert(JSON.stringify(project.title.actors[0])===before&&project.title.actors[1].offsetZ===.03,'Title transforms are not independent');
+   const toggle=document.querySelector('[data-title-actor-id="title-test-0"][data-title-actor-prop]');toggle.checked=false;toggle.dispatchEvent(new Event('input',{bubbles:true}));await updatePreview();
+   assert(stage.visibleRecords.get('title:title-test-0').attachedProps.size===0&&stage.visibleRecords.get('title:title-test-3').attachedProps.size===1,'Repeated actors share prop visibility');
+   toggle.checked=true;toggle.dispatchEvent(new Event('input',{bubbles:true}));await updatePreview();
+   document.querySelector('[data-action=add-title-actor]').click();await updatePreview();assert(project.title.actors.length===5&&stage.visibleRecords.size===5,'Adding title actor failed');
+   const last=project.title.actors.at(-1);document.querySelector(`[data-action=delete-title-actor][data-id="${last.id}"]`).click();await updatePreview();assert(project.title.actors.length===4&&stage.visibleRecords.size===4,'Removing title actor failed');
+   assert(document.querySelectorAll('#title-preview .title-bottom-menu span').length===7,'Title buttons disappeared');
+   await save();document.querySelector('.inspector').scrollTop=0;
+   return {ok:true,actors:4,blankLogo:true,independentTransforms:true,repeatedModelIndependent:true,independentProps:true,addRemove:true,menuButtons:7};
+ }
+ if(phase==='finger-bindings'){
+   const results=[];
+   for(const actor of [fbx,vrm]){
+     selectedCharacter=project.characters.indexOf(actor);activePanel='characters';await display();
+     const record=stage.visibleRecords.get(`gallery:${actor.id}`),original=actor.props[0].bone;
+     const fingers=availablePropBones(record).filter(b=>/^(left|right)(Thumb|Index|Middle|Ring|Little)/.test(b.value));
+     assert(fingers.some(b=>b.value==='rightIndexDistal')&&fingers.some(b=>b.value==='leftThumbProximal'),'Test model finger bones missing');
+     for(const name of ['rightHand','leftHand','rightIndexDistal','leftThumbProximal']){
+       const select=document.querySelector(`[data-prop-field=bone][data-prop-id="${actor.props[0].id}"]`);
+       assert(select.querySelector(`[value="${name}"]`),'Missing bone in picker');select.value=name;select.dispatchEvent(new Event('input',{bubbles:true}));await updatePreview();
+       const prop=record.attachedProps.get(actor.props[0].id),bone=propBone(record,name);assert(prop.root.parent===bone,'Prop attached to wrong hand/finger');
+       const moving=record.vrm.humanoid.getNormalizedBoneNode(name),saved=moving.quaternion.clone(),before=prop.root.getWorldQuaternion(new THREE.Quaternion());
+       moving.rotateZ(.2);record.vrm.update(0);stage.characterProps.update(record);const after=prop.root.getWorldQuaternion(new THREE.Quaternion());
+       assert(before.angleTo(after)>.05,'Prop did not follow finger rotation');moving.quaternion.copy(saved);record.vrm.update(0);stage.characterProps.update(record);
+     }
+     actor.props[0].bone=original;await updatePreview();results.push({modelType:asset(actor.modelId).type,fingerChoices:fingers.length,handAndFingerAttachment:true,followJointRotation:true});
+   }
+   return {ok:true,models:results};
+ }
+ if(phase==='binding-view'){
+   selectedCharacter=project.characters.indexOf(fbx);activePanel='characters';await display();
+   const before=JSON.stringify(project);document.querySelector('[data-action=binding-view-open]').click();
+   for(let i=0;i<100&&!stage.bindingView.enabled;i++)await new Promise(resolve=>setTimeout(resolve,50));
+   assert(stage.bindingView.enabled&&document.querySelector('.binding-view-mode'),'Binding camera not enabled');
+   const canvas=stage.renderer.domElement,camera=stage.camera,rect=canvas.getBoundingClientRect(),x=rect.left+rect.width/2,y=rect.top+rect.height/2;
+   assert(document.elementFromPoint(x,y)===canvas,'Binding overlay intercepts the canvas');
+   const set=canvas.setPointerCapture,release=canvas.releasePointerCapture;canvas.setPointerCapture=()=>{};canvas.releasePointerCapture=()=>{};
+   const drag=(shift=false)=>{canvas.dispatchEvent(new PointerEvent('pointerdown',{pointerId:100,pointerType:'mouse',button:0,clientX:x,clientY:y,shiftKey:shift,bubbles:true}));canvas.dispatchEvent(new PointerEvent('pointermove',{pointerId:100,pointerType:'mouse',button:0,buttons:1,clientX:x+40,clientY:y+20,shiftKey:shift,bubbles:true}));canvas.dispatchEvent(new PointerEvent('pointerup',{pointerId:100,pointerType:'mouse',button:0,clientX:x+40,clientY:y+20,shiftKey:shift,bubbles:true}));};
+   const start=camera.position.clone();drag();assert(camera.position.distanceTo(start)>.01,'Dragging did not rotate view');
+   const target=stage.bindingView.controls.target.clone();drag(true);assert(stage.bindingView.controls.target.distanceTo(target)>.01,'Shift drag did not pan');
+   const distance=camera.position.distanceTo(stage.bindingView.controls.target);canvas.dispatchEvent(new WheelEvent('wheel',{deltaY:-120,clientX:x,clientY:y,bubbles:true,cancelable:true}));assert(camera.position.distanceTo(stage.bindingView.controls.target)<distance,'Wheel did not zoom');
+   canvas.setPointerCapture=set;canvas.releasePointerCapture=release;
+   document.querySelector('[data-action=binding-view-bone]').click();await updatePreview();await new Promise(resolve=>setTimeout(resolve,200));
+   const record=stage.visibleRecords.get(`gallery:${fbx.id}`),bone=propBone(record,fbx.props[0].bone);assert(stage.bindingView.controls.target.distanceTo(bone.getWorldPosition(new THREE.Vector3()))<.001,'Focus missed binding joint');
+   const position=camera.position.clone(),aim=stage.bindingView.controls.target.clone();
+   const fine=document.querySelector(`[data-prop-transform="${fbx.props[0].id}"][data-vector=position][data-axis="0"][data-mode=fine]`);fine.value='1';fine.dispatchEvent(new Event('input',{bubbles:true}));fine.dispatchEvent(new Event('change',{bubbles:true}));await updatePreview();
+   assert(camera.position.distanceTo(position)<1e-8&&stage.bindingView.controls.target.distanceTo(aim)<1e-8,'Fine adjustment reset the camera');
+   fbx.props[0].position[0]-=.001;await updatePreview();assert(JSON.stringify(project)===before,'Camera inspection changed saved actor transforms');
+   stage.setRenderSettings({...project.render,antialias:'off'});await updatePreview();
+   assert(stage.bindingView.enabled&&stage.bindingView.canvas===stage.renderer.domElement,'Changing render quality detached view controls');
+   stage.bindingView.focusBone(propBone(record,fbx.props[0].bone));
+   assert(document.querySelector('#title-preview').classList.contains('hidden'),'Title menu covers binding view');
+   renderInspector();document.querySelector('.prop-editor').scrollIntoView({block:'start'});await save();
+   return {ok:true,fullViewport:true,rotate:true,pan:true,zoom:true,focusBone:true,adjustmentPreservesView:true,actorUnchanged:true,renderQualityCompatible:true};
+ }
+ if(phase==='binding-view-exit'){
+   activePanel='story';selectedStep=0;await display();assert(!stage.bindingView.enabled&&!document.querySelector('.binding-view-mode'),'Inspection camera leaked into game scene');
+   const env=project.environments.find(e=>e.id===act().environmentId);assert(stage.camera.position.distanceTo(new THREE.Vector3(...env.camera.position))<1e-8,'Game camera was changed by inspection');
+   return {ok:true,gameCameraRestored:true};
+ }
+ if(phase==='player-props'){
+   assert(mode==='player','Not a standalone player');await showTitleScene(true);
+   assert(stage.visibleRecords.size===4&&!document.querySelector('#player-start .title-logo-region'),'Exported title actors or blank logo lost');
+   assert(document.querySelectorAll('#player-start .title-bottom-menu button').length===7,'Exported title menu lost');
+   document.querySelector('#player-start [data-action=play]').click();
+   for(let i=0;i<200&&(stage.visibleRecords.get(fbx.id)?.attachedProps?.size!==1||stage.visibleRecords.get(vrm.id)?.attachedProps?.size!==1||transitioning);i++)await new Promise(resolve=>setTimeout(resolve,100));
+   assert(stage.visibleRecords.get(fbx.id)?.attachedProps?.size===1&&stage.visibleRecords.get(vrm.id)?.attachedProps?.size===1,'Exported dialogue prop not visible');
+   return {ok:true,standaloneTitleActors:4,blankLogo:true,menuButtons:7,standaloneDialogueProps:true};
+ }
+ if(phase==='archive-export'){
+   project.name='物品绑定与逐句登场示例';await save();
+   const archive=await bridge('saveProjectAs',{project:structuredClone(project),name:'物品绑定与逐句登场示例'});
+   const game=await bridge('exportGame',{folderName:'直接试玩'});return {ok:true,archive,game};
+ }
+ if(phase==='reopen'){
+   assert(project.dialogueCastVersion===1 && act().steps.length===4 && !act().cast,'Dialogue structure was not saved');
+   assert(Math.abs(act().steps[1].cast.left.offsetZ-.03)<1e-8 && act().steps[0].cast.left.offsetZ!==.03,'Dialogue transforms were not preserved');
+   assert(project.title.actors.length===4&&project.title.logoImageId==='__none__'&&project.title.actors[1].offsetZ===.03,'Title settings were not saved');
+   selectedStep=0;activePanel='story';await display();assert(stage.visibleRecords.get(fbx.id).attachedProps.size===1 && stage.visibleRecords.get(vrm.id).attachedProps.size===1,'Saved attachments were not restored');
+   return {ok:true,reopened:true,propsSaved:true,dialogueCastSaved:true,titleActorsSaved:true};
+ }
+ throw Error('Unknown prop smoke phase');
+};
 if(new URLSearchParams(location.search).has('smoke')) {
  window.__vrmSmokeEnvironmentOpen=async()=>{
    const owner=act();owner.environmentId=project.environments[0]?.id;
@@ -458,7 +600,7 @@ async function editEnvironment(owner){
   project.environments ||= [];let env=project.environments.find(e=>e.id===owner.environmentId);
   if(!env){env=createEnvironment((owner.name||'标题')+'场景');project.environments.push(env);owner.environmentId=env.id;markDirty({label:'新建 3D 环境'});renderInspector();}
   for(const e of project.environments)if(!environmentBaselines.has(e.id))environmentBaselines.set(e.id,JSON.stringify(e));
-  const result=await bridge('openEnvironment',{projectId:project.id,environment:structuredClone(env),environments:structuredClone(project.environments),environmentLibrary:structuredClone(project.environmentLibrary||{folders:[],assignments:{}}),referenceSettings:structuredClone(owner.castSettings||{}),referenceMultiple:Object.values(owner.cast||{}).filter(Boolean).length>1,assets:structuredClone(project.assets)});if(result.created)environmentBaselines=new Map(project.environments.map(e=>[e.id,JSON.stringify(e)]));
+  const result=await bridge('openEnvironment',{projectId:project.id,environment:structuredClone(env),environments:structuredClone(project.environments),environmentLibrary:structuredClone(project.environmentLibrary||{folders:[],assignments:{}}),referenceSettings:structuredClone(owner===project.title?{}:(step()?.cast||owner.steps?.[0]?.cast||{})),referenceMultiple:Object.values(step()?.cast||owner.steps?.[0]?.cast||{}).filter(s=>s.characterId).length>1,assets:structuredClone(project.assets)});if(result.created)environmentBaselines=new Map(project.environments.map(e=>[e.id,JSON.stringify(e)]));
 }
 async function showEnvironment(owner){const env=project.environments?.find(e=>e.id===owner?.environmentId);await stage.setEnvironment(env,project.assets);return Boolean(env);}
 const isFbxModel=id=>asset(id)?.type==='fbxCharacter';
@@ -506,7 +648,7 @@ function normalize() {
   project.ui.clickSoundId ||= '';
   project.title = { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
     size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12, ...project.title };
-  project.title.expressionWeights ||= {};
+  migrateTitleActors(project.title, uid);
   project.render = { antialias: 'standard', style: 'original', outline: 0, autoLight: true, lightStrength: 0.6,
     shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, shadowHeight: 0,
     paintEffect: 'none', paintStrength: 0.65, ...project.render };
@@ -520,7 +662,7 @@ function normalize() {
     item.render = chapterRender(item, project.render);
     item.steps ||= [];
     item.castSettings ||= {};
-    if (!item.cast) {
+    if (!item.cast && item.steps.some(entry=>!entry.cast)) {
       const distinct = [...new Set(item.steps.map(entry => entry.characterId).filter(Boolean))];
       item.cast = { left: '', center: '', right: '' };
       for (const id of distinct.slice(0, 3)) {
@@ -531,6 +673,7 @@ function normalize() {
     }
     for (const entry of item.steps) entry.choices ||= [];
   }
+  migrateDialogueCast(project);
 }
 async function init() {
   try {
@@ -604,7 +747,7 @@ function updateHistoryButtons() {
 function historyInputContextSupported(node) {
   const bindings = Object.entries(node.dataset || {}).filter(([key]) => !key.endsWith('Output'));
   const supported = bindings.some(([key]) => ['field','bookField','eventField','motionOptions','galleryMusic','galleryImage',
-    'audioTitle','storyIndex','assetFolder','titleField','uiField','titleAdjust','titleExpression','stepCast','castSlot','castMotion','castAdjust','castExpression',
+    'audioTitle','storyIndex','assetFolder','titleField','uiField','titleAdjust','titleExpression','titleActorField','titleActorAdjust','titleActorExpression','titleActorProp','stepCast','castSlot','castMotion','castAdjust','castExpression','castProp','propField','propTransform',
     'render','weather','galleryAdjust','adjust','expression','choiceField'].includes(key)) || node.id === 'project-name' || node.hasAttribute('data-gallery-frame-number');
   return supported;
 }
@@ -846,10 +989,11 @@ function renderSidebar() {
     body.innerHTML = `<div class="section-heading">标题画面</div>
       <div class="title-sidebar-actions">
         ${button('导入 Logo', 'import', 'data-type="image" data-title-import="logoImageId"')}
-        ${button('导入标题人物', 'import', 'data-type="vrm" data-title-import="modelId"')}
+        ${button('导入标题 VRM 人物', 'import', 'data-type="vrm" data-title-import="modelId"')}
+        ${button('导入标题 FBX 人物', 'import', 'data-type="fbxCharacter" data-title-import="modelId"')}
         ${button('导入标题动作', 'import', 'data-type="motion" data-title-import="motionId"')}
         ${button('编辑环境', 'edit-environment')}
-      </div><div class="sidebar-note">标题布局固定：Logo 在左侧，人物在中间偏右，菜单排在底部。导入后到右侧调整位置和角度。</div>`;
+      </div><div class="sidebar-note">在右侧逐个添加标题人物。每个人可以单独选择模型、动作和位置。Logo 可以留空，菜单排在底部。</div>`;
   }
   renderAssetDock();
 }
@@ -936,7 +1080,7 @@ function renderAssetDock() {
   const selectedFolder = folders.find(folder => folder.id === folderId);
   const scroll = body.scrollTop;
   const settingsOpen = body.querySelector('.asset-dock-settings')?.open || false;
-  const tabs = [['image', '图像'], ['vrm', 'VRM'], ['fbxCharacter','FBX 人物'], ['motion', '动作'], ['audio', '音乐与音效'], ['voice', '配音'], ['video', '视频']];
+  const tabs = [['image', '图像'], ['vrm', 'VRM'], ['fbxCharacter','FBX 人物'], ['sceneModel','物品与模型'], ['motion', '动作'], ['audio', '音乐与音效'], ['voice', '配音'], ['video', '视频']];
   document.querySelector('#asset-dock-tabs').innerHTML = tabs.map(([key, label]) =>
     `<button type="button" role="tab" aria-selected="${type === key}" class="${type === key ? 'active' : ''}" data-action="asset-tab" data-type="${key}">${label}<small>${byType(key).length}</small></button>`).join('');
   if (type === 'voice') { renderVoiceLibrary(body, folderId, folders, selectedFolder, scroll); return; }
@@ -1047,7 +1191,7 @@ document.addEventListener('drop', async event => {
   catch (error) { toast(error.message, true); }
 });
 const droppedAssetTypes = {
-  vrm: ['.vrm'], motion: ['.vrma', '.fbx'], image: ['.png', '.jpg', '.jpeg', '.webp'],
+  vrm: ['.vrm'], sceneModel:['.glb'], motion: ['.vrma', '.fbx'], image: ['.png', '.jpg', '.jpeg', '.webp'],
   audio: ['.mp3', '.wav', '.ogg'], video: ['.mp4', '.webm']
 };
 function droppedAssetType(name) {
@@ -1126,22 +1270,36 @@ document.addEventListener('toggle', event => {
   if (details.open) openAssetFolders.add(details.dataset.folderKey);
   else openAssetFolders.delete(details.dataset.folderKey);
 }, true);
+function propEditor(item) {
+  const record=stage?.visibleRecords.get(`gallery:${item.id}`);
+  const bones=availablePropBones(record),choices=bones.length?bones:Object.entries(propBoneLabels).map(([value,label])=>({value,label}));
+  return `<section class="prop-editor"><h2>绑定物品</h2><p class="tip">先导入 GLB，添加物品，再选手或其他骨骼。角色页会显示所有已绑定物品，方便调整；对白里勾选后才会显示。</p><div class="inline-actions">${button('导入物品 GLB','import-prop-model')}${button('＋ 添加物品','add-character-prop')}${item.props?.length?button('调整视角与物品','binding-view-open'):''}</div>${(item.props||[]).map((prop,index)=>`<details class="prop-binding" ${index===0?'open':''}><summary>${escape(prop.name||'物品')}</summary>
+    ${field('物品名称',`<input data-prop-field="name" data-prop-id="${escape(prop.id)}" value="${escape(prop.name)}">`)}
+    ${field('物品模型',`<select data-prop-field="assetId" data-prop-id="${escape(prop.id)}">${options(byType('sceneModel'),prop.assetId,'请选择 GLB')}</select>`)}
+    ${field('绑定骨骼',`<select data-prop-field="bone" data-prop-id="${escape(prop.id)}">${choices.map(b=>`<option value="${escape(b.value)}" ${b.value===prop.bone?'selected':''}>${escape(b.label)}</option>`).join('')}${!choices.some(b=>b.value===prop.bone)?`<option selected value="${escape(prop.bone)}">${escape(prop.bone)}（等待模型读取）</option>`:''}</select>`)}
+    <div class="inline-actions">${button('放大绑定部位','binding-view-bone',`data-prop-id="${escape(prop.id)}"`)}${button('看物品','binding-view-item',`data-prop-id="${escape(prop.id)}"`)}</div>
+    ${['position','rotation','scale'].map((kind,i)=>`<details class="prop-vector" ${i===0?'open':''}><summary>${['位置（米）','旋转（度）','缩放'][i]}</summary>${prop[kind].map((value,axis)=>{
+      const lower=kind==='scale'?.001:kind==='rotation'?-180:-2,upper=kind==='scale'?5:kind==='rotation'?180:2;
+      const data=`data-prop-transform="${escape(prop.id)}" data-vector="${kind}" data-axis="${axis}"`;
+      return `<div class="prop-axis" data-prop-axis="${escape(prop.id)}.${kind}.${axis}"><label class="prop-number"><span>${['X · 左右','Y · 上下','Z · 前后'][axis]}</span><input type="number" ${data} data-mode="number" min="${kind==='scale'?.001:-10000}" max="10000" step="${kind==='rotation'?.1:.001}" value="${Number(value.toFixed(5))}"></label><label><span>粗调</span><input type="range" ${data} data-mode="coarse" min="${Math.min(lower,value)}" max="${Math.max(upper,value)}" step="any" value="${value}"></label><label><span>细调</span><input type="range" ${data} data-mode="fine" min="-100" max="100" step="1" value="0"></label></div>`;
+    }).join('')}</details>`).join('')}<p class="tip">细调一次：位置 0.001 米、旋转 0.1 度、缩放 0.001。松开细调滑块后会回到中间，保留修改结果。模型先按最长边约 0.8 米摆放。</p>${button('移除这个绑定','remove-character-prop',`data-prop-id="${escape(prop.id)}" class="danger"`)}</details>`).join('')}</section>`;
+}
 function castEditor(currentAct, slot) {
   const settings = castSettingsOf(currentAct, slot);
-  const actorId = currentAct.cast?.[slot];
+  const actorId = settings.characterId;
   const slider = (key, label, value, min, max, stepSize, unit = '') =>
     `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-cast-adjust="${slot}.${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-cast-adjust="${slot}.${key}" aria-label="${castSlotLabels[slot]}前后精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-cast-output="${slot}.${key}">${value}${unit}</output></label>`;
-  return `<details class="cast-editor"><summary>${castSlotLabels[slot]} · ${escape(character(actorId)?.name || '未选择')}</summary>
+  return `<details class="cast-editor" ${actorId && actorId===step()?.characterId?'open':''}><summary>${castSlotLabels[slot]} · ${escape(character(actorId)?.name || '未选择')}</summary>
     <div class="cast-editor-body">
       ${field('角色', `<select data-cast-slot="${slot}">${options(project.characters.filter(item => item.modelId || item.id === actorId), actorId, '此位置无人')}</select>`)}
-      ${actorId ? `${field('本幕动作', `<select data-cast-motion="${slot}">${options(byType('motion'), settings.motionId, '保持站立')}</select>`)}
+      ${actorId ? `${field('这一句的动作', `<select data-cast-motion="${slot}">${options(byType('motion'), settings.motionId, '保持站立')}</select>`)}
         ${motionAdvanced(settings, `cast:${slot}`)}
         ${slider('size', '大小', Math.round((settings.size ?? defaultSize) * 100), 50, 250, 5, '%')}
         ${slider('offsetX', '左右', Number(settings.offsetX) || 0, -1.5, 1.5, 0.05)}
         ${slider('offsetY', '上下', Number(settings.offsetY) || 0, -3, 2, 0.05)}
         ${slider('offsetZ', '前后', Number(settings.offsetZ) || 0, -100, 100, 0.1)}
         ${slider('yaw', '转身角度', Number(settings.yaw) || 0, -90, 90, 5, '°')}
-${!isFbxModel(character(actorId)?.modelId) ? `<div class="field"><span>本幕表情</span><div id="cast-expression-${slot}" class="expression-controls"></div></div>` : ''}` : ''}
+${!isFbxModel(character(actorId)?.modelId) ? `<div class="field"><span>这一句的表情</span><div id="cast-expression-${slot}" class="expression-controls"></div></div>` : ''}<div class="dialogue-props"><b>这一句显示的物品</b>${(character(actorId)?.props||[]).map(prop=>`<label><input type="checkbox" data-cast-prop="${slot}" data-prop-id="${escape(prop.id)}" ${(settings.props||[]).includes(prop.id)?'checked':''}>${escape(prop.name||asset(prop.assetId)?.name||'物品')}</label>`).join('')||'<small>先到角色页绑定物品。</small>'}</div>` : ''}
     </div></details>`;
 }
 function renderInspector() {
@@ -1162,6 +1320,7 @@ function renderInspector() {
       <label class="adjustment"><span>鉴赏转身角度</span><input type="range" data-gallery-adjust="galleryYaw" min="-90" max="90" step="5" value="${item.galleryYaw}"><output data-gallery-output="galleryYaw">${item.galleryYaw}°</output></label>
       <label class="adjustment gallery-frame-adjustment"><span>动作定格帧</span><input type="range" data-gallery-adjust="galleryPoseFrame" min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled><output data-gallery-output="galleryPoseFrame">${item.galleryMotionId ? '读取中…' : '先选择动作'}</output></label>
       <label class="gallery-frame-number"><span>输入帧号</span><input type="number" data-gallery-frame-number min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled></label>
+      ${propEditor(item)}
       ${field('身份 / 称号', input('character.title', item.title, '例如：旅行者、学生'))}
       ${field('角色简介', textarea('character.description', item.description, '玩家在角色鉴赏里看到的介绍'))}
       <hr><h2>角色故事（最多三段）</h2>
@@ -1179,25 +1338,16 @@ function renderInspector() {
   if (activePanel === 'title') {
     const title = project.title;
     body.innerHTML = `<div class="inspector-content"><h2>标题画面</h2>
-      ${field('游戏名称', `<input id="project-name" value="${escape(project.name)}" aria-label="游戏名称">`)}
-      ${field('Logo 图片', `<select data-title-field="logoImageId">${options(byType('image'), title.logoImageId, '使用游戏名称')}</select>`)}
+      ${title.logoImageId==='__none__'?'':field('游戏名称', `<input id="project-name" value="${escape(project.name)}" aria-label="游戏名称">`)}
+      ${field('Logo 图片', `<select data-title-field="logoImageId"><option value="__none__" ${title.logoImageId==='__none__'?'selected':''}>不显示（留空）</option>${options(byType('image'), title.logoImageId, '使用游戏名称')}</select>`)}
       ${field('标题场景', `<select data-title-field="environmentId">${options(project.environments || [], title.environmentId, '默认天空')}</select>`)}${button('编辑标题环境（独立窗口）','edit-environment')}
-      ${field('标题 VRM 人物', `<select data-title-field="modelId">${options(actorModels(), title.modelId, '不显示人物')}</select>`)}
-      ${field('标题人物动作', `<select data-title-field="motionId">${options(byType('motion'), title.motionId, '保持站立')}</select>`)}
-      ${motionAdvanced(title, 'title')}
       ${field('标题音乐', `<select data-title-field="bgmId">${options(byType('audio'), title.bgmId, '无音乐')}</select>`)}
       ${field('按钮点击音效', `<select data-ui-field="clickSoundId">${options(byType('audio'), project.ui.clickSoundId, '使用内置轻提示音')}</select>`)}
-      <p class="tip">Logo 固定在左侧，按钮固定在底部。人物的位置和角度可以调整。</p>
-      <hr><h2>标题人物</h2>
-      ${titleSlider('size', '大小', Math.round(title.size * 100), 50, 500, 5, `${Math.round(title.size * 100)}%`)}
-      ${titleSlider('offsetX', '左右位置', title.offsetX, -2, 2, .05, Number(title.offsetX).toFixed(2))}
-      ${titleSlider('offsetY', '上下位置', title.offsetY, -10, 3, .05, Number(title.offsetY).toFixed(2))}
-      ${titleSlider('offsetZ', '前后位置', title.offsetZ, -100, 100, .1, Number(title.offsetZ).toFixed(2))}
-      ${titleSlider('yaw', '左右转身', title.yaw, -120, 120, 5, `${title.yaw}°`)}
-      ${titleSlider('pitch', '人物上下转角', title.pitch, -60, 60, 5, `${title.pitch}°`)}
-      ${titleSlider('cameraAngle', '镜头俯视角', title.cameraAngle, 0, 65, 5, `${title.cameraAngle}°`)}
-      ${!isFbxModel(title.modelId) ? `<h3>标题人物表情</h3><div id="title-expression-controls" class="expression-controls"></div>` : ''}
-      <p class="tip">想做俯视画面，可以先提高“镜头俯视角”，再微调人物的上下转角与位置。</p>
+      <p class="tip">选“不显示（留空）”后，左边的标题板会全部隐藏。底部菜单照常显示。</p>
+      ${titleSlider('cameraAngle', '镜头俯视角', title.cameraAngle, 0, 65, 1, `${title.cameraAngle}°`)}
+      <hr><h2>标题人物 (${title.actors.length})</h2>${button('＋ 添加标题人物','add-title-actor')}
+      <p class="tip">可以添加多个 VRM 或 FBX 人物，每个人分别调整。选择角色后，也能显示他绑定的物品。</p>
+      ${title.actors.map(titleActorEditor).join('')}
     </div>`;
     renderTitleExpressionControls();
     return;
@@ -1230,7 +1380,7 @@ function renderInspector() {
   const currentAct = act();
   const current = step();
   if (!currentAct) { body.innerHTML = '<div class="inspector-content empty">先新增一幕</div>'; return; }
-  body.innerHTML = `<div class="inspector-content"><h2>${escape(currentAct.name)}</h2>
+  body.innerHTML = `<div class="inspector-content"><details class="act-settings" ${current?'':'open'}><summary>本幕设置 · ${escape(currentAct.name)}</summary>
     ${field('幕名称', input('act.name', currentAct.name))}
     ${field('章节封面', select('act.coverImageId', byType('image'), currentAct.coverImageId, '默认使用背景图'))}
     ${asset(currentAct.coverImageId || currentAct.backgroundId)?.type === 'image' ? `<img class="act-cover-preview" src="${escape(assetUrl(asset(currentAct.coverImageId || currentAct.backgroundId)))}" alt="本幕封面">` : '<p class="tip">还没有封面。建议上传竖图，人物放在图片中央。</p>'}
@@ -1238,30 +1388,14 @@ function renderInspector() {
     ${field('3D 场景', select('act.environmentId', project.environments || [], currentAct.environmentId, '默认天空'))}<div class="inline-actions">${button('编辑环境（独立窗口）','edit-environment')}${button('新建场景','new-environment')}</div>
     ${field('背景音乐', select('act.bgmId', byType('audio'), currentAct.bgmId, '无音乐'))}
     ${weatherEditor(currentAct)}
-    <hr><h2>本幕登场人物（初始位置）</h2>
-    ${castSlots.map(slot => castEditor(currentAct, slot)).join('')}
-    <p class="tip">这里选本幕舞台上的人物。没有站在舞台上的角色，也能用头像、名字和对白说话。</p>
     <div class="inline-actions">${button('删除本幕', 'delete-act', 'class="danger"')}</div>
-    <hr><h2>第 ${selectedStep + 1} 句对白</h2>
+    </details><hr><h2>第 ${selectedStep + 1} 句对白</h2>
     ${current ? `
-      ${field('角色', select('step.characterId', project.characters, current.characterId, '旁白 / 无模型'))}
-      ${castAssignments(currentAct, current).length > 1 ? `<div class="step-cast-positions"><span>这一句的人物站位</span>
-        ${castAssignments(currentAct, current).map(entry => `<label><span>${escape(character(entry.actorKey)?.name || '角色')}</span>
-          <select data-step-cast="${escape(entry.actorKey)}">${castSlots.map(slot => `<option value="${slot}" ${entry.position === slot ? 'selected' : ''}>${castSlotLabels[slot]}</option>`).join('')}</select>
-        </label>`).join('')}<small>把一人换到其他位置时，原位置的人会与其交换。</small></div>` : ''}
+      ${field('说话角色', select('step.characterId', project.characters, current.characterId, '旁白 / 场外说话'))}
       ${field('显示名字', input('step.speaker', current.speaker, '留空时用角色名字'))}
       ${field('对白内容', textarea('step.text', current.text, '在这里写台词'))}
-${!isFbxModel(character(current.characterId)?.modelId) ? `<div class="field"><span>表情参数（可以同时调多项）</span><div id="expression-controls" class="expression-controls"></div></div>` : ''}
-      ${field('动作', select('step.motionId', byType('motion'), current.motionId, '保持站立'))}
-      ${motionAdvanced(current, 'step')}
-      ${field('位置（单人幕使用）', `<select data-field="step.position"><option value="left" ${current.position === 'left' ? 'selected' : ''}>左侧</option><option value="center" ${current.position === 'center' ? 'selected' : ''}>中间</option><option value="right" ${current.position === 'right' ? 'selected' : ''}>右侧</option></select>`)}
-      <div class="field"><span>人物大小和位置</span>
-        ${adjustmentSlider('size', '大小', Math.round((current.size ?? defaultSize) * 100), 50, 250, 5, `${Math.round((current.size ?? defaultSize) * 100)}%`)}
-        ${adjustmentSlider('offsetX', '左右微调', Number(current.offsetX) || 0, -1.5, 1.5, 0.05, (Number(current.offsetX) || 0).toFixed(2))}
-        ${adjustmentSlider('offsetY', '上下微调', Number(current.offsetY) || 0, -3, 2, 0.05, (Number(current.offsetY) || 0).toFixed(2))}
-        ${adjustmentSlider('offsetZ', '前后微调', Number(current.offsetZ) || 0, -100, 100, 0.1, (Number(current.offsetZ) || 0).toFixed(2))}
-        ${adjustmentSlider('yaw', '转身微调', Number(current.yaw) || 0, -90, 90, 5, `${Number(current.yaw) || 0}°`)}
-        <p class="tip">左右：负数向左，正数向右。上下：正数向上。前后：正数靠近镜头，负数远离镜头。转身角度可以让人物侧身。</p></div>
+      <hr><h3>这一句在场的人物</h3><p class="tip">左、中、右各选一人。动作、位置、表情和物品只在这里设置；上面的说话角色只决定谁说台词。新增对白会复制上一句的站位，可以单独修改。</p>
+      ${castSlots.map(slot => castEditor(currentAct, slot)).join('')}
       ${dialogueVoiceField(current)}
       ${field('本句音效', select('step.seId', byType('audio'), current.seId, '无音效'))}
       <div class="inline-actions">${button('复制本句', 'duplicate-step')}${button('上移', 'move-up')}${button('下移', 'move-down')}${button('删除', 'delete-step', 'class="danger"')}</div>
@@ -1281,7 +1415,7 @@ function renderCastExpressionControls() {
   for (const slot of castSlots) {
     const node = document.querySelector(`#cast-expression-${slot}`);
     if (!node) continue;
-    const actorId = act().cast?.[slot];
+    const actorId = step()?.cast?.[slot]?.characterId;
     const record = stage.visibleRecords.get(actorId);
     if (!record) { node.innerHTML = '<p class="tip">正在读取人物表情…</p>'; continue; }
     const weights = castSettingsOf(act(), slot).expressionWeights || {};
@@ -1295,23 +1429,15 @@ function renderCastExpressionControls() {
   }
 }
 function renderTitleExpressionControls() {
-  const node = document.querySelector('#title-expression-controls');
-  if (!node || !project) return;
-  const modelAsset = asset(project.title.modelId);
-  if (!modelAsset) { node.innerHTML = '<p class="tip">先选择一个标题 VRM 人物。</p>'; return; }
-  if (stage?.currentModelId !== modelAsset.id || !stage?.vrm) {
-    node.innerHTML = '<p class="tip">正在读取人物的表情参数…</p>';
-    return;
+  for(const node of document.querySelectorAll('[data-title-actor-expressions]')){
+    const actor=project.title.actors.find(a=>a.id===node.dataset.titleActorExpressions);
+    const record=stage?.visibleRecords.get(`title:${actor?.id}`);
+    const names=record?.vrm?.expressionManager?.expressions?.map(expression=>expression.expressionName)||[];
+    if(!names.length){node.innerHTML='<p class="tip">读取人物后会显示可调的表情。</p>';continue;}
+    node.innerHTML=names.map(name=>{const value=Math.round((Number(actor.expressionWeights[name])||0)*100);
+      return `<label class="expression-slider"><span>${escape(expressionLabels[name]||name)}</span><input type="range" data-title-actor-id="${actor.id}" data-title-actor-expression="${escape(name)}" min="0" max="100" step="1" value="${value}"><output>${value}%</output></label>`;
+    }).join('')+button('表情全部归零','reset-title-expressions',`data-id="${actor.id}"`);
   }
-  const names = stage.expressions();
-  if (!names.length) { node.innerHTML = '<p class="tip">这个模型没有可调的表情参数。</p>'; return; }
-  const weights = project.title.expressionWeights || {};
-  node.innerHTML = names.map(name => {
-    const value = Math.round(Math.max(0, Math.min(1, Number(weights[name]) || 0)) * 100);
-    return `<label class="expression-slider"><span title="${escape(name)}">${escape(expressionLabels[name] || name)}</span>
-      <input type="range" data-title-expression="${escape(name)}" min="0" max="100" step="1" value="${value}">
-      <output data-title-expression-output="${escape(name)}">${value}%</output></label>`;
-  }).join('') + `<div class="inline-actions">${button('表情全部归零', 'reset-title-expressions')}</div>`;
 }
 function renderExpressionControls() {
   const node = document.querySelector('#expression-controls');
@@ -1792,11 +1918,7 @@ async function showPlayStep() {
   try {
     if (preparedAct !== playAct) {
       loading?.classList.remove('hidden');
-      const castIds = new Set(Object.values(currentAct.cast || {}));
-      const entries = currentAct.steps.filter(entry => castIds.has(entry.characterId)).map(entry => ({ actorKey: entry.characterId,
-        modelAsset: modelForStep(entry), motionAsset: asset(entry.motionId) }));
-      for (const castEntry of castForAct(currentAct, current))
-        entries.push({ actorKey: castEntry.actorKey, modelAsset: castEntry.modelAsset, motionAsset: castEntry.motionAsset });
+      const entries=currentAct.steps.flatMap(line=>castForAct(currentAct,line));
       await stage.prepareAct(entries);
       if (request !== playRequest || !playing) return;
       preparedAct = playAct;
@@ -2304,6 +2426,7 @@ function galleryCharacterMarkup(editorPreview = false) {
     : '<p class="gallery-empty">还没有创建角色。</p>';
 }
 function hideCharacterEditorPreview() {
+  stage?.bindingView.disable();propPreviewMode=false;document.querySelector('.stage-frame')?.classList.remove('binding-view-mode');
   const overlay = document.querySelector('#character-preview');
   const frame = document.querySelector('.editor .stage-frame');
   if (!overlay || !frame) return;
@@ -2340,6 +2463,8 @@ function refreshGalleryFrameControl(item) {
   output.textContent = `第 ${frame} / ${frames} 帧`;
 }
 async function showCharacterEditorPreview() {
+  document.querySelector('#title-preview')?.classList.add('hidden');
+  document.querySelector('.stage-frame')?.classList.remove('title-mode');
   await stage.setEnvironment(null,project.assets);
   setSceneWeather();
   applySceneColor(colorDefaults);
@@ -2349,13 +2474,16 @@ async function showCharacterEditorPreview() {
   const item = project.characters[selectedCharacter];
   if (stage.element.parentElement !== frame) frame.insertBefore(stage.element, overlay);
   stage.setPaintBackground(null);
-  overlay.innerHTML = `<div class="gallery-box gallery-box-character character-preview-box">
+  const bindingMode=propPreviewMode && Boolean(item?.props?.length);
+  frame.classList.toggle('binding-view-mode',bindingMode);overlay.classList.toggle('binding-preview',bindingMode);
+  if(bindingMode){overlay.innerHTML=`<div class="binding-preview-tools"><div>${button('看整个人物','binding-view-reset')}${button('放大绑定部位','binding-view-bone')}${button('返回人物鉴赏','binding-view-close')}</div><small>左键拖动旋转 · Shift＋左键拖动平移 · 滚轮缩放 · 右键拖动也能平移</small></div>`;}
+  else {stage.bindingView.disable();overlay.innerHTML = `<div class="gallery-box gallery-box-character character-preview-box">
     <header><div><small>EXTRAS</small><h2>附加鉴赏</h2></div></header>
     <div class="gallery-main-tabs"><button type="button" disabled>图像鉴赏</button><button type="button" disabled>乐曲鉴赏</button><button type="button" class="active">人物鉴赏</button></div>
-    <div class="gallery-content">${galleryCharacterMarkup(true)}</div></div>`;
+    <div class="gallery-content">${galleryCharacterMarkup(true)}</div></div>`;}
   overlay.querySelector('.gallery-character-picker .active')?.scrollIntoView({ block: 'nearest' });
   overlay.classList.remove('hidden');
-  document.querySelector('#stage-caption').textContent = '人物鉴赏预览';
+  document.querySelector('#stage-caption').textContent = bindingMode?'物品绑定 · 可转动视角':'人物鉴赏预览';
   document.querySelector('#stage-placeholder').style.display = 'none';
   document.querySelector('#dialogue')?.classList.remove('visible');
   updateSpeakerPortrait('', false);
@@ -2365,15 +2493,18 @@ async function showCharacterEditorPreview() {
     if (target && portraitAsset) target.innerHTML = `<img class="gallery-flat-portrait" src="${assetUrl(portraitAsset)}" alt="${escape(item.name)}">`;
     await stage.show(null, null); return;
   }
-  const portrait = overlay.querySelector('#gallery-character-canvas');
+  const portrait = bindingMode?frame:overlay.querySelector('#gallery-character-canvas');
   if (!portrait) return;
-  portrait.appendChild(stage.element);
+  if(bindingMode)frame.insertBefore(stage.element,overlay);else portrait.appendChild(stage.element);
   stage.resize();
   stage.setRenderSettings(project.render);
-  stage.setPortraitCamera();
+  if(!bindingMode){if(item.props?.length)stage.setCameraAngle(0);else stage.setPortraitCamera();}
   await stage.show(asset(item.modelId), asset(item.galleryMotionId), {}, 'center',
-    { size: 1.23, yaw: item.galleryYaw || 0 }, `gallery:${item.id}`);
+    { size: 1.23, yaw: item.galleryYaw || 0 }, `gallery:${item.id}`,{},'',{bindings:item.props||[],visibleIds:(item.props||[]).map(p=>p.id),assets:project.assets});
   if (activePanel === 'characters' && project.characters[selectedCharacter]?.id === item.id) {
+    const record=stage.visibleRecords.get(`gallery:${item.id}`);
+    if(bindingMode)stage.bindingView.enable(record,`gallery:${item.id}`);
+    for(const select of document.querySelectorAll('[data-prop-field=bone]')){const value=select.value;select.innerHTML=availablePropBones(record).map(b=>`<option value="${escape(b.value)}">${escape(b.label)}</option>`).join('');select.value=value;}
     refreshGalleryFrameControl(item);
     if (item.galleryMotionId) stage.setMotionPoseFrame(item.galleryPoseFrame);
   }
@@ -2489,9 +2620,12 @@ async function importAssets(type, folderId = '', titleImport = '', galleryImage 
     if (type === 'image') item.galleryImage = galleryImage;
   }
   if (folderId) openAssetFolders.add(folderId);
-  if (titleImport) project.title[titleImport] = imported[0].id;
+  if (titleImport === 'modelId') project.title.actors.push(...imported.map((model,index)=>newTitleActor(uid(),model.id,project.title.actors.length+index)));
+  else if(titleImport==='motionId'){const actor=project.title.actors.at(-1);if(actor)actor.motionId=imported[0].id;}
+  else if (titleImport) project.title[titleImport] = imported[0].id;
   project.assets.push(...imported); markDirty(); renderSidebar(); renderInspector(); toast(`已导入 ${imported.length} 个素材`);
   if (activePanel === 'title') updatePreview();
+  return imported;
 }
 function renderPlayer() {
   events.cancel();
@@ -2639,7 +2773,7 @@ document.addEventListener('click', async event => {
     } else if (action === 'add-act') {
       project.acts.push({ id: uid(), name: `第${project.acts.length + 1}幕`, backgroundId: '', bgmId: '', weather: normalizeWeather(),
         coverImageId: '', render: chapterRender(null, project.render),
-        cast: { left: '', center: '', right: '' }, castSettings: {}, steps: [] });
+        steps: [] });
       selectedAct = project.acts.length - 1; selectedStep = 0; markDirty(); renderSidebar(); renderInspector(); updatePreview();
     } else if (action === 'upload-act-cover') {
       await uploadActCover();
@@ -2656,7 +2790,7 @@ document.addEventListener('click', async event => {
       project.acts.splice(selectedAct, 1); selectedAct = Math.max(0, selectedAct - 1); selectedStep = 0;
       markDirty(); renderSidebar(); renderInspector(); updatePreview();
     } else if (action === 'add-step') {
-      act().steps.push({ id:uid(), characterId:'', speaker:'', text:'', expressionWeights:{}, motionId:'', position:'center', size:defaultSize, offsetX:0, offsetY:0, voiceId:'', choices:[] });
+      act().steps.push({id:uid(),characterId:'',speaker:'',text:'',cast:copyDialogueCast(step()||act().steps.at(-1)),voiceId:'',choices:[]});
       selectedStep = act().steps.length - 1; markDirty(); renderSidebar(); renderInspector(); updatePreview();
     } else if (action === 'duplicate-step') {
       const original = step();
@@ -2702,8 +2836,33 @@ document.addEventListener('click', async event => {
       if (content) content.innerHTML = galleryStoryMarkup(item, Infinity, editorGalleryStoryIndex, true);
       document.querySelectorAll('#character-preview [data-action="preview-story"]').forEach(button =>
         button.classList.toggle('active', Number(button.dataset.index) === editorGalleryStoryIndex));
+    } else if(action.startsWith('binding-view-')){
+      const item=project.characters[selectedCharacter];if(!item?.modelId)return;
+      if(action==='binding-view-close'){propPreviewMode=false;await updatePreview();return;}
+      propPreviewMode=true;await updatePreview();
+      const record=stage.visibleRecords.get(`gallery:${item.id}`);if(!record)return;
+      if(node.dataset.propId)selectedBindingPropId=node.dataset.propId;
+      const prop=item.props.find(p=>p.id===selectedBindingPropId)||item.props[0];
+      if(action==='binding-view-reset')stage.bindingView.focusModel(record);
+      else if(action==='binding-view-bone'&&prop)stage.bindingView.focusBone(propBone(record,prop.bone));
+      else if(action==='binding-view-item'&&prop)stage.bindingView.focusItem(record.attachedProps?.get(prop.id)?.root);
+    } else if (action === 'import-prop-model') {
+      const imported=await importAssets('sceneModel');
+      if(imported?.length)toast('物品已导入，点击“＋ 添加物品”即可绑定。');
+    } else if (action === 'add-character-prop') {
+      const item=project.characters[selectedCharacter],model=byType('sceneModel').at(-1);
+      if(!item?.modelId){toast('先给角色选择 VRM 或 FBX 人物模型。',true);return;}
+      if(!model){toast('先点击“导入物品 GLB”。',true);return;}
+      item.props ||= [];item.props.push({id:uid(),name:model.name,assetId:model.id,bone:'rightHand',position:[0,0,0],rotation:[0,0,0],scale:[1,1,1]});
+      markDirty();renderInspector();updatePreview();
+    } else if (action === 'remove-character-prop') {
+      const item=project.characters[selectedCharacter];item.props=(item.props||[]).filter(p=>p.id!==node.dataset.propId);
+      for(const act of project.acts)for(const line of act.steps)for(const value of Object.values(line.cast||{}))value.props=(value.props||[]).filter(id=>id!==node.dataset.propId);
+      markDirty();renderInspector();updatePreview();
     } else if (action === 'delete-character') {
       if (!confirm('删除这个角色？已有对白会变成旁白。')) return;
+      const deletedId=project.characters[selectedCharacter].id;
+      for(const act of project.acts)for(const line of act.steps){if(line.characterId===deletedId)line.characterId='';for(const value of Object.values(line.cast||{}))if(value.characterId===deletedId){value.characterId='';value.props=[];}}
       project.characters.splice(selectedCharacter, 1); selectedCharacter = Math.max(0, selectedCharacter - 1);
       markDirty(); renderSidebar(); renderInspector(); updatePreview();
     } else if (action === 'import') {
@@ -2752,6 +2911,7 @@ document.addEventListener('click', async event => {
     } else if (action === 'delete-asset') {
       const item = asset(node.dataset.assetId);
       if (!item) return;
+      if(project.characters.some(c=>c.props?.some(p=>p.assetId===item.id))){toast('这个模型已绑定为角色物品，请先到角色页移除绑定。',true);return;}
       if(project.environments?.some(e=>e.nodes.some(n=>n.assetId===item.id))){toast('这个素材正在 3D 场景里使用，请先从场景中移除对应物体。',true);return;}
       const used = JSON.stringify({ ...project, assets: [] }).includes(JSON.stringify(item.id));
       if (!confirm(item.type === 'voice' ? `删除这段配音？引用它的对白会变成无配音，可用撤销找回。\n\n${item.name}` : used ? `“${item.name}”正在工程中使用。删除后，对应的模型、动作或画面会失效。确定删除吗？`
@@ -2766,9 +2926,13 @@ document.addEventListener('click', async event => {
       step().expressionWeights = {};
       step().expression = '';
       markDirty(); renderExpressionControls(); stage?.setExpressions({});
+    } else if (action === 'add-title-actor') {
+      project.title.actors.push(newTitleActor(uid(),actorModels()[0]?.id||'',project.title.actors.length));markDirty();renderInspector();updatePreview();
+    } else if (action === 'delete-title-actor') {
+      project.title.actors=project.title.actors.filter(a=>a.id!==node.dataset.id);markDirty();renderInspector();updatePreview();
     } else if (action === 'reset-title-expressions') {
-      project.title.expressionWeights = {};
-      markDirty(); renderTitleExpressionControls(); stage?.setExpressions({});
+      const actor=project.title.actors.find(a=>a.id===node.dataset.id);if(!actor)return;actor.expressionWeights={};
+      markDirty(); renderTitleExpressionControls(); updatePreview();
     } else if (action === 'add-choice') {
       if (!step()) return;
       step().choices.push({ text:'', actId:'' }); markDirty(); renderInspector();
@@ -2904,10 +3068,26 @@ document.addEventListener('input', event => {
     if (['type','burst'].includes(key)) renderInspector();
     updatePreview(); return;
   }
+  if (node.dataset.propField && project) {
+    const prop=project.characters[selectedCharacter]?.props?.find(p=>p.id===node.dataset.propId);if(!prop)return;selectedBindingPropId=prop.id;
+    prop[node.dataset.propField]=node.value;markDirty();updatePreview();return;
+  }
+  if (node.dataset.propTransform && project) {
+    selectedBindingPropId=node.dataset.propTransform;const prop=project.characters[selectedCharacter]?.props?.find(p=>p.id===node.dataset.propTransform);if(!prop||node.value===''||!Number.isFinite(node.valueAsNumber))return;
+    const kind=node.dataset.vector,axis=Number(node.dataset.axis),row=node.closest('.prop-axis'),unit=kind==='rotation'?.1:.001;
+    let value=node.valueAsNumber;
+    if(node.dataset.mode==='fine'){
+      node.__propFineBase ??= String(prop[kind][axis]);value=Number(node.__propFineBase)+value*unit;
+    }else{const fine=row.querySelector('[data-mode=fine]');fine.value='0';delete fine.__propFineBase;}
+    value=Number(Math.max(kind==='scale'?.001:-10000,Math.min(10000,value)).toFixed(5));prop[kind][axis]=value;
+    const number=row.querySelector('[data-mode=number]'),coarse=row.querySelector('[data-mode=coarse]');number.value=String(value);
+    coarse.min=String(Math.min(Number(coarse.min),value));coarse.max=String(Math.max(Number(coarse.max),value));coarse.value=String(value);
+    markDirty();updatePreview();return;
+  }
   if (node.dataset.motionOptions && project) {
     const scope = node.dataset.motionOptions;
-    const holder = scope === 'step' ? step() : scope === 'title' ? project.title
-      : scope.startsWith('cast:') ? (act().castSettings[scope.slice(5)] ||= {}) : null;
+    const holder = scope === 'step' ? step() : scope === 'title' ? project.title : scope.startsWith('titleActor:') ? project.title.actors.find(a=>a.id===scope.slice(11))
+      : scope.startsWith('cast:') ? step()?.cast?.[scope.slice(5)] : null;
     if (!holder) return;
     holder.motionOptions ||= {};
     const key = node.dataset.motionSetting;
@@ -2923,7 +3103,7 @@ document.addEventListener('input', event => {
     else if (key === 'placement') holder.motionOptions.placement = node.value === 'free' ? 'free' : 'bounded';
     else if (key === 'feet') holder.motionOptions.feet = ['lock', 'free'].includes(node.value) ? node.value : 'auto';
     markDirty();
-    if (scope === 'title') showTitleScene(false);
+    if (scope === 'title' || scope.startsWith('titleActor:')) showTitleScene(false);
     else updatePreview();
     return;
   }
@@ -2968,9 +3148,27 @@ document.addEventListener('input', event => {
     markDirty(); if (activePanel === 'characters') updatePreview(); return;
   }
   if (node.id === 'project-name') { project.name = node.value; markDirty(); if (activePanel === 'title') updatePreview(); return; }
+  if(node.dataset.titleActorId && project){
+    const actor=project.title.actors.find(a=>a.id===node.dataset.titleActorId);if(!actor)return;
+    if(node.dataset.titleActorField){
+      const key=node.dataset.titleActorField;actor[key]=node.value;
+      if(key==='characterId'){const role=character(node.value);if(role)actor.modelId=role.modelId;actor.props=[];}
+      if(key==='modelId'&&character(actor.characterId)?.modelId!==actor.modelId){actor.characterId='';actor.props=[];}
+      markDirty();renderInspector();updatePreview();return;
+    }
+    if(node.dataset.titleActorAdjust){
+      if(node.value===''||!Number.isFinite(node.valueAsNumber))return;
+      const key=node.dataset.titleActorAdjust,value=Math.max(Number(node.min),Math.min(Number(node.max),node.valueAsNumber));
+      actor[key]=key==='size'?value/100:value;
+      for(const control of node.closest('.adjustment').querySelectorAll('input'))control.value=String(value);
+    }else if(node.dataset.titleActorExpression){actor.expressionWeights[node.dataset.titleActorExpression]=Number(node.value)/100;node.closest('label').querySelector('output').textContent=node.value+'%';}
+    else if(node.dataset.titleActorProp){actor.props=actor.props.filter(id=>id!==node.dataset.titleActorProp);if(node.checked)actor.props.push(node.dataset.titleActorProp);}
+    markDirty();updatePreview();return;
+  }
   if (node.dataset.titleField && project) {
     project.title[node.dataset.titleField] = node.value;
     markDirty();
+    if(node.dataset.titleField==='logoImageId')renderInspector();
     if (node.dataset.titleField !== 'authorNote') updatePreview();
     return;
   }
@@ -3031,53 +3229,32 @@ document.addEventListener('input', event => {
     if (node.value) openAssetFolders.add(node.value);
     markDirty(); renderSidebar(); return;
   }
-  if (node.dataset.stepCast && step()) {
-    const positions = castAssignments(act(), step());
-    const moving = positions.find(entry => entry.actorKey === node.dataset.stepCast);
-    if (!moving || !castSlots.includes(node.value)) return;
-    const previous = moving.position;
-    const other = positions.find(entry => entry.position === node.value && entry !== moving);
-    const updated = Object.fromEntries(positions.map(entry => [entry.actorKey, entry.position]));
-    updated[moving.actorKey] = node.value;
-    if (other) updated[other.actorKey] = previous;
-    step().castPositions = updated;
-    markDirty(); renderInspector(); updatePreview(); return;
+  if (node.dataset.castSlot && step()) {
+    setDialogueActor(step(),node.dataset.castSlot,node.value);
+    markDirty();renderInspector();updatePreview();return;
   }
-  if (node.dataset.castSlot && act()) {
-    act().cast ||= { left: '', center: '', right: '' };
-    for (const slot of castSlots) if (slot !== node.dataset.castSlot && act().cast[slot] === node.value) act().cast[slot] = '';
-    act().cast[node.dataset.castSlot] = node.value;
-    markDirty(); renderInspector(); updatePreview(); return;
+  if (node.dataset.castMotion && step()) {
+    step().cast[node.dataset.castMotion].motionId=node.value;
+    markDirty();updatePreview();refreshMotionHints();return;
   }
-  if (node.dataset.castMotion && act()) {
-    const slot = node.dataset.castMotion;
-    act().castSettings ||= {};
-    act().castSettings[slot] ||= {};
-    act().castSettings[slot].motionId = node.value;
-    markDirty(); updatePreview(); refreshMotionHints(); return;
+  if (node.dataset.castAdjust && step()) {
+    const [slot,key]=node.dataset.castAdjust.split('.');if(node.value===''||!Number.isFinite(node.valueAsNumber))return;
+    step().cast[slot][key]=key==='size'?Number(node.value)/100:Number(node.value);
+    const output=document.querySelector(`[data-cast-output="${slot}.${key}"]`);
+    if(output)output.textContent=key==='size'?`${node.value}%`:key==='yaw'?`${node.value}°`:node.value;
+    markDirty();updatePreview();return;
   }
-  if (node.dataset.castAdjust && act()) {
-    const [slot, key] = node.dataset.castAdjust.split('.');
-    act().castSettings ||= {};
-    act().castSettings[slot] ||= {};
-    act().castSettings[slot][key] = key === 'size' ? Number(node.value) / 100 : Number(node.value);
-    const output = document.querySelector(`[data-cast-output="${slot}.${key}"]`);
-    if (output) output.textContent = key === 'size' ? `${node.value}%` : key === 'yaw' ? `${node.value}°` : node.value;
-    markDirty(); updatePreview(); return;
+  if (node.dataset.castExpression && step()) {
+    const divider=node.dataset.castExpression.indexOf('.'),slot=node.dataset.castExpression.slice(0,divider),name=node.dataset.castExpression.slice(divider+1);
+    step().cast[slot].expressionWeights ||= {};step().cast[slot].expressionWeights[name]=Number(node.value)/100;
+    const output=[...document.querySelectorAll('[data-cast-expression-output]')].find(item=>item.dataset.castExpressionOutput===node.dataset.castExpression);
+    if(output)output.textContent=`${node.value}%`;markDirty();updatePreview();return;
   }
-  if (node.dataset.castExpression && act()) {
-    const divider = node.dataset.castExpression.indexOf('.');
-    const slot = node.dataset.castExpression.slice(0, divider);
-    const name = node.dataset.castExpression.slice(divider + 1);
-    act().castSettings ||= {};
-    act().castSettings[slot] ||= {};
-    act().castSettings[slot].expressionWeights ||= {};
-    act().castSettings[slot].expressionWeights[name] = Number(node.value) / 100;
-    const output = [...document.querySelectorAll('[data-cast-expression-output]')]
-      .find(item => item.dataset.castExpressionOutput === node.dataset.castExpression);
-    if (output) output.textContent = `${node.value}%`;
-    markDirty();
-    updatePreview(); return;
+  if (node.dataset.castProp && step()) {
+    const settings=step().cast[node.dataset.castProp];settings.props ||= [];
+    settings.props=settings.props.filter(id=>id!==node.dataset.propId);
+    if(node.checked)settings.props.push(node.dataset.propId);
+    markDirty();updatePreview();return;
   }
   if (node.dataset.render && project) {
     const key = node.dataset.render;
@@ -3964,9 +4141,10 @@ window.__vrmDiagnostics = () => ({
   ,preloadedModels: stage?.modelCache?.size || 0
   ,visibleModels: [...(stage?.visibleRecords?.values() || [])].filter(record => record.vrm.scene.visible).length
   ,sceneModels: stage?.scene?.children.filter(node => !node.isLight).map(node => ({ name: node.name, visible: node.visible, type: node.type, uuid: node.uuid })) || []
-  ,castSlots: act()?.cast || {}
-  ,castSettings: act()?.castSettings || {}
+  ,castSlots: Object.fromEntries(Object.entries(step()?.cast||{}).map(([slot,value])=>[slot,value.characterId]))
+  ,castSettings: step()?.cast || {}
   ,visibleActors: [...(stage?.visibleRecords?.entries() || [])].map(([id, record]) => ({
+    attachedProps:[...(record.attachedProps?.values()||[])].map(p=>({id:p.binding.id,assetId:p.binding.assetId,bone:p.bone.name,position:p.binding.position,worldPosition:p.root.getWorldPosition(new THREE.Vector3()).toArray()})),
     id, x: record.anchor.position.x, y: record.anchor.position.y, z: record.anchor.position.z,
     shadowGroundY: stage?.shadowGroundHeightAt(record.anchor.position.x, record.anchor.position.z) ?? null,
     scale: record.anchor.scale.x,
@@ -4086,3 +4264,7 @@ window.__vrmDiagnostics = () => ({
   ,playStep
 });
 init();
+
+document.addEventListener('change',event=>{
+  if(event.target.dataset.propTransform && event.target.dataset.mode==='fine'){event.target.value='0';delete event.target.__propFineBase;}
+});

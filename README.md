@@ -1,22 +1,36 @@
-# VRM Galgame 编辑器 · 公开版 0.0.9
+# VRM Galgame 编辑器 · 公开版 0.0.10
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.9** 在原有功能上加入可编辑 3D 环境和 Mixamo FBX 人物。
+把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.10** 加入人物物品绑定、每句对白独立登场、多人标题和留空 Logo，保留可编辑 3D 环境与 Mixamo FBX 人物。
 
 **第一次使用？先看 [图文说明书](docs/新手说明书.md)。** 它从下载、准备素材到导出游戏一步一步讲清楚。
 
 ## 下载
 
-到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.9-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
+到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.10-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
 
 > 公开包不附带示例人物、背景、Mixamo 动作或故事工程。下列图片是**示例与效果图**，展示做出来可以是什么样子；请使用自己有权使用的素材。
+
+## 0.0.10 更新：物品绑定、逐句登场与多人标题
+
+在角色页把 GLB 物品绑到手掌、手指或其他骨骼，使用粗调、细调和数字输入找准位置。绑定时可以转动、平移和拉近视角，直接放大手掌或手指。每句对白分别安排三个在场人物与物品显示；标题可放更多人物，并可完全隐藏左侧 Logo 标题板。
+
+**[打开完整图文说明](docs/物品绑定与多人标题_v0.0.10.md)** · [本次更新记录](RELEASE_NOTES.md)
+
+![多人标题与留空 Logo](docs/images/v010/title-actors.png)
+
+![FBX 物品绑定](docs/images/v010/fbx-prop.png)
+
+![近看手掌绑定位置](docs/images/v010/binding-view.png)
+
+![每句独立安排人物](docs/images/v010/dialogue-cast.png)
 
 ## 0.0.9 更新：3D 环境与 FBX 人物
 
 独立环境编辑窗口、工程内多环境、GLB 和远景图片摆放、分组、地面和灯光、透明参考人物、游戏镜头保存、真实阴影，以及 Mixamo FBX 人物。前后位置可以直接输入数字，每次微调 0.01。
 
-**[打开完整图文说明](docs/3D环境与FBX人物_v0.0.9.md)** · [本次更新记录](RELEASE_NOTES.md)
+**[打开完整图文说明](docs/3D环境与FBX人物_v0.0.9.md)**
 
 ![3D 环境编辑器](docs/images/v009/environment-editor.png)
 
