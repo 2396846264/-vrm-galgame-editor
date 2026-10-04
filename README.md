@@ -1,4 +1,4 @@
-# VRM Galgame 编辑器 · 公开版 0.0.8
+# VRM Galgame 编辑器 · 源码更新 0.0.9
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
@@ -12,7 +12,19 @@
 
 > 公开包不附带示例人物、背景、Mixamo 动作或故事工程。下列图片是**示例与效果图**，展示做出来可以是什么样子；请使用自己有权使用的素材。
 
-## 本版新增
+## 0.0.9 更新：3D 环境与 FBX 人物
+
+独立环境编辑窗口、工程内多环境、GLB 和远景图片摆放、分组、地面和灯光、透明参考人物、游戏镜头保存、真实阴影，以及 Mixamo FBX 人物。前后位置可以直接输入数字，每次微调 0.01。
+
+**[打开完整图文说明](docs/3D环境与FBX人物_v0.0.9.md)** · [本次更新记录](RELEASE_NOTES.md)
+
+![3D 环境编辑器](docs/images/v009/environment-editor.png)
+
+![FBX 人物鉴赏](docs/images/v009/fbx-gallery.png)
+
+![3D 教室对话](docs/images/v009/classroom-vrm.png)
+
+## 0.0.8 已有功能
 
 - 顶部查找与替换，批量改对白、人物名字和介绍；游戏名称在“标题”页修改。
 - PDF 知识库：大封面书库、完成指定幕后解锁、离线双页翻书阅读。
@@ -76,7 +88,8 @@
 
 | 想放什么 | 允许的文件 |
 | --- | --- |
-| 3D 人物 | `.vrm` |
+| 3D 人物 | `.vrm`、Mixamo 骨骼人物 `.fbx` |
+| 环境模型 | 贴图内嵌 `.glb` |
 | 动作 | `.vrma`、Mixamo `.fbx` |
 | 背景、头像等图片 | `.png`、`.jpg`、`.jpeg`、`.webp` |
 | 音乐、音效 | `.mp3`、`.wav`、`.ogg` |
@@ -91,10 +104,7 @@
 需要 Windows、Node.js、npm 和 .NET 10 SDK。在仓库根目录运行：
 
 ```powershell
-npm ci
-npm run build
-dotnet publish Desktop/Desktop.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
-Copy-Item -Recurse dist publish/web
+./scripts/build-windows.ps1
 ```
 
 保留 `publish` 中的 EXE、`WebView2Loader.dll` 和 `web` 文件夹。字体的授权文件见 [HarmonyOS Sans SC 授权](public/fonts/HarmonyOS_Sans_SC_LICENSE.txt)。第三方依赖遵循各自的许可；本仓库未对项目源码另附再授权许可。

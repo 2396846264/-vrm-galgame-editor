@@ -12,6 +12,9 @@ import { createEvents, eventNames, eventSeconds, isEvent, normalizeEvent, newEve
 import { normalizeWeather, weatherDefaults, weatherNames, weatherMood } from './weather.js';
 import { colorDefaults, chapterRender, colorFilter, chapterUnlocked } from './chapters.js';
 import { VRMStage, assetUrl, motionFrameInfo, captureVrmPortrait } from './renderer.js';
+import { embeddedVrmThumbnail, internalPortrait } from './vrm-thumbnail.js';
+import {validateEnvironmentLibrary} from './environment-operations.js';
+import {createEnvironment,migrateEnvironments,validateEnvironment} from './environment-schema.js';
 import { createLibrary } from './library.js';
 import { createEditorHistory } from './editor-history.js';
 import './editor-history.css';
@@ -35,7 +38,7 @@ let activePanel = 'story';
 const openAssetFolders = new Set(['unfiled:vrm', 'unfiled:motion', 'unfiled:image', 'unfiled:audio', 'unfiled:video']);
 let dockInitializedProjectId = '';
 let activeAssetType = 'image';
-const currentAssetFolder = { image: '', vrm: '', motion: '', audio: '', voice: '', video: '' };
+const currentAssetFolder = { image: '', vrm: '', fbxCharacter: '', motion: '', audio: '', voice: '', video: '' };
 let draggingStory = null;
 let playing = false;
 let playAct = 0;
@@ -122,6 +125,7 @@ window.chrome?.webview?.addEventListener('message', event => {
     ).catch(error=>toast(error.message,true));
     return;
   }
+  if(message.environmentCommit){applyEnvironmentCommit(message.environmentCommit);return;}
   const promise = pending.get(message.id);
   if (!promise) return;
   pending.delete(message.id);
@@ -171,7 +175,47 @@ const character = id => project.characters.find(item => item.id === id);
 const options = (items, value, empty = '无') =>
   `<option value="">${escape(empty)}</option>${items.map(item =>
     `<option value="${escape(item.id)}" ${item.id === value ? 'selected' : ''}>${escape(item.name)}</option>`).join('')}`;
-const byType = type => project.assets.filter(item => item.type === type);
+const byType = type => project.assets.filter(item => item.type === type && !internalPortrait(project, item));
+const vrmThumbnails = new Map();
+let thumbnailProject = null;
+function refreshVrmThumbnails() {
+  if (thumbnailProject !== project) {
+    for (const result of vrmThumbnails.values()) if (result.url) URL.revokeObjectURL(result.url);
+    vrmThumbnails.clear(); thumbnailProject = project;
+  }
+  const owner = project;
+  for (const model of byType('vrm')) {
+    const key = assetUrl(model);
+    if (vrmThumbnails.has(key)) continue;
+    const entry = {}; vrmThumbnails.set(key, entry);
+    (async () => {
+      try {
+        const response = await fetch(key); if (!response.ok) return;
+        const blob = embeddedVrmThumbnail(await response.arrayBuffer());
+        if (!blob || project !== owner || !owner.assets.includes(model)) return;
+        entry.url = URL.createObjectURL(blob);
+        // Old projects sometimes registered the embedded image as an ordinary image.
+        const bytes = new Uint8Array(await blob.arrayBuffer());
+        const portraitIds = new Set(owner.characters.map(c => c.portraitId));
+        for (const portrait of owner.assets.filter(a => a.type === 'image' &&
+          (portraitIds.has(a.id) || /头像|portrait|thumbnail/i.test(a.name || '')))) {
+          if (!portrait || internalPortrait(owner, portrait)) continue;
+          const image = await fetch(assetUrl(portrait)); if (!image.ok) continue;
+          const other = new Uint8Array(await image.arrayBuffer());
+          if (project !== owner) return;
+          if (bytes.length === other.length && bytes.every((v, i) => v === other[i])) {
+            portrait.internalPortrait = true; portrait.galleryImage = false;
+            portrait.folderId = 'embedded-vrm-portraits';
+            if (!owner.assetFolders.some(f => f.id === portrait.folderId))
+              owner.assetFolders.push({ id: portrait.folderId, name: 'VRM内置头像', type: 'image', hidden: true });
+            markDirty({ derived: true });
+          }
+        }
+      } catch { /* Models without an embedded image keep the ordinary icon. */ }
+      finally { if (project === owner) renderAssetDock(); }
+    })();
+  }
+}
 const field = (label, control) => `<label class="field"><span>${label}</span>${control}</label>`;
 const input = (key, value, placeholder = '') => `<input data-field="${key}" value="${escape(value)}" placeholder="${escape(placeholder)}">`;
 const textarea = (key, value, placeholder = '') => `<textarea data-field="${key}" placeholder="${escape(placeholder)}">${escape(value)}</textarea>`;
@@ -317,9 +361,9 @@ async function displayActStep(currentAct, current) {
   }
 }
 const adjustmentSlider = (key, label, value, min, max, stepSize, display) =>
-  `<label class="adjustment"><span>${label}</span><input type="range" data-adjust="${key}" min="${min}" max="${max}" step="${stepSize}" value="${value}"><output data-adjust-output="${key}">${display}</output></label>`;
+  `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-adjust-output="${key}">${display}</output></label>`;
 const titleSlider = (key, label, value, min, max, stepSize, display) =>
-  `<label class="adjustment"><span>${label}</span><input type="range" data-title-adjust="${key}" min="${min}" max="${max}" step="${stepSize}" value="${value}"><output data-title-output="${key}">${display}</output></label>`;
+  `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-title-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-title-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-title-output="${key}">${display}</output></label>`;
 function titleMarkup(interactive) {
   const logo = asset(project.title.logoImageId);
   const logoMarkup = logo
@@ -344,11 +388,12 @@ async function showTitleScene(interactive = false) {
   const request = ++titleRequest;
   const frame = document.querySelector('.stage-frame');
   frame?.classList.add('title-mode');
-  showBackground(asset(project.title.backgroundId));
+  showBackground(null);
   if (interactive && project.title.logoImageId) rememberDiscovery('image', project.title.logoImageId);
   stage.setRenderSettings(project.render);
   stage.setBackgroundLighting(asset(project.title.backgroundId));
   stage.setCameraAngle(project.title.cameraAngle);
+  await showEnvironment(project.title);
   const overlay = document.querySelector(interactive ? '#player-start' : '#title-preview');
   if (overlay) {
     overlay.innerHTML = titleMarkup(interactive);
@@ -373,6 +418,51 @@ async function showTitleScene(interactive = false) {
   if (!interactive && activePanel === 'title') renderTitleExpressionControls();
 }
 
+async function applyEnvironmentCommit(message){
+  try{const p=message.payload;if(mode!=='editor'||p.projectId!==project.id)throw Error('工程已切换，请重新打开环境窗口');
+    let index=project.environments.findIndex(e=>e.id===p.environment.id);const isNew=index<0;
+    if(isNew ? p.baseRevision!==-1 : JSON.stringify(project.environments[index])!==environmentBaselines.get(p.environment.id))throw Error('场景已在主窗口改变，请关闭并重新打开');
+    if(!isNew&&(project.environments[index].revision||0)!==p.baseRevision)throw Error('场景版本已改变，请重新打开');
+    const added=p.assets.filter(a=>!project.assets.some(x=>x.id===a.id));
+    for(const a of added)if(!['image','sceneModel'].includes(a.type)||!/^assets\/(image|sceneModel)\//.test(a.path)||a.path.includes('..'))throw Error('素材路径无效');
+    const assets=[...project.assets,...added];validateEnvironment(p.environment,assets);if(p.environmentLibrary){p.environmentLibrary=structuredClone(p.environmentLibrary);const currentIds=new Set(assets.map(a=>a.id));for(const id of Object.keys(p.environmentLibrary.assignments||{}))if(!currentIds.has(id))delete p.environmentLibrary.assignments[id];validateEnvironmentLibrary(p.environmentLibrary,assets);}
+    const replacement=structuredClone(p.environment);replacement.revision=p.baseRevision+1;
+    project.assets.push(...added);if(p.environmentLibrary)project.environmentLibrary=structuredClone(p.environmentLibrary);if(isNew){index=project.environments.length;project.environments.push(replacement);}else project.environments[index]=replacement;markDirty({label:'编辑 3D 环境'});
+    try {await save();} catch(error) {project.environments[index].revision=p.baseRevision;environmentBaselines.set(p.environment.id,JSON.stringify(project.environments[index]));throw error;}
+    environmentBaselines.set(p.environment.id,JSON.stringify(replacement));
+    await bridge('environmentCommitReply',{session:message.session,ok:true,data:{revision:replacement.revision}});
+    renderInspector();renderAssetDock();updatePreview().catch(error=>toast(error.message,true));
+  }catch(error){await bridge('environmentCommitReply',{session:message.session,ok:false,error:error.message});}
+}
+let environmentBaselines=new Map();
+if(new URLSearchParams(location.search).has('smoke')) {
+ window.__vrmSmokeEnvironmentOpen=async()=>{
+   const owner=act();owner.environmentId=project.environments[0]?.id;
+   owner.steps[0].text='环境保存期间保留的对白';
+   await editEnvironment(owner);return {opened:true,id:owner.environmentId};
+ };
+ window.__vrmSmokeEnvironmentCheck=async()=>{
+   await updatePreview();const env=project.environments.find(e=>e.id===act().environmentId);
+   if(env.name!=='窗口保存验证'||env.nodes.length<2||env.revision!==1||act().steps[0].text!=='环境保存期间保留的对白'||stage.element.style.visibility!=='visible')throw Error('环境保存或风景显示验证失败');
+   activePanel='characters';selectedCharacter=0;renderInspector();
+   if(isFbxModel(project.characters[0]?.modelId)&&document.querySelector('[data-field="character.autoMouth"]'))throw Error('FBX 嘴型选项仍显示');
+   const actor=project.characters[0];const record=await stage.loadModel(asset(actor?.modelId),actor?.id);
+   const motion=project.assets.find(a=>a.type==='motion'&&a.id==='fbx-motion');if(motion){const clip=await stage.prepareClip(asset(actor.modelId),motion,actor.id);if(!clip?.tracks.length)throw Error('FBX 动作没有成功对应');await stage.show(asset(actor.modelId),motion,{},'center',{},actor.id);}
+   await new Promise(resolve=>setTimeout(resolve,1500));
+   if(stageError)throw Error(stageError);let meshes=0,loadedMaps=0;record.vrm.scene.traverse(o=>{if(o.isSkinnedMesh)meshes++;for(const m of Array.isArray(o.material)?o.material:[o.material])if(m?.map?.image?.width>0)loadedMaps++;});if(!meshes||!loadedMaps)throw Error('FBX 人物或贴图未显示');
+   return {ok:true,revision:env.revision,nodeCount:env.nodes.length,canvasVisible:stage.element.style.visibility,dialoguePreserved:true,fbxMouthHidden:true,fbxSkinnedMeshes:meshes,loadedTextureMaps:loadedMaps,mixamoMotionTracks:stage.activeRecord.currentAction.getClip().tracks.length};
+ };
+}
+
+async function editEnvironment(owner){
+  project.environments ||= [];let env=project.environments.find(e=>e.id===owner.environmentId);
+  if(!env){env=createEnvironment((owner.name||'标题')+'场景');project.environments.push(env);owner.environmentId=env.id;markDirty({label:'新建 3D 环境'});renderInspector();}
+  for(const e of project.environments)if(!environmentBaselines.has(e.id))environmentBaselines.set(e.id,JSON.stringify(e));
+  const result=await bridge('openEnvironment',{projectId:project.id,environment:structuredClone(env),environments:structuredClone(project.environments),environmentLibrary:structuredClone(project.environmentLibrary||{folders:[],assignments:{}}),referenceSettings:structuredClone(owner.castSettings||{}),referenceMultiple:Object.values(owner.cast||{}).filter(Boolean).length>1,assets:structuredClone(project.assets)});if(result.created)environmentBaselines=new Map(project.environments.map(e=>[e.id,JSON.stringify(e)]));
+}
+async function showEnvironment(owner){const env=project.environments?.find(e=>e.id===owner?.environmentId);await stage.setEnvironment(env,project.assets);return Boolean(env);}
+const isFbxModel=id=>asset(id)?.type==='fbxCharacter';
+const actorModels=()=>project.assets.filter(a=>['vrm','fbxCharacter'].includes(a.type));
 function defaultProject(name) {
   return {
     version: 1, id: uid(), name: name || '我的 VRM 故事', ui: { dialogueImageId: '', clickSoundId: '' },
@@ -388,10 +478,12 @@ function defaultProject(name) {
   };
 }
 function normalize() {
+  migrateEnvironments(project);
   library.reset();
   project.knowledgeBooks ||= [];
   project.assets ||= [];
   project.assetFolders ||= [];
+  for (const folder of project.assetFolders) if (folder.id === 'auto-character-portraits') folder.hidden = true;
   project.characters ||= [];
   for (const item of project.characters) {
     item.autoMouth = item.autoMouth !== false;
@@ -587,6 +679,7 @@ async function restoreEditorHistory(direction) {
   finally { historyBusy = false; document.querySelector('.editor')?.classList.remove('history-busy'); updateHistoryButtons(); }
 }
 function markDirty(options) {
+  if(project)migrateEnvironments(project);
   if (project) syncDialogueVoices(project);
   changeRevision++;
   dirty = true;
@@ -688,7 +781,7 @@ function renderEditor() {
     <header class="topbar"><div class="brand">✦ <b>VRM Galgame</b><span>编辑器</span></div>
       <div class="project-title"><input id="text-search" placeholder="查找与替换剧情、角色名称…" aria-label="查找剧情文本，按回车打开替换工具"><button class="search-open-button" data-action="search-open" title="查找与替换">⌕</button><span id="save-state">✓ 已保存</span></div>
       <div class="editor-history-controls" role="group" aria-label="撤销和重做">${button('↶ 撤销', 'editor-undo', 'disabled')}${button('↷ 重做', 'editor-redo', 'disabled')}</div>
-      <nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('导入旧工程', 'import-folder-project')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('剧情助手', 'assistant-open')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}<div class="editor-feedback" aria-label="Bug反馈交流群"><span>Bug反馈交流群 · QQ</span><strong>${escape(feedbackGroup)}</strong></div></nav>
+      <nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('导入旧工程', 'import-folder-project')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('剧情助手', 'assistant-open')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}${button('环境编辑器', 'edit-environment')}<div class="editor-feedback" aria-label="Bug反馈交流群"><span>Bug反馈交流群 · QQ</span><strong>${escape(feedbackGroup)}</strong></div></nav>
     </header>
     <div class="workspace">
       <aside class="sidebar"><div class="tabs">
@@ -745,7 +838,7 @@ function renderSidebar() {
     body.innerHTML = `<div class="section-heading">角色 ${button('＋ 新增', 'add-character')}</div>
       <div class="list">${project.characters.map((item, index) =>
         `<button class="list-row ${index === selectedCharacter ? 'selected' : ''}" data-action="select-character" data-index="${index}">
-          <span class="number">✦</span><span>${escape(item.name)}</span><small>${item.modelId ? 'VRM' : '未设模型'}</small></button>`).join('')}</div>
+          <span class="number">✦</span><span>${escape(item.name)}</span><small>${item.modelId ? (isFbxModel(item.modelId)?'FBX':'VRM') : '未设模型'}</small></button>`).join('')}</div>
       <div class="sidebar-note">角色只需设置一次。对白选中角色后就能调用它的模型。</div>`;
   } else if (activePanel === 'render') {
     body.innerHTML = `<div class="section-heading">选择要调节的幕</div><div class="list">${project.acts.flatMap((item, index) => isEvent(item) ? [] : [`<button class="list-row ${index === selectedAct ? 'selected' : ''}" data-action="select-act" data-index="${index}"><span class="number">${index + 1}</span><span>${escape(item.name)}</span></button>`]).join('')}</div><div class="sidebar-note">右侧的画风、阴影和调色只影响选中的这一幕。标题画面保留原来的效果。</div>`;
@@ -755,7 +848,7 @@ function renderSidebar() {
         ${button('导入 Logo', 'import', 'data-type="image" data-title-import="logoImageId"')}
         ${button('导入标题人物', 'import', 'data-type="vrm" data-title-import="modelId"')}
         ${button('导入标题动作', 'import', 'data-type="motion" data-title-import="motionId"')}
-        ${button('导入背景', 'import', 'data-type="image" data-title-import="backgroundId"')}
+        ${button('编辑环境', 'edit-environment')}
       </div><div class="sidebar-note">标题布局固定：Logo 在左侧，人物在中间偏右，菜单排在底部。导入后到右侧调整位置和角度。</div>`;
   }
   renderAssetDock();
@@ -837,16 +930,17 @@ function renderAssetDock() {
     dockInitializedProjectId = project.id;
   }
   const type = activeAssetType;
-  const folders = project.assetFolders.filter(folder => folder.type === type);
+  const folders = project.assetFolders.filter(folder => folder.type === type && !folder.hidden && folder.id !== autoPortraitFolderId);
   if (currentAssetFolder[type] && !folders.some(folder => folder.id === currentAssetFolder[type])) currentAssetFolder[type] = '';
   const folderId = currentAssetFolder[type];
   const selectedFolder = folders.find(folder => folder.id === folderId);
   const scroll = body.scrollTop;
   const settingsOpen = body.querySelector('.asset-dock-settings')?.open || false;
-  const tabs = [['image', '图像'], ['vrm', 'VRM'], ['motion', '动作'], ['audio', '音乐与音效'], ['voice', '配音'], ['video', '视频']];
+  const tabs = [['image', '图像'], ['vrm', 'VRM'], ['fbxCharacter','FBX 人物'], ['motion', '动作'], ['audio', '音乐与音效'], ['voice', '配音'], ['video', '视频']];
   document.querySelector('#asset-dock-tabs').innerHTML = tabs.map(([key, label]) =>
     `<button type="button" role="tab" aria-selected="${type === key}" class="${type === key ? 'active' : ''}" data-action="asset-tab" data-type="${key}">${label}<small>${byType(key).length}</small></button>`).join('');
   if (type === 'voice') { renderVoiceLibrary(body, folderId, folders, selectedFolder, scroll); return; }
+  refreshVrmThumbnails();
   const visible = byType(type).filter(item => folderId ? item.folderId === folderId : !folders.some(folder => folder.id === item.folderId));
   body.innerHTML = `<div class="asset-browser-toolbar">
       <div class="asset-browser-location">${folderId ? button('← 返回', 'asset-folder-back') : '<strong>全部文件夹</strong>'}<span>${escape(selectedFolder?.name || (folderId ? '文件夹' : '未分类素材'))}</span></div>
@@ -875,6 +969,8 @@ function renderAssetTile(item, folders) {
   const icons = { vrm: '♟', motion: '▶', audio: '♫', video: '▣' };
   const preview = item.type === 'image'
     ? `<img class="asset-tile-preview" loading="lazy" src="${escape(assetUrl(item))}" alt="${escape(item.name)}的缩略图">`
+    : item.type === 'vrm' && vrmThumbnails.get(assetUrl(item))?.url
+      ? `<img class="asset-tile-preview vrm-embedded-thumbnail" src="${escape(vrmThumbnails.get(assetUrl(item)).url)}" alt="${escape(item.name)}自带的头像">`
     : `<span class="asset-tile-icon asset-tile-icon-${item.type}" aria-hidden="true">${icons[item.type] || '▣'}</span>`;
   return `<div class="asset-tile asset-file-tile" title="${escape(item.name)}"><div class="asset-tile-picture">${preview}</div><span class="asset-tile-name">${escape(item.name)}</span>
     <div class="asset-tile-tools"><select data-asset-folder="${escape(item.id)}" aria-label="把 ${escape(item.name)} 移动到文件夹" title="移动到文件夹">
@@ -972,6 +1068,7 @@ async function readDroppedEntry(entry, folderName, result) {
   }
 }
 async function importDroppedEntries(transfer) {
+  if(activeAssetType==='fbxCharacter'){toast('FBX 人物请点击“导入”，这样可以一起收集旁边的贴图。');return;}
   if (activeAssetType === 'voice') { redirectVoiceUpload(); return; }
   const entries = [];
   const items = [...transfer.items].filter(item => item.kind === 'file')
@@ -1033,7 +1130,7 @@ function castEditor(currentAct, slot) {
   const settings = castSettingsOf(currentAct, slot);
   const actorId = currentAct.cast?.[slot];
   const slider = (key, label, value, min, max, stepSize, unit = '') =>
-    `<label class="adjustment"><span>${label}</span><input type="range" data-cast-adjust="${slot}.${key}" min="${min}" max="${max}" step="${stepSize}" value="${value}"><output data-cast-output="${slot}.${key}">${value}${unit}</output></label>`;
+    `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-cast-adjust="${slot}.${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-cast-adjust="${slot}.${key}" aria-label="${castSlotLabels[slot]}前后精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-cast-output="${slot}.${key}">${value}${unit}</output></label>`;
   return `<details class="cast-editor"><summary>${castSlotLabels[slot]} · ${escape(character(actorId)?.name || '未选择')}</summary>
     <div class="cast-editor-body">
       ${field('角色', `<select data-cast-slot="${slot}">${options(project.characters.filter(item => item.modelId || item.id === actorId), actorId, '此位置无人')}</select>`)}
@@ -1042,9 +1139,9 @@ function castEditor(currentAct, slot) {
         ${slider('size', '大小', Math.round((settings.size ?? defaultSize) * 100), 50, 250, 5, '%')}
         ${slider('offsetX', '左右', Number(settings.offsetX) || 0, -1.5, 1.5, 0.05)}
         ${slider('offsetY', '上下', Number(settings.offsetY) || 0, -3, 2, 0.05)}
-        ${slider('offsetZ', '前后', Number(settings.offsetZ) || 0, -2, 1.5, 0.05)}
+        ${slider('offsetZ', '前后', Number(settings.offsetZ) || 0, -100, 100, 0.1)}
         ${slider('yaw', '转身角度', Number(settings.yaw) || 0, -90, 90, 5, '°')}
-        <div class="field"><span>本幕表情</span><div id="cast-expression-${slot}" class="expression-controls"></div></div>` : ''}
+${!isFbxModel(character(actorId)?.modelId) ? `<div class="field"><span>本幕表情</span><div id="cast-expression-${slot}" class="expression-controls"></div></div>` : ''}` : ''}
     </div></details>`;
 }
 function renderInspector() {
@@ -1055,11 +1152,11 @@ function renderInspector() {
     const item = project.characters[selectedCharacter];
     body.innerHTML = item ? `<div class="inspector-content"><h2>角色设置</h2>
       ${field('角色名字', input('character.name', item.name))}
-      ${field('VRM 模型', select('character.modelId', byType('vrm'), item.modelId, '请选择模型'))}
-      <label class="field"><span>自动说话嘴型</span><select data-field="character.autoMouth"><option value="on" ${item.autoMouth !== false ? 'selected' : ''}>开启（默认）</option><option value="off" ${item.autoMouth === false ? 'selected' : ''}>关闭</option></select></label>
-      <p class="tip">跟随对白文字显示动嘴，标点处稍作停顿；文字显示完就停止。有 A、I、U、E、O 嘴型的模型可使用。</p>
+      ${field('人物模型', select('character.modelId', actorModels(), item.modelId, '请选择模型'))}
+      ${!isFbxModel(item.modelId) ? `<label class="field"><span>自动说话嘴型</span><select data-field="character.autoMouth"><option value="on" ${item.autoMouth !== false ? 'selected' : ''}>开启（默认）</option><option value="off" ${item.autoMouth === false ? 'selected' : ''}>关闭</option></select></label>
+      <p class="tip">跟随对白文字显示动嘴，标点处稍作停顿；文字显示完就停止。有 A、I、U、E、O 嘴型的模型可使用。</p>` : '<p class="tip">FBX 人物只播放身体动作。</p>'}
       <div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}
-        <div class="inline-actions">${button('上传头像', 'upload-character-portrait')}${item.modelId ? button('重新拍摄 VRM', 'capture-character-portrait') : ''}</div>
+        <div class="inline-actions">${button('上传头像', 'upload-character-portrait')}${item.modelId && !isFbxModel(item.modelId) ? button('重新拍摄 VRM', 'capture-character-portrait') : ''}</div>
         <p class="tip">没有模型也能上传头像说话。VRM 自动头像会采用下方选中的动作和定格帧；选好帧后会重拍。手动上传的头像不会被覆盖。</p></div>
       ${field('鉴赏姿势 / 动作', select('character.galleryMotionId', byType('motion'), item.galleryMotionId, '保持站立'))}
       <label class="adjustment"><span>鉴赏转身角度</span><input type="range" data-gallery-adjust="galleryYaw" min="-90" max="90" step="5" value="${item.galleryYaw}"><output data-gallery-output="galleryYaw">${item.galleryYaw}°</output></label>
@@ -1074,7 +1171,7 @@ function renderInspector() {
         ${field('故事内容', `<textarea data-story-index="${index}" data-story-field="text" placeholder="不写就不显示">${escape(story.text)}</textarea>`)}
         ${field('读过这个角色多少句对白后解锁', `<input type="number" min="0" step="1" data-story-index="${index}" data-story-field="unlockLines" value="${Math.max(0, Number(story.unlockLines) || 0)}">`)}
       </div>`).join('')}
-      <div class="inline-actions">${button('导入 VRM', 'import', 'data-type="vrm"')}${button('删除角色', 'delete-character', 'class="danger"')}</div>
+      <div class="inline-actions">${button('导入 VRM', 'import', 'data-type="vrm"')}${button('导入 FBX 人物', 'import', 'data-type="fbxCharacter"')}${button('删除角色', 'delete-character', 'class="danger"')}</div>
       <p class="tip">选中角色后，预览里会显示它。表情名称取决于模型本身。</p></div>` : '<div class="inspector-content empty">先新增角色</div>';
     if (item) updatePreview();
     return;
@@ -1084,8 +1181,8 @@ function renderInspector() {
     body.innerHTML = `<div class="inspector-content"><h2>标题画面</h2>
       ${field('游戏名称', `<input id="project-name" value="${escape(project.name)}" aria-label="游戏名称">`)}
       ${field('Logo 图片', `<select data-title-field="logoImageId">${options(byType('image'), title.logoImageId, '使用游戏名称')}</select>`)}
-      ${field('标题背景', `<select data-title-field="backgroundId">${options(byType('image'), title.backgroundId, '使用默认深蓝背景')}</select>`)}
-      ${field('标题 VRM 人物', `<select data-title-field="modelId">${options(byType('vrm'), title.modelId, '不显示人物')}</select>`)}
+      ${field('标题场景', `<select data-title-field="environmentId">${options(project.environments || [], title.environmentId, '默认天空')}</select>`)}${button('编辑标题环境（独立窗口）','edit-environment')}
+      ${field('标题 VRM 人物', `<select data-title-field="modelId">${options(actorModels(), title.modelId, '不显示人物')}</select>`)}
       ${field('标题人物动作', `<select data-title-field="motionId">${options(byType('motion'), title.motionId, '保持站立')}</select>`)}
       ${motionAdvanced(title, 'title')}
       ${field('标题音乐', `<select data-title-field="bgmId">${options(byType('audio'), title.bgmId, '无音乐')}</select>`)}
@@ -1095,11 +1192,11 @@ function renderInspector() {
       ${titleSlider('size', '大小', Math.round(title.size * 100), 50, 500, 5, `${Math.round(title.size * 100)}%`)}
       ${titleSlider('offsetX', '左右位置', title.offsetX, -2, 2, .05, Number(title.offsetX).toFixed(2))}
       ${titleSlider('offsetY', '上下位置', title.offsetY, -10, 3, .05, Number(title.offsetY).toFixed(2))}
-      ${titleSlider('offsetZ', '前后位置', title.offsetZ, -2, 1.5, .05, Number(title.offsetZ).toFixed(2))}
+      ${titleSlider('offsetZ', '前后位置', title.offsetZ, -100, 100, .1, Number(title.offsetZ).toFixed(2))}
       ${titleSlider('yaw', '左右转身', title.yaw, -120, 120, 5, `${title.yaw}°`)}
       ${titleSlider('pitch', '人物上下转角', title.pitch, -60, 60, 5, `${title.pitch}°`)}
       ${titleSlider('cameraAngle', '镜头俯视角', title.cameraAngle, 0, 65, 5, `${title.cameraAngle}°`)}
-      <h3>标题人物表情</h3><div id="title-expression-controls" class="expression-controls"></div>
+      ${!isFbxModel(title.modelId) ? `<h3>标题人物表情</h3><div id="title-expression-controls" class="expression-controls"></div>` : ''}
       <p class="tip">想做俯视画面，可以先提高“镜头俯视角”，再微调人物的上下转角与位置。</p>
     </div>`;
     renderTitleExpressionControls();
@@ -1120,13 +1217,13 @@ function renderInspector() {
       ${field('画面效果', `<select data-render="paintEffect"><option value="none" ${settings.paintEffect !== 'oil' ? 'selected' : ''}>关闭</option><option value="oil" ${settings.paintEffect === 'oil' ? 'selected' : ''}>油画笔触（人物与背景）</option></select>`)}
       ${field('油画笔触强度', `<input type="range" data-render="paintStrength" min="0" max="100" step="5" value="${Math.round((Number(settings.paintStrength) || 0) * 100)}"><output data-render-output="paintStrength">${Math.round((Number(settings.paintStrength) || 0) * 100)}%</output>`)}
       <p class="tip">油画笔触会一起处理背景和人物；对白、菜单保持清晰。开启后会多用一些显卡性能，旧工程默认关闭。</p>
-      <details class="render-advanced"><summary>高级渲染 · 角色阴影</summary><div class="render-advanced-body">
+      ${act().environmentId?'<p class="tip">三维场景自动使用真实阴影，人物和物体把阴影投到场景的地面、墙壁上。灯光在环境编辑器里调整。</p>':`<details class="render-advanced"><summary>高级渲染 · 角色阴影</summary><div class="render-advanced-body">
         <label class="render-shadow-toggle"><input type="checkbox" data-render="shadowEnabled" ${settings.shadowEnabled ? 'checked' : ''}><span>显示角色阴影</span></label>
         <label class="adjustment"><span>影子方向</span><input type="range" data-render="shadowAngle" min="-180" max="180" step="5" value="${Number(settings.shadowAngle) || 0}"><output data-render-output="shadowAngle">${Number(settings.shadowAngle) || 0}°</output></label>
         <label class="adjustment"><span>影子深浅</span><input type="range" data-render="shadowOpacity" min="0" max="100" step="5" value="${Math.round((Number(settings.shadowOpacity) || 0) * 100)}"><output data-render-output="shadowOpacity">${Math.round((Number(settings.shadowOpacity) || 0) * 100)}%</output></label>
         <label class="adjustment shadow-height-adjustment"><span>阴影水平高度</span><input type="range" data-render="shadowHeight" min="-40" max="40" step="1" value="${Math.round((Number(settings.shadowHeight) || 0) * 100)}"><output data-render-output="shadowHeight">${Math.round((Number(settings.shadowHeight) || 0) * 100) > 0 ? '+' : ''}${Math.round((Number(settings.shadowHeight) || 0) * 100)} 厘米</output></label>
         <p class="tip">一套设置控制画面中的全部角色。脚掌看着浮起时，把阴影高度往右调；影子盖住鞋子时往左调。0° 表示影子朝画面下方；默认关闭。</p>
-      </div></details>
+      </div></details>`}
       <p class="tip">“三渲二”会增强动画式明暗、减少塑料般的高光。描边选“细”通常更自然。背景配光会从图片估计亮处和颜色；视频背景使用默认灯光。</p></div>`;
     return;
   }
@@ -1138,7 +1235,7 @@ function renderInspector() {
     ${field('章节封面', select('act.coverImageId', byType('image'), currentAct.coverImageId, '默认使用背景图'))}
     ${asset(currentAct.coverImageId || currentAct.backgroundId)?.type === 'image' ? `<img class="act-cover-preview" src="${escape(assetUrl(asset(currentAct.coverImageId || currentAct.backgroundId)))}" alt="本幕封面">` : '<p class="tip">还没有封面。建议上传竖图，人物放在图片中央。</p>'}
     <div class="inline-actions">${button('上传本幕封面', 'upload-act-cover')}${button('本幕渲染与调色', 'edit-act-render')}</div>
-    ${field('背景图片 / 视频', select('act.backgroundId', [...byType('image'),...byType('video')], currentAct.backgroundId, '无背景'))}
+    ${field('3D 场景', select('act.environmentId', project.environments || [], currentAct.environmentId, '默认天空'))}<div class="inline-actions">${button('编辑环境（独立窗口）','edit-environment')}${button('新建场景','new-environment')}</div>
     ${field('背景音乐', select('act.bgmId', byType('audio'), currentAct.bgmId, '无音乐'))}
     ${weatherEditor(currentAct)}
     <hr><h2>本幕登场人物（初始位置）</h2>
@@ -1154,7 +1251,7 @@ function renderInspector() {
         </label>`).join('')}<small>把一人换到其他位置时，原位置的人会与其交换。</small></div>` : ''}
       ${field('显示名字', input('step.speaker', current.speaker, '留空时用角色名字'))}
       ${field('对白内容', textarea('step.text', current.text, '在这里写台词'))}
-      <div class="field"><span>表情参数（可以同时调多项）</span><div id="expression-controls" class="expression-controls"></div></div>
+${!isFbxModel(character(current.characterId)?.modelId) ? `<div class="field"><span>表情参数（可以同时调多项）</span><div id="expression-controls" class="expression-controls"></div></div>` : ''}
       ${field('动作', select('step.motionId', byType('motion'), current.motionId, '保持站立'))}
       ${motionAdvanced(current, 'step')}
       ${field('位置（单人幕使用）', `<select data-field="step.position"><option value="left" ${current.position === 'left' ? 'selected' : ''}>左侧</option><option value="center" ${current.position === 'center' ? 'selected' : ''}>中间</option><option value="right" ${current.position === 'right' ? 'selected' : ''}>右侧</option></select>`)}
@@ -1162,7 +1259,7 @@ function renderInspector() {
         ${adjustmentSlider('size', '大小', Math.round((current.size ?? defaultSize) * 100), 50, 250, 5, `${Math.round((current.size ?? defaultSize) * 100)}%`)}
         ${adjustmentSlider('offsetX', '左右微调', Number(current.offsetX) || 0, -1.5, 1.5, 0.05, (Number(current.offsetX) || 0).toFixed(2))}
         ${adjustmentSlider('offsetY', '上下微调', Number(current.offsetY) || 0, -3, 2, 0.05, (Number(current.offsetY) || 0).toFixed(2))}
-        ${adjustmentSlider('offsetZ', '前后微调', Number(current.offsetZ) || 0, -2, 1.5, 0.05, (Number(current.offsetZ) || 0).toFixed(2))}
+        ${adjustmentSlider('offsetZ', '前后微调', Number(current.offsetZ) || 0, -100, 100, 0.1, (Number(current.offsetZ) || 0).toFixed(2))}
         ${adjustmentSlider('yaw', '转身微调', Number(current.yaw) || 0, -90, 90, 5, `${Number(current.yaw) || 0}°`)}
         <p class="tip">左右：负数向左，正数向右。上下：正数向上。前后：正数靠近镜头，负数远离镜头。转身角度可以让人物侧身。</p></div>
       ${dialogueVoiceField(current)}
@@ -1262,11 +1359,12 @@ async function updatePreview() {
   const modelAsset = modelForStep(current);
   const motionAsset = asset(current?.motionId);
   const bgAsset = asset(currentAct?.backgroundId);
-  showBackground(bgAsset);
+  showBackground(null);
   setSceneWeather(currentAct);
   stage.setRenderSettings(chapterRender(currentAct, project.render));
   applySceneColor(chapterRender(currentAct, project.render));
-  stage.setBackgroundLighting(bgAsset);
+  stage.setBackgroundLighting(null);
+  await showEnvironment(currentAct);
   document.querySelector('#stage-caption').textContent = currentAct?.name || '没有幕';
   const placeholder = document.querySelector('#stage-placeholder');
   setStagePlaceholder(placeholder, current ? '此句没有 VRM 角色' : '这一幕还没有人物', Boolean(modelAsset));
@@ -1300,7 +1398,8 @@ async function prepareEventScene(node) {
   setSceneWeather();
   stage.setRenderSettings(chapterRender(backdrop.chapter, project.render));
   applySceneColor(chapterRender(backdrop.chapter, project.render));
-  if (!sameBackground) showBackground(bg);
+  showBackground(null);
+  await showEnvironment(backdrop.chapter||project.title);
   const container = document.querySelector('#scene-bg');
   document.querySelector('.stage-frame').style.setProperty('--event-base-filter', container.style.filter || 'brightness(100%)');
   const video = container.querySelector('video');
@@ -1416,7 +1515,7 @@ function showBackground(bgAsset) {
   const node = document.querySelector('#scene-bg');
   node.replaceChildren();
   node.style.backgroundImage = '';
-  stage?.setPaintBackground(bgAsset);
+  if(!stage?.environmentRuntime.root) stage?.setPaintBackground(bgAsset);
   if (!bgAsset) return;
   if (bgAsset.type === 'image') rememberDiscovery('image', bgAsset.id);
   if (bgAsset.type === 'video') {
@@ -1434,7 +1533,7 @@ function showBackground(bgAsset) {
 }
 async function ensureCharacterPortrait(item, force = false, userCapture = false) {
   const modelAsset = asset(item?.modelId);
-  if (!item || !modelAsset || (!force && asset(item.portraitId))) return;
+  if (!item || !modelAsset || modelAsset.type==='fbxCharacter' || (!force && asset(item.portraitId))) return;
   const motionId = item.galleryMotionId || '';
   const motionAsset = asset(motionId);
   const poseFrame = Math.max(1, Math.floor(Number(item.galleryPoseFrame) || 1));
@@ -1506,6 +1605,7 @@ async function replaceAutoPortrait(item, saved, deferHistory = false) {
   if (!project.assetFolders.some(folder => folder.id === autoPortraitFolderId))
     project.assetFolders.push({ id: autoPortraitFolderId, name: '自动角色头像', type: 'image' });
   saved.galleryImage = false; saved.folderId = autoPortraitFolderId;
+  saved.internalPortrait = true;
   const existing = asset(saved.id);
   if (existing) Object.assign(existing, saved);
   else project.assets.push(saved);
@@ -1714,13 +1814,14 @@ async function showPlayStep() {
     setSceneWeather(currentAct);
     stage.setRenderSettings(chapterRender(currentAct, project.render));
     applySceneColor(chapterRender(currentAct, project.render));
-    stage.setBackgroundLighting(asset(currentAct.backgroundId));
+    stage.setBackgroundLighting(null);
+    await showEnvironment(currentAct);
     await displayActStep(currentAct, current);
     if (request !== playRequest || !playing) return;
     if (mode === 'player') for (const id of stage.visibleRecords.keys())
       if (character(id)) rememberDiscovery('character', id);
     if (mode === 'player' && character(current.characterId)) rememberDiscovery('character', current.characterId);
-    showBackground(asset(currentAct.backgroundId));
+    showBackground(null);
     await ensureCharacterPortrait(character(current.characterId));
     if (request !== playRequest || !playing) return;
     showDialogue(current.speaker || character(current.characterId)?.name || '旁白', current.text, true, current.characterId);
@@ -2239,6 +2340,7 @@ function refreshGalleryFrameControl(item) {
   output.textContent = `第 ${frame} / ${frames} 帧`;
 }
 async function showCharacterEditorPreview() {
+  await stage.setEnvironment(null,project.assets);
   setSceneWeather();
   applySceneColor(colorDefaults);
   const overlay = document.querySelector('#character-preview');
@@ -2516,6 +2618,8 @@ document.addEventListener('click', async event => {
       directory = result.directory;
       window.location.reload();
     }
+    else if(action==='new-environment'){const owner=activePanel==='title'?project.title:act();const old=owner.environmentId;owner.environmentId='';try{await editEnvironment(owner);}catch(error){owner.environmentId=old;renderInspector();throw error;}}
+    else if (action === 'edit-environment') await editEnvironment(activePanel==='title'?project.title:act());
     else if (action === 'editor-settings') renderEditorSettings();
     else if (action === 'toggle-editor-theme') {
       editorSettings.theme = editorSettings.theme === 'dark' ? 'light' : 'dark';
@@ -2648,6 +2752,7 @@ document.addEventListener('click', async event => {
     } else if (action === 'delete-asset') {
       const item = asset(node.dataset.assetId);
       if (!item) return;
+      if(project.environments?.some(e=>e.nodes.some(n=>n.assetId===item.id))){toast('这个素材正在 3D 场景里使用，请先从场景中移除对应物体。',true);return;}
       const used = JSON.stringify({ ...project, assets: [] }).includes(JSON.stringify(item.id));
       if (!confirm(item.type === 'voice' ? `删除这段配音？引用它的对白会变成无配音，可用撤销找回。\n\n${item.name}` : used ? `“${item.name}”正在工程中使用。删除后，对应的模型、动作或画面会失效。确定删除吗？`
         : `从工程文件夹中删除“${item.name}”？`)) return;
@@ -2874,6 +2979,12 @@ document.addEventListener('input', event => {
     markDirty();
     return;
   }
+  if ([node.dataset.titleAdjust, node.dataset.castAdjust?.split('.')[1], node.dataset.adjust].includes('offsetZ')) {
+    if (node.value === '' || !Number.isFinite(node.valueAsNumber)) return;
+    const value = Math.max(-100, Math.min(100, node.valueAsNumber));
+    for (const control of node.closest('.adjustment').querySelectorAll('input'))
+      if (control !== node || Number(node.value) !== value) control.value = String(value);
+  }
   if (node.dataset.titleAdjust && project) {
     const key = node.dataset.titleAdjust;
     project.title[key] = key === 'size' ? Number(node.value) / 100 : Number(node.value);
@@ -3057,7 +3168,7 @@ document.addEventListener('input', event => {
   else target[property] = path === 'character.autoMouth' ? node.value !== 'off' : node.value;
   markDirty();
   if (node.tagName === 'SELECT') {
-    if (path === 'act.coverImageId') renderInspector();
+    if (path === 'act.coverImageId' || path === 'act.environmentId') renderInspector();
     if (path === 'step.characterId' && !step().speaker) {
       document.querySelector('[data-field="step.speaker"]')?.setAttribute('placeholder', character(node.value)?.name || '留空时用角色名字');
     }
@@ -3191,7 +3302,7 @@ async function runDialogueVoiceSmoke() {
     assert(asset('shared')?.type === 'audio' && !asset('legacy'), 'music preservation');
     assert(byType('voice').every(v => v.path.startsWith('assets/voice/') && v.folderId === voiceFolderId(v.characterId)), 'physical folder migration');
     checks.push('旧对白配音转入角色文件夹，背景音乐保留');
-    assert([...document.querySelectorAll('#asset-dock-tabs button')].map(n => n.dataset.type).join(',') === 'image,vrm,motion,audio,voice,video', 'tab order');
+    assert([...document.querySelectorAll('#asset-dock-tabs button')].map(n => n.dataset.type).join(',') === 'image,vrm,fbxCharacter,motion,audio,voice,video', 'tab order');
     assert(document.querySelector('[data-type="audio"][role="tab"]').textContent.startsWith('音乐与音效'), 'music tab label');
     checks.push('配音位于音乐与音效之后、视频之前');
     panel('characters'); click('add-character'); const newId = project.characters.at(-1).id;
@@ -3811,6 +3922,9 @@ window.__vrmDiagnostics = () => ({
   assetDockScrollHeight: document.querySelector('#asset-dock-body')?.scrollHeight || 0,
   assetDockHeight: document.querySelector('#asset-dock-body')?.clientHeight || 0,
   assetThumbnails: document.querySelectorAll('.asset-dock .asset-thumbnail').length,
+  vrmEmbeddedThumbnails: document.querySelectorAll('.vrm-embedded-thumbnail').length,
+  visibleImageAssets: project ? byType('image').length : 0,
+  hiddenPortraitAssets: project?.assets.filter(a => internalPortrait(project, a)).length || 0,
   speakerPortraitVisible: Boolean(document.querySelector('#speaker-portrait:not(.hidden)')),
   speakerPortraitSrc: document.querySelector('#speaker-portrait img')?.getAttribute('src') || '',
   characterPortraitIds: project?.characters.map(item => ({ id:item.id, modelId:item.modelId,

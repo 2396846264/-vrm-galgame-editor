@@ -19,7 +19,7 @@ try {
     Invoke-Checked $DotNet @('run','--project','BuildIdentity/BuildIdentity.csproj','--','generate',$IdentityDirectory,$constants,'565407768')
     Invoke-Checked $DotNet @('publish','Desktop/Desktop.csproj','-c','Release','-r','win-x64','--self-contained','true','-p:PublishSingleFile=true','-o','publish/editor')
     Invoke-Checked $DotNet @('publish','AgentHost/AgentHost.csproj','-c','Release','-r','win-x64','--self-contained','true','-p:PublishSingleFile=true','-o','publish/agent')
-    $package = Join-Path $repository 'release\VRMGalgame-0.0.8-developer-win-x64'
+    $package = Join-Path $repository 'release\VRMGalgame-0.0.9-developer-win-x64'
     if (Test-Path -LiteralPath $package) { throw 'Build output already exists. Choose a clean checkout for another build.' }
     New-Item -ItemType Directory -Path $package -Force | Out-Null
     $loader = 'publish/editor/WebView2Loader.dll'

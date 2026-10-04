@@ -1,6 +1,10 @@
-import * as THREE from 'three';
+﻿import * as THREE from 'three';
+import {fitEnvironmentShadow,environmentShadowBounds} from './environment-shadows.js';
+import {EnvironmentRuntime} from './environment-runtime.js';
+import {createFbxActor, retargetFbxClip} from './fbx-character.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import {CompatibleFBXLoader as FBXLoader} from './fbx-loader.js';
+import {TGALoader} from 'three/addons/loaders/TGALoader.js';
 import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
 import { VRMAnimationLoaderPlugin, createVRMAnimationClip } from '@pixiv/three-vrm-animation';
 import { OutlineEffect } from 'three/addons/effects/OutlineEffect.js';
@@ -175,6 +179,7 @@ export class VRMStage {
     this.element.style.visibility = 'hidden';
     this.onError = onError;
     this.scene = new THREE.Scene();
+    this.environmentRuntime = new EnvironmentRuntime(this.scene);
     this.camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
     this.camera.position.set(0, 1.3, 4.3);
     this.camera.lookAt(0, 1.05, 0);
@@ -224,7 +229,11 @@ export class VRMStage {
     this.loader = new GLTFLoader();
     this.loader.register(parser => new VRMLoaderPlugin(parser));
     this.loader.register(parser => new VRMAnimationLoaderPlugin(parser));
-    this.fbxLoader = new FBXLoader();
+    const fbxManager=new THREE.LoadingManager(),fbxBlobs=new Set();
+    fbxManager.setURLModifier(url=>{if(url.startsWith('blob:'))fbxBlobs.add(url);return url;});
+    fbxManager.onLoad=()=>{for(const url of fbxBlobs)URL.revokeObjectURL(url);fbxBlobs.clear();};
+    fbxManager.addHandler(/\.tga$/i,new TGALoader());
+    this.fbxLoader = new FBXLoader(fbxManager);
     this.clock = new THREE.Clock();
     this.averageFrameMs = 0;
     this.vrm = null;
@@ -259,6 +268,17 @@ export class VRMStage {
         Math.max(1, Math.round(height * this.paintPixelRatio)));
     }
     this.updatePaintBackgroundCrop();
+  }
+  async setEnvironment(environment,assets=[]) {
+    const request=this.environmentRequest=(this.environmentRequest||0)+1;
+    await this.environmentRuntime.load(environment,assets);
+    if(request!==this.environmentRequest)return;
+    this.environmentSettings=environment;
+    this.environmentShadowBounds=environment?environmentShadowBounds(this.environmentRuntime.root):null;this.environmentShadowKey='';
+    this.applyShadowSettings();for(const task of this.modelCache.values()){Promise.resolve(task).then(record=>{if(record)this.applyShadowCasting(record.vrm.scene);}).catch(()=>{});}
+    this.scene.background=environment?new THREE.Color(environment.background):null;
+    if(environment){this.camera.far=300;this.camera.position.fromArray(environment.camera.position);this.camera.lookAt(...environment.camera.target);this.camera.fov=environment.camera.fov;this.camera.updateProjectionMatrix();this.keyLight.color.set(environment.lighting.color);this.keyLight.intensity=environment.lighting.intensity;}
+    this.element.style.visibility=this.environmentRuntime.root||this.visibleRecords.size||this.weather?.active?'visible':'hidden';
   }
   setCameraAngle(degrees = 0) {
     const angle = THREE.MathUtils.degToRad(Math.max(0, Math.min(65, Number(degrees) || 0)));
@@ -301,7 +321,7 @@ export class VRMStage {
       this.weather?.applyWind(record);
       record.vrm.update(delta);
     }
-    this.updateShadowGround();
+    this.environmentRuntime.update(this.camera);this.updateShadowGround();
     this.weather?.update(delta);
     if (this.paintEnabled && this.paintComposer) this.paintComposer.render(delta);
     else if (this.outlineEffect.enabled) this.outlineEffect.render(this.scene, this.camera);
@@ -313,6 +333,7 @@ export class VRMStage {
     cancelAnimationFrame(this.frame);
     this.resizeObserver.disconnect();
     this.clear();
+    this.environmentRuntime.clear();
     this.shadowPlane.geometry.dispose();
     this.shadowPlane.material.dispose();
     this.releasePaintBackground();
@@ -324,22 +345,38 @@ export class VRMStage {
     const existing = this.modelCache.get(actorKey);
     if (existing) return existing;
     const generation = this.cacheGeneration;
-    const task = this.loader.loadAsync(assetUrl(modelAsset)).then(gltf => {
+    const task = (modelAsset.type === 'fbxCharacter' ? this.fbxLoader.loadAsync(assetUrl(modelAsset)).then(fbx => ({scene:fbx,userData:{vrm:createFbxActor(fbx)}})) : this.loader.loadAsync(assetUrl(modelAsset))).then(gltf => {
       if (generation !== this.cacheGeneration) {
         VRMUtils.deepDispose(gltf.scene);
         return null;
       }
       const vrm = gltf.userData.vrm;
       if (!vrm) { VRMUtils.deepDispose(gltf.scene); throw new Error('文件里没有找到 VRM 角色'); }
-      VRMUtils.removeUnnecessaryVertices(vrm.scene);
-      VRMUtils.removeUnnecessaryJoints(vrm.scene);
+      if (!vrm.isFbx) { VRMUtils.removeUnnecessaryVertices(vrm.scene); VRMUtils.removeUnnecessaryJoints(vrm.scene); }
+      // FBX bind pose and its first animation frame can have different root heights.
+      // Fit the visible initial pose, while keeping the original rig rest data for retargeting.
+      if (vrm.isFbx) {
+        const fitMixer = new THREE.AnimationMixer(vrm.scene);
+        fitMixer.clipAction(vrm.idleClip).play();
+        fitMixer.update(0);
+        const pose = new Map();
+        for (const bone of vrm.bones.values()) pose.set(bone, {
+          position: bone.position.clone(), quaternion: bone.quaternion.clone(), scale: bone.scale.clone()
+        });
+        fitMixer.stopAllAction();
+        fitMixer.uncacheRoot(vrm.scene);
+        for (const [bone, value] of pose) {
+          bone.position.copy(value.position); bone.quaternion.copy(value.quaternion); bone.scale.copy(value.scale);
+        }
+        vrm.scene.updateMatrixWorld(true);
+      }
       vrm.scene.traverse(object => { object.frustumCulled = false; });
-      const bounds = new THREE.Box3().setFromObject(vrm.scene);
+      const bounds = new THREE.Box3().setFromObject(vrm.scene, vrm.isFbx === true);
       const size = new THREE.Vector3();
       bounds.getSize(size);
       if (size.y > 0) vrm.scene.scale.multiplyScalar(1.8 / size.y);
       vrm.scene.updateMatrixWorld(true);
-      const fittedBounds = new THREE.Box3().setFromObject(vrm.scene);
+      const fittedBounds = new THREE.Box3().setFromObject(vrm.scene, vrm.isFbx === true);
       vrm.scene.position.y -= fittedBounds.min.y;
       vrm.scene.visible = false;
       const anchor = new THREE.Object3D();
@@ -363,7 +400,7 @@ export class VRMStage {
       this.applyMaterialStyle(vrm.scene);
       this.applyOutline(vrm.scene);
       this.applyShadowCasting(vrm.scene);
-      const idleClip = this.createIdleClip(vrm);
+      const idleClip = vrm.isFbx ? vrm.idleClip : this.createIdleClip(vrm);
       const record = {
         vrm, anchor, motionRoot, referenceHips, mixer: new THREE.AnimationMixer(vrm.scene),
         fitScale: vrm.scene.scale.clone(), fitPosition: vrm.scene.position.clone(), materials,
@@ -412,6 +449,7 @@ export class VRMStage {
     const generation = this.cacheGeneration;
     const task = Promise.all([this.loadModel(modelAsset, actorKey), this.loadMotionSource(motionAsset)]).then(([record, source]) => {
       if (generation !== this.cacheGeneration || !record || !source) return null;
+      if(record.vrm.isFbx) { if(source.kind !== 'fbx') throw new Error('FBX 人物请使用 Mixamo FBX 动作'); return retargetFbxClip(source.fbx,record.vrm); }
       return source.kind === 'vrma'
         ? createVRMAnimationClip(source.animation, record.vrm)
         : VRMStage.loadMixamo(source.fbx, record.vrm);
@@ -468,7 +506,7 @@ export class VRMStage {
         record.vrm.scene.visible = true;
         this.visibleRecords.set(actorKey, record);
       }
-      this.element.style.visibility = record || this.weather?.active ? 'visible' : 'hidden';
+      this.element.style.visibility = record || this.environmentRuntime.root || this.weather?.active ? 'visible' : 'hidden';
       this.currentModelId = modelId;
       this.currentMotionId = motionId;
     } catch (error) {
@@ -520,7 +558,7 @@ export class VRMStage {
         record.vrm.update(0);
         record.vrm.scene.visible = true;
       }
-      this.element.style.visibility = next.size || this.weather?.active ? 'visible' : 'hidden';
+      this.element.style.visibility = next.size || this.environmentRuntime.root || this.weather?.active ? 'visible' : 'hidden';
       this.activeRecord = speakingRecord || null;
       this.vrm = speakingRecord?.vrm || null;
       this.mixer = speakingRecord?.mixer || null;
@@ -560,7 +598,8 @@ export class VRMStage {
     record.mixer.timeScale = 1;
     const previousLock = record.footLock;
     this.restoreFootPose(record);
-    const lockFeet = settings.feet === 'lock' || (settings.feet === 'auto' && isPlantedMotion(motionAsset));
+    const plantedSource = motionAsset || (record.vrm.isFbx && record.idleClip.name !== '原始站姿' ? { name: record.idleClip.name } : null);
+    const lockFeet = settings.feet === 'lock' || (settings.feet === 'auto' && isPlantedMotion(plantedSource));
     record.footLock = lockFeet ? previousLock || {
       left: this.footChain(record.vrm, 'left'), right: this.footChain(record.vrm, 'right'), prePose: null
     } : null;
@@ -688,7 +727,7 @@ export class VRMStage {
     const size = Math.max(0.5, Math.min(5, Number(transform?.size) || 1.15));
     const offsetX = Number(transform?.offsetX) || 0;
     const offsetY = Number(transform?.offsetY) || 0;
-    const offsetZ = Math.max(-2, Math.min(1.5, Number(transform?.offsetZ) || 0));
+    const offsetZ = Number(transform?.offsetZ) || 0;
     const yaw = Math.max(-120, Math.min(120, Number(transform?.yaw) || 0));
     const pitch = Math.max(-60, Math.min(60, Number(transform?.pitch) || 0));
     const multiple = this.visibleRecords.size > 1;
@@ -773,7 +812,7 @@ export class VRMStage {
   startTalking(actorKey, enabled = true) {
     this.stopTalking();
     const record = enabled ? this.visibleRecords.get(actorKey) : null;
-    if (!record) return;
+    if (!record || record.vrm.isFbx) return;
     record.talkingMouth ||= createTalkingMouth(record.vrm.expressionManager);
     if (!record.talkingMouth) return;
     this.talkingRecord = record; record.talkingMouth.start();
@@ -792,7 +831,7 @@ export class VRMStage {
     this.weatherSettings = normalizeWeather(settings);
     if (!this.weather && this.weatherSettings.type !== 'none') this.weather = new WeatherStage(this);
     this.weather?.set(this.weatherSettings, audio);
-    this.element.style.visibility = this.visibleRecords?.size || this.weather?.active ? 'visible' : 'hidden';
+    this.element.style.visibility = this.visibleRecords?.size || this.environmentRuntime.root || this.weather?.active ? 'visible' : 'hidden';
     this.applyLighting(this.currentLightProfile);
   }
   setRenderSettings(settings = {}) {
@@ -847,7 +886,7 @@ export class VRMStage {
   }
   releasePaintBackground() {
     this.paintBackgroundRequest++;
-    this.scene.background = null;
+    this.scene.background = this.environmentSettings ? new THREE.Color(this.environmentSettings.background) : null;
     this.paintBackgroundTexture?.dispose();
     this.paintBackgroundTexture = null;
   }
@@ -895,6 +934,8 @@ export class VRMStage {
     texture.repeat.set(aspect > 1 ? 1 / aspect : 1, aspect > 1 ? 1 : aspect);
   }
   applyShadowSettings() {
+    if(this.environmentSettings){this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.shadowLight.castShadow=false;this.shadowPlane.visible=false;this.keyLight.castShadow=true;this.scene.add(this.keyLight.target);this.element.closest('.stage-frame')?.classList.remove('shadows-on');this.updateShadowGround();return;}
+    this.keyLight.castShadow=false;this.keyLight.target.position.set(0,0,0);this.keyLight.target.updateMatrixWorld();
     const enabled = this.renderSettings.shadowEnabled === true && Number(this.renderSettings.shadowOpacity) > 0;
     this.renderer.shadowMap.enabled = enabled;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -921,6 +962,7 @@ export class VRMStage {
     return weightedHeight / totalWeight;
   }
   updateShadowGround() {
+    if(this.environmentSettings){const bounds=this.environmentShadowBounds.clone();for(const record of this.visibleRecords.values()){const p=record.anchor.position,s=record.anchor.scale.x;bounds.expandByPoint(new THREE.Vector3(p.x-s,p.y-.1,p.z-s));bounds.expandByPoint(new THREE.Vector3(p.x+s,p.y+2.5*s,p.z+s));}const key=[...bounds.min.toArray(),...bounds.max.toArray()].map(v=>v.toFixed(2)).join(',');if(key!==this.environmentShadowKey){fitEnvironmentShadow(this.keyLight,bounds);this.environmentShadowKey=key;}return;}
     if (!this.shadowPlane.visible) return;
     const heightOffset = Math.max(-0.4, Math.min(0.4, Number(this.renderSettings.shadowHeight) || 0));
     const points = [...this.visibleRecords.values()]
@@ -938,7 +980,7 @@ export class VRMStage {
   }
   applyShadowCasting(scene) {
     const enabled = this.renderSettings.shadowEnabled === true && Number(this.renderSettings.shadowOpacity) > 0;
-    scene.traverse(object => { if (object.isMesh) object.castShadow = enabled; });
+    scene.traverse(object => { if (object.isMesh) {object.castShadow = Boolean(this.environmentSettings)||enabled;object.receiveShadow=Boolean(this.environmentSettings);} });
   }
   applyMaterialStyle(scene) {
     const anime = this.renderSettings.style === 'anime';
@@ -1034,6 +1076,7 @@ export class VRMStage {
       x: bx / weight / 64, y: by / weight / 36 };
   }
   applyLighting(profile) {
+    if(this.environmentSettings){this.ambientLight.color.set(0xffffff);this.keyLight.color.set(this.environmentSettings.lighting.color);this.keyLight.intensity=this.environmentSettings.lighting.intensity;return;}
     const style = this.renderSettings?.style || 'original';
     const soft = style === 'soft';
     const strength = this.renderSettings?.autoLight ? Math.max(0, Math.min(1, Number(this.renderSettings.lightStrength) || 0)) : 0;
@@ -1064,7 +1107,7 @@ export class VRMStage {
   clear() {
     this.stopTalking();
     this.requestNumber++;
-    this.element.style.visibility = this.weather?.active ? 'visible' : 'hidden';
+    this.element.style.visibility = this.environmentRuntime.root || this.weather?.active ? 'visible' : 'hidden';
     this.cacheGeneration++;
     this.activeRecord?.mixer.stopAllAction();
     for (const record of this.visibleRecords.values()) record.mixer.stopAllAction();
@@ -1169,3 +1212,4 @@ export class VRMStage {
     return new THREE.AnimationClip(clip.name || 'Mixamo', clip.duration, tracks);
   }
 }
+

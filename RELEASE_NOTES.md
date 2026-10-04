@@ -1,35 +1,24 @@
-# VRM Galgame Editor 0.0.8
+# 0.0.9 · 3D 环境编辑器与 FBX 人物
 
-基于本地 v0.7.29，包含前一版之后的天气、事件、编辑历史、配音、嘴型和剧情助手。
+环境编辑器现在是独立窗口。可以创建和切换工程内的环境，拖入 GLB 或图片，摆放、分组、添加灯光和地面，再保存为故事使用的场景。
 
-## 中文
+- 图片背景改为场景里的远景薄板；环境随 `.vrmg` 工程一起保存。
+- 左、中、右半透明参考人物帮助构图；游戏镜头可从编辑视角直接保存。
+- 支持 Mixamo 骨骼的 FBX 人物和身体动作，隐藏表情口型选项。
+- 3D 场景采用实际地面、墙壁和灯光阴影。
+- VRM 素材图标显示内置头像；自动对白头像从普通图片栏隐藏。
+- 修复 FBX 待机脚掌漂移，并为“前后位置”增加数字输入，箭头步长为 0.01。
 
-- 剧情文字查找、批量替换与撤销；游戏名字移到标题设置。
-- PDF 知识库、章节完成后解锁、黑白封面与红色“未解锁”封条。
-- 离线双页阅读，纸张、书脊和立体翻页，支持方向键、滑动、放大和阅读位置记忆。
-- 每幕独立封面、渲染、调色及章节卡片重玩。
-- 乳白玻璃菜单、黑色文字，标题按钮悬停变毛玻璃；无框白色对白增加黑色阴影。
-- 修复书本按钮空白与点击无反应，设置滚动、标题音乐与启动冲突；自动头像覆盖旧图。
-- 每幕天气、世界新闻事件、撤销重做、角色专属配音、逐字说话嘴型。
-- 剧情助手和 `VRMGalgame.Agent.exe`：导入小说/大纲，连接 MCP 或 CLI Agent，预览并采用可试玩粗稿。
-- 公开源码不携带官方工程密码和签名私钥；源码编译会生成自己的开发身份，详见 `docs/源码编译.md`。
+完整图文步骤：[3D 环境与 FBX 人物使用说明](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/3D环境与FBX人物_v0.0.9.md)。
 
-## English
+![环境编辑器](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v009/environment-editor.png)
 
-Story-wide find and replace with undo; game naming moves to Title settings. PDF knowledge library with chapter-completion unlocking, grayscale locked covers, and a red locked ribbon. Offline two-page reading includes paper and spine shadows, animated page turns, keyboard/swipe navigation, zoom, and remembered reading position. Per-chapter rendering, color grading, cover selection, and replay cards. Milky translucent glass menus with black text, clear title buttons that frost on hover, and borderless white dialogue with black shadows. Fixes the blank, unclickable book entry, settings scrolling, title music, startup conflicts, and duplicate automatic portraits.
+![FBX 标题画面](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v009/title-fbx.png)
 
-## 日本語
+![FBX 人物鉴赏](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v009/fbx-gallery.png)
 
-台詞、キャラクター名、紹介文を一括検索・置換でき、取り消しにも対応しました。ゲーム名はタイトル設定で変更します。PDF 資料庫では指定の幕を読み終えると本が解放され、未解放の表紙は白黒と赤い帯で表示されます。オフラインの見開き表示、紙と背表紙の陰影、立体的なページめくり、方向キー・スワイプ・拡大・読書位置の保存に対応。幕ごとの画風・色調・表紙と再プレイ機能を追加し、乳白色のガラスメニュー、黒文字、影付きの枠なし台詞に統一しました。本の入口、設定のスクロール、タイトル音楽、起動時の問題、重複する自動ポートレートも修正しました。
+![3D 教室对话](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v009/classroom-vrm.png)
 
-## 한국어
+![前后位置数字输入](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v009/depth-number.png)
 
-대사, 캐릭터 이름, 소개를 일괄 검색·바꾸기하고 실행 취소할 수 있습니다. 게임 이름은 제목 설정에서 변경합니다. PDF 지식 라이브러리는 지정한 막의 대사를 모두 읽으면 잠금이 해제되며, 잠긴 책은 흑백 표지와 빨간 띠로 표시합니다. 오프라인 양면 보기, 종이와 책등 그림자, 입체 페이지 넘기기, 방향키·스와이프·확대·읽던 위치 저장을 지원합니다. 막별 렌더링·색 보정·표지·재플레이와 유백색 유리 메뉴, 검은 글자, 그림자가 있는 테두리 없는 대사를 추가했습니다. 책 버튼, 설정 스크롤, 제목 음악, 실행 충돌, 중복 자동 초상화도 수정했습니다.
-
-完整解压 ZIP 后运行 VRMGalgame.exe。以前导出的游戏请重新导出。公开包不包含本地第三方模型、动作或完整示例工程；截图是示例与效果图。
-
-[图文说明](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/新功能说明_0.0.7.md)
-
-![书库示例与效果图](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/library-shelf-v0722.png)
-
-作者 B 站：[尸工U5十三世的个人空间](https://b23.tv/krcyQ8I)
+解压整个 `VRMGalgame-0.0.9-win-x64.zip`，双击 `VRMGalgame.exe`。程序包不包含截图中的第三方人物、场景和动作素材。环境模型目前支持贴图内嵌 GLB；通用 FBX / OBJ 环境转换将在后续加入。

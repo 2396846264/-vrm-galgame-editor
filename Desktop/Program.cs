@@ -181,6 +181,7 @@ internal sealed partial class EditorWindow : Form
         StartPosition = FormStartPosition.CenterScreen;
         Controls.Add(web);
         Shown += async (_, _) => await InitializeWebAsync();
+        FormClosing += async(_,e)=>{if(environmentOwnerClosing||environmentWindow is not {IsDisposed:false})return;e.Cancel=true;if(await environmentWindow.ConfirmOwnerClose()){environmentOwnerClosing=true;Close();}};
         FormClosed += (_, _) => { StopAgentBridge(); CleanupTemporaryProject(); };
     }
 
@@ -448,6 +449,11 @@ internal sealed partial class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".root-after.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                     await Task.Delay(3200);
                     File.WriteAllText(smokeBase + ".root-long.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    if (Environment.GetCommandLineArgs().Contains("--smoke-feet-loop"))
+                    {
+                        await Task.Delay(8200);
+                        File.WriteAllText(smokeBase + ".root-loop.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                    }
                 }
                 if (smokeMotionOptions)
                 {
@@ -971,6 +977,62 @@ internal sealed partial class EditorWindow : Form
             }
             if (Environment.GetCommandLineArgs().Contains("--smoke-agent"))
                 for(int n=0;n<120 && !File.Exists(smokeBase+".agent-done");n++) await Task.Delay(500);
+            if(Environment.GetCommandLineArgs().Contains("--smoke-environment")){
+                await web.CoreWebView2.ExecuteScriptAsync("window.__envOpen=null;window.__vrmSmokeEnvironmentOpen().then(r=>window.__envOpen=r).catch(e=>window.__envOpen={error:e.message})");
+                for(int i=0;i<100&&environmentWindow==null;i++)await Task.Delay(100);
+                if(environmentWindow==null)throw new Exception("环境窗口没有打开");
+                string environmentResult=await environmentWindow.Smoke(smokeBase+".environment.png");File.WriteAllText(smokeBase+".environment.json",environmentResult);
+                if(!environmentResult.Contains("\"ok\":true"))throw new Exception(environmentResult);
+                await web.CoreWebView2.ExecuteScriptAsync("window.__envCheck=null;window.__vrmSmokeEnvironmentCheck().then(r=>window.__envCheck=r).catch(e=>window.__envCheck={error:e.message})");
+                string checkResult="null";for(int i=0;i<200;i++){checkResult=await web.CoreWebView2.ExecuteScriptAsync("window.__envCheck");if(checkResult!="null")break;await Task.Delay(100);}
+                File.WriteAllText(smokeBase+".environment-check.json",checkResult);if(!checkResult.Contains("\"ok\":true"))throw new Exception(checkResult);
+                environmentWindow.Close();
+                BuildGame(Path.Combine(Path.GetDirectoryName(smokeBase)!,"exported-game"),ReadProject()!);
+                string expectedEnvironments=ReadProject()?["environments"]?.ToJsonString()??"";
+                string expectedLibrary=ReadProject()?["environmentLibrary"]?.ToJsonString()??"";
+                string archiveCheck=smokeBase+".vrmg";WriteArchive(projectDirectory!,archiveCheck);LoadArchive(archiveCheck);
+                if(ReadProject()?["environments"]?.ToJsonString()!=expectedEnvironments||ReadProject()?["environmentLibrary"]?.ToJsonString()!=expectedLibrary)throw new Exception("环境或素材文件夹没有随工程包重开");
+                File.WriteAllText(smokeBase+".archive-check.json",JsonSerializer.Serialize(new{ok=true,environments=ReadProject()?["environments"]?.AsArray().Count,libraryPreserved=true,archiveBytes=new FileInfo(archiveCheck).Length}));
+            }
+            if (Environment.GetCommandLineArgs().Contains("--smoke-vrm-thumbnails"))
+            {
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=asset-tab][data-type=vrm]')?.click()");
+                await Task.Delay(2500);
+                File.WriteAllText(smokeBase + ".thumbnails.json", await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
+                using (var shot = File.Create(smokeBase + ".thumbnails.png"))
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, shot);
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=asset-tab][data-type=image]')?.click()");
+                await Task.Delay(300);
+                using (var shot = File.Create(smokeBase + ".images.png"))
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, shot);
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                await Task.Delay(800);
+            }
+            if (Environment.GetCommandLineArgs().Contains("--smoke-depth-number"))
+            {
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-panel=title]')?.click()");
+                await Task.Delay(400);
+                File.WriteAllText(smokeBase + ".depth.json", await web.CoreWebView2.ExecuteScriptAsync("""
+                    (() => {
+                      const n=document.querySelector('.depth-number[data-title-adjust=offsetZ]');
+                      const r=document.querySelector('input[type=range][data-title-adjust=offsetZ]');
+                      if(!n||!r) throw Error('Missing numeric depth control');
+                      const input=v=>{n.value=v;n.dispatchEvent(new Event('input',{bubbles:true}));};
+                      input('0.01');const exact=[n.valueAsNumber,r.valueAsNumber];
+                      input('');const blankRange=r.valueAsNumber;
+                      input('-2.41');const negative=[n.valueAsNumber,r.valueAsNumber];
+                      r.value='0.02';r.dispatchEvent(new Event('input',{bubbles:true}));
+                      const slider=[n.valueAsNumber,r.valueAsNumber];
+                      input('-2.41');n.scrollIntoView({block:'center'});
+                      return JSON.stringify({exact,blankRange,negative,slider,step:n.step});
+                    })()
+                    """));
+                await Task.Delay(500);
+                using (var shot = File.Create(smokeBase + ".depth.png"))
+                    await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, shot);
+                await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
+                await Task.Delay(1200);
+            }
             string result = await web.CoreWebView2.ExecuteScriptAsync(
                 "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})");
             File.WriteAllText(smokeBase + ".json", result);
@@ -1001,6 +1063,7 @@ internal sealed partial class EditorWindow : Form
 
     private void MapProject()
     {
+        environmentSession = "";
         if (projectDirectory == null) return;
         web.CoreWebView2.SetVirtualHostNameToFolderMapping(
             ProjectHost, projectDirectory, CoreWebView2HostResourceAccessKind.Allow);
@@ -1019,6 +1082,8 @@ internal sealed partial class EditorWindow : Form
             object? data = action switch
             {
                 "init" => GetProjectInfo(),
+                "openEnvironment" when !playerMode => OpenEnvironment(payload),
+                "environmentCommitReply" when !playerMode => EnvironmentCommitReply(payload),
                 "setAgentEnabled" when !playerMode => SetAgentEnabled(payload?["enabled"]?.GetValue<bool>() ?? false),
                 "agentReply" when !playerMode => ReceiveAgentReply(payload),
                 "pickStoryDocuments" when !playerMode => PickStoryDocuments(),
@@ -1559,7 +1624,7 @@ internal sealed partial class EditorWindow : Form
         if (type == "voice") throw new Exception("配音不能从素材库导入，请到对应对白上传。");
         var extensions = new Dictionary<string, string[]>(StringComparer.Ordinal)
         {
-            ["vrm"] = [".vrm"],
+            ["vrm"] = [".vrm"], ["fbxCharacter"] = [".fbx"], ["sceneModel"] = [".glb"],
             ["motion"] = [".vrma", ".fbx"],
             ["image"] = [".png", ".jpg", ".jpeg", ".webp"],
             ["audio"] = [".mp3", ".wav", ".ogg"],
@@ -1590,11 +1655,27 @@ internal sealed partial class EditorWindow : Form
         {
             string extension = Path.GetExtension(source).ToLowerInvariant();
             if (!allowed.Contains(extension)) throw new Exception($"不支持 {extension} 文件。");
+            if(type=="sceneModel")ValidateStandaloneGlb(source);
             string id = Guid.NewGuid().ToString("N");
             string filename = id + extension;
-            string target = Path.Combine(targetDirectory, filename);
-            File.Copy(source, target);
-            results.Add(new { id, type, name = Path.GetFileName(source), path = $"assets/{type}/{filename}" });
+            if(type=="fbxCharacter") {
+                string folder=Path.Combine(targetDirectory,id);Directory.CreateDirectory(folder);
+                File.Copy(source,Path.Combine(folder,Path.GetFileName(source)));
+                results.Add(new {id,type,name=Path.GetFileName(source),path=$"assets/{type}/{id}/{Path.GetFileName(source)}"});
+                string sourceFolder=Path.GetDirectoryName(source)!;
+                string fbxReferences=Encoding.UTF8.GetString(File.ReadAllBytes(source));
+                var textureExtensions=new HashSet<string>(StringComparer.OrdinalIgnoreCase){".png",".jpg",".jpeg",".webp",".bmp",".tga"};
+                var candidates=Directory.EnumerateFiles(sourceFolder).Concat(new[]{"textures",Path.GetFileName(source)+".fbm",Path.GetFileNameWithoutExtension(source)+".fbm"}.SelectMany(sub=>Directory.Exists(Path.Combine(sourceFolder,sub))?Directory.EnumerateFiles(Path.Combine(sourceFolder,sub),"*",SearchOption.AllDirectories):Enumerable.Empty<string>()));
+                foreach(string texture in candidates.Distinct(StringComparer.OrdinalIgnoreCase).Where(f=>textureExtensions.Contains(Path.GetExtension(f))&&fbxReferences.Contains(Path.GetFileName(f),StringComparison.OrdinalIgnoreCase))) {
+                    string relative=Path.GetRelativePath(sourceFolder,texture).Replace('\\','/');string target=Path.Combine(folder,relative.Replace('/',Path.DirectorySeparatorChar));Directory.CreateDirectory(Path.GetDirectoryName(target)!);File.Copy(texture,target);
+                    results.Add(new{id=Guid.NewGuid().ToString("N"),type="modelDependency",name=Path.GetFileName(texture),path=$"assets/{type}/{id}/{relative}"});
+                    string flat=Path.Combine(folder,Path.GetFileName(texture));if(!File.Exists(flat)){File.Copy(texture,flat);results.Add(new{id=Guid.NewGuid().ToString("N"),type="modelDependency",name=Path.GetFileName(texture),path=$"assets/{type}/{id}/{Path.GetFileName(texture)}"});}
+                }
+            }else {
+                string target = Path.Combine(targetDirectory, filename);
+                File.Copy(source, target);
+                results.Add(new { id, type, name = Path.GetFileName(source), path = $"assets/{type}/{filename}" });
+            }
         }
         return results;
     }
@@ -1620,7 +1701,7 @@ internal sealed partial class EditorWindow : Form
         {
             var extensions = new Dictionary<string, string[]>(StringComparer.Ordinal)
             {
-                ["vrm"] = [".vrm"], ["motion"] = [".vrma", ".fbx"],
+                ["vrm"] = [".vrm"], ["fbxCharacter"] = [".fbx"], ["sceneModel"] = [".glb"], ["motion"] = [".vrma", ".fbx"],
                 ["image"] = [".png", ".jpg", ".jpeg", ".webp"],
                 ["audio"] = [".mp3", ".wav", ".ogg"], ["video"] = [".mp4", ".webm"]
             };

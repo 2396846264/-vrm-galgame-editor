@@ -38,3 +38,7 @@ jobs:
           node scripts/test-editor-history.mjs
           node scripts/test-dialogue-voices.mjs
           node scripts/test-talking-mouth.mjs
+          node scripts/test-environment.mjs
+          node scripts/test-environment-camera.mjs
+          node scripts/test-environment-operations.mjs
+          node scripts/test-vrm-thumbnail.mjs
