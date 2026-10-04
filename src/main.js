@@ -419,6 +419,47 @@ async function applyEnvironmentCommit(message){
   }catch(error){await bridge('environmentCommitReply',{session:message.session,ok:false,error:error.message});}
 }
 let environmentBaselines=new Map();
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeMixamo=async phase=>{
+ const assert=(ok,message)=>{if(!ok)throw Error(message);};
+ const actor=project.characters.find(c=>phase==='vrm'?asset(c.modelId)?.type==='vrm':isFbxModel(c.modelId));
+ const motion=asset('mixamo-aim-test');assert(actor&&motion,'Missing Mixamo test fixture');
+ actor.galleryMotionId=motion.id;actor.galleryPoseFrame=1;
+ selectedCharacter=project.characters.indexOf(actor);activePanel='characters';
+ renderSidebar();renderInspector();await updatePreview();
+ const record=stage.visibleRecords.get(`gallery:${actor.id}`);assert(record?.currentAction,'Animation did not load');
+ stage.setMotionPoseFrame(1);stage.restoreFootPose(record);record.footLock=null;
+ for(const prop of record.attachedProps.values())prop.root.visible=phase==='binding';
+ document.querySelector('[data-action=binding-view-open]').click();
+ for(let i=0;i<100&&!stage.bindingView.enabled;i++)await new Promise(resolve=>setTimeout(resolve,50));
+ stage.setMotionPoseFrame(1);stage.bindingView.focusModel(record);
+ const center=stage.bindingView.controls.target.clone(),distance=stage.camera.position.distanceTo(center);
+ center.y+=.12;
+ stage.bindingView.look(center,distance*1.4,new THREE.Vector3(-.6,.12,1));
+ document.querySelector('.inspector').scrollTop=0;
+ const source=await stage.fbxLoader.loadAsync(assetUrl(motion));
+ const hips=record.vrm.humanoid.getNormalizedBoneNode('hips'),sourceHips=source.getObjectByName('mixamorigHips')||source.getObjectByName('mixamorig:Hips');
+ const hipTrack=source.animations[0].tracks.find(t=>t.name===sourceHips.name+'.position');
+ const sourceFirstY=hipTrack.values[1],targetRestY=record.vrm.isFbx?record.vrm.rest.get(hips).position.y:record.vrm.humanoid.normalizedRestPose.hips.position[1];
+ const expectedHipY=sourceFirstY*targetRestY/sourceHips.position.y,hipError=Math.abs(hips.position.y-expectedHipY);
+ let maximumErrorDegrees=0;
+ if(record.vrm.isFbx){
+   for(const name of ['LeftArm','LeftForeArm','LeftHand','RightArm','RightForeArm','RightHand']){
+     const src=source.getObjectByName('mixamorig'+name)||source.getObjectByName('mixamorig:'+name);
+     const track=source.animations[0].tracks.find(t=>t.name===src.name+'.quaternion');
+     const error=record.vrm.bones.get(name).quaternion.clone().normalize().angleTo(new THREE.Quaternion().fromArray(track.values).normalize())*180/Math.PI;
+     maximumErrorDegrees=Math.max(maximumErrorDegrees,error);
+   }
+ }
+ const props=[...record.attachedProps.values()];
+ const result={ok:phase==='before'||(hipError<.0001&&maximumErrorDegrees<.01),phase,modelType:asset(actor.modelId).type,motion:motion.name,hipY:hips.position.y,expectedHipY,hipError,maximumErrorDegrees,props:props.length,attachedToHand:props.every(p=>p.root.parent===p.bone),frame:1};
+ if(phase!=='before'){assert(result.ok,'Mixamo body pose differs from source: '+JSON.stringify(result));assert(result.attachedToHand,'Attachment no longer follows its joint');}
+ const size=stage.renderer.getSize(new THREE.Vector2()),oldAspect=stage.camera.aspect;
+ stage.renderer.setSize(1280,720,false);stage.camera.aspect=16/9;stage.camera.updateProjectionMatrix();
+ stage.renderer.render(stage.scene,stage.camera);
+ window.__mixamoPng=stage.renderer.domElement.toDataURL('image/png').split(',')[1];
+ stage.renderer.setSize(size.x,size.y,false);stage.camera.aspect=oldAspect;stage.camera.updateProjectionMatrix();
+ return result;
+};
 if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeProps=async phase=>{
  const assert=(ok,message)=>{if(!ok)throw Error(message);};
  const fbx=project.characters.find(c=>isFbxModel(c.modelId)),vrm=project.characters.find(c=>asset(c.modelId)?.type==='vrm');

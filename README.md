@@ -1,16 +1,24 @@
-# VRM Galgame 编辑器 · 公开版 0.0.10
+# VRM Galgame 编辑器 · 公开版 0.0.11
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.10** 加入人物物品绑定、每句对白独立登场、多人标题和留空 Logo，保留可编辑 3D 环境与 Mixamo FBX 人物。
+把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.11** 修复 Mixamo 动作的手臂角度与跪姿、坐姿高度，保留物品绑定、逐句登场、多人标题和可编辑 3D 环境。
 
 **第一次使用？先看 [图文说明书](docs/新手说明书.md)。** 它从下载、准备素材到导出游戏一步一步讲清楚。
 
 ## 下载
 
-到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.10-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
+到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.11-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
 
 > 公开包不附带示例人物、背景、Mixamo 动作或故事工程。下列图片是**示例与效果图**，展示做出来可以是什么样子；请使用自己有权使用的素材。
+
+## 0.0.11 更新：Mixamo 动作修复
+
+修复 FBX 导入瞄准动作后手臂跑偏，以及 FBX / VRM 跪姿、坐姿被抬高的问题。用真实动画数据和 Windows 实际画面核对，保留手掌、手指的物品绑定与已有工程设置。
+
+**[打开完整图文说明](docs/Mixamo动作修复_v0.0.11.md)**
+
+![修复后的 FBX 瞄准动作](docs/images/v011/fbx-after.png)
 
 ## 0.0.10 更新：物品绑定、逐句登场与多人标题
 

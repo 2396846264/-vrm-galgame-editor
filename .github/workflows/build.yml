@@ -44,3 +44,4 @@ jobs:
           node scripts/test-vrm-thumbnail.mjs
           node scripts/test-dialogue-cast-props.mjs
           node scripts/test-title-actors.mjs
+          node scripts/test-mixamo-fbx.mjs

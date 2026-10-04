@@ -1033,6 +1033,21 @@ internal sealed partial class EditorWindow : Form
                 await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
                 await Task.Delay(1200);
             }
+            if (Environment.GetCommandLineArgs().Contains("--smoke-mixamo"))
+            {
+                string[] phases=Environment.GetCommandLineArgs().Contains("--smoke-mixamo-before")?new[]{"before"}:new[]{"fbx","vrm","binding"};
+                foreach(string phase in phases)
+                {
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__mixamoCheck=null;window.__vrmSmokeMixamo("+JsonSerializer.Serialize(phase)+").then(r=>window.__mixamoCheck=r).catch(e=>window.__mixamoCheck={error:e.message})");
+                    string check="null";
+                    for(int i=0;i<600;i++){check=await web.CoreWebView2.ExecuteScriptAsync("window.__mixamoCheck");if(check!="null")break;await Task.Delay(100);}
+                    File.WriteAllText(smokeBase+".mixamo-"+phase+".json",check);
+                    string? posePng=JsonSerializer.Deserialize<string>(await web.CoreWebView2.ExecuteScriptAsync("window.__mixamoPng || null"));
+                    if(posePng!=null)File.WriteAllBytes(smokeBase+".mixamo-"+phase+".pose.png",Convert.FromBase64String(posePng));
+                    using(var shot=File.Create(smokeBase+".mixamo-"+phase+".png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);
+                    if(check.Contains("\"error\""))break;
+                }
+            }
             if (Environment.GetCommandLineArgs().Contains("--smoke-props"))
             {
                 string[] phases = Environment.GetCommandLineArgs().Contains("--smoke-props-reopen")

@@ -1210,7 +1210,10 @@ export class VRMStage {
           if (position) {
             const current = sample(position, time, object.position.toArray());
             const start = sample(position, 0, object.position.toArray());
-            movement.add(new THREE.Vector3(current[0] - start[0], current[1] - start[1], current[2] - start[2]));
+            // Preserve an initial crouch/sit height; only horizontal motion is
+            // recentered at the first frame. Root ancestors retain their offset.
+            const baseY = object === hips ? object.position.y : start[1];
+            movement.add(new THREE.Vector3(current[0] - start[0], current[1] - baseY, current[2] - start[2]));
           }
         }
         const targetRotation = worldRotation.multiply(sourceRestInverse);

@@ -1,6 +1,7 @@
-﻿
+
 import * as THREE from 'three';
-const names={Hips:'hips',Spine:'spine',Spine1:'chest',Spine2:'upperChest',Neck:'neck',Head:'head',LeftShoulder:'leftShoulder',LeftArm:'leftUpperArm',LeftForeArm:'leftLowerArm',LeftHand:'leftHand',RightShoulder:'rightShoulder',RightArm:'rightUpperArm',RightForeArm:'rightLowerArm',RightHand:'rightHand',LeftUpLeg:'leftUpperLeg',LeftLeg:'leftLowerLeg',LeftFoot:'leftFoot',RightUpLeg:'rightUpperLeg',RightLeg:'rightLowerLeg',RightFoot:'rightFoot'};
+import {fbxBindPose} from './fbx-bind-pose.js';
+const names={Hips:'hips',Spine:'spine',Spine1:'chest',Spine2:'upperChest',Neck:'neck',Head:'head',LeftShoulder:'leftShoulder',LeftArm:'leftUpperArm',LeftForeArm:'leftLowerArm',LeftHand:'leftHand',RightShoulder:'rightShoulder',RightArm:'rightUpperArm',RightForeArm:'rightLowerArm',RightHand:'rightHand',LeftUpLeg:'leftUpperLeg',LeftLeg:'leftLowerLeg',LeftFoot:'leftFoot',LeftToeBase:'leftToes',RightUpLeg:'rightUpperLeg',RightLeg:'rightLowerLeg',RightFoot:'rightFoot',RightToeBase:'rightToes'};
 for(const side of ['Left','Right'])for(const [source,target]of [['Thumb','Thumb'],['Index','Index'],['Middle','Middle'],['Ring','Ring'],['Pinky','Little']]){
  const joints=source==='Thumb'?['Metacarpal','Proximal','Distal']:['Proximal','Intermediate','Distal'];
  joints.forEach((joint,index)=>{names[side+'Hand'+source+(index+1)]=side.toLowerCase()+target+joint;});
@@ -24,12 +25,13 @@ export function createFbxActor(scene){
 export function retargetFbxClip(source,actor){
  const clip=source.animations[0];if(!clip)throw Error('FBX 动作文件没有动作');
  source.updateMatrixWorld(true);actor.humanoid.resetNormalizedPose();actor.scene.updateMatrixWorld(true);
+ const sourceBind=fbxBindPose(source),targetBind=fbxBindPose(actor.scene);
  const sourceBones=new Map();source.traverse(o=>{if(o.isBone)sourceBones.set(canonical(o.name),o);});
  const sourceHip=sourceBones.get('Hips'),targetHip=actor.bones.get('Hips');if(!sourceHip)throw Error('动作没有 Mixamo 骨骼');
  const ratio=Math.abs(sourceHip.position.y)>.001?actor.rest.get(targetHip).position.y/sourceHip.position.y:1,tracks=[];
  for(const track of clip.tracks){const dot=track.name.lastIndexOf('.'),name=canonical(track.name.slice(0,dot)),property=track.name.slice(dot+1),bone=actor.bones.get(name),sourceBone=sourceBones.get(name);if(!bone||!sourceBone)continue;
- if(property==='quaternion'){const values=Array.from(track.values),inverse=sourceBone.getWorldQuaternion(new THREE.Quaternion()).invert(),sourceParent=sourceBone.parent.getWorldQuaternion(new THREE.Quaternion()),targetParent=bone.parent.getWorldQuaternion(new THREE.Quaternion()).invert(),rest=bone.getWorldQuaternion(new THREE.Quaternion());for(let i=0;i<values.length;i+=4){const q=new THREE.Quaternion().fromArray(values,i);q.premultiply(sourceParent).multiply(inverse).multiply(rest).premultiply(targetParent).normalize().toArray(values,i);}tracks.push(new THREE.QuaternionKeyframeTrack(bone.uuid+'.quaternion',track.times,values));}
- else if(property==='position'&&name==='Hips'){const values=Array.from(track.values),start=values.slice(0,3),rest=actor.rest.get(bone).position.toArray();for(let i=0;i<values.length;i++)values[i]=rest[i%3]+(values[i]-start[i%3])*ratio;tracks.push(new THREE.VectorKeyframeTrack(bone.uuid+'.position',track.times,values));}
+ if(property==='quaternion'){const values=Array.from(track.values),inverse=sourceBind.world.get(sourceBone).clone().invert(),sourceParent=sourceBind.world.get(sourceBone.parent)||sourceBone.parent.getWorldQuaternion(new THREE.Quaternion()),targetParent=(targetBind.world.get(bone.parent)||bone.parent.getWorldQuaternion(new THREE.Quaternion())).clone().invert(),rest=targetBind.world.get(bone);for(let i=0;i<values.length;i+=4){const q=new THREE.Quaternion().fromArray(values,i);q.premultiply(sourceParent).multiply(inverse).multiply(rest).premultiply(targetParent).normalize().toArray(values,i);}tracks.push(new THREE.QuaternionKeyframeTrack(bone.uuid+'.quaternion',track.times,values));}
+ else if(property==='position'&&name==='Hips'){const values=Array.from(track.values),start=values.slice(0,3),rest=actor.rest.get(bone).position.toArray();for(let i=0;i<values.length;i++)values[i]=rest[i%3]+(values[i]-(i%3===1?sourceHip.position.y:start[i%3]))*ratio;tracks.push(new THREE.VectorKeyframeTrack(bone.uuid+'.position',track.times,values));}
  }
  if(!tracks.some(t=>t.name.includes('quaternion')))throw Error('人物与动作骨骼没有对应上');return new THREE.AnimationClip(clip.name,clip.duration,tracks);
 }
