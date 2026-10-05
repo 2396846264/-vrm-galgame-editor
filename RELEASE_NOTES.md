@@ -1,22 +1,16 @@
-# 0.0.13 · 天空描边修复、自动保存与实时头像
+# 0.0.14 · VRM 实时头像恢复肩部照片角度
 
-修复打开任意程度描边后天空球变黑的问题；增加环境编辑器自动保存，改善暗场景人物光照，把 VRM 对话头像改成同步嘴型与表情的实时模型。
+按原来的自动肩部照片调整 VRM 实时头像：从人物正面稍偏一侧拍，显示头部、肩膀和一点胸口，保持左下角头像原来的大小。嘴型、眨眼和表情继续同步。
 
-- 天空球跳过描边，保留纯色天空与全景贴图；人物和场景物体继续描边。
-- 环境编辑器每 10 分钟自动保存：倒计时、提前 5 秒提示、保存动画和失败重试。
-- 工程包后台压缩；等待拖拽和输入结束再自动保存，保存期间保护文件操作。
-- 移除旧的背景自动配光选项，人物跟随 3D 灯光；环境中增加“补光亮度”。
-- VRM 实时头像拍摄同一个模型，同步嘴型、眨眼和表情；FBX 保留图片头像。
-- 保留旧工程、GLB 场景动画、Mixamo 动作修复、物品绑定、逐句登场与多人标题。
+- 实时头像和自动照片共用拍摄方向、放大比例与摆放方式。
+- 只对 VRM 生效。FBX 和没有模型的角色继续使用上传的 PNG 头像。
+- 保留已有头像图片；其他角色不自动拍摄，也不增加实时模型头像。
+- 保留 0.0.13 的天空描边修复、环境自动保存和暗场景人物光照。
 
-**[完整图文说明](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/天空描边与实时头像_v0.0.13.md)**
+**[完整图文说明](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/VRM肩部头像_v0.0.14.md)**
 
-![打开描边后天空保持正常](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v013/sky-outline.png)
+![独立游戏中的肩部头像](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v014/player-shoulder.png)
 
-![独立游戏的实时头像](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v013/live-portrait.png)
+15 组源码检查、网页和 Windows 构建通过。实际验证 VRM 拍摄角度和大小、嘴型变化、FBX / 纯图片角色使用 PNG、独立游戏。
 
-![保存时的提示](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v013/autosave-saving.png)
-
-15 组源码检查、网页和 Windows 构建通过。实际验证纯色/贴图天空四档描边、真实嘴型变化、暗场景、约 118 MB 工程后台自动保存、工程包重开与独立游戏。
-
-完整解压新版，再打开原工程即可。以前导出的游戏需要用新版重新导出。公开包不包含第三方人物与模型文件。
+完整解压新版，再打开原工程即可。已导出的游戏需重新导出。公开包不附带第三方模型与私人工程。

@@ -1,8 +1,9 @@
 import * as THREE from 'three';
+import {setShoulderPortraitCamera} from './portrait-camera.js';
 
 // A second camera views the existing actor. No second VRM, mixer or WebGL context.
 export class LivePortrait {
-  constructor(){this.camera=new THREE.PerspectiveCamera(30,1,.01,300);this.record=null;this.node=null;this.frames=0;}
+  constructor(){this.camera=new THREE.OrthographicCamera(-.2,.2,.2,-.2,.01,300);this.record=null;this.node=null;this.frames=0;}
   overlay(renderer,element){
     if(typeof document==='undefined')return;
     if(!this.overlayScene){
@@ -28,10 +29,8 @@ export class LivePortrait {
     const head=record.vrm.humanoid.getNormalizedBoneNode('head');if(!head)return;
     record.anchor.updateWorldMatrix(true,true);
     const scale=record.anchor.getWorldScale(new THREE.Vector3()).y;
-    const center=head.getWorldPosition(new THREE.Vector3());center.y-=.16*scale;
-    const forward=new THREE.Vector3(0,0,1).applyQuaternion(record.anchor.getWorldQuaternion(new THREE.Quaternion()));
-    camera.position.copy(center).addScaledVector(forward,1.25*scale);camera.position.y+=.03*scale;
-    camera.aspect=rect.width/rect.height;camera.lookAt(center);camera.updateProjectionMatrix();camera.layers.set(31);
+    setShoulderPortraitCamera(camera,head.getWorldPosition(new THREE.Vector3()),scale,record.anchor.getWorldQuaternion(new THREE.Quaternion()));
+    camera.layers.set(31);
     const viewport=renderer.getViewport(new THREE.Vector4()),scissor=renderer.getScissor(new THREE.Vector4());
     const state={background:scene.background,autoClear:renderer.autoClear,scissor:renderer.getScissorTest(),shadow:renderer.shadowMap.autoUpdate,visible:record.vrm.scene.visible};
     const layers=[];record.vrm.scene.traverse(o=>{layers.push([o,o.layers.mask]);o.layers.enable(31);});
@@ -39,8 +38,9 @@ export class LivePortrait {
     try{
       record.vrm.scene.visible=true;scene.background=null;renderer.autoClear=false;renderer.shadowMap.autoUpdate=false;
       this.overlay(renderer,element);
-      const x=rect.left-area.left,y=area.bottom-rect.bottom;
-      renderer.setViewport(x,y,rect.width,rect.height);renderer.setScissor(x,y,rect.width,rect.height);renderer.setScissorTest(true);
+      // The old PNG is square and uses object-fit:contain, centered at the bottom.
+      const side=Math.min(rect.width,rect.height),x=rect.left-area.left+(rect.width-side)/2,y=area.bottom-rect.bottom;
+      renderer.setViewport(x,y,side,side);renderer.setScissor(x,y,side,side);renderer.setScissorTest(true);
       renderer.clearDepth();renderer.render(scene,camera);this.frames++;
     }finally{
       for(const [object,mask]of layers)object.layers.mask=mask;

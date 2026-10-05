@@ -5,6 +5,7 @@ import {fitEnvironmentShadow,environmentShadowBounds} from './environment-shadow
 import {EnvironmentRuntime} from './environment-runtime.js';
 import {CharacterSceneLighting,environmentAmbient} from './character-scene-lighting.js';
 import {LivePortrait} from './live-portrait.js';
+import {setShoulderPortraitCamera} from './portrait-camera.js';
 import {createFbxActor, retargetFbxClip} from './fbx-character.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import {CompatibleFBXLoader as FBXLoader} from './fbx-loader.js';
@@ -158,8 +159,7 @@ export async function captureVrmPortrait(modelAsset, motionAsset = null, poseFra
     const head = vrm.humanoid.getNormalizedBoneNode('head');
     const target = head?.getWorldPosition(new THREE.Vector3()) || new THREE.Vector3(0, 1.55, 0);
     const camera = new THREE.OrthographicCamera(-0.20, 0.20, 0.20, -0.20, 0.01, 20);
-    camera.position.set(target.x - 0.85, target.y + 0.05, target.z + 1.7);
-    camera.lookAt(target.x, target.y + 0.03, target.z);
+    setShoulderPortraitCamera(camera,target);
     scene.add(new THREE.HemisphereLight(0xffffff, 0x8497b0, 2));
     const key = new THREE.DirectionalLight(0xffffff, 2.1);
     key.position.set(-2, 4, 5);
@@ -848,6 +848,7 @@ export class VRMStage {
   talkingLetter(char) { this.talkingRecord?.talkingMouth?.letter(char); }
   clearLivePortrait(){this.portraitRequest=(this.portraitRequest||0)+1;this.portraitActorKey='';this.livePortrait.clear();}
   async setLivePortrait(modelAsset,actorKey,node,weights={}){
+    if(modelAsset?.type!=='vrm'){this.clearLivePortrait();return null;}
     const token=this.portraitRequest=(this.portraitRequest||0)+1;
     if(this.portraitActorKey!==actorKey||this.portraitModelId!==modelAsset.id||this.livePortrait.node!==node)this.livePortrait.clear();
     const record=await this.loadModel(modelAsset,actorKey);

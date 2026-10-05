@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {LivePortrait} from '../src/live-portrait.js';
+import {setShoulderPortraitCamera} from '../src/portrait-camera.js';
 const scene=new THREE.Scene(),anchor=new THREE.Group(),root=new THREE.Group(),head=new THREE.Bone(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());
 head.position.y=1.7;root.add(head,mesh);anchor.add(root);scene.add(anchor,new THREE.DirectionalLight());root.visible=false;scene.background=new THREE.Color('red');
 const other=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());scene.add(other);
@@ -9,6 +10,14 @@ let autoClear=true,viewport=new THREE.Vector4(0,0,800,450),scissor=viewport.clon
 const renderer={get autoClear(){return autoClear;},set autoClear(v){autoClear=v;},shadowMap:{autoUpdate:true},getViewport:v=>v.copy(viewport),getScissor:v=>v.copy(scissor),getScissorTest:()=>scissorTest,setViewport:(...args)=>{viewport=args[0].isVector4?args[0].clone():new THREE.Vector4(...args);},setScissor:(...args)=>{scissor=args[0].isVector4?args[0].clone():new THREE.Vector4(...args);},setScissorTest:v=>scissorTest=v,clearDepth(){},render:(s,c)=>{assert.equal(root.visible,true);assert.equal(c.layers.test(mesh.layers),true);assert.equal(c.layers.test(other.layers),false);assert.equal(renderer.shadowMap.autoUpdate,false);if(throws)throw Error('GPU unavailable');rendered++;}};
 const element={getBoundingClientRect:()=>({left:0,bottom:450,width:800,height:450})};
 portrait.render(renderer,scene,element);assert.equal(rendered,1);assert.equal(root.visible,false);assert.equal(mesh.layers.mask,1);assert.equal(scene.background.getHexString(),'ff0000');assert.equal(renderer.autoClear,true);assert.equal(scissorTest,false);assert.deepEqual(viewport.toArray(),[0,0,800,450]);assert.equal(renderer.shadowMap.autoUpdate,true);
+assert.equal(portrait.camera.isOrthographicCamera,true);
+const old=new THREE.OrthographicCamera(-.2,.2,.2,-.2,.01,20);old.position.set(-.85,1.75,1.7);old.lookAt(0,1.73,0);old.updateProjectionMatrix();
+assert.ok(old.position.distanceTo(portrait.camera.position)<1e-9);assert.ok(old.quaternion.angleTo(portrait.camera.quaternion)<1e-7);
+const framed=mesh.position.clone();assert.equal(portrait.camera.left,-.2);assert.equal(portrait.camera.top,.2);
+const scaled=new THREE.OrthographicCamera();setShoulderPortraitCamera(scaled,new THREE.Vector3(0,3.4,0),2);
+assert.equal(scaled.left,-.4);assert.ok(scaled.position.distanceTo(new THREE.Vector3(-1.7,3.5,3.4))<1e-9);
+const turned=new THREE.OrthographicCamera();setShoulderPortraitCamera(turned,new THREE.Vector3(0,1.7,0),1,new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2));
+assert.ok(turned.position.distanceTo(new THREE.Vector3(1.7,1.75,.85))<1e-9);assert.deepEqual(mesh.position.toArray(),framed.toArray());
 const first=portrait.camera.position.clone();head.position.x=.3;portrait.render(renderer,scene,element);assert.ok(portrait.camera.position.x-first.x>.29);
 throws=true;assert.throws(()=>portrait.render(renderer,scene,element));assert.equal(root.visible,false);assert.equal(mesh.layers.mask,1);assert.equal(renderer.shadowMap.autoUpdate,true);
 portrait.clear();portrait.render(renderer,scene,element);

@@ -502,7 +502,7 @@ internal sealed partial class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".character-preview.json",
                         await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
-                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression"))
+                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression") && !Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait"))
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=editor-settings]').click(); const interval=document.querySelector('#editor-auto-save-minutes'); interval.value='10'; interval.dispatchEvent(new Event('input',{bubbles:true})); document.querySelector('[data-action=close-editor-settings]').click(); window.prompt=()=> '测试副本'; document.querySelector('[data-action=save-as]').click()");
                     await Task.Delay(2600);
@@ -1032,6 +1032,15 @@ internal sealed partial class EditorWindow : Form
                     await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, shot);
                 await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
                 await Task.Delay(1200);
+            }
+            if(Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait")){
+                foreach(string phase in playerMode?new[]{"player"}:new[]{"vrm","fbx","png","export"}){
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__shoulderCheck=null;window.__vrmSmokeShoulderPortrait("+JsonSerializer.Serialize(phase)+").then(r=>window.__shoulderCheck=r).catch(e=>window.__shoulderCheck={error:e.message})");
+                    string check="null";for(int i=0;i<1200;i++){check=await web.CoreWebView2.ExecuteScriptAsync("window.__shoulderCheck");if(check!="null")break;await Task.Delay(50);}
+                    File.WriteAllText(smokeBase+".shoulder-"+phase+".json",check);
+                    using(var shot=File.Create(smokeBase+".shoulder-"+phase+".png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);
+                    if(check.Contains("\"error\""))throw new Exception(check);
+                }
             }
             if(Environment.GetCommandLineArgs().Contains("--smoke-render-regression")){
                 bool reopenOnly=Environment.GetCommandLineArgs().Contains("--smoke-render-reopen");
