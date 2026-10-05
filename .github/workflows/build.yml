@@ -54,3 +54,4 @@ jobs:
           node scripts/test-portrait-policy.mjs
           node scripts/test-act-preload.mjs
           node scripts/test-render-style.mjs
+          node scripts/test-inventory.mjs

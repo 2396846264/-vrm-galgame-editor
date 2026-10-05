@@ -538,7 +538,7 @@ internal sealed partial class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".character-preview.json",
                         await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
-                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression") && !Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-preload") && !Environment.GetCommandLineArgs().Contains("--smoke-npr"))
+                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression") && !Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-preload") && !Environment.GetCommandLineArgs().Contains("--smoke-npr") && !Environment.GetCommandLineArgs().Contains("--smoke-inventory"))
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=editor-settings]').click(); const interval=document.querySelector('#editor-auto-save-minutes'); interval.value='10'; interval.dispatchEvent(new Event('input',{bubbles:true})); document.querySelector('[data-action=close-editor-settings]').click(); window.prompt=()=> '测试副本'; document.querySelector('[data-action=save-as]').click()");
                     await Task.Delay(2600);
@@ -1077,6 +1077,15 @@ internal sealed partial class EditorWindow : Form
                 await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
                 await Task.Delay(1200);
             }
+            if(Environment.GetCommandLineArgs().Contains("--smoke-inventory")){
+                foreach(string phase in playerMode?new[]{"player"}:Environment.GetCommandLineArgs().Contains("--smoke-inventory-reopen")?new[]{"reopen"}:new[]{"prepare","locked","reward","reload-pending","spend","gallery","detail","export"}){
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__inventoryCheck=null;window.__vrmSmokeInventory("+JsonSerializer.Serialize(phase)+").then(r=>window.__inventoryCheck=r).catch(e=>window.__inventoryCheck={error:e.message})");
+                    string check="null";for(int i=0;i<2400;i++){check=await web.CoreWebView2.ExecuteScriptAsync("window.__inventoryCheck");if(check!="null")break;await Task.Delay(50);}
+                    File.WriteAllText(smokeBase+".inventory-"+phase+".json",check);
+                    using(var shot=File.Create(smokeBase+".inventory-"+phase+".png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);
+                    if(!check.Contains("\"ok\":true"))throw new Exception(check);
+                }
+            }
             if(Environment.GetCommandLineArgs().Contains("--smoke-npr")){
                 foreach(string phase in playerMode?new[]{"player"}:Environment.GetCommandLineArgs().Contains("--smoke-npr-reopen")?new[]{"reopen"}:new[]{"neutral","zzz-low","zzz-high","custom","tno","dialogue","fbx","export"}){
                     await web.CoreWebView2.ExecuteScriptAsync("window.__nprCheck=null;window.__vrmSmokeNpr("+JsonSerializer.Serialize(phase)+").then(r=>window.__nprCheck=r).catch(e=>window.__nprCheck={error:e.message})");
@@ -1247,6 +1256,7 @@ internal sealed partial class EditorWindow : Form
                 "organizeDialogueVoices" when !playerMode => OrganizeDialogueVoices(payload?["project"]),
                 "importAsset" when !playerMode => ImportAssets(payload?["type"]?.GetValue<string>() ?? "", payload?["single"]?.GetValue<bool>() ?? false),
                 "importAssetChunk" when !playerMode => ImportAssetChunk(payload),
+                "saveInventoryImage" when !playerMode => SaveInventoryImage(payload?["dataUrl"]?.GetValue<string>()??"",payload?["itemId"]?.GetValue<string>()??"",payload?["name"]?.GetValue<string>()??"物品"),
                 "saveGeneratedPortrait" when !playerMode => SaveGeneratedPortrait(payload?["dataUrl"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "角色", payload?["previousRevision"]?.GetValue<string>() ?? ""),
                 "organizeGeneratedPortrait" when !playerMode => OrganizeGeneratedPortrait(payload?["path"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "角色"),
                 "restoreHistoryAssets" when !playerMode => RestoreHistoryAssets(payload?["project"]),
@@ -1900,6 +1910,16 @@ internal sealed partial class EditorWindow : Form
         return SaveGeneratedPortrait("data:image/png;base64," + Convert.ToBase64String(File.ReadAllBytes(source)), characterId, name);
     }
 
+    private object SaveInventoryImage(string dataUrl,string itemId,string name)
+    {
+        if(projectDirectory==null||string.IsNullOrWhiteSpace(itemId))throw new Exception("请先打开工程并选择物品。");
+        const string prefix="data:image/png;base64,";if(!dataUrl.StartsWith(prefix,StringComparison.Ordinal))throw new Exception("物品立绘需要 PNG。");
+        byte[] bytes=Convert.FromBase64String(dataUrl[prefix.Length..]);if(bytes.Length<32||bytes.Length>12_000_000||!bytes.AsSpan(0,8).SequenceEqual(new byte[]{137,80,78,71,13,10,26,10}))throw new Exception("物品立绘无效或太大。");
+        using(var stream=new MemoryStream(bytes))using(var image=System.Drawing.Image.FromStream(stream))if(image.Width!=image.Height||image.Width>4096)throw new Exception("物品立绘必须为1:1正方形。");
+        string key=Guid.NewGuid().ToString("N"),folder=Path.Combine(projectDirectory,"assets","image","玩家物品立绘");Directory.CreateDirectory(folder);File.WriteAllBytes(Path.Combine(folder,key+".png"),bytes);
+        return new{id="item-image-"+key,type="image",name=SafeName(name)+"_立绘.png",path="assets/image/玩家物品立绘/"+key+".png",itemImage=true,galleryImage=false};
+    }
+
     private object SaveGeneratedPortrait(string dataUrl, string characterId, string name, string previousRevision = "")
     {
         if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
@@ -1994,8 +2014,22 @@ internal sealed partial class EditorWindow : Form
         if (Path.GetFullPath(destination).StartsWith(Path.GetFullPath(projectDirectory) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
             throw new Exception("导出位置不能放在工程文件夹里面，请选择别的位置。");
         JsonNode gameProject = ReadProject() ?? throw new Exception("工程文件无法读取。");
+        ValidateInventoryContent(gameProject);
         BuildGame(destination, gameProject);
         return new { directory = destination, executable = Path.Combine(destination, "VRMGalgame.exe") };
+    }
+
+    private void ValidateInventoryContent(JsonNode project)
+    {
+        var items=(project["items"]?.AsArray()??new JsonArray()).Where(item=>item!=null).ToDictionary(item=>item!["id"]?.GetValue<string>()??"",item=>item!);
+        var assets=(project["assets"]?.AsArray()??new JsonArray()).Where(item=>item!=null).ToDictionary(item=>item!["id"]?.GetValue<string>()??"",item=>item!);
+        foreach(var act in project["acts"]?.AsArray()??new JsonArray())foreach(var line in act?["steps"]?.AsArray()??new JsonArray()){
+            var rows=new List<JsonNode>();foreach(var row in line?["itemGrants"]?.AsArray()??new JsonArray())if(row!=null)rows.Add(row);
+            foreach(var choice in line?["choices"]?.AsArray()??new JsonArray())foreach(var row in choice?["requirements"]?.AsArray()??new JsonArray())if(row!=null)rows.Add(row);
+            foreach(var row in rows){string id=row["itemId"]?.GetValue<string>()??"";int count=row["quantity"]?.GetValue<int>()??0;
+                if(count<1||count>1_000_000||!items.TryGetValue(id,out var item)||string.IsNullOrWhiteSpace(item["name"]?.GetValue<string>())||string.IsNullOrWhiteSpace(item["description"]?.GetValue<string>())||!assets.TryGetValue(item["imageId"]?.GetValue<string>()??"",out var image)||image["type"]?.GetValue<string>()!="image")throw new Exception("对白或分支的物品设置不完整，请检查名字、立绘、介绍与数量。");
+            }
+        }
     }
 
     private async Task<object> PreviewGameAsync(JsonNode? snapshot)

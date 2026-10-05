@@ -8,6 +8,8 @@ import './style.css';
 import './skin.css';
 import './layout.css';
 import {createPreviewResizer} from './preview-resize.js';
+import {normalizeInventory,itemDefinitionReady,choiceItemStatus,grantDialogueItems,useChoiceItems,validateInventoryProject} from './inventory.js';
+import './inventory.css';
 import './vn-theme.css';
 import './ios7-theme.css';
 import './chapters.css';
@@ -48,6 +50,7 @@ let selectedAct = 0;
 let selectedStep = 0;
 let selectedCharacter = 0;
 let activePanel = 'story';
+let selectedItem=0,playerInventory=normalizeInventory(),inventorySession=false;
 let propPreviewMode=false,selectedBindingPropId='';
 const openAssetFolders = new Set(['unfiled:vrm', 'unfiled:motion', 'unfiled:image', 'unfiled:audio', 'unfiled:video']);
 let dockInitializedProjectId = '';
@@ -330,6 +333,51 @@ function castForAct(currentAct, speakingStep = currentAct?.steps?.[0]) {
     return modelAsset?[{actorKey,modelAsset,position,transform:transformOf(settings),expressionWeights:settings.expressionWeights||{},motionAsset:asset(settings.motionId),motionOptions:motionOptionsOf(settings),playbackKey:`step:${speakingStep.id}:${actorKey}`,props:actor.props||[],visiblePropIds:settings.props||[],assets:project.assets,returnToIdle:true}]:[];
   });
 }
+
+window.__vrmSmokeInventory=async function(phase){
+ if(!new URLSearchParams(location.search).has('smoke'))throw Error('Smoke only');
+ const assert=(test,message)=>{if(!test)throw Error(message);},wait=ms=>new Promise(resolve=>setTimeout(resolve,ms)),click=action=>document.querySelector('[data-action="'+action+'"]')?.click();
+ async function display(index,line=0){playing=true;playAct=index;playStep=line;preparedAct=-1;saveModalMode='';document.querySelector('#player-modal')?.remove();document.querySelector('#inventory-reward')?.remove();await showPlayStep();finishTyping();await wait(300);}
+ async function rewards(){for(let i=0;i<6&&playerInventory.pending.length;i++){click('confirm-item-reward');await wait(120);}}
+ if(phase==='prepare'){
+   project.items=[];
+   for(const [id,name,consumable,label,color,description]of[
+    ['usd','美元',true,'$','#3c8970','一枚美元代表一美元的余额。这是旅途中可以使用的零钱，能支付车费、购买日用品，也能换取其他补给。选择需要美元的分支时，系统会检查余额并扣除所需数量。零钱用完后，背包不再显示它，但鉴赏仍可阅读这段介绍。'],
+    ['key','旧钥匙',false,'⚿','#b68a37','一把旧钥匙，表面留着长年使用的磨痕。它可以打开某些地点的门，也是故事中的重要线索。选择需要钥匙的分支时，只检查玩家是否持有，不会消耗钥匙。妥善保管后，它能在后面的剧情中反复使用，直到故事结束。'],
+    ['ticket','纪念车票',false,'票','#516fa5','一张尚未获得的纪念车票，用来检查物品鉴赏的锁定效果。未获得时，立绘会变灰并盖上红色封条，不能点击阅读。真正获得后，系统才会解锁详情；即使物品后来不在背包里，曾经获得的记录也仍然保留。']]){
+    const canvas=document.createElement('canvas');canvas.width=canvas.height=512;const ctx=canvas.getContext('2d');ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(64,100,384,312,24);ctx.fill();ctx.strokeStyle='#e4e9dc';ctx.lineWidth=10;ctx.strokeRect(84,120,344,272);ctx.fillStyle='#fff';ctx.font='bold 160px sans-serif';ctx.textAlign='center';ctx.fillText(label,256,310);const image=await bridge('saveInventoryImage',{dataUrl:canvas.toDataURL('image/png'),itemId:id,name});project.assets.push(image);project.items.push({id,name,imageId:image.id,description});
+   }
+   const template=structuredClone(project.acts[0]),base=structuredClone(template.steps[0]);
+   const line=(id,text)=>({...structuredClone(base),id,text,choices:[],itemGrants:[],voiceId:'',seId:''});
+   const first={...structuredClone(template),id:'item-start',name:'获得物品与打车',steps:[line('no-money','现在还没有美元，打车选项会变灰。'),line('receive-money','出发前，你找到了五美元和一把旧钥匙。'),line('travel-choice','要走路前往目的地，还是花五美元打车？')]};
+   first.steps[0].choices=[{text:'走路去',actId:'walk'},{text:'打车（5 美元）',actId:'taxi',consumeRequired:true,requirements:[{itemId:'usd',quantity:5}]}];first.steps[1].itemGrants=[{itemId:'usd',quantity:5},{itemId:'key',quantity:1}];first.steps[2].choices=structuredClone(first.steps[0].choices);
+   const taxi={...structuredClone(template),id:'taxi',name:'打车后',steps:[line('taxi-result','你花了五美元抵达目的地，旧钥匙仍在背包里。')]};taxi.steps[0].choices=[{text:'用旧钥匙开门',actId:'door',requirements:[{itemId:'key',quantity:1}]}];
+   const walk={...structuredClone(template),id:'walk',name:'步行',steps:[line('walk-result','步行不花钱。')]},door={...structuredClone(template),id:'door',name:'开门',steps:[line('door-result','门打开了，旧钥匙还在。')]};project.acts=[first,taxi,walk,door];project.name='玩家物品与分支验证';playerInventory=normalizeInventory({},project.items);inventorySession=true;activePanel='items';selectedItem=0;renderSidebar();renderInspector();markDirty();await save();return {ok:true,definitions:project.items.length,squareImages:true};
+ }
+ if(phase==='locked'){
+   playerInventory=normalizeInventory({},project.items);inventorySession=true;await display(0);assert(document.querySelector('[data-action="choose"][data-index="1"]').disabled,'没有钱也能打车');assert(document.querySelector('.choice-missing').textContent.includes('美元'),'没有缺少物品提示');const before=playerInventory.counts.usd||0;document.querySelector('[data-action="choose"][data-index="1"]').click();await wait(100);assert(playAct===0&&(playerInventory.counts.usd||0)===before,'锁定选项仍被执行');return {ok:true,disabledChoice:true,missingItemText:true};
+ }
+ if(phase==='reward'){
+   playerInventory=normalizeInventory({},project.items);inventorySession=true;await display(0,1);assert(playerInventory.counts.usd===5&&playerInventory.counts.key===1,'获得数量错误');assert(document.querySelector('#inventory-reward')&&document.querySelector('.inventory-reward-dialogue').textContent.includes('美元 × 5'),'没有额外获得对话');const snapshot=snapshotSlot();localStorage.setItem('inventory-pending-test-'+project.id,JSON.stringify(snapshot));const image=document.querySelector('.inventory-reward-image');assert(image.naturalWidth===image.naturalHeight,'立绘不是正方形');return {ok:true,extraDialogue:true,centerArtwork:true,pendingSaved:snapshot.inventory.pending.length===2};
+ }
+ if(phase==='reload-pending'){
+   const slot=JSON.parse(localStorage.getItem('inventory-pending-test-'+project.id));const slots=Array(20).fill(null);slots[1]=slot;localStorage.setItem(saveKey(),JSON.stringify(slots));playing=false;loadSlot(1);await wait(650);finishTyping();assert(playerInventory.counts.usd===5&&playerInventory.pending.length===2,'读档重复发放或丢失提示');await rewards();await display(0,1);assert(playerInventory.counts.usd===5&&!playerInventory.pending.length,'同句重复发放');return {ok:true,noDuplicateReward:true,pendingRestored:true};
+ }
+ if(phase==='spend'){
+   await rewards();await display(0,2);assert(!document.querySelector('[data-action="choose"][data-index="1"]').disabled,'有5美元仍不能打车');const before=snapshotSlot();document.querySelector('[data-action="choose"][data-index="1"]').click();await wait(650);finishTyping();assert(project.acts[playAct].id==='taxi'&&(playerInventory.counts.usd||0)===0,'打车没有扣5美元');assert(playerInventory.counts.key===1,'钱被扣时工具也丢失');document.querySelector('[data-action="choose"][data-index="0"]').click();await wait(650);finishTyping();assert(playerInventory.counts.key===1,'工具被消耗');const after=snapshotSlot(),slots=Array(20).fill(null);slots[1]=before;slots[2]=after;localStorage.setItem(saveKey(),JSON.stringify(slots));playing=false;loadSlot(1);await wait(650);finishTyping();assert(playerInventory.counts.usd===5,'读回花钱前存档没有恢复余额');playing=false;loadSlot(2);await wait(650);finishTyping();assert((playerInventory.counts.usd||0)===0&&playerInventory.counts.key===1,'花钱后存档恢复错误');return {ok:true,currencyConsumed:true,toolPreserved:true,independentSaveBalances:true};
+ }
+ if(phase==='gallery'){
+   if(mode==='editor'){mode='player';renderPlayer();playing=true;playAct=1;playStep=0;await showPlayStep();finishTyping();}galleryTab='items';renderGalleryModal();assert(document.querySelector('[data-item-id="ticket"]').disabled,'未知物品能点');assert(document.querySelector('.inventory-seal').textContent==='未获得','没有红色封条');assert(getComputedStyle(document.querySelector('[data-item-id="ticket"] img')).filter.includes('grayscale'),'未知立绘不是灰色');assert(!document.querySelector('[data-item-id="usd"]').disabled,'用完的钱不能鉴赏');return {ok:true,unknownLocked:true,grayArtwork:true,redSeal:true,consumedStillKnown:true};
+ }
+ if(phase==='detail'){document.querySelector('[data-item-id="usd"]').click();assert(document.querySelector('.inventory-detail p').textContent.includes('当前持有：0'),'用完物品的详情数量错误');assert(document.querySelector('.inventory-detail').textContent.includes('这段介绍'),'介绍没有显示');return {ok:true,descriptionShown:true,zeroBalanceShown:true};}
+ if(phase==='export'){
+   mode='editor';playing=false;closePlayerModal();document.querySelector('#player-modal')?.remove();renderEditor();validateInventoryProject(project);markDirty();await save();await bridge('saveProjectAs',{project:structuredClone(project),name:'玩家物品与分支示例'});await bridge('exportGame',{folderName:'物品栏试玩'});return {ok:true,exported:true};
+ }
+ if(phase==='player'||phase==='reopen'){
+   assert(project.items.length===3,'物品定义没有保存');playerInventory=normalizeInventory({},project.items);inventorySession=true;await display(0);assert(document.querySelector('[data-action="choose"][data-index="1"]').disabled,'独立游戏条件失效');await display(0,1);assert(playerInventory.counts.usd===5,'独立游戏没有发放');await rewards();await display(0,2);document.querySelector('[data-action="choose"][data-index="1"]').click();await wait(650);finishTyping();assert((playerInventory.counts.usd||0)===0&&playerInventory.counts.key===1,'独立游戏扣除错误');renderBackpack();assert(document.querySelector('[data-item-id="key"]'),'背包缺少工具');return {ok:true,projectItems:true,grantWorks:true,consumeWorks:true,toolInBackpack:true};
+ }
+ throw Error('Unknown phase');
+};
 
 window.__vrmSmokePreviewResize=async(mode)=>{
  const frame=document.querySelector('.center .stage-frame'),assert=(test,message)=>{if(!test)throw Error(message);};
@@ -1036,16 +1084,19 @@ function defaultProject(name) {
     title: { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
       size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12 },
     render: normalizeRender(),
-    assets: [], assetFolders: [], characters: [],
+    assets: [], assetFolders: [], characters: [], items: [],
     acts: [{ id: uid(), name: '第一幕', backgroundId: '', bgmId: '', weather: normalizeWeather(), steps: [
       { id: uid(), characterId: '', speaker: '', text: '在这里写第一句对白。', expressionWeights: {}, motionId: '', position: 'center', size: defaultSize, offsetX: 0, offsetY: 0, voiceId: '', choices: [] }
     ] }]
   };
 }
 function normalize() {
+  playerInventory=normalizeInventory({},project.items||[]);inventorySession=false;
   migrateEnvironments(project);
   library.reset();
   project.knowledgeBooks ||= [];
+  project.items ||= [];
+  for(const item of project.items)delete item.consumable;
   project.assets ||= [];
   project.assetFolders ||= [];
   for (const folder of project.assetFolders) if (folder.id === 'auto-character-portraits') folder.hidden = true;
@@ -1168,7 +1219,7 @@ function updateHistoryButtons() {
 }
 function historyInputContextSupported(node) {
   const bindings = Object.entries(node.dataset || {}).filter(([key]) => !key.endsWith('Output'));
-  const supported = bindings.some(([key]) => ['field','bookField','eventField','motionOptions','galleryMusic','galleryImage','nprFilter',
+  const supported = bindings.some(([key]) => ['field','bookField','eventField','motionOptions','galleryMusic','galleryImage','nprFilter','itemField','inventoryRow',
     'audioTitle','storyIndex','assetFolder','titleField','uiField','titleAdjust','titleExpression','titleActorField','titleActorAdjust','titleActorExpression','titleActorProp','stepCast','castSlot','castMotion','castAdjust','castExpression','castProp','propField','propTransform',
     'render','weather','galleryAdjust','adjust','expression','choiceField'].includes(key)) || node.id === 'project-name' || node.hasAttribute('data-gallery-frame-number');
   return supported;
@@ -1353,7 +1404,7 @@ function renderEditor() {
     </header>
     <div class="workspace">
       <aside class="sidebar"><div class="tabs">
-        <button data-panel="story" class="active">剧情</button><button data-panel="characters">角色</button><button data-panel="title">标题</button><button data-panel="render">渲染</button><button data-panel="knowledge">知识库</button>
+        <button data-panel="story" class="active">剧情</button><button data-panel="characters">角色</button><button data-panel="items">物品</button><button data-panel="title">标题</button><button data-panel="render">渲染</button><button data-panel="knowledge">知识库</button>
       </div><div id="sidebar-body"></div></aside>
       <main class="center"><div class="stage-toolbar"><span id="stage-caption"></span><span>预览画面</span></div>
         <div class="stage-frame"><div id="scene-bg"></div><div id="stage-canvas"></div><div id="title-preview" class="title-composition hidden"></div>
@@ -1397,7 +1448,7 @@ function renderSidebar() {
   document.querySelectorAll('[data-panel]').forEach(node => node.classList.toggle('active', node.dataset.panel === activePanel));
   const body = document.querySelector('#sidebar-body');
   if (activePanel === 'knowledge') { library.editor(); renderAssetDock(); return; }
-  if (activePanel === 'story') {
+  if(activePanel==='items'){body.innerHTML=`<div class="section-heading">玩家物品 ${button('＋ 新增','add-inventory-item')}</div><div class="list inventory-editor-list">${project.items.map((item,index)=>`<button class="list-row ${index===selectedItem?'selected':''}" data-action="select-inventory-item" data-index="${index}">${escape(item.name||'未命名物品')}</button>`).join('')}</div><p class="sidebar-note">这是玩家背包里的物品。先补全名字、立绘和介绍，再到对白里设置获得与分支条件。</p>`;}else if (activePanel === 'story') {
     body.innerHTML = `<div class="section-heading">剧情 <span class="heading-actions">${button('＋ 幕', 'add-act')}${button('＋ 事件', 'event-add')}</span></div>
       <div class="list act-accordion" data-order-list="act">${project.acts.map((item, index) =>
         `<section class="act-group ${isEvent(item) ? 'event-group' : ''} ${index === selectedAct ? 'expanded' : ''}"><button class="list-row sortable-row ${index === selectedAct ? 'selected' : ''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" aria-expanded="${index === selectedAct}">
@@ -1730,6 +1781,40 @@ function castEditor(currentAct, slot) {
 ${!isFbxModel(character(actorId)?.modelId) ? `<div class="field"><span>这一句的表情</span><div id="cast-expression-${slot}" class="expression-controls"></div></div>` : ''}<div class="dialogue-props"><b>这一句显示的物品</b>${(character(actorId)?.props||[]).map(prop=>`<label><input type="checkbox" data-cast-prop="${slot}" data-prop-id="${escape(prop.id)}" ${(settings.props||[]).includes(prop.id)?'checked':''}>${escape(prop.name||asset(prop.assetId)?.name||'物品')}</label>`).join('')||'<small>先到角色页绑定物品。</small>'}</div>` : ''}
     </div></details>`;
 }
+
+const inventoryItem=id=>project.items.find(item=>item.id===id);
+const readyItems=()=>project.items.filter(item=>itemDefinitionReady(item,project.assets));
+function inventoryRows(rows,kind,index=''){
+ return `<div class="inventory-rows">${(rows||[]).map((row,i)=>`<div class="inventory-rule-row"><select data-inventory-row="${kind}" data-choice="${index}" data-row="${i}" data-key="itemId">${options(readyItems(),row.itemId,'选择物品')}${row.itemId&&!readyItems().some(item=>item.id===row.itemId)?`<option selected value="${escape(row.itemId)}">物品已删除或未填写完整</option>`:''}</select><input type="number" min="1" max="1000000" step="1" aria-label="物品数量" value="${row.quantity}" data-inventory-row="${kind}" data-choice="${index}" data-row="${i}" data-key="quantity">${button('删除','remove-inventory-row',`data-kind="${kind}" data-choice="${index}" data-row="${i}"`)}</div>`).join('')}</div>`;
+}
+function itemAcquisitionEditor(line){return `<details class="inventory-dialogue-editor"><summary>这一句获得的物品</summary>${inventoryRows(line.itemGrants,'grant')}${button('＋ 获得物品','add-inventory-grant')}<p class="tip">对白显示完后，额外显示“玩家获得了物品 × 数量”和正方形立绘。同一存档中这句不会重复发放。</p></details>`;}
+async function uploadInventoryImage(){
+ const owner=project,item=project.items[selectedItem];if(!item)return;const imported=await bridge('importAsset',{type:'image',single:true});if(project!==owner||!owner.items.includes(item)||!imported?.length)return;
+ for(const source of imported)source.galleryImage=false;owner.assets.push(...imported);const picture=new Image();await new Promise((resolve,reject)=>{picture.onload=resolve;picture.onerror=()=>reject(Error('图片无法读取'));picture.src=assetUrl(imported[0]);});
+ const canvas=document.createElement('canvas');canvas.width=canvas.height=512;const context=canvas.getContext('2d'),scale=Math.min(512/picture.naturalWidth,512/picture.naturalHeight),w=picture.naturalWidth*scale,h=picture.naturalHeight*scale;context.drawImage(picture,(512-w)/2,(512-h)/2,w,h);
+ const saved=await bridge('saveInventoryImage',{dataUrl:canvas.toDataURL('image/png'),itemId:item.id,name:item.name});if(project!==owner||!owner.items.includes(item))return;saved.galleryImage=false;saved.folderId='inventory-images';owner.assetFolders||=[];if(!owner.assetFolders.some(folder=>folder.id==='inventory-images'))owner.assetFolders.push({id:'inventory-images',name:'玩家物品立绘',type:'image'});owner.assets.push(saved);item.imageId=saved.id;markDirty();renderInspector();renderAssetDock();updatePreview();toast('已生成 1:1 物品立绘，原图保持完整。');
+}
+function refreshChoiceItems(){
+ const line=project.acts[playAct]?.steps[playStep],node=document.querySelector('#choice-list');if(!line||!node)return;
+ node.innerHTML=(line.choices||[]).map((choice,index)=>{const status=choiceItemStatus(choice,playerInventory,project.items),missing=status.missing.map(row=>`${row.name} × ${row.quantity}（现有 ${row.have}）`).join('、');return `<button data-action="choose" data-index="${index}" ${!status.allowed||playerInventory.pending.length?'disabled':''} class="${status.allowed?'':'choice-locked'}" title="${escape(status.allowed?'':`缺少：${missing}`)}">${escape(choice.text||'继续')}${!status.allowed?`<small class="choice-missing">缺少：${escape(missing)}</small>`:''}</button>`;}).join('');
+}
+function showItemReward(){
+ if(!playing||!playerInventory.pending.length)return false;const row=playerInventory.pending[0],item=inventoryItem(row.itemId);if(!item){playerInventory.pending.shift();return showItemReward();}
+ clearAutoAdvance();saveModalMode='item-reward';document.querySelector('#inventory-reward')?.remove();document.querySelector('.stage-frame').insertAdjacentHTML('beforeend',`<section id="inventory-reward" class="inventory-reward" role="dialog" aria-modal="true" aria-label="获得物品"><img class="inventory-reward-image" src="${escape(assetUrl(asset(item.imageId)))}" alt="${escape(item.name)}"><div class="inventory-reward-dialogue"><p>玩家获得了：<strong>${escape(item.name)} × ${row.quantity}</strong></p>${button('继续','confirm-item-reward')}</div></section>`);document.querySelector('[data-action="confirm-item-reward"]')?.focus();refreshChoiceItems();return true;
+}
+document.addEventListener('keydown',event=>{if(saveModalMode==='item-reward'&&['Enter',' ','Escape'].includes(event.key)){event.preventDefault();event.stopImmediatePropagation();document.querySelector('[data-action="confirm-item-reward"]')?.click();}},true);
+function maybeGrantCurrentItems(){
+ if(!playing||transitioning||typingTimer||saveModalMode)return false;const line=project.acts[playAct]?.steps[playStep];if(!line)return false;
+ try{const gained=grantDialogueItems(line,playerInventory,project.items,project.assets);if(gained.length&&mode==='player'){const progress=loadLifetimeProgress();progress.seenItemIds||=[];for(const row of gained)if(!progress.seenItemIds.includes(row.itemId))progress.seenItemIds.push(row.itemId);localStorage.setItem(lifetimeKey(),JSON.stringify(progress));}refreshChoiceItems();return showItemReward();}catch(error){toast(error.message,true);return false;}
+}
+function itemViewState(){if(playing||inventorySession)return playerInventory;const last=readSaveSlots().filter(Boolean).sort((a,b)=>(Date.parse(b.savedAt)||0)-(Date.parse(a.savedAt)||0))[0];return normalizeInventory(last?.inventory,project.items);}
+function itemGalleryMarkup(backpack=false){
+ const state=itemViewState(),known=new Set([...(loadLifetimeProgress().seenItemIds||[]),...state.known]),items=readyItems().filter(item=>!backpack||state.counts[item.id]>0);
+ return `<div class="inventory-grid">${items.map(item=>{const unlocked=backpack||mode==='editor'||known.has(item.id),count=state.counts[item.id]||0;return `<button class="inventory-card ${unlocked?'':'locked'}" data-action="inventory-detail" data-item-id="${escape(item.id)}" ${unlocked?'':'disabled'}><img src="${escape(assetUrl(asset(item.imageId)))}" alt="${escape(item.name)}"><b>${escape(item.name)}</b>${unlocked?`<small>当前持有：${count}</small>`:'<span class="inventory-seal">未获得</span>'}</button>`;}).join('')||'<p class="inventory-empty">背包里还没有物品。</p>'}</div>`;
+}
+function renderBackpack(){clearAutoAdvance();saveModalMode='inventory';document.querySelector('#player-modal')?.remove();document.querySelector('.stage-frame').insertAdjacentHTML('beforeend',`<section id="player-modal" class="player-modal"><div class="modal-box"><header><h2>物品栏</h2>${button('关闭 ×','close-modal')}</header>${itemGalleryMarkup(true)}</div></section>`);}
+function renderItemDetail(id){const item=inventoryItem(id),state=itemViewState(),known=new Set([...(loadLifetimeProgress().seenItemIds||[]),...state.known]);if(!item||mode!=='editor'&&!known.has(id)&&!state.counts[id])return;const gallery=saveModalMode==='gallery';document.querySelector('#player-modal .gallery-content, #player-modal .inventory-grid')?.replaceWith(Object.assign(document.createElement('div'),{className:'inventory-detail',innerHTML:`<img src="${escape(assetUrl(asset(item.imageId)))}" alt="${escape(item.name)}"><h3>${escape(item.name)}</h3><p class="inventory-count">当前持有：${state.counts[id]||0}</p><p>${escape(item.description)}</p>${button('返回物品列表',gallery?'inventory-gallery-back':'open-inventory')}`}));}
+
 function renderStyleEditor(settings,scope,override=null){
  const attr=`data-render-scope="${scope}"`,slider=(key,label,value,min,max,step=1)=>field(label,`<div class="npr-slider"><input type="range" data-render="${key}" ${attr} min="${min}" max="${max}" step="${step}" value="${value}"><input type="number" data-render="${key}" ${attr} min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}精确数值"></div>`);
  const preset=scope==='step'?(override?.preset||''):settings.preset;
@@ -1741,6 +1826,7 @@ function renderStyleEditor(settings,scope,override=null){
 
 function renderInspector() {
   sceneAnimationDialog.close(false);
+  if(activePanel==='items'){const item=project.items[selectedItem],body=document.querySelector('#inspector-body');body.innerHTML=item?`<div class="inspector-content"><h2>玩家物品设置</h2>${field('名字',`<input data-item-field="name" maxlength="100" value="${escape(item.name)}">`)}${asset(item.imageId)?`<img class="inventory-editor-image" src="${escape(assetUrl(asset(item.imageId)))}" alt="${escape(item.name)}">`:'<p class="tip">还没有立绘。</p>'}${button('上传物品立绘（自动整理为 1:1）','upload-inventory-image')}${field('物品介绍（建议约 100 字）',`<textarea data-item-field="description" maxlength="3000" placeholder="写清用途、来历和特点">${escape(item.description||'')}</textarea>`)}<p class="tip">所有物品统一管理。名字、立绘、介绍都填写后才可用于对白；是否扣除由分支选项决定。</p>${button('删除物品','delete-inventory-item','class="danger"')}</div>`:'<p class="tip">先新增物品。</p>';updatePreview();return;}
   if (activePanel === 'knowledge') { library.editor(); return; }
   const body = document.querySelector('#inspector-body');
   if (isEvent(act()) && ['story', 'render'].includes(activePanel)) { body.innerHTML = events.editor(act()); return; }
@@ -1818,13 +1904,14 @@ function renderInspector() {
       ${dialogueVoiceField(current)}
       ${field('本句音效', select('step.seId', byType('audio'), current.seId, '无音效'))}
       <div id="scene-animation-controls"></div>
+      ${itemAcquisitionEditor(current)}
       <details class="dialogue-render-editor"><summary>这一句的渲染风格与微调</summary>${renderStyleEditor(dialogueRender(currentAct,current,project.render),'step',current.render)}</details>
       <div class="inline-actions">${button('复制本句', 'duplicate-step')}${button('上移', 'move-up')}${button('下移', 'move-down')}${button('删除', 'delete-step', 'class="danger"')}</div>
       <hr><div class="section-heading">选择分支 ${button('＋ 选项', 'add-choice')}</div>
       ${current.choices.map((choice,index) => `<div class="choice-editor">
         <input data-choice-index="${index}" data-choice-field="text" value="${escape(choice.text)}" placeholder="玩家看到的选项">
         <select data-choice-index="${index}" data-choice-field="actId">${options(project.acts,choice.actId,'选择跳转到哪一幕')}</select>
-        ${button('删除选项', 'delete-choice', `data-index="${index}"`)}</div>`).join('')}
+        <details><summary>所需物品条件</summary>${inventoryRows(choice.requirements,'requirement',index)}${button('＋ 物品条件','add-inventory-condition',`data-choice="${index}"`)}<label class="inventory-consume-toggle"><input type="checkbox" data-choice-consume="${index}" ${choice.consumeRequired?'checked':''}>选择后扣除所需物品</label><p class="tip">全部条件满足才能选。勾选后扣除上面列出的数量；不勾选只检查持有数量。</p></details>${button('删除选项', 'delete-choice', `data-index="${index}"`)}</div>`).join('')}
     ` : '<p class="tip">这幕还没有对白。</p>'}
     </div>`;
   renderExpressionControls();
@@ -1885,6 +1972,7 @@ async function updatePreview() {
   if (!stage || !project || playing) return;
   const request = ++previewRequest;
   if(activePanel!=='story'||stage.environmentRuntime.animations.key!==sceneAnimationKey(act(),step()))cancelSceneAnimations();
+  if(activePanel==='items'){events.cancel();stage.clear();showDialogue('','',false);document.querySelector('#title-preview')?.classList.add('hidden');document.querySelector('#speaker-portrait')?.classList.add('hidden');const item=project.items[selectedItem],overlay=document.querySelector('#character-preview');overlay.classList.remove('hidden');overlay.innerHTML=item?`<div class="editor-inventory-preview">${asset(item.imageId)?`<img src="${escape(assetUrl(asset(item.imageId)))}">`:''}<h2>${escape(item.name)}</h2><p>${escape(item.description||'填写约100字介绍')}</p></div>`:'';return;}
   if (activePanel === 'characters') {
     events.cancel();
     await showCharacterEditorPreview();
@@ -2238,7 +2326,7 @@ function finishTyping() {
   clearTyping();
   const node = document.querySelector('#dialogue-text');
   if (node) node.textContent = full;
-  if (playing && autoPlay) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+  if (playing) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
   return true;
 }
 function startTyping(value, characterId = project.acts[playAct]?.steps[playStep]?.characterId) {
@@ -2258,7 +2346,7 @@ function startTyping(value, characterId = project.acts[playAct]?.steps[playStep]
     typingIndex = end;
     if (typingIndex >= typingCharacters.length) {
       clearTyping();
-      if (playing && autoPlay) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+      if (playing) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
     }
   }, 1000 / textSpeed);
 }
@@ -2330,6 +2418,7 @@ function clearAutoAdvance() {
 }
 function scheduleAutoAdvance(current) {
   clearAutoAdvance();
+  if(maybeGrantCurrentItems())return;
   if (events.active() || isEvent(project.acts[playAct]) || !autoPlay || !playing || !current || current.choices?.length || saveModalMode || typingTimer) return;
   const wait = Math.max(1800, Math.min(7000, 1100 + (current.text?.length || 0) * 95));
   const advance = () => { autoTimer = setTimeout(() => next(), wait); };
@@ -2347,6 +2436,7 @@ function updateAutoButton() {
   button.setAttribute('aria-pressed', String(autoPlay));
 }
 async function showPlayStep() {
+  hideCharacterEditorPreview();
   sceneAnimationDialog.close(false);
   cancelSceneAnimations();
   const request = ++playRequest;
@@ -2414,8 +2504,7 @@ async function showPlayStep() {
       });
     }
     const choiceList = document.querySelector('#choice-list');
-    choiceList.innerHTML = current.choices.map((choice,index) =>
-      `<button data-action="choose" data-index="${index}">${escape(choice.text || '继续')}</button>`).join('');
+    refreshChoiceItems();
     if (stage.visibleRecords.size || !stageError)
       placeholder.style.display = 'none';
     else if (modelAsset && stageError)
@@ -2431,11 +2520,12 @@ async function showPlayStep() {
     if (request === playRequest) {
       transitioning = false;
       loading?.classList.add('hidden');
-      if (displayed) { scheduleAutoAdvance(current); updateRuntimePreparation(); }
+      if (displayed) { if(playerInventory.pending.length){clearTyping();document.querySelector('#dialogue-text').textContent=current.text||'';showItemReward();}else scheduleAutoAdvance(current); updateRuntimePreparation(); }
     }
   }
 }
 function startPlay() {
+  playerInventory=normalizeInventory({},project.items);inventorySession=true;
   nextPreloader.reset();releasePreparedMedia();
   restoredEventRemaining = undefined;
   const firstAct = mode === 'player' || activePanel === 'title' ? 0 : selectedAct;
@@ -2449,6 +2539,7 @@ function startPlay() {
   showPlayStep();
 }
 function stopPlay() {
+  document.querySelector('#inventory-reward')?.remove();
   nextPreloader.reset();releasePreparedMedia();
   sceneAnimationDialog.close(false);
   cancelSceneAnimations();
@@ -2481,6 +2572,7 @@ function next() {
   if (isEvent(project.acts[playAct])) { events.confirm(); return; }
   if (finishTyping()) return;
   clearAutoAdvance();
+  if(maybeGrantCurrentItems())return;
   const currentAct = project.acts[playAct];
   if (currentAct.steps[playStep]?.choices.length) return;
   playStep++;
@@ -2497,11 +2589,11 @@ const lifetimeKey = () => `vrm-lifetime-progress-${project.id || project.name}`;
 function loadLifetimeProgress() {
   if (lifetimeProgress) return lifetimeProgress;
   const fresh = { version: 2, viewedDialogueIds: [], viewedDialogueText: {}, characterLineCounts: {},
-    seenCharacterIds: [], seenImageIds: [], heardMusicIds: [], enteredActIds: [], completedEventIds: [], lastActId: '' };
+    seenCharacterIds: [], seenImageIds: [], heardMusicIds: [], seenItemIds: [], enteredActIds: [], completedEventIds: [], lastActId: '' };
   try {
     const stored = JSON.parse(localStorage.getItem(lifetimeKey()) || 'null');
     if (stored && typeof stored === 'object') {
-      for (const key of ['viewedDialogueIds', 'seenCharacterIds', 'seenImageIds', 'heardMusicIds', 'enteredActIds', 'completedEventIds'])
+      for (const key of ['viewedDialogueIds', 'seenCharacterIds', 'seenImageIds', 'heardMusicIds', 'seenItemIds', 'enteredActIds', 'completedEventIds'])
         if (Array.isArray(stored[key])) fresh[key] = [...new Set(stored[key].filter(id => typeof id === 'string'))];
       if (stored.characterLineCounts && typeof stored.characterLineCounts === 'object')
         for (const [id, count] of Object.entries(stored.characterLineCounts))
@@ -2655,7 +2747,7 @@ function closePlayerModal() {
     modal.inert = true;
     setTimeout(() => modal.remove(), 180);
   }
-  if (playing && autoPlay) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+  if (playing) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
 }
 function restartPlayerAutoSave() {
   clearInterval(playerAutoSaveTimer);
@@ -2676,7 +2768,7 @@ function snapshotSlot(auto = false) {
     backgroundId: isEvent(currentAct) ? eventBackdrop(currentAct).backgroundId : currentAct.backgroundId, savedAt: new Date().toISOString(),
     progressRank: storyRank(playAct, playStep),
     characterLineCounts: { ...playCharacterLineCounts },
-    viewedDialogueIds: [...playViewedStepIds]
+    viewedDialogueIds: [...playViewedStepIds], inventory:structuredClone(playerInventory)
   };
 }
 function saveAutoSlot() {
@@ -2703,6 +2795,8 @@ function loadSlot(index) {
   const { actIndex: targetAct, stepIndex: targetStep } = slotLocation(slot);
   if (!project.acts[targetAct]?.steps[targetStep]) { toast('这个存档对应的剧情已不存在', true); return; }
   if (playing && !confirm(`读取${index === -1 ? '旧版备份' : `第 ${index + 1} 个存档`}？当前进度若未保存会丢失。`)) return;
+  playerInventory=normalizeInventory(slot.inventory,project.items);inventorySession=true;document.querySelector('#inventory-reward')?.remove();
+  const discoveries=loadLifetimeProgress();discoveries.seenItemIds||=[];for(const id of playerInventory.known)if(!discoveries.seenItemIds.includes(id))discoveries.seenItemIds.push(id);localStorage.setItem(lifetimeKey(),JSON.stringify(discoveries));
   const progress = slotDialogueProgress(slot);
   playViewedStepIds = new Set(progress.seen);
   playCharacterLineCounts = { ...progress.counts };
@@ -2975,11 +3069,11 @@ function renderGalleryModal() {
   galleryStage?.destroy();
   galleryStage = null;
   const content = galleryTab === 'images' ? galleryImageMarkup()
-    : galleryTab === 'music' ? galleryMusicMarkup() : galleryCharacterMarkup();
+    : galleryTab === 'music' ? galleryMusicMarkup() : galleryTab==='items'?itemGalleryMarkup():galleryCharacterMarkup();
   document.querySelector('#player-modal')?.remove();
   document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal gallery-modal" role="dialog" aria-modal="true" aria-label="附加鉴赏">
     <div class="modal-box gallery-box ${galleryTab === 'characters' ? 'gallery-box-character' : ''}"><header><div><small>EXTRAS</small><h2>附加鉴赏</h2></div>${button('关闭 ×', 'close-modal')}</header>
-      <div class="gallery-main-tabs">${[['images','图像鉴赏'],['music','乐曲鉴赏'],['characters','人物鉴赏']].map(([key,label]) =>
+      <div class="gallery-main-tabs">${[['images','图像鉴赏'],['music','乐曲鉴赏'],['characters','人物鉴赏'],['items','物品鉴赏']].map(([key,label]) =>
         button(label, 'gallery-tab', `data-tab="${key}" class="${galleryTab === key ? 'active' : ''}"`)).join('')}</div>
       <div class="gallery-content">${content}</div>
     </div></section>`);
@@ -3106,6 +3200,7 @@ function renderPlayer() {
         <button type="button" id="auto-play-button" class="auto-play-button hidden" data-action="auto-toggle" aria-pressed="false" title="自动播放">自动播放</button>
         <button type="button" data-action="load-game" title="读档">读档</button>
         <button type="button" data-action="save-game" title="存档">存档</button>
+        <button type="button" data-action="open-inventory" title="物品栏">物品栏</button>
         <button type="button" data-action="toggle-fullscreen" title="切换全屏">${playerFullscreen ? '窗口' : '全屏'}</button>
       </div>
     </div>
@@ -3149,6 +3244,16 @@ document.addEventListener('click', async event => {
     if (action.startsWith('assistant-')) { await storyAssistant.click(action,node); return; }
     if (action === 'upload-dialogue-voice') { await uploadDialogueVoice(); return; }
     if (action === 'preview-dialogue-voice' || action === 'preview-voice-asset') { await previewDialogueVoice(action === 'preview-dialogue-voice' ? step()?.voiceId : node.dataset.assetId); return; }
+    if(action==='add-inventory-item'){project.items.push({id:uid(),name:`物品${project.items.length+1}`,description:'',imageId:''});selectedItem=project.items.length-1;markDirty();renderSidebar();renderInspector();return;}
+    if(action==='select-inventory-item'){selectedItem=Number(node.dataset.index);renderSidebar();renderInspector();return;}
+    if(action==='upload-inventory-image'){await uploadInventoryImage();return;}
+    if(action==='delete-inventory-item'){const item=project.items[selectedItem];if(!item||!confirm('删除这个物品？引用它的对白和分支需要重新设置。'))return;project.items.splice(selectedItem,1);selectedItem=Math.max(0,selectedItem-1);markDirty();renderSidebar();renderInspector();return;}
+    if(action==='add-inventory-grant'||action==='add-inventory-condition'){const item=readyItems()[0];if(!item){toast('先在物品页补全名字、立绘和介绍。',true);return;}const holder=action==='add-inventory-grant'?step():step().choices[Number(node.dataset.choice)],key=action==='add-inventory-grant'?'itemGrants':'requirements';holder[key]||=[];holder[key].push({itemId:item.id,quantity:1});markDirty();renderInspector();return;}
+    if(action==='remove-inventory-row'){const holder=node.dataset.kind==='grant'?step():step().choices[Number(node.dataset.choice)],key=node.dataset.kind==='grant'?'itemGrants':'requirements';holder[key].splice(Number(node.dataset.row),1);markDirty();renderInspector();return;}
+    if(action==='confirm-item-reward'){playerInventory.pending.shift();document.querySelector('#inventory-reward')?.remove();saveModalMode='';if(!showItemReward()){refreshChoiceItems();scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);}return;}
+    if(action==='open-inventory'){if(saveModalMode==='item-reward')return;renderBackpack();return;}
+    if(action==='inventory-detail'){renderItemDetail(node.dataset.itemId);return;}
+    if(action==='inventory-gallery-back'){galleryTab='items';renderGalleryModal();return;}
     if (action === 'remove-dialogue-voice') { if (step()) { stopEditorVoicePreview(); step().voiceId = ''; markDirty(); renderInspector(); renderAssetDock(); } return; }
     if (action === 'delete-asset-folder' && project.assetFolders.find(folder => folder.id === node.dataset.folderId)?.type === 'voice') { toast('角色配音文件夹不能删除。', true); return; }
     if (action === 'editor-undo' || action === 'editor-redo') { await restoreEditorHistory(action === 'editor-undo' ? -1 : 1); return; }
@@ -3227,6 +3332,7 @@ document.addEventListener('click', async event => {
     }
     else if (action === 'close-editor-settings') document.querySelector('#editor-settings-modal')?.remove();
     else if (action === 'export') {
+      validateInventoryProject(project);
       await save();
       const entered = prompt('导出的游戏文件夹叫什么名字？', `${project.name}_可游玩版`);
       if (entered === null) return;
@@ -3512,9 +3618,12 @@ document.addEventListener('click', async event => {
       if (saveModalMode === 'settings') renderSettingsModal();
     }
     else if (action === 'choose') {
+      if(!playing||transitioning||saveModalMode||playerInventory.pending.length)return;
+      if(finishTyping())return;if(maybeGrantCurrentItems())return;
       const choice = project.acts[playAct].steps[playStep].choices[Number(node.dataset.index)];
       const target = project.acts.findIndex(item => item.id === choice.actId);
       if (target < 0) { toast('这个选项还没有设置目标幕', true); return; }
+      const used=useChoiceItems(choice,playerInventory,project.items);if(!used.ok){refreshChoiceItems();toast('缺少所需物品。',true);return;}
       playAct = target; playStep = 0; showPlayStep();
     }
   } catch (error) { toast(error.message, true); }
@@ -3787,6 +3896,9 @@ document.addEventListener('input', event => {
     markDirty(); stage?.setExpressions(step().expressionWeights);
     return;
   }
+  if(node.hasAttribute('data-choice-consume')){step().choices[Number(node.dataset.choiceConsume)].consumeRequired=node.checked;markDirty();return;}
+  if(node.dataset.itemField){const item=project.items[selectedItem];if(!item)return;item[node.dataset.itemField]=node.value;markDirty();if(node.dataset.itemField==='name')renderSidebar();updatePreview();return;}
+  if(node.dataset.inventoryRow){const holder=node.dataset.inventoryRow==='grant'?step():step().choices[Number(node.dataset.choice)],key=node.dataset.inventoryRow==='grant'?'itemGrants':'requirements',row=holder[key][Number(node.dataset.row)];if(node.dataset.key==='quantity'){if(node.value===''||!Number.isSafeInteger(Number(node.value))||Number(node.value)<1)return;row.quantity=Math.min(1000000,Number(node.value));}else row.itemId=node.value;markDirty();return;}
   if (node.dataset.choiceField) {
     step().choices[Number(node.dataset.choiceIndex)][node.dataset.choiceField] = node.value;
     markDirty(); return;

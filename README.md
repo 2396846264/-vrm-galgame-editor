@@ -1,16 +1,24 @@
-# VRM Galgame 编辑器 · 公开版 0.0.18
+# VRM Galgame 编辑器 · 公开版 0.0.19
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.18** 重做三种渲染风格，支持逐句设置和三个画面微调。编辑预览可拖边缘调整，锁定 16:9 并记忆大小，大屏素材库更好用。保留按 FPS 预加载及既有功能。
+把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.19** 新增玩家物品栏、对白获得提示、数量条件和可选扣除，背包随存档保存；物品鉴赏支持灰图红封条与历史解锁。保留渲染、预览拖拽及既有功能。
 
 **第一次使用？先看 [图文说明书](docs/新手说明书.md)。** 它从下载、准备素材到导出游戏一步一步讲清楚。
 
 ## 下载
 
-到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.18-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
+到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.19-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
 
 > 公开包不附带示例人物、背景、Mixamo 动作或故事工程。下列图片是**示例与效果图**，展示做出来可以是什么样子；请使用自己有权使用的素材。
+
+## 0.0.19 更新：玩家物品栏
+
+对白获得物品，按数量解锁分支，选择后可勾选扣除。背包随存档恢复，物品鉴赏区分未获得和曾获得的物品。
+
+**[查看图文使用步骤](docs/玩家物品栏_v0.0.19.md)**
+
+![物品鉴赏](docs/images/v019/item-gallery.png)
 
 ## 0.0.18 更新：新渲染与预览拖拽
 
