@@ -13,8 +13,10 @@ import {CompatibleFBXLoader as FBXLoader} from './fbx-loader.js';
 import {TGALoader} from 'three/addons/loaders/TGALoader.js';
 import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
 import { VRMAnimationLoaderPlugin, createVRMAnimationClip } from '@pixiv/three-vrm-animation';
-import { OutlineEffect } from 'three/addons/effects/OutlineEffect.js';
-import { createOilPaintComposer } from './oil-paint-effect.js';
+import {StylizedPipeline} from './stylized-render.js';
+import {normalizeRender,effectiveStyle} from './render-style.js';
+import {applyStylizedMaterials} from './stylized-materials.js';
+
 import { WeatherStage, normalizeWeather, weatherMood } from './weather.js';
 import { createTalkingMouth } from './talking-mouth.js';
 
@@ -229,21 +231,11 @@ export class VRMStage {
     this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.aaMode = 'standard';
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    this.outlineEffect = new OutlineEffect(this.renderer);
     this.originalMaterialSettings = new WeakMap();
     this.characterSceneLighting=new CharacterSceneLighting();
     this.livePortrait=new LivePortrait();
-    this.paintComposer = null;
-    this.paintPass = null;
-    this.paintPixelRatio = 1;
-    this.paintBackgroundAsset = null;
-    this.paintBackgroundVideo = null;
-    this.paintBackgroundTexture = null;
-    this.paintBackgroundRequest = 0;
-    this.paintEnabled = false;
-    this.renderSettings = { antialias: 'standard', style: 'original', outline: 0, autoLight: true, lightStrength: 0.6,
-      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, shadowHeight: 0,
-      paintEffect: 'none', paintStrength: 0.65 };
+    this.stylePipeline=null;
+    this.renderSettings=normalizeRender();
     this.setRenderSettings(this.renderSettings);
     this.element.appendChild(this.renderer.domElement);
     this.bindingView=new BindingView(this.camera,this.renderer.domElement);
@@ -283,20 +275,14 @@ export class VRMStage {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height, false);
-    if (this.paintComposer) {
-      this.paintComposer.setPixelRatio(this.paintPixelRatio);
-      this.paintComposer.setSize(width, height);
-      this.paintPass.uniforms.resolution.value.set(
-        Math.max(1, Math.round(width * this.paintPixelRatio)),
-        Math.max(1, Math.round(height * this.paintPixelRatio)));
-    }
-    this.updatePaintBackgroundCrop();
+    this.stylePipeline?.resize(width,height);
   }
   async setEnvironment(environment,assets=[]) {
     const request=this.environmentRequest=(this.environmentRequest||0)+1;
     await this.environmentRuntime.load(environment,assets);
     if(request!==this.environmentRequest)return;
     this.environmentSettings=environment;
+    if(this.environmentRuntime.root)this.applyMaterialStyle(this.environmentRuntime.root);
     this.applyLighting(this.currentLightProfile);
     for(const task of this.modelCache.values())Promise.resolve(task).then(record=>{if(record)this.applyMaterialStyle(record.vrm.scene);}).catch(()=>{});
     this.environmentShadowBounds=environment?environmentShadowBounds(this.environmentRuntime.root):null;this.environmentShadowKey='';
@@ -353,9 +339,7 @@ export class VRMStage {
     }
     this.environmentRuntime.update(this.camera,delta,Boolean(this.sceneAnimationsPaused?.()));this.updateShadowGround();
     this.weather?.update(delta);
-    if (this.paintEnabled && this.paintComposer) this.paintComposer.render(delta);
-    else if (this.outlineEffect.enabled) this.outlineEffect.render(this.scene, this.camera);
-    else this.renderer.render(this.scene, this.camera);
+    if(this.stylePipeline)this.stylePipeline.render(delta);else this.renderer.render(this.scene,this.camera);
     this.livePortrait.render(this.renderer,this.scene,this.element);
   }
   destroy() {
@@ -369,8 +353,7 @@ export class VRMStage {
     this.livePortrait.dispose();
     this.shadowPlane.geometry.dispose();
     this.shadowPlane.material.dispose();
-    this.releasePaintBackground();
-    this.paintComposer?.dispose();
+    this.stylePipeline?.dispose();
     this.renderer.dispose();
   }
   loadModel(modelAsset, actorKey = modelAsset?.id) {
@@ -421,6 +404,7 @@ export class VRMStage {
       vrm.scene.visible = false;
       const anchor = new THREE.Object3D();
       anchor.name = 'CharacterAnchor';
+      anchor.userData.nprCharacter=true;
       const motionRoot = new THREE.Object3D();
       motionRoot.name = 'MotionRoot';
       this.scene.add(anchor);
@@ -506,7 +490,7 @@ export class VRMStage {
   createActPreparation(settings,environment){
     // A detached scene and independent caches prevent preparation from changing the live cast.
     const warm=Object.create(VRMStage.prototype);
-    Object.assign(warm,{scene:new THREE.Scene(),renderSettings:{...this.renderSettings,...settings},environmentSettings:environment,originalMaterialSettings:new WeakMap(),characterSceneLighting:new CharacterSceneLighting(),cacheGeneration:0,modelCache:new Map(),motionCache:new Map(),clipCache:new Map(),visibleRecords:new Map(),characterProps:new CharacterProps(assetUrl),livePortrait:new LivePortrait(),element:{style:{}},onError:()=>{}});
+    Object.assign(warm,{scene:new THREE.Scene(),renderSettings:{...normalizeRender(settings),shadowEnabled:true,shadowOpacity:.35},environmentSettings:environment,originalMaterialSettings:new WeakMap(),characterSceneLighting:new CharacterSceneLighting(),cacheGeneration:0,modelCache:new Map(),motionCache:new Map(),clipCache:new Map(),visibleRecords:new Map(),characterProps:new CharacterProps(assetUrl),livePortrait:new LivePortrait(),element:{style:{}},onError:()=>{}});
     warm.loader=new GLTFLoader();warm.loader.register(parser=>new VRMLoaderPlugin(parser));warm.loader.register(parser=>new VRMAnimationLoaderPlugin(parser));
     const blobs=new Set(),manager=new THREE.LoadingManager();let textures=Promise.resolve(),resolveTextures;
     manager.onStart=()=>{textures=new Promise(resolve=>resolveTextures=resolve);};
@@ -521,6 +505,7 @@ export class VRMStage {
   }
   async warmPreparedGraphics(bundle,gate){
     const renderer=this.renderer,visible=[],props=[];
+    if(bundle.environment.root)bundle.stage.applyMaterialStyle(bundle.environment.root);
     try{
       for(const task of bundle.stage.modelCache.values()){const record=await task;if(record){visible.push(record.vrm.scene);record.vrm.scene.visible=true;}}
       for(const task of bundle.stage.characterProps.cache.values()){const root=await task;if(root){props.push(root);bundle.stage.scene.add(root);}}
@@ -929,105 +914,16 @@ export class VRMStage {
     this.applyLighting(this.currentLightProfile);
   }
   setRenderSettings(settings = {}) {
-    this.renderSettings = { ...this.renderSettings, ...settings };
-    const quality = this.renderSettings.antialias;
-    if (this.renderer.aaMode !== quality) {
-      const previous = this.renderer;
-      this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: quality !== 'off' });
-      this.renderer.aaMode = quality;
-      this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-      this.element.replaceChild(this.renderer.domElement, previous.domElement);
-      if(this.bindingView){this.bindingView.dispose();this.bindingView=new BindingView(this.camera,this.renderer.domElement);}
-      this.paintComposer?.dispose();
-      this.paintComposer = null;
-      this.paintPass = null;
-      previous.dispose();
-      this.outlineEffect = new OutlineEffect(this.renderer);
-    }
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.renderer.setPixelRatio(quality === 'off' ? 1 : quality === 'high' ? Math.min(3, dpr * 1.5) : dpr);
-    const style = this.renderSettings.style;
-    this.renderer.toneMapping = style === 'cinematic' ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
-    this.renderer.toneMappingExposure = style === 'cinematic' ? 1.18 : 1;
-    this.outlineEffect.enabled = Number(this.renderSettings.outline) > 0;
-    this.applyPaintSettings();
+    this.renderSettings={...normalizeRender(settings),antialias:'standard',shadowEnabled:true,shadowAngle:0,shadowOpacity:.35,shadowHeight:0};
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    this.renderer.toneMapping=THREE.NoToneMapping;this.renderer.toneMappingExposure=1;
+    if(!this.stylePipeline)this.stylePipeline=new StylizedPipeline(this);else this.stylePipeline.update(this.renderSettings);
     this.applyShadowSettings();
-    for (const task of this.modelCache?.values() || []) task.then(record => {
-      if (record) { this.applyMaterialStyle(record.vrm.scene); this.applyOutline(record.vrm.scene); this.applyShadowCasting(record.vrm.scene); }
-    }).catch(() => {});
-    this.applyLighting(this.currentLightProfile);
-    this.resize();
+    for(const task of this.modelCache?.values()||[])task.then(record=>{if(record){this.applyMaterialStyle(record.vrm.scene);this.applyOutline(record.vrm.scene);this.applyShadowCasting(record.vrm.scene);}}).catch(()=>{});
+    if(this.environmentRuntime?.root)this.applyMaterialStyle(this.environmentRuntime.root);
+    this.applyLighting(null);this.resize();
   }
-  applyPaintSettings() {
-    const enabled = this.renderSettings.paintEffect === 'oil' && Number(this.renderSettings.paintStrength) > 0;
-    if (enabled && !this.paintComposer) {
-      const { composer, paintPass } = createOilPaintComposer(this);
-      this.paintComposer = composer;
-      this.paintPass = paintPass;
-      this.paintPixelRatio = Math.min(this.renderer.getPixelRatio(), 1.5) * 0.7;
-    }
-    if (this.paintPass)
-      this.paintPass.uniforms.strength.value = Math.max(0, Math.min(1, Number(this.renderSettings.paintStrength) || 0));
-    if (enabled !== this.paintEnabled) {
-      this.paintEnabled = enabled;
-      if (enabled) this.setPaintBackground(this.paintBackgroundAsset, this.paintBackgroundVideo);
-      else this.releasePaintBackground();
-    }
-    if (!enabled && this.paintComposer) {
-      this.paintComposer.dispose();
-      this.paintComposer = null;
-      this.paintPass = null;
-    }
-  }
-  releasePaintBackground() {
-    this.paintBackgroundRequest++;
-    this.scene.background = this.environmentSettings ? new THREE.Color(this.environmentSettings.background) : null;
-    this.paintBackgroundTexture?.dispose();
-    this.paintBackgroundTexture = null;
-  }
-  setPaintBackground(backgroundAsset, video = null) {
-    this.paintBackgroundAsset = backgroundAsset || null;
-    this.paintBackgroundVideo = video;
-    this.releasePaintBackground();
-    if (!this.paintEnabled || !backgroundAsset) return;
-    const request = this.paintBackgroundRequest;
-    if (backgroundAsset.type === 'video' && video) {
-      const texture = new THREE.VideoTexture(video);
-      texture.colorSpace = THREE.SRGBColorSpace;
-      this.paintBackgroundTexture = texture;
-      const activate = () => {
-        if (request !== this.paintBackgroundRequest || video.readyState < 2) return;
-        this.scene.background = texture;
-        this.updatePaintBackgroundCrop();
-      };
-      video.addEventListener('loadeddata', activate, { once: true });
-      video.addEventListener('loadedmetadata', () => {
-        if (request === this.paintBackgroundRequest) this.updatePaintBackgroundCrop();
-      }, { once: true });
-      activate();
-    } else if (backgroundAsset.type === 'image') {
-      new THREE.TextureLoader().loadAsync(assetUrl(backgroundAsset)).then(texture => {
-        if (request !== this.paintBackgroundRequest) { texture.dispose(); return; }
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.needsUpdate = true;
-        this.paintBackgroundTexture = texture;
-        this.scene.background = texture;
-        this.updatePaintBackgroundCrop();
-      }).catch(() => {});
-    }
-  }
-  updatePaintBackgroundCrop() {
-    const texture = this.paintBackgroundTexture;
-    const image = texture?.image;
-    const width = image?.videoWidth || image?.width;
-    const height = image?.videoHeight || image?.height;
-    const bounds = this.element.getBoundingClientRect();
-    if (!width || !height || !bounds.width || !bounds.height) return;
-    const aspect = (width / height) / (bounds.width / bounds.height);
-    texture.offset.set(aspect > 1 ? (1 - 1 / aspect) / 2 : 0,
-      aspect > 1 ? 0 : (1 - aspect) / 2);
-    texture.repeat.set(aspect > 1 ? 1 / aspect : 1, aspect > 1 ? 1 : aspect);
-  }
+  setPaintBackground(){}
   applyShadowSettings() {
     if(this.environmentSettings){this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.shadowLight.castShadow=false;this.shadowPlane.visible=false;this.keyLight.castShadow=true;this.scene.add(this.keyLight.target);this.element.closest('.stage-frame')?.classList.remove('shadows-on');this.updateShadowGround();return;}
     this.keyLight.castShadow=false;this.keyLight.target.position.set(0,0,0);this.keyLight.target.updateMatrixWorld();
@@ -1077,130 +973,16 @@ export class VRMStage {
     const enabled = this.renderSettings.shadowEnabled === true && Number(this.renderSettings.shadowOpacity) > 0;
     scene.traverse(object => { if (object.isMesh) {object.castShadow = Boolean(this.environmentSettings)||enabled;object.receiveShadow=Boolean(this.environmentSettings);} });
   }
-  applyMaterialStyle(scene) {
-    const anime = this.renderSettings.style === 'anime';
-    const visited = new Set();
-    scene.traverse(object => {
-      if (!object.isMesh) return;
-      for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
-        if (!material || visited.has(material)) continue;
-        visited.add(material);
-        let original = this.originalMaterialSettings.get(material);
-        if (!original) {
-          original = material.isMToonMaterial ? {
-            toony: material.shadingToonyFactor,
-            shift: material.shadingShiftFactor,
-            rim: material.parametricRimColorFactor.clone(),
-            matcap: material.matcapFactor.clone()
-          } : material.isMeshStandardMaterial ? {
-            metalness: material.metalness, roughness: material.roughness
-          } : {};
-          this.originalMaterialSettings.set(material, original);
-        }
-        if (material.isMToonMaterial) {
-          material.shadingToonyFactor = anime ? Math.max(original.toony, 0.96) : original.toony;
-          material.shadingShiftFactor = anime ? Math.max(-0.18, original.shift - 0.07) : original.shift;
-          material.parametricRimColorFactor.copy(original.rim).multiplyScalar(anime ? 0.55 : 1);
-          material.matcapFactor.copy(original.matcap).multiplyScalar(anime ? 0.65 : 1);
-        } else if (material.isMeshStandardMaterial) {
-          material.metalness = anime ? 0 : original.metalness;
-          material.roughness = anime ? Math.max(0.9, original.roughness) : original.roughness;
-        }
-      }
-    });
-    this.characterSceneLighting.apply(scene,Boolean(this.environmentSettings),anime);
-  }
-  applyOutline(scene) {
-    const width = Math.max(0, Math.min(4, Number(this.renderSettings.outline) || 0));
-    scene.traverse(object => {
-      if (!object.isMesh) return;
-      for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
-        if (!material) continue;
-        material.userData.outlineParameters = { thickness: width * 0.0015, color: [0.08, 0.06, 0.11], visible: width > 0 && !material.isOutline };
-      }
-    });
-  }
-  async setBackgroundLighting(backgroundAsset) {
-    const token = backgroundAsset?.id || '';
-    this.currentBackgroundId = token;
-    if (!backgroundAsset || backgroundAsset.type !== 'image' || !this.renderSettings.autoLight) {
-      this.currentLightProfile = null;
-      this.applyLighting(null);
-      return;
-    }
-    let task = this.backgroundProfiles.get(token);
-    if (!task) {
-      task = this.analyzeBackground(backgroundAsset).catch(() => null);
-      this.backgroundProfiles.set(token, task);
-    }
-    const profile = await task;
-    if (this.currentBackgroundId !== token) return;
-    this.currentLightProfile = profile;
-    this.applyLighting(profile);
-  }
-  async analyzeBackground(backgroundAsset) {
-    const response = await fetch(assetUrl(backgroundAsset));
-    if (!response.ok) throw new Error(`背景读取失败：${response.status}`);
-    const bitmap = await createImageBitmap(await response.blob());
-    const canvas = document.createElement('canvas');
-    canvas.width = 64; canvas.height = 36;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    ctx.drawImage(bitmap, 0, 0, 64, 36);
-    bitmap.close();
-    const pixels = ctx.getImageData(0, 0, 64, 36).data;
-    const samples = [];
-    let sum = [0, 0, 0], count = 0;
-    for (let y = 2; y < 32; y += 2) for (let x = 2; x < 62; x += 2) {
-      const i = (y * 64 + x) * 4;
-      if (pixels[i + 3] < 128) continue;
-      const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
-      const brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-      samples.push({ x, y, r, g, b, brightness });
-      sum[0] += r; sum[1] += g; sum[2] += b; count++;
-    }
-    if (!count) return null;
-    samples.sort((a, b) => b.brightness - a.brightness);
-    const bright = samples.slice(0, Math.max(1, Math.round(samples.length * 0.15)));
-    let bx = 0, by = 0, br = 0, bg = 0, bb = 0, weight = 0;
-    for (const sample of bright) {
-      const w = Math.max(1, sample.brightness);
-      bx += sample.x * w; by += sample.y * w;
-      br += sample.r * w; bg += sample.g * w; bb += sample.b * w; weight += w;
-    }
-    return { average: sum.map(value => value / count / 255),
-      bright: [br / weight / 255, bg / weight / 255, bb / weight / 255],
-      x: bx / weight / 64, y: by / weight / 36 };
-  }
-  applyLighting(profile) {
-    if(this.environmentSettings){this.ambientLight.color.set(0xffffff);this.ambientLight.intensity=environmentAmbient(this.environmentSettings);this.keyLight.color.set(this.environmentSettings.lighting.color);this.keyLight.intensity=this.environmentSettings.lighting.intensity;return;}
-    const style = this.renderSettings?.style || 'original';
-    const soft = style === 'soft';
-    const strength = this.renderSettings?.autoLight ? Math.max(0, Math.min(1, Number(this.renderSettings.lightStrength) || 0)) : 0;
-    const ambient = new THREE.Color(0xffffff);
-    const key = new THREE.Color(0xffffff);
-    if (profile && strength > 0) {
-      const avg = new THREE.Color(...profile.average).lerp(new THREE.Color(0xffffff), 0.35);
-      const lit = new THREE.Color(...profile.bright).lerp(new THREE.Color(0xffffff), 0.25);
-      ambient.lerp(avg, strength);
-      key.lerp(lit, strength);
-    }
-    this.ambientLight.color.copy(ambient);
-    this.ambientLight.intensity = style === 'anime' ? 0.9 : soft ? 2.4 : style === 'cinematic' ? 1.45 : 2.0;
-    this.keyLight.color.copy(key);
-    this.keyLight.intensity = style === 'anime' ? 2.5 : soft ? 1.5 : style === 'cinematic' ? 2.6 : 2.2;
-    const x = profile && strength > 0 ? (profile.x - 0.5) * 6 : -2;
-    const y = profile && strength > 0 ? 2 + (1 - profile.y) * 3 : 4;
-    this.keyLight.position.set(x, y, 5);
-    const mood = weatherMood(this.weatherSettings);
-    this.ambientLight.intensity *= mood.brightness;
-    this.keyLight.intensity *= mood.brightness;
-    if (this.weatherSettings?.autoMood && this.weatherSettings.type !== 'none') {
-      const amount = this.weatherSettings.intensity;
-      this.keyLight.color.lerp(new THREE.Color(this.weatherSettings.type === 'sunny' ? 0xfff1d6 : 0xdce7ef), amount * .15);
-      if (this.weatherSettings.type === 'sunny') this.keyLight.position.x = (this.weatherSettings.sunX - .5) * 8;
-    }
+  applyMaterialStyle(scene) {applyStylizedMaterials(scene,effectiveStyle(this.renderSettings),this.characterSceneLighting,this.originalMaterialSettings);}
+  applyOutline(scene){scene.traverse(object=>{for(const material of(Array.isArray(object.material)?object.material:[object.material]))if(material)material.userData.outlineParameters={visible:false};});}
+  async setBackgroundLighting(){this.applyLighting(null);}
+  applyLighting(){
+    const mood=weatherMood(this.weatherSettings);
+    if(this.environmentSettings){const env=this.environmentSettings;this.ambientLight.color.set('#ffffff');this.ambientLight.groundColor.set('#7181a2');this.ambientLight.intensity=environmentAmbient(env)*mood.brightness;this.keyLight.color.set(env.lighting.color);this.keyLight.intensity=env.lighting.intensity*mood.brightness;return;}
+    this.ambientLight.intensity=1.2*mood.brightness;this.keyLight.color.set('#ffffff');this.keyLight.intensity=2.2*mood.brightness;
   }
   clear() {
+    this.stylePipeline?.scenePass.clearMaterials();
     this.stopTalking();
     this.clearLivePortrait();
     this.requestNumber++;

@@ -1,17 +1,18 @@
-# 0.0.17 · 下一幕预加载与小号 FPS
+# 0.0.18 · 新渲染与可拖拽预览
 
-在本幕最后三句提前准备下一幕，按玩家当前实际帧数自动调整：**高于 55 完整、30～55 部分、低于 30 不开始预加载。** 不读取电脑硬件配置。
+渲染页重做为 **绝区零风格、自定义、TNO** 三种预设。亮度、对比度、饱和度始终保留；每句对白也可以单独选择风格。
 
-- 左上角用很小、半透明的数字显示 FPS，预加载转圈放在旁边。
-- 部分预加载优先环境和开场人物、动作、物品、声音；完整预加载继续准备后续对白资源。
-- 帧数下降暂停后续任务，恢复后继续；已准备资源在换幕时直接复用。
-- 预加载不改变当前人物、镜头、环境或声音。分支目标不确定时不猜路线。
-- 保留 FBX 静态头像、VRM 实时头像、MCP 环境布置和既有功能。
+- 绝区零方向：明亮、高饱和、简化色块、柔和的深灰蓝细描边；只需调节风格浓度。
+- 自定义：29 项光照、轮廓、颜色、胶片、印刷和 CRT 滤镜。
+- TNO：固定的低饱和旧照片、亮青色描边、颗粒、扫描线与随机撕裂，不提供浓度滑块。
+- 编辑预览默认缩小，为素材库留空间。拖右边、底边或右下角调整大小，始终锁定 16:9。
+- 预览大小在本机记忆，双击手柄恢复默认；窗口变小时自动限制尺寸。
+- 保留 VRM / FBX、物品绑定、场景动画、MCP 布置与按 FPS 预加载。
 
-**[完整图文说明](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/按帧数预加载_v0.0.17.md)**
+**[完整图文说明](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/新渲染与预览拖拽_v0.0.18.md)**
 
-![FPS 与预加载提示](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v017/player-preloading.png)
+![大屏布局与预览手柄](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v018/editor-layout.png)
 
-![切换后的场景和小号 FPS](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v017/player-fps.png)
+![深灰蓝细描边](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v018/zzz.png)
 
-19 组源码检查、Windows 构建、真实模型准备与复用、工程重开、独立游戏通过。大型素材或快速点击仍可能存在剩余等待。完整解压新版打开原工程，旧游戏需重新导出。
+20 组源码检查、Windows 构建、真实渲染、工程重开、独立游戏与五种窗口尺寸检查通过。真实拖动、16:9 锁定、记忆和恢复默认通过。完整解压新版，打开原工程；已有游戏重新导出。

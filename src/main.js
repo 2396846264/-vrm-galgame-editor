@@ -7,6 +7,7 @@ import {availablePropBones,propBoneLabels,propBone} from './character-props.js';
 import './style.css';
 import './skin.css';
 import './layout.css';
+import {createPreviewResizer} from './preview-resize.js';
 import './vn-theme.css';
 import './ios7-theme.css';
 import './chapters.css';
@@ -16,9 +17,11 @@ import './weather.css';
 import './events.css';
 import { createEvents, eventNames, eventSeconds, isEvent, normalizeEvent, newEvent } from './events.js';
 import { normalizeWeather, weatherDefaults, weatherNames, weatherMood } from './weather.js';
-import { colorDefaults, chapterRender, colorFilter, chapterUnlocked } from './chapters.js';
+import { colorDefaults, chapterRender, colorFilter, chapterUnlocked, dialogueRender } from './chapters.js';
 import { VRMStage, assetUrl, motionFrameInfo, captureCharacterPortrait } from './renderer.js';
 import {canGeneratePortrait} from './portrait-policy.js';
+import {normalizeRender,renderPresets,customFilterSpecs,filterGroups,colorAdjustments} from './render-style.js';
+import './render-style.css';
 import {ActPreloader,nextPreloadTarget} from './act-preload.js';
 import './act-preload.css';
 import { embeddedVrmThumbnail, internalPortrait } from './vrm-thumbnail.js';
@@ -40,6 +43,7 @@ let mode = 'editor';
 let directory = '';
 let recentProjects = [];
 let stage = null;
+let previewResizer=null;
 let selectedAct = 0;
 let selectedStep = 0;
 let selectedCharacter = 0;
@@ -327,6 +331,55 @@ function castForAct(currentAct, speakingStep = currentAct?.steps?.[0]) {
   });
 }
 
+window.__vrmSmokePreviewResize=async(mode)=>{
+ const frame=document.querySelector('.center .stage-frame'),assert=(test,message)=>{if(!test)throw Error(message);};
+ const wait=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ if(mode==='reset'){previewResizer.reset();window.__previewResizeEvents=[];await wait();}
+ if(mode==='persist'){const width=frame.getBoundingClientRect().width,revision=changeRevision;renderEditor();await wait();assert(Math.abs(document.querySelector('.center .stage-frame').getBoundingClientRect().width-width)<2,'重开编辑界面丢失大小');assert(changeRevision===revision,'调整预览修改了工程');}
+ const current=document.querySelector('.center .stage-frame'),rect=current.getBoundingClientRect(),corner=current.querySelector('[data-preview-resize="corner"]').getBoundingClientRect(),body=document.querySelector('.asset-dock-body');assert(Math.abs(rect.width/rect.height-16/9)<.01,'拖动改变比例');assert(body.clientHeight>=140,'拖动挤压素材卡片');return {ok:true,width:rect.width,height:rect.height,ratio:rect.width/rect.height,assetBodyHeight:body.clientHeight,preferredWidth:previewResizer.preferredWidth,hit:document.elementFromPoint(corner.left+corner.width/2,corner.top+corner.height/2)?.outerHTML.slice(0,250),pointer:window.__resizePointer,events:window.__previewResizeEvents,corner:{x:corner.left+corner.width/2,y:corner.top+corner.height/2}};
+};
+
+window.__vrmSmokeEditorLayout=async()=>{
+ if(!new URLSearchParams(location.search).has('smoke'))throw Error('Smoke only');
+ const assert=(test,message)=>{if(!test)throw Error(message);};playing=false;activePanel='story';selectedAct=Math.max(0,project.acts.findIndex(a=>a.id==='act-school'));selectedStep=0;activeAssetType='vrm';renderSidebar();renderInspector();await updatePreview();renderAssetDock();await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ previewResizer.reset();await new Promise(resolve=>requestAnimationFrame(resolve));
+ const center=document.querySelector('.center'),preview=center.querySelector('.stage-frame'),dock=document.querySelector('.asset-dock'),body=document.querySelector('.asset-dock-body'),p=preview.getBoundingClientRect(),d=dock.getBoundingClientRect(),c=center.getBoundingClientRect(),tile=document.querySelector('.asset-file-tile')?.getBoundingClientRect();
+ assert(Math.abs(p.width/p.height-16/9)<.03,'预览比例改变');assert(p.width<=961,'预览没有限制最大宽度');assert(d.bottom<=c.bottom+1,'素材库超出可见范围');assert(body.clientHeight>=140,'素材区仍不能显示完整卡片：'+body.clientHeight);if(tile)assert(tile.bottom<=body.getBoundingClientRect().bottom+1,'素材卡片被挤出窗口');assert(!document.querySelector('.player'),'编辑状态错误');
+ return {ok:true,viewport:[innerWidth,innerHeight],preview:[p.width,p.height],assetDockHeight:d.height,assetBodyHeight:body.clientHeight,previewRatio:p.width/p.height,centerScroll:Math.max(0,center.scrollHeight-center.clientHeight)};
+};
+
+window.__vrmSmokeNpr=async function(phase){
+ if(!new URLSearchParams(location.search).has('smoke'))throw Error('Smoke only');
+ const assert=(test,message)=>{if(!test)throw Error(message);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ const index=project.acts.findIndex(a=>a.id==='act-school');assert(index>=0,'没有校园测试场景');
+ async function show(settings,lineSettings){nextPreloader.reset();playing=false;selectedAct=index;selectedStep=0;activePanel='render';project.acts[index].render=normalizeRender(settings);project.acts[index].steps[0].render=lineSettings;renderSidebar();renderInspector();await updatePreview();await wait(650);stage.stylePipeline.render(.016);}
+ function pixels(){stage.stylePipeline.render(.016);const gl=stage.renderer.getContext(),w=stage.renderer.domElement.width,h=stage.renderer.domElement.height;const sample=new Uint8Array(4),values=[];for(let y=1;y<8;y++)for(let x=1;x<12;x++){gl.readPixels(Math.floor(w*x/12),Math.floor(h*y/8),1,1,gl.RGBA,gl.UNSIGNED_BYTE,sample);values.push(...sample.slice(0,3));}const brightness=values.reduce((a,b)=>a+b,0)/values.length;assert(brightness>8,'渲染画面黑屏');const bad=stage.renderer.info.programs.filter(p=>p.diagnostics&&!p.diagnostics.runnable);assert(!bad.length,'着色器编译失败：'+JSON.stringify(bad.map(p=>p.diagnostics)));return {values,brightness};}
+ function difference(a,b){return a.reduce((total,v,i)=>total+Math.abs(v-b[i]),0)/a.length;}
+ if(phase==='neutral'){await show({preset:'custom'});window.__nprNeutral=pixels();return {ok:true,brightness:window.__nprNeutral.brightness};}
+ if(phase==='zzz-low'||phase==='zzz-high'){
+   await show({preset:'zzz',strength:phase==='zzz-high'?1:.25});const result=pixels();assert(document.querySelector('[data-render="strength"]'),'没有风格浓度');assert(!document.querySelector('[data-npr-filter]'),'预设出现自定义滤镜');assert(!document.querySelector('[data-render="style"]')&&!document.querySelector('[data-render="paintEffect"]'),'旧风格仍显示');for(const key of ['brightness','contrast','saturation'])assert(document.querySelector('[data-render="'+key+'"]'),'缺少微调');const diff=difference(window.__nprNeutral.values,result.values);assert(diff>1,'预设没有改变画面');if(phase==='zzz-low')window.__nprLow=result;else assert(difference(window.__nprLow.values,result.values)>1,'浓度滑块没有效果');return {ok:true,brightness:result.brightness,difference:diff,sceneAndCharacters:true};
+ }
+ if(phase==='custom'){
+   await show({preset:'custom',filters:{ao:.65,aoRadius:.5,outline:1.4,outlineColor:'#351415',posterize:8,sharpen:.4,pixelSize:3,hatch:.15,grain:.08}});for(const[key]of customFilterSpecs)assert(document.querySelector('[data-npr-filter="'+key+'"]'),'缺少滤镜 '+key);return {ok:true,filters:customFilterSpecs.length,difference:difference(window.__nprNeutral.values,pixels().values),aoGeometry:stage.stylePipeline.needsGeometry};
+ }
+ if(phase==='tno'){
+   await show({preset:'tno'});assert(!document.querySelector('[data-render="strength"]'),'TNO 出现风格浓度');const first=pixels();await wait(500);const second=pixels();assert(difference(first.values,second.values)>.02,'CRT没有动态颗粒');assert(stage.stylePipeline.style.outlineColor==='#64f5ed','描边不是青色');return {ok:true,fixedPreset:true,cyanOutline:true,temporalDifference:difference(first.values,second.values),brightness:first.brightness};
+ }
+ if(phase==='dialogue'){
+   await show({preset:'zzz'},{preset:'tno',brightness:125,contrast:115,saturation:120});activePanel='story';renderInspector();await updatePreview();assert(document.querySelector('[data-render="preset"][data-render-scope="step"]'),'对白不能选择风格');assert(!document.querySelector('[data-render="strength"]'),'对白TNO出现浓度');for(const key of ['brightness','contrast','saturation'])assert(document.querySelector('[data-render="'+key+'"][data-render-scope="step"]'),'对白缺少微调');assert(stage.renderSettings.preset==='tno'&&stage.renderSettings.brightness===125,'对白覆盖未应用');return {ok:true,dialoguePreset:true,calibrationAlwaysAvailable:true};
+ }
+ if(phase==='fbx'){
+   nextPreloader.reset();playing=false;selectedAct=project.acts.findIndex(a=>a.id==='act-shadow-test');selectedStep=0;activePanel='render';project.acts[selectedAct].render=normalizeRender({preset:'zzz',strength:.85});delete project.acts[selectedAct].steps[0].render;renderSidebar();renderInspector();await updatePreview();await wait(650);pixels();assert([...stage.visibleRecords.values()].some(record=>record.vrm.isFbx),'FBX 不在场');return {ok:true,fbxPreset:true,vrmTogether:true,noShaderErrors:true};
+ }
+ if(phase==='export'){
+   await show({preset:'zzz',strength:.85});for(const line of project.acts[index].steps)delete line.render;project.acts[index].steps[1].render={preset:'tno',brightness:110,contrast:105,saturation:115};project.acts[index].steps[2].render={preset:'custom',filters:{outline:1,posterize:10,pixelSize:2,ao:.35}};markDirty();await save();await bridge('saveProjectAs',{project:structuredClone(project),name:'新渲染三种风格验证'});await bridge('exportGame',{folderName:'新渲染试玩'});return {ok:true,exported:true};
+ }
+ if(phase==='player'||phase==='reopen'){
+   playing=true;playAct=index;playStep=0;preparedAct=-1;await showPlayStep();await wait(700);assert(stage.renderSettings.preset==='zzz','保存后缺少预设');pixels();playStep=1;await showPlayStep();await wait(300);assert(stage.renderSettings.preset==='tno'&&stage.renderSettings.brightness===110,'对白TNO未保存');pixels();playStep=2;await showPlayStep();await wait(300);assert(stage.renderSettings.preset==='custom'&&stage.renderSettings.filters.ao===.35,'自定义未保存');pixels();playStep=0;await showPlayStep();await wait(500);return {ok:true,threePresets:true,dialogueOverrides:true,noShaderErrors:true};
+ }
+ throw Error('Unknown phase');
+};
+
 window.__vrmSmokePreload=async function(phase){
  if(!new URLSearchParams(location.search).has('smoke'))throw Error('Smoke only');
  const assert=(test,message)=>{if(!test)throw Error(message);},wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -368,7 +421,7 @@ async function prepareMedia(item,bundle){
  await new Promise(resolve=>{let timer;const finish=()=>{clearTimeout(timer);node.removeEventListener('load',finish);node.removeEventListener('loadeddata',finish);node.removeEventListener('error',finish);resolve();};node.addEventListener(item.type==='image'?'load':'loadeddata',finish,{once:true});node.addEventListener('error',finish,{once:true});timer=setTimeout(finish,5000);node.src=assetUrl(item);node.load?.();});
 }
 function createPreloadBundle(target){
- const environment=project.environments.find(env=>env.id===target.environmentId),bundle=stage.createActPreparation(chapterRender(target,project.render),environment);
+ const environment=project.environments.find(env=>env.id===target.environmentId),bundle=stage.createActPreparation(dialogueRender(target,target.steps?.[0],project.render),environment);
  bundle.mediaMap=new Map();bundle.openingEntries=preparationEntries(target,(target.steps||[]).slice(0,1));
  const allEntries=preparationEntries(target,target.steps||[]),opening=bundle.openingEntries,warm=bundle.stage;
  const models=new Map(),motions=new Map(),clips=new Map(),props=new Map(),media=new Map();
@@ -982,9 +1035,7 @@ function defaultProject(name) {
     version: 1, id: uid(), name: name || '我的 VRM 故事', ui: { dialogueImageId: '', clickSoundId: '' },
     title: { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
       size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12 },
-    render: { antialias: 'standard', style: 'anime', outline: 1, autoLight: true, lightStrength: 0.6,
-      shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, shadowHeight: 0,
-      paintEffect: 'none', paintStrength: 0.65 },
+    render: normalizeRender(),
     assets: [], assetFolders: [], characters: [],
     acts: [{ id: uid(), name: '第一幕', backgroundId: '', bgmId: '', weather: normalizeWeather(), steps: [
       { id: uid(), characterId: '', speaker: '', text: '在这里写第一句对白。', expressionWeights: {}, motionId: '', position: 'center', size: defaultSize, offsetX: 0, offsetY: 0, voiceId: '', choices: [] }
@@ -1021,9 +1072,7 @@ function normalize() {
   project.title = { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
     size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12, ...project.title };
   migrateTitleActors(project.title, uid);
-  project.render = { antialias: 'standard', style: 'original', outline: 0, autoLight: true, lightStrength: 0.6,
-    shadowEnabled: false, shadowAngle: 0, shadowOpacity: 0.45, shadowHeight: 0,
-    paintEffect: 'none', paintStrength: 0.65, ...project.render };
+  project.render=normalizeRender(project.render);
   for (const item of project.acts) {
     if (isEvent(item)) {
       item.event = normalizeEvent(item.event); item.cast = {}; item.castSettings = {};
@@ -1033,6 +1082,7 @@ function normalize() {
     item.weather = normalizeWeather(item.weather);
     item.render = chapterRender(item, project.render);
     item.steps ||= [];
+    for(const line of item.steps)if(line.render?.preset)line.render=normalizeRender(line.render);
     item.castSettings ||= {};
     if (!item.cast && item.steps.some(entry=>!entry.cast)) {
       const distinct = [...new Set(item.steps.map(entry => entry.characterId).filter(Boolean))];
@@ -1118,7 +1168,7 @@ function updateHistoryButtons() {
 }
 function historyInputContextSupported(node) {
   const bindings = Object.entries(node.dataset || {}).filter(([key]) => !key.endsWith('Output'));
-  const supported = bindings.some(([key]) => ['field','bookField','eventField','motionOptions','galleryMusic','galleryImage',
+  const supported = bindings.some(([key]) => ['field','bookField','eventField','motionOptions','galleryMusic','galleryImage','nprFilter',
     'audioTitle','storyIndex','assetFolder','titleField','uiField','titleAdjust','titleExpression','titleActorField','titleActorAdjust','titleActorExpression','titleActorProp','stepCast','castSlot','castMotion','castAdjust','castExpression','castProp','propField','propTransform',
     'render','weather','galleryAdjust','adjust','expression','choiceField'].includes(key)) || node.id === 'project-name' || node.hasAttribute('data-gallery-frame-number');
   return supported;
@@ -1290,6 +1340,7 @@ function renderRecentProjectsModal() {
       ${recentProjects.length ? recentProjectButtons() : '<p>还没有打开过工程包。</p>'}</div></div>`);
 }
 function renderEditor() {
+  previewResizer?.dispose();previewResizer=null;
   sceneAnimationDialog.close(false);cancelSceneAnimations();
   events.cancel();
   stage?.destroy();
@@ -1323,6 +1374,7 @@ function renderEditor() {
     </div>
     <footer class="status"><span id="project-path">${escape(directory)}</span><span>素材和剧情保存在工程包中</span></footer>
   </div>`;
+  previewResizer=createPreviewResizer(document.querySelector('.center'));
   stageError = '';
   stage = new VRMStage(document.querySelector('#stage-canvas'), message => {
     stageError = message;
@@ -1360,7 +1412,7 @@ function renderSidebar() {
           <span class="number">✦</span><span>${escape(item.name)}</span><small>${item.modelId ? (isFbxModel(item.modelId)?'FBX':'VRM') : '未设模型'}</small></button>`).join('')}</div>
       <div class="sidebar-note">角色只需设置一次。对白选中角色后就能调用它的模型。</div>`;
   } else if (activePanel === 'render') {
-    body.innerHTML = `<div class="section-heading">选择要调节的幕</div><div class="list">${project.acts.flatMap((item, index) => isEvent(item) ? [] : [`<button class="list-row ${index === selectedAct ? 'selected' : ''}" data-action="select-act" data-index="${index}"><span class="number">${index + 1}</span><span>${escape(item.name)}</span></button>`]).join('')}</div><div class="sidebar-note">右侧的画风、阴影和调色只影响选中的这一幕。标题画面保留原来的效果。</div>`;
+    body.innerHTML = `<div class="section-heading">选择要调节的幕</div><div class="list">${project.acts.flatMap((item, index) => isEvent(item) ? [] : [`<button class="list-row ${index === selectedAct ? 'selected' : ''}" data-action="select-act" data-index="${index}"><span class="number">${index + 1}</span><span>${escape(item.name)}</span></button>`]).join('')}</div><div class="sidebar-note">右侧的预设风格与微调只改变选中的这一幕；对白可以单独覆盖。</div>`;
   } else if (activePanel === 'title') {
     body.innerHTML = `<div class="section-heading">标题画面</div>
       <div class="title-sidebar-actions">
@@ -1678,6 +1730,15 @@ function castEditor(currentAct, slot) {
 ${!isFbxModel(character(actorId)?.modelId) ? `<div class="field"><span>这一句的表情</span><div id="cast-expression-${slot}" class="expression-controls"></div></div>` : ''}<div class="dialogue-props"><b>这一句显示的物品</b>${(character(actorId)?.props||[]).map(prop=>`<label><input type="checkbox" data-cast-prop="${slot}" data-prop-id="${escape(prop.id)}" ${(settings.props||[]).includes(prop.id)?'checked':''}>${escape(prop.name||asset(prop.assetId)?.name||'物品')}</label>`).join('')||'<small>先到角色页绑定物品。</small>'}</div>` : ''}
     </div></details>`;
 }
+function renderStyleEditor(settings,scope,override=null){
+ const attr=`data-render-scope="${scope}"`,slider=(key,label,value,min,max,step=1)=>field(label,`<div class="npr-slider"><input type="range" data-render="${key}" ${attr} min="${min}" max="${max}" step="${step}" value="${value}"><input type="number" data-render="${key}" ${attr} min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}精确数值"></div>`);
+ const preset=scope==='step'?(override?.preset||''):settings.preset;
+ return `${field('渲染风格',`<select data-render="preset" ${attr}>${scope==='step'?`<option value="" ${!preset?'selected':''}>使用本幕风格</option>`:''}${Object.entries(renderPresets).map(([id,name])=>`<option value="${id}" ${preset===id?'selected':''}>${name}</option>`).join('')}</select>`)}
+ ${settings.preset==='zzz'?slider('strength','风格浓度',Math.round(settings.strength*100),0,100):settings.preset==='tno'?'<p class="tip">固定的低饱和旧照片、青色描边、CRT 颗粒与随机撕裂。下方三个微调始终可用。</p>':''}
+ <h3>画面微调</h3>${Object.entries(colorAdjustments).map(([key])=>slider(key,{brightness:'亮度',contrast:'对比度',saturation:'饱和度'}[key],settings[key],0,200)).join('')}
+ ${settings.preset==='custom'?Object.entries(filterGroups).map(([group,name])=>`<details class="npr-filter-group"><summary>${name}</summary>${customFilterSpecs.filter(spec=>spec[6]===group).map(([key,label,min,max,step,fallback])=>field(label,min==='color'?`<input type="color" data-npr-filter="${key}" ${attr} value="${settings.filters[key]}">`:`<div class="npr-slider"><input type="range" data-npr-filter="${key}" ${attr} min="${min}" max="${max}" step="${step}" value="${settings.filters[key]}"><input type="number" data-npr-filter="${key}" ${attr} min="${min}" max="${max}" step="${step}" value="${settings.filters[key]}" aria-label="${label}精确数值"></div>`)).join('')}</details>`).join(''):''}`;
+}
+
 function renderInspector() {
   sceneAnimationDialog.close(false);
   if (activePanel === 'knowledge') { library.editor(); return; }
@@ -1732,24 +1793,7 @@ function renderInspector() {
   if (activePanel === 'render') {
     if (!act()) { body.innerHTML = '<div class="inspector-content">先新增一幕</div>'; return; }
     const settings = act().render;
-    body.innerHTML = `<div class="inspector-content"><h2>本幕渲染 · ${escape(act().name)}</h2><p class="tip">这里只改变这一幕。背景自动配光默认开启，下面的调色也会一起作用于人物和背景。</p>
-      <h3>本幕调色</h3>
-      ${[['brightness','亮度',0,200,'%'],['contrast','对比度',0,200,'%'],['saturation','饱和度',0,200,'%'],['temperature','色温（左冷右暖）',-100,100,''],['hue','色差（色相偏移）',-180,180,'°']].map(([key,label,min,max,unit]) => field(label, `<input type="range" data-render="${key}" min="${min}" max="${max}" step="1" value="${settings[key]}"><output data-render-output="${key}">${settings[key]}${unit}</output>`)).join('')}
-      ${button('恢复默认调色与自动配光', 'reset-act-color')}<hr>
-      ${field('抗锯齿', `<select data-render="antialias"><option value="off" ${settings.antialias === 'off' ? 'selected' : ''}>关闭</option><option value="standard" ${settings.antialias === 'standard' ? 'selected' : ''}>标准</option><option value="high" ${settings.antialias === 'high' ? 'selected' : ''}>高清</option></select>`)}
-      ${field('人物画风', `<select data-render="style"><option value="original" ${settings.style === 'original' ? 'selected' : ''}>模型原版</option><option value="anime" ${settings.style === 'anime' ? 'selected' : ''}>三渲二（推荐）</option><option value="soft" ${settings.style === 'soft' ? 'selected' : ''}>柔和动漫</option><option value="cinematic" ${settings.style === 'cinematic' ? 'selected' : ''}>电影色调</option></select>`)}
-      ${field('人物描边', `<select data-render="outline"><option value="0" ${Number(settings.outline) === 0 ? 'selected' : ''}>关闭</option><option value="1" ${Number(settings.outline) === 1 ? 'selected' : ''}>细</option><option value="2" ${Number(settings.outline) === 2 ? 'selected' : ''}>中</option><option value="3" ${Number(settings.outline) === 3 ? 'selected' : ''}>粗</option></select>`)}
-      ${field('画面效果', `<select data-render="paintEffect"><option value="none" ${settings.paintEffect !== 'oil' ? 'selected' : ''}>关闭</option><option value="oil" ${settings.paintEffect === 'oil' ? 'selected' : ''}>油画笔触（人物与背景）</option></select>`)}
-      ${field('油画笔触强度', `<input type="range" data-render="paintStrength" min="0" max="100" step="5" value="${Math.round((Number(settings.paintStrength) || 0) * 100)}"><output data-render-output="paintStrength">${Math.round((Number(settings.paintStrength) || 0) * 100)}%</output>`)}
-      <p class="tip">油画笔触会一起处理背景和人物；对白、菜单保持清晰。开启后会多用一些显卡性能，旧工程默认关闭。</p>
-      ${act().environmentId?'<p class="tip">三维场景自动使用真实阴影，人物和物体把阴影投到场景的地面、墙壁上。灯光在环境编辑器里调整。</p>':`<details class="render-advanced"><summary>高级渲染 · 角色阴影</summary><div class="render-advanced-body">
-        <label class="render-shadow-toggle"><input type="checkbox" data-render="shadowEnabled" ${settings.shadowEnabled ? 'checked' : ''}><span>显示角色阴影</span></label>
-        <label class="adjustment"><span>影子方向</span><input type="range" data-render="shadowAngle" min="-180" max="180" step="5" value="${Number(settings.shadowAngle) || 0}"><output data-render-output="shadowAngle">${Number(settings.shadowAngle) || 0}°</output></label>
-        <label class="adjustment"><span>影子深浅</span><input type="range" data-render="shadowOpacity" min="0" max="100" step="5" value="${Math.round((Number(settings.shadowOpacity) || 0) * 100)}"><output data-render-output="shadowOpacity">${Math.round((Number(settings.shadowOpacity) || 0) * 100)}%</output></label>
-        <label class="adjustment shadow-height-adjustment"><span>阴影水平高度</span><input type="range" data-render="shadowHeight" min="-40" max="40" step="1" value="${Math.round((Number(settings.shadowHeight) || 0) * 100)}"><output data-render-output="shadowHeight">${Math.round((Number(settings.shadowHeight) || 0) * 100) > 0 ? '+' : ''}${Math.round((Number(settings.shadowHeight) || 0) * 100)} 厘米</output></label>
-        <p class="tip">一套设置控制画面中的全部角色。脚掌看着浮起时，把阴影高度往右调；影子盖住鞋子时往左调。0° 表示影子朝画面下方；默认关闭。</p>
-      </div></details>`}
-      <p class="tip">“三渲二”会增强动画式明暗、减少塑料般的高光。描边选“细”通常更自然。背景配光会从图片估计亮处和颜色；视频背景使用默认灯光。</p></div>`;
+    body.innerHTML=`<div class="inspector-content"><h2>本幕渲染 · ${escape(act().name)}</h2><p class="tip">人物与三维场景一起处理。对白可以继承本幕风格，也可以单独选择。</p>${renderStyleEditor(settings,'act')}${button('恢复亮度 / 对比度 / 饱和度','reset-act-color')}</div>`;
     return;
   }
   const currentAct = act();
@@ -1774,6 +1818,7 @@ function renderInspector() {
       ${dialogueVoiceField(current)}
       ${field('本句音效', select('step.seId', byType('audio'), current.seId, '无音效'))}
       <div id="scene-animation-controls"></div>
+      <details class="dialogue-render-editor"><summary>这一句的渲染风格与微调</summary>${renderStyleEditor(dialogueRender(currentAct,current,project.render),'step',current.render)}</details>
       <div class="inline-actions">${button('复制本句', 'duplicate-step')}${button('上移', 'move-up')}${button('下移', 'move-down')}${button('删除', 'delete-step', 'class="danger"')}</div>
       <hr><div class="section-heading">选择分支 ${button('＋ 选项', 'add-choice')}</div>
       ${current.choices.map((choice,index) => `<div class="choice-editor">
@@ -1865,8 +1910,9 @@ async function updatePreview() {
   const bgAsset = asset(currentAct?.backgroundId);
   showBackground(null);
   setSceneWeather(currentAct);
-  stage.setRenderSettings(chapterRender(currentAct, project.render));
-  applySceneColor(chapterRender(currentAct, project.render));
+  const previewRender=activePanel==='render'?chapterRender(currentAct,project.render):dialogueRender(currentAct,current,project.render);
+  stage.setRenderSettings(previewRender);
+  applySceneColor(previewRender);
   stage.setBackgroundLighting(null);
   await showEnvironment(currentAct);
   if(request!==previewRequest||playing)return;
@@ -2338,8 +2384,8 @@ async function showPlayStep() {
     document.querySelector('#title-preview')?.classList.add('hidden');
     stage.setCameraAngle(0);
     setSceneWeather(currentAct);
-    stage.setRenderSettings(chapterRender(currentAct, project.render));
-    applySceneColor(chapterRender(currentAct, project.render));
+    stage.setRenderSettings(dialogueRender(currentAct,current,project.render));
+    applySceneColor(dialogueRender(currentAct,current,project.render));
     stage.setBackgroundLighting(null);
     await showEnvironment(currentAct);
     if(request!==playRequest||!playing)return;
@@ -3042,6 +3088,7 @@ async function importAssets(type, folderId = '', titleImport = '', galleryImage 
   return imported;
 }
 function renderPlayer() {
+  previewResizer?.dispose();previewResizer=null;
   events.cancel();
   stage?.destroy();
   if (!project) { app.innerHTML = '<div class="fatal">游戏工程文件不完整</div>'; return; }
@@ -3197,7 +3244,7 @@ document.addEventListener('click', async event => {
     } else if (action === 'edit-act-render') {
       activePanel = 'render'; renderSidebar(); renderInspector(); updatePreview();
     } else if (action === 'reset-act-color') {
-      Object.assign(act().render, colorDefaults, { autoLight: true, lightStrength: .6 });
+      Object.assign(act().render,colorDefaults);
       markDirty(); renderInspector(); updatePreview();
     } else if (action === 'select-act') {
       selectedAct = Number(node.dataset.index); selectedStep = 0; renderSidebar(); renderInspector(); updatePreview();
@@ -3673,22 +3720,15 @@ document.addEventListener('input', event => {
     if(node.checked)settings.props.push(node.dataset.propId);
     markDirty();updatePreview();return;
   }
-  if (node.dataset.render && project) {
-    const key = node.dataset.render;
-    act().render[key] = key === 'autoLight' ? node.value === 'true'
-      : key === 'shadowEnabled' ? node.checked
-      : ['outline', 'shadowAngle', ...Object.keys(colorDefaults)].includes(key) ? Number(node.value)
-      : ['lightStrength', 'shadowOpacity', 'paintStrength', 'shadowHeight'].includes(key) ? Number(node.value) / 100 : node.value;
-    if (key === 'lightStrength') document.querySelector('#light-strength-value').textContent = `${node.value}%`;
-    const output = document.querySelector(`[data-render-output="${key}"]`);
-    if (output) output.textContent = key === 'shadowAngle' ? `${node.value}°`
-      : key === 'hue' ? `${node.value}°` : key === 'temperature' ? node.value
-      : key === 'shadowHeight' ? `${Number(node.value) > 0 ? '+' : ''}${node.value} 厘米` : `${node.value}%`;
-    markDirty();
-    stage?.setRenderSettings(act().render);
-    applySceneColor(act().render);
-    stage?.setBackgroundLighting(asset(act()?.backgroundId));
-    return;
+  if((node.dataset.render||node.dataset.nprFilter)&&project){
+    const scope=node.dataset.renderScope||'act',holder=scope==='step'?step():act();if(!holder)return;
+    holder.render ||= scope==='step'?{}:normalizeRender();
+    const key=node.dataset.render||node.dataset.nprFilter;
+    if(node.dataset.nprFilter){const spec=customFilterSpecs.find(spec=>spec[0]===key);if(!spec)return;if(spec[2]!=='color'&&(node.value===''||!Number.isFinite(Number(node.value))))return;holder.render.filters||={};holder.render.filters[key]=spec[2]==='color'?node.value:Number(node.value);}
+    else if(key==='preset'){if(node.value)holder.render.preset=node.value;else{delete holder.render.preset;delete holder.render.strength;delete holder.render.filters;}}
+    else {if(node.value===''||!Number.isFinite(Number(node.value)))return;holder.render[key]=key==='strength'?Number(node.value)/100:Number(node.value);}
+    const selector=node.dataset.nprFilter?'data-npr-filter':'data-render';for(const other of document.querySelectorAll(`[${selector}="${key}"][data-render-scope="${scope}"]`))if(other!==node)other.value=node.value;
+    markDirty();const settings=scope==='act'&&activePanel==='render'?chapterRender(act(),project.render):dialogueRender(act(),step(),project.render);stage?.setRenderSettings(settings);applySceneColor(settings);if(key==='preset')renderInspector();return;
   }
   if (node.dataset.weather && act()) {
     const key = node.dataset.weather;
@@ -3699,7 +3739,7 @@ document.addEventListener('input', event => {
     act().weather = normalizeWeather(act().weather);
     const output = document.querySelector(`[data-weather-output="${key}"]`);
     if (output) output.textContent = `${node.value}%`;
-    markDirty(); setSceneWeather(act()); applySceneColor(chapterRender(act(),project.render));
+    markDirty(); setSceneWeather(act()); applySceneColor(dialogueRender(act(),step(),project.render));
     if (['type','splashes'].includes(key)) renderInspector();
     return;
   }
@@ -4610,7 +4650,7 @@ window.__vrmDiagnostics = () => ({
   ,motionAdvancedClosed: [...document.querySelectorAll('.motion-advanced')].every(node => !node.open)
   ,dialogueBottom: document.querySelector('#dialogue') ? getComputedStyle(document.querySelector('#dialogue')).bottom : ''
   ,renderSettings: project?.render || {}
-  ,paintEffectActive: Boolean(stage?.paintEnabled && stage?.paintComposer)
+  ,paintEffectActive: false
   ,weather: stage?.weatherSettings || normalizeWeather()
   ,weatherParticles: stage?.weather?.particles.geometry.instanceCount || 0
   ,weatherSound: Boolean(stage?.weather?.audible)

@@ -53,3 +53,4 @@ jobs:
           node scripts/test-environment-agent-window.mjs
           node scripts/test-portrait-policy.mjs
           node scripts/test-act-preload.mjs
+          node scripts/test-render-style.mjs

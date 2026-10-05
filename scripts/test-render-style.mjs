@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {normalizeRender,effectiveStyle,mergeRender,customFilterSpecs} from '../src/render-style.js';
+import {dialogueRender,colorFilter} from '../src/chapters.js';
+import {applyStylizedMaterials} from '../src/stylized-materials.js';
+import {StylizedPipeline} from '../src/stylized-render.js';
+const legacy=normalizeRender({style:'anime',paintEffect:'oil',outline:3,brightness:120,temperature:100});assert.equal(legacy.preset,'zzz');assert.equal(legacy.brightness,120);assert.equal(legacy.paintEffect,undefined);assert.equal(legacy.outline,undefined);assert.equal(legacy.temperature,undefined);
+assert.equal(normalizeRender({style:'original'}).preset,'custom');assert.equal(mergeRender(legacy,{style:'original'}).preset,'custom');
+assert.equal(normalizeRender({strength:5,filters:{gamma:0,outlineColor:'javascript:bad',pixelSize:999}}).strength,1);assert.equal(normalizeRender({filters:{gamma:0}}).filters.gamma,.5);
+const z=effectiveStyle({preset:'zzz',strength:1}),zero=effectiveStyle({preset:'zzz',strength:0});assert.ok(z.saturationBoost>1&&z.toon===1&&z.outline>0&&z.simplify>.5);assert.equal(zero.outline,0);assert.equal(zero.posterize,0);
+assert.equal(z.outlineColor,'#253445');assert.ok(z.outline<=.5,'Character contour should stay thin and subdued');
+assert.deepEqual(effectiveStyle({preset:'tno',strength:0}),effectiveStyle({preset:'tno',strength:1}));const t=effectiveStyle({preset:'tno'});assert.equal(t.outlineColor,'#64f5ed');assert.ok(t.saturationBoost<1&&t.grain>0&&t.tear>0);
+const act={render:{preset:'tno',brightness:80}},line={render:{brightness:150,saturation:130}};const combined=dialogueRender(act,line);assert.equal(combined.preset,'tno');assert.equal(combined.brightness,150);assert.equal(combined.saturation,130);assert.equal(dialogueRender(act,{render:{preset:'zzz'}}).preset,'zzz');assert.equal(colorFilter(combined).filter,'brightness(150%) contrast(100%) saturate(130%)');
+assert.ok(customFilterSpecs.length>=25);assert.equal(new Set(customFilterSpecs.map(spec=>spec[0])).size,customFilterSpecs.length);
+const material=new THREE.MeshStandardMaterial(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),originals=new WeakMap();applyStylizedMaterials(mesh,z,null,originals);const compile=material.onBeforeCompile,shader={uniforms:{},fragmentShader:'#include <lights_fragment_end>'};compile.call(material,shader,{});assert.ok(shader.fragmentShader.includes('nprBand'));assert.equal(shader.uniforms.nprStrength.value,1);applyStylizedMaterials(mesh,zero,null,originals);assert.equal(material.onBeforeCompile,compile);assert.equal(shader.uniforms.nprStrength.value,0);assert.equal(material.userData.outlineParameters.visible,false);
+const stage={renderer:{getPixelRatio:()=>1,getSize:target=>target.set(800,450)},renderSettings:{preset:'tno'}};const pipeline=new StylizedPipeline(stage);assert.equal(pipeline.filterPass.uniforms.tNormal.value,pipeline.scenePass.normalTarget.texture);assert.equal(pipeline.filterPass.uniforms.tDepth.value,pipeline.scenePass.normalTarget.depthTexture);pipeline.dispose();
+console.log('PASS: legacy migration, three presets, fixed TNO, concentration, per-dialogue inheritance/calibration, 29 custom filters, reversible material uniforms and live geometry textures.');

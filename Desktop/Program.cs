@@ -246,6 +246,42 @@ internal sealed partial class EditorWindow : Form
     {
         try
         {
+            if(Environment.GetCommandLineArgs().Contains("--smoke-editor-layout")){
+                await Task.Delay(1600);
+                foreach(var size in new[]{new Size(2560,1600),new Size(2048,1280),new Size(1707,1067),new Size(1280,800),new Size(1280,720)}){
+                    await web.CoreWebView2.CallDevToolsProtocolMethodAsync("Emulation.setDeviceMetricsOverride",JsonSerializer.Serialize(new{width=size.Width,height=size.Height,deviceScaleFactor=1,mobile=false}));
+                    await Task.Delay(300);
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__layoutCheck=null;window.__vrmSmokeEditorLayout().then(r=>window.__layoutCheck=r).catch(e=>window.__layoutCheck={error:e.message})");
+                    string check="null";for(int i=0;i<600;i++){check=await web.CoreWebView2.ExecuteScriptAsync("window.__layoutCheck");if(check!="null")break;await Task.Delay(50);}
+                    string prefix=smokeBase+".layout-"+size.Width+"x"+size.Height;File.WriteAllText(prefix+".json",check);
+                    string captured=await web.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.captureScreenshot",JsonSerializer.Serialize(new{format="png",captureBeyondViewport=true,clip=new{x=0,y=0,width=size.Width,height=size.Height,scale=1}}));
+                    using(var parsed=JsonDocument.Parse(captured))File.WriteAllBytes(prefix+".png",Convert.FromBase64String(parsed.RootElement.GetProperty("data").GetString()!));
+                    if(!check.Contains("\"ok\":true"))throw new Exception(check);
+                }
+                await web.CoreWebView2.CallDevToolsProtocolMethodAsync("Emulation.setDeviceMetricsOverride",JsonSerializer.Serialize(new{width=1280,height=800,deviceScaleFactor=1,mobile=false}));
+                await Task.Delay(300);
+                string info=await web.CoreWebView2.ExecuteScriptAsync("window.__vrmSmokePreviewResize('reset')");
+                await web.CoreWebView2.ExecuteScriptAsync("window.__resizeInfo=null;window.__vrmSmokePreviewResize('reset').then(r=>window.__resizeInfo=r)");await Task.Delay(150);
+                info=await web.CoreWebView2.ExecuteScriptAsync("window.__resizeInfo");
+                await web.CoreWebView2.ExecuteScriptAsync("document.addEventListener('pointerdown',e=>window.__resizePointer={x:e.clientX,y:e.clientY,button:e.button,target:e.target.outerHTML.slice(0,250)},{once:true,capture:true})");
+                double initialPreviewWidth;
+                using(var data=JsonDocument.Parse(info)){
+                    initialPreviewWidth=data.RootElement.GetProperty("width").GetDouble();
+                    double x=data.RootElement.GetProperty("corner").GetProperty("x").GetDouble(),y=data.RootElement.GetProperty("corner").GetProperty("y").GetDouble();
+                    await web.CoreWebView2.CallDevToolsProtocolMethodAsync("Input.dispatchMouseEvent",JsonSerializer.Serialize(new{type="mousePressed",x,y,button="left",buttons=1,clickCount=1}));
+                    await Task.Delay(120);
+                    await web.CoreWebView2.CallDevToolsProtocolMethodAsync("Input.dispatchMouseEvent",JsonSerializer.Serialize(new{type="mouseMoved",x=x-150,y=y-84,button="left",buttons=1}));
+                    await Task.Delay(120);
+                    await web.CoreWebView2.CallDevToolsProtocolMethodAsync("Input.dispatchMouseEvent",JsonSerializer.Serialize(new{type="mouseReleased",x=x-150,y=y-84,button="left",buttons=0,clickCount=1}));
+                }
+                await Task.Delay(200);
+                foreach(string phase in new[]{"check","persist","reset"}){
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__resizeInfo=null;window.__vrmSmokePreviewResize("+JsonSerializer.Serialize(phase)+").then(r=>window.__resizeInfo=r).catch(e=>window.__resizeInfo={error:e.message})");await Task.Delay(300);
+                    string check=await web.CoreWebView2.ExecuteScriptAsync("window.__resizeInfo");File.WriteAllText(smokeBase+".resize-"+phase+".json",check);if(!check.Contains("\"ok\":true"))throw new Exception(check);
+                    if(phase=="check")using(var data=JsonDocument.Parse(check))if(data.RootElement.GetProperty("width").GetDouble()>=initialPreviewWidth-20)throw new Exception("拖动没有缩小预览");
+                }
+                Close();return;
+            }
             if (smokeOpenDirectory != null)
             {
                 await Task.Delay(150);
@@ -502,7 +538,7 @@ internal sealed partial class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".character-preview.json",
                         await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
-                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression") && !Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-preload"))
+                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression") && !Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-preload") && !Environment.GetCommandLineArgs().Contains("--smoke-npr"))
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=editor-settings]').click(); const interval=document.querySelector('#editor-auto-save-minutes'); interval.value='10'; interval.dispatchEvent(new Event('input',{bubbles:true})); document.querySelector('[data-action=close-editor-settings]').click(); window.prompt=()=> '测试副本'; document.querySelector('[data-action=save-as]').click()");
                     await Task.Delay(2600);
@@ -1040,6 +1076,15 @@ internal sealed partial class EditorWindow : Form
                     await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, shot);
                 await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
                 await Task.Delay(1200);
+            }
+            if(Environment.GetCommandLineArgs().Contains("--smoke-npr")){
+                foreach(string phase in playerMode?new[]{"player"}:Environment.GetCommandLineArgs().Contains("--smoke-npr-reopen")?new[]{"reopen"}:new[]{"neutral","zzz-low","zzz-high","custom","tno","dialogue","fbx","export"}){
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__nprCheck=null;window.__vrmSmokeNpr("+JsonSerializer.Serialize(phase)+").then(r=>window.__nprCheck=r).catch(e=>window.__nprCheck={error:e.message})");
+                    string check="null";for(int i=0;i<2400;i++){check=await web.CoreWebView2.ExecuteScriptAsync("window.__nprCheck");if(check!="null")break;await Task.Delay(50);}
+                    File.WriteAllText(smokeBase+".npr-"+phase+".json",check);
+                    using(var shot=File.Create(smokeBase+".npr-"+phase+".png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);
+                    if(!check.Contains("\"ok\":true"))throw new Exception(check);
+                }
             }
             if(Environment.GetCommandLineArgs().Contains("--smoke-preload")){
                 foreach(string phase in playerMode?new[]{"trigger","player"}:Environment.GetCommandLineArgs().Contains("--smoke-preload-reopen")?new[]{"reopen"}:new[]{"off","trigger","partial","full","dynamic","adopt","export"}){

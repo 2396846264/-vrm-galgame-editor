@@ -1,4 +1,5 @@
 import {legacyDialogueCast,migrateDialogueCast} from './dialogue-cast.js';
+import {normalizeRender} from './render-style.js';
 // The same validated draft format is used by the assistant panel and live Agent tools.
 // No model-supplied IDs, paths, scripts or existing project objects are trusted.
 export const draftVersion = 1;
@@ -81,7 +82,7 @@ export function compileDraft(value, project, id = () => crypto.randomUUID().repl
     if (weather.type && !weathers.includes(weather.type)) throw new Error(`“${name}”的天气无效。`);
     const backgroundId = resolveAsset(raw.backgroundId,'image','背景'), bgmId = resolveAsset(raw.bgmId,'audio','背景音乐');
     const result = { id:actId, name, backgroundId, bgmId, coverImageId:resolveAsset(raw.coverImageId,'image','章节封面'),
-      render:{...project.render, autoLight:true,brightness:100,contrast:100,saturation:100,temperature:0,hue:0},
+      render:{...normalizeRender(project.render),brightness:100,contrast:100,saturation:100},
       weather:{type:weather.type || 'none',intensity:number(weather.intensity,.55,0,1)}, cast:{left:'',center:'',right:''},castSettings:{},steps:[] };
     if (!backgroundId) missing.add(`“${name}”还需要背景图。`);
     if (!bgmId) missing.add(`“${name}”未安排背景音乐。`);
