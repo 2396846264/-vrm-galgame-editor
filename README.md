@@ -1,16 +1,24 @@
-# VRM Galgame 编辑器 · 公开版 0.0.14
+# VRM Galgame 编辑器 · 公开版 0.0.15
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.14** 把 VRM 实时头像调整为原来肩部照片的角度和大小，嘴型、表情继续同步；其他角色使用上传的 PNG 头像。保留天空描边修复、环境自动保存、GLB 场景动画、物品绑定和逐句登场。
+把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.15** 新增 MCP 环境布置：聊天摆放模型、图片远景、灯光和镜头，支持分组、撤销、实际截图和工程保存。保留 VRM 肩部实时头像及既有功能。
 
 **第一次使用？先看 [图文说明书](docs/新手说明书.md)。** 它从下载、准备素材到导出游戏一步一步讲清楚。
 
 ## 下载
 
-到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.14-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
+到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.15-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
 
 > 公开包不附带示例人物、背景、Mixamo 动作或故事工程。下列图片是**示例与效果图**，展示做出来可以是什么样子；请使用自己有权使用的素材。
+
+## 0.0.15 更新：MCP 环境布置
+
+新增 9 个环境接口。通过 Agent 布置三维场景，每批可以一次撤销，并保护环境窗口里未保存的手动修改。
+
+**[查看使用步骤和图文说明](docs/MCP环境布置_v0.0.15.md)**
+
+![MCP 布置窗口](docs/images/v015/mcp-environment.png)
 
 ## 0.0.14 更新：VRM 肩部头像
 

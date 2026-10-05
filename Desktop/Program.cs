@@ -880,6 +880,8 @@ internal sealed partial class EditorWindow : Form
                 if (Environment.GetCommandLineArgs().Contains("--smoke-mouth")) menuPhases = new List<string> { playerMode ? "mouth-player" : "mouth-editor" };
                 if (Environment.GetCommandLineArgs().Contains("--smoke-protected")) menuPhases = new List<string> { "protected-editor" };
                 if (Environment.GetCommandLineArgs().Contains("--smoke-agent")) menuPhases = new List<string> { "agent-editor" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-agent-environment")) menuPhases = new List<string> { "agent-env-editor" };
+                if (Environment.GetCommandLineArgs().Contains("--smoke-agent-environment-player")) menuPhases = new List<string> { "agent-env-player" };
                 if (Environment.GetCommandLineArgs().Contains("--smoke-agent-player")) menuPhases = new List<string> { "agent-player" };
                 if (Environment.GetCommandLineArgs().Contains("--smoke-voices")) menuPhases = new List<string> { playerMode ? "voices-player" : "voices-editor" };
                 if (Environment.GetCommandLineArgs().Contains("--smoke-event-media"))
@@ -975,8 +977,14 @@ internal sealed partial class EditorWindow : Form
                     }
                 }
             }
-            if (Environment.GetCommandLineArgs().Contains("--smoke-agent"))
-                for(int n=0;n<120 && !File.Exists(smokeBase+".agent-done");n++) await Task.Delay(500);
+            if (Environment.GetCommandLineArgs().Contains("--smoke-agent")||Environment.GetCommandLineArgs().Contains("--smoke-agent-environment"))
+                for(int n=0;n<1200 && !File.Exists(smokeBase+".agent-done");n++){
+                    if(Environment.GetCommandLineArgs().Contains("--smoke-agent-environment")&&File.Exists(smokeBase+".agent-window-edit")&&!File.Exists(smokeBase+".agent-window-edit.json")){
+                        if(environmentWindow==null)throw new Exception("测试环境窗口没有打开");
+                        File.WriteAllText(smokeBase+".agent-window-edit.json",await environmentWindow.AgentEditSmoke());
+                    }
+                    await Task.Delay(500);
+                }
             if(Environment.GetCommandLineArgs().Contains("--smoke-environment")){
                 await web.CoreWebView2.ExecuteScriptAsync("window.__envOpen=null;window.__vrmSmokeEnvironmentOpen().then(r=>window.__envOpen=r).catch(e=>window.__envOpen={error:e.message})");
                 for(int i=0;i<100&&environmentWindow==null;i++)await Task.Delay(100);
@@ -1155,6 +1163,7 @@ internal sealed partial class EditorWindow : Form
             {
                 "init" => GetProjectInfo(),
                 "openEnvironment" when !playerMode => OpenEnvironment(payload),
+                "agentEnvironmentControl" when !playerMode => await AgentEnvironmentControl(payload),
                 "environmentCommitReply" when !playerMode => EnvironmentCommitReply(payload),
                 "setAgentEnabled" when !playerMode => SetAgentEnabled(payload?["enabled"]?.GetValue<bool>() ?? false),
                 "agentReply" when !playerMode => ReceiveAgentReply(payload),

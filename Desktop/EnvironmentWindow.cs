@@ -10,13 +10,43 @@ internal sealed class EnvironmentWindow : Form {
     private readonly Func<string, JsonNode?, Task<object?>> handle;
     private readonly string webDirectory, projectDirectory;
     private bool closing;
+    private readonly Dictionary<string,TaskCompletionSource<JsonNode?>> agentControlReplies=new();
     public EnvironmentWindow(string webDirectory, string projectDirectory, JsonObject initial, Func<string, JsonNode?, Task<object?>> handle) {
         this.webDirectory=webDirectory;this.projectDirectory=projectDirectory;this.initial=initial;this.handle=handle;
+        FormClosed+=(_,_)=>{foreach(var task in agentControlReplies.Values)task.TrySetException(new Exception("环境窗口已关闭。"));agentControlReplies.Clear();};
         Text="3D 环境编辑器";Width=1280;Height=850;MinimumSize=new Size(1000,650);Controls.Add(view);
-        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-environment" or "--smoke-render-regression")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
+        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-environment" or "--smoke-render-regression" or "--smoke-agent-environment")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
         FormClosing+=async(_,e)=>{if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(await IsSaving()){MessageBox.Show(this,"正在保存工程，请等保存完成后再关闭。","正在保存");return;}bool dirty=await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentHasChanges?.())")=="true";if(dirty&&MessageBox.Show(this,"场景还有未应用的修改，确定放弃并关闭吗？","关闭环境编辑器",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;closing=true;Close();};
     }
     internal void RefreshScenes(JsonNode? payload){view.CoreWebView2?.PostWebMessageAsJson(JsonSerializer.Serialize(new{environmentRefresh=payload}));}
+    internal async Task<JsonNode?> AgentControl(JsonNode? payload){
+        for(int i=0;i<200;i++){
+            if(IsDisposed)throw new Exception("环境窗口已关闭，请重新打开。");
+            if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentAgentReady?.())")=="true")break;
+            if(i==199)throw new Exception("环境窗口尚未就绪，请稍候重试。");await Task.Delay(50);
+        }
+        string id=Guid.NewGuid().ToString("N"),command=payload?["command"]?.GetValue<string>()??"";
+        var task=new TaskCompletionSource<JsonNode?>(TaskCreationOptions.RunContinuationsAsynchronously);agentControlReplies[id]=task;
+        try{
+            view.CoreWebView2!.PostWebMessageAsJson(JsonSerializer.Serialize(new{environmentAgentRequest=new{id,command,payload}}));
+            var result=await task.Task.WaitAsync(TimeSpan.FromSeconds(180));
+            if(command=="capture"){
+                using var image=new MemoryStream();await view.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,image);
+                result??=new JsonObject();result["image"]=new JsonObject{["mimeType"]="image/png",["data"]=Convert.ToBase64String(image.ToArray())};
+            }
+            return result;
+        }finally{agentControlReplies.Remove(id);}
+    }
+    private object AgentControlReply(JsonNode? payload){
+        if(agentControlReplies.TryGetValue(payload?["id"]?.GetValue<string>()??"",out var reply)){
+            if(payload?["ok"]?.GetValue<bool>()==true)reply.TrySetResult(payload?["data"]?.DeepClone());else reply.TrySetException(new Exception(payload?["error"]?.GetValue<string>()??"环境操作失败"));
+        }
+        return new{received=true};
+    }
+    internal async Task<string> AgentEditSmoke(){
+        await view.CoreWebView2!.ExecuteScriptAsync("window.__agentEdit=null;window.environmentAgentEditSmoke().then(v=>window.__agentEdit=v).catch(e=>window.__agentEdit={error:e.message})");
+        for(int i=0;i<200;i++){string result=await view.CoreWebView2.ExecuteScriptAsync("window.__agentEdit");if(result!="null")return result;await Task.Delay(50);}throw new Exception("环境编辑验证超时");
+    }
     private async Task<bool> IsSaving()=>view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentSaving?.())")=="true";
     internal async Task<bool> ConfirmOwnerClose(){
         if(await IsSaving()){MessageBox.Show(this,"正在保存工程，请等保存完成后再关闭。","正在保存");return false;}
@@ -42,10 +72,19 @@ internal sealed class EnvironmentWindow : Form {
     }
     private async void OnMessage(object? sender,CoreWebView2WebMessageReceivedEventArgs e){
         if(!e.Source.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))return;
-        string id="";try{var m=JsonNode.Parse(e.WebMessageAsJson)!;id=m["id"]?.GetValue<string>()??"";string action=m["action"]?.GetValue<string>()??"";object? result=action=="init"?initial:await handle(action,m["payload"]);view.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new{id,ok=true,data=result}));}catch(Exception ex){view.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new{id,ok=false,error=ex.Message}));}
+        string id="";try{var m=JsonNode.Parse(e.WebMessageAsJson)!;id=m["id"]?.GetValue<string>()??"";string action=m["action"]?.GetValue<string>()??"";object? result=action=="init"?initial:action=="environmentAgentReply"?AgentControlReply(m["payload"]):await handle(action,m["payload"]);view.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new{id,ok=true,data=result}));}catch(Exception ex){view.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new{id,ok=false,error=ex.Message}));}
     }
 }
 internal sealed partial class EditorWindow {
+    private async Task<JsonNode?> AgentEnvironmentControl(JsonNode? payload){
+        string command=payload?["command"]?.GetValue<string>()??"";
+        if(!new[]{"read","lock","release","refresh","sync","capture"}.Contains(command))throw new Exception("未知环境窗口操作。");
+        if(environmentWindow is not {IsDisposed:false}){
+            if(command=="capture")throw new Exception("请先打开环境窗口。");
+            return new JsonObject{["opened"]=false};
+        }
+        return await environmentWindow.AgentControl(payload);
+    }
     private EnvironmentWindow? environmentWindow;
     private bool environmentOwnerClosing;
     private string environmentSession="";

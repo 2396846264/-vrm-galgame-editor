@@ -1,0 +1,38 @@
+name: Publish tested Windows release 0.0.15
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/releases/v0.0.15.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-v0.0.15
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reconstruct locally tested package and verify its checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/assemble-release.mjs .github/releases/v0.0.15.json
+      - name: Publish archive and illustrated release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $existing = gh release list --repo $env:GITHUB_REPOSITORY --limit 100 --json tagName --jq '.[].tagName'
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to check existing releases.' }
+          if ($existing -contains 'v0.0.15') { throw 'Version 0.0.15 already exists; refusing to overwrite a release.' }
+          gh release create v0.0.15 VRMGalgame-0.0.15-win-x64.zip SHA256SUMS.txt --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title "0.0.15 · MCP 环境场景布置" --notes-file RELEASE_NOTES.md --latest
+          if ($LASTEXITCODE -ne 0) { throw 'GitHub release publication failed.' }

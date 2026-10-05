@@ -1,4 +1,5 @@
 import {environmentAmbient} from './character-scene-lighting.js';
+import {createEnvironmentAgentWindow} from './environment-agent-window.js';
 import * as THREE from 'three';
 import {createEnvironmentAutosave} from './environment-autosave.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
@@ -36,7 +37,27 @@ function renderAssets(){const all=assets.filter(a=>['image','sceneModel'].includ
 function renderProperties(){const n=env.nodes.find(n=>n.id===primary),descendants=n?subtreeIds(env,[n.id]):new Set();$('#properties').innerHTML=`<details ${n?'':'open'}><summary>环境设置</summary><label>天空底色<input data-env="background" type="color" value="${env.background}"></label><label>主灯颜色<input data-light="color" type="color" value="${env.lighting.color}"></label><label>主灯亮度<input data-light="intensity" type="number" min="0" max="10" step=".1" value="${env.lighting.intensity}"></label><label>补光亮度<input data-light="ambientIntensity" type="number" min="0" max="5" step=".05" value="${environmentAmbient(env)}"></label><small>补光越低，暗处越暗。设为 0 可关闭补光。环境随工程保存，阴影投到实际地面和模型墙壁上。</small></details>${n?`<h3>${selected.size>1?'当前物体（属性只改这一件）':'物体属性'}</h3><label>名称<input data-node="name" type="text" value="${esc(n.name)}" maxlength="200"></label>${n.kind==='sky'?`<label>全景图片<select data-node="assetId"><option value="">纯色天空</option>${assets.filter(a=>a.type==='image').map(a=>`<option value="${esc(a.id)}" ${n.assetId===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></label><label>天空颜色<input data-node="color" type="color" value="${n.color}"></label><small>建议使用 2:1 全景图片。天空球跟随镜头，不投射阴影。</small>`:`<label>所在分组<select data-node="parentId"><option value="">场景根目录</option>${env.nodes.filter(x=>x.kind==='group'&&!descendants.has(x.id)).map(x=>`<option value="${x.id}" ${n.parentId===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label>${['position','rotation','scale'].map((key,i)=>`<label class="vector-label">${['位置（米）','旋转（度）','大小'][i]}<div class="vector-inputs">${n[key].map((v,j)=>`<label>${['X','Y','Z'][j]}<input data-vector="${key}" data-index="${j}" type="number" step="${key==='rotation'?1:.1}" value="${key==='rotation'?Math.round(v*180/Math.PI):Number(v.toFixed(3))}"></label>`).join('')}</div></label>`).join('')}`}${n.kind==='light'?`<label>灯光颜色<input data-node="color" type="color" value="${n.color}"></label><label>亮度<input data-node="intensity" type="number" min="0" max="1000" value="${n.intensity}"></label><label>照射范围（米）<input data-node="distance" type="number" min="0" max="10000" value="${n.distance}"></label><label><input data-node="castShadow" type="checkbox" ${n.castShadow?'checked':''}>投射阴影</label>`:''}${n.kind==='ground'?`<label>地面颜色<input data-node="color" type="color" value="${n.color}"></label>`:''}${['ground','imagePlane'].includes(n.kind)?`<label>宽度<input data-node="width" type="number" min=".1" step=".1" value="${n.width}"></label><label>高度<input data-node="height" type="number" min=".1" step=".1" value="${n.height}"></label>`:''}${n.kind==='imagePlane'?`<label><input data-node="unlit" type="checkbox" ${n.unlit?'checked':''}>保持图片原亮度</label><label><input data-alpha type="checkbox" ${n.alphaCutoff?'checked':''}>镂空图片</label>`:''}`:'<p class="empty-hint">选择物体后，这里显示位置和大小。Shift / Ctrl 可多选。</p>'}`;}
 let saveFlight=null;
 const smokeClock={time:null};
-const autosave=createEnvironmentAutosave({now:()=>smokeClock.time??Date.now(),canSave:()=>Boolean(env&&!busy&&!modal&&!gizmo.dragging&&!drag&&!boxStart&&!document.querySelector('#dialog-root').children.length&&!document.activeElement?.matches('input,select,textarea')),
+const environmentAgentWindow=createEnvironmentAgentWindow({
+ read:()=>({opened:true,projectId,environment:structuredClone(env),environmentLibrary:structuredClone(library),assets:structuredClone(assets),dirty,busy:Boolean(busy||modal||drag||boxStart||gizmo.dragging||document.activeElement?.matches('input,select,textarea')),editorCamera:{position:camera.position.toArray(),target:orbit.target.toArray(),fov:camera.fov}}),
+ save:()=>saveCurrent(),
+ lock:value=>{$('#app').inert=value;$('#dialog-root').inert=value;orbit.enabled=!value;gizmo.enabled=!value;status(value?'MCP 正在布置场景，请稍候':'可以继续搭建');},
+ refresh:async payload=>{
+  if(payload.projectId!==projectId)throw Error('工程已切换，请重新连接 MCP');
+  const next=payload.environments?.find(e=>e.id===env.id)||payload.environments?.[0];if(!next)throw Error('没有可打开的环境');
+  const changed=JSON.stringify(next)!==JSON.stringify(env)||JSON.stringify(payload.assets)!==JSON.stringify(assets)||JSON.stringify(payload.environmentLibrary)!==JSON.stringify(library);
+  environments=structuredClone(payload.environments);assets=structuredClone(payload.assets);library=structuredClone(payload.environmentLibrary);env=environments.find(e=>e.id===next.id);baseRevision=env.revision||0;
+  if(changed){undo=[];redo=[];importedIds.clear();await rebuild();viewGameCamera();autosave.saved();}else renderPanels();
+ },
+ view:async view=>{if(!['game','editor'].includes(view))throw Error('view 应为 game 或 editor');if(view==='game')viewGameCamera();await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));}
+});
+window.environmentAgentReady=()=>Boolean(env&&!busy);
+for(const type of ['pointerdown','keydown','click','dblclick','drop','change'])document.addEventListener(type,event=>{if(environmentAgentWindow.isLocked()){event.preventDefault();event.stopImmediatePropagation();}},true);
+window.chrome.webview.addEventListener('message',async event=>{
+ const request=event.data.environmentAgentRequest;if(!request)return;
+ try{const result=await environmentAgentWindow.control(request.command,request.payload||{});await send('environmentAgentReply',{id:request.id,ok:true,data:result});}
+ catch(error){await send('environmentAgentReply',{id:request.id,ok:false,error:error.message});}
+});
+const autosave=createEnvironmentAutosave({now:()=>smokeClock.time??Date.now(),canSave:()=>Boolean(env&&!busy&&!environmentAgentWindow.isLocked()&&!modal&&!gizmo.dragging&&!drag&&!boxStart&&!document.querySelector('#dialog-root').children.length&&!document.activeElement?.matches('input,select,textarea')),
  hasChanges:()=>dirty,save:()=>saveCurrent(),render:s=>{
   const badge=$('#environment-autosave');if(!badge)return;
   const countdown=`${String(Math.floor(s.seconds/60)).padStart(2,'0')}:${String(s.seconds%60).padStart(2,'0')}`;
@@ -109,6 +130,7 @@ window.addEventListener('beforeunload',()=>{clearInterval(autosaveTimer);rendere
 try{const init=await send('init');env=init.environment;environments=(init.environments||[env]).map(e=>e.id===env.id?env:e);assets=init.assets;library=init.environmentLibrary||{folders:[],assignments:{}};projectId=init.projectId;baseRevision=env.revision||0;referenceSettings=init.referenceSettings||{};referenceMultiple=Boolean(init.referenceMultiple);addReferencePeople(references,referenceSettings,referenceMultiple);await rebuild();viewGameCamera();recordRecent(env.id);status('可以开始搭建');}catch(error){status(error.message);}
 
 if(new URLSearchParams(location.search).has('smoke')){window.environmentOpenPicker=()=>openEnvironmentDialog();window.environmentClosePicker=closeDialog;}
+if(new URLSearchParams(location.search).has('smoke'))window.environmentAgentEditSmoke=async()=>{await mutate(()=>{env.name+=' · 作者未保存';const model=env.nodes.find(n=>n.kind==='model');if(model)model.position[0]+=.125;});return {ok:true,dirty,environment:structuredClone(env)};};
 
 if(new URLSearchParams(location.search).has('smoke'))window.environmentAutosaveSmoke=async phase=>{
  const assert=(v,m)=>{if(!v)throw Error(m);};

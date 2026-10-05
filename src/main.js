@@ -170,13 +170,14 @@ const events = createEvents({ project: () => project, escape, asset, assetUrl,
     playAct++; playStep = 0; preparedAct = -1; showPlayStep();
   } });
 const act = () => project.acts[selectedAct];
-const storyAssistant = createStoryAssistant({project:()=>project,mode:()=>mode,escape,bridge,toast,
+const storyAssistant = createStoryAssistant({project:()=>project,mode:()=>mode,escape,bridge,toast,assetUrl,
   revision:()=>changeRevision,dirty:()=>dirty,busy:()=>historyBusy||transitioning||playing,
   begin:()=>{editorHistory.seal();editorHistory.begin();},
   changed:label=>{normalize();markDirty({label});},
   refresh:async()=>{renderSidebar();renderInspector();await updatePreview();},
   selectAct:index=>{selectedAct=index;selectedStep=0;activePanel='story';},
-  undo:restoreEditorHistory,history:()=>editorHistory.status(),save});
+  undo:restoreEditorHistory,history:()=>editorHistory.status(),save,
+  openEnvironment:openAgentEnvironment,refreshEnvironmentWindow:refreshAgentEnvironmentWindow});
 const step = () => act()?.steps[selectedStep];
 const character = id => project.characters.find(item => item.id === id);
 const options = (items, value, empty = '无') =>
@@ -817,6 +818,16 @@ async function editEnvironment(owner){
   if(!env){env=createEnvironment((owner.name||'标题')+'场景');project.environments.push(env);owner.environmentId=env.id;markDirty({label:'新建 3D 环境'});renderInspector();}
   for(const e of project.environments)if(!environmentBaselines.has(e.id))environmentBaselines.set(e.id,JSON.stringify(e));
   const result=await bridge('openEnvironment',{projectId:project.id,environment:structuredClone(env),environments:structuredClone(project.environments),environmentLibrary:structuredClone(project.environmentLibrary||{folders:[],assignments:{}}),referenceSettings:structuredClone(owner===project.title?{}:(step()?.cast||owner.steps?.[0]?.cast||{})),referenceMultiple:Object.values(step()?.cast||owner.steps?.[0]?.cast||{}).filter(s=>s.characterId).length>1,assets:structuredClone(project.assets)});if(result.created)environmentBaselines=new Map(project.environments.map(e=>[e.id,JSON.stringify(e)]));
+}
+async function openAgentEnvironment(env){
+  const result=await bridge('openEnvironment',{projectId:project.id,environment:structuredClone(env),environments:structuredClone(project.environments),environmentLibrary:structuredClone(project.environmentLibrary||{folders:[],assignments:{}}),assets:structuredClone(project.assets)});
+  if(result.created)environmentBaselines=new Map(project.environments.map(e=>[e.id,JSON.stringify(e)]));
+  return result;
+}
+async function refreshAgentEnvironmentWindow(options={}){
+  const result=await bridge('agentEnvironmentControl',{command:'refresh',keepLocked:options.keepLocked===true,projectId:project.id,environments:structuredClone(project.environments),environmentLibrary:structuredClone(project.environmentLibrary||{folders:[],assignments:{}}),assets:structuredClone(project.assets)});
+  if(result.opened)environmentBaselines=new Map(project.environments.map(e=>[e.id,JSON.stringify(e)]));
+  return result;
 }
 function sceneAnimationCatalog() {
   const runtime=stage?.environmentRuntime;
@@ -3935,6 +3946,17 @@ async function runPortraitHistorySmoke() {
 if (new URLSearchParams(location.search).has('smoke'))
   Object.assign(window, { __vrmSmokeAutoSave: () => saveAutoSlot(), __vrmSmokeSaveSlot: index => saveSlot(index),
     __vrmSmokeMenuPolish: async phase => {
+      if(phase==='agent-env-editor'){
+        storyAssistant.render();await storyAssistant.click('assistant-toggle');if(!storyAssistant.isEnabled())throw Error('MCP 未开启');
+        await storyAssistant.click('assistant-close');return {ok:true,agentEnabled:true};
+      }
+      if(phase==='agent-env-player'){
+        const index=project.acts.findIndex(a=>a.environmentId&&project.environments.find(e=>e.id===a.environmentId)?.name.startsWith('MCP'));
+        if(index<0)throw Error('MCP 场景未导出');playing=true;playAct=index;playStep=0;preparedAct=-1;await showPlayStep();await new Promise(resolve=>setTimeout(resolve,1500));
+        const env=project.environments.find(e=>e.id===project.acts[index].environmentId);
+        if(stageError||stage.environmentRuntime.objects.size!==env.nodes.length||stage.camera.position.distanceTo(new THREE.Vector3(...env.camera.position))>.001)throw Error('MCP 场景没有正确加载');
+        return {ok:true,sceneNodes:env.nodes.length,loadedObjects:stage.environmentRuntime.objects.size,gameCamera:true,dialogue:project.acts[index].steps[0].text};
+      }
       if (phase === 'agent-player') {
         const index=project.acts.findIndex(a=>a.draftBatchId&&a.kind!=='event');
         if(index<0)throw new Error('generated draft not found in export');

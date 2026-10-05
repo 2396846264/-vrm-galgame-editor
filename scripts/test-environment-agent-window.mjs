@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {createEnvironmentAgentWindow} from '../src/environment-agent-window.js';
+let state={opened:true,dirty:true,busy:false,environment:{id:'school'}},saved=0,refreshes=0,locked=false;
+const window=createEnvironmentAgentWindow({read:()=>structuredClone(state),lock:v=>locked=v,save:async()=>{saved++;state.dirty=false;},refresh:async()=>{refreshes++;},view:async()=>{}});
+assert.equal((await window.control('read')).dirty,true);
+await assert.rejects(window.control('lock'),/sync_environment_editor/);assert.equal(locked,false);
+await window.control('sync');assert.equal(saved,1);await window.control('lock');assert.equal(locked,true);
+await assert.rejects(window.control('lock'),/占用/);await assert.rejects(window.control('sync'),/MCP/);
+await window.control('refresh',{});assert.equal(refreshes,1);assert.equal(locked,false);
+state.busy=true;await assert.rejects(window.control('lock'),/正在操作/);await assert.rejects(window.control('capture',{view:'game'}),/正在操作/);state.busy=false;
+await window.control('lock');await window.control('release');assert.equal(locked,false);
+await window.control('lock');await window.control('refresh',{keepLocked:true});assert.equal(locked,true);await window.control('release');assert.equal(locked,false);
+state.dirty=true;await assert.rejects(window.control('refresh',{}),/不能覆盖/);assert.equal(refreshes,2);
+console.log('Environment window: unsaved edits readable, explicit sync, busy/write exclusion and safe unlock passed');

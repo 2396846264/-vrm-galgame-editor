@@ -13,7 +13,7 @@ internal sealed partial class EditorWindow
     private NamedPipeServerStream? agentPipe;
     private string? agentSessionFile;
     private readonly Dictionary<string, TaskCompletionSource<JsonNode?>> agentReplies = new();
-    private static readonly HashSet<string> AgentOperations = ["get_project","get_act","get_source","read_document","import_assets","set_asset_tags","propose_draft","apply_draft","undo","redo","save","preview","export_game"];
+    private static readonly HashSet<string> AgentOperations = ["get_project","get_act","get_source","read_document","import_assets","set_asset_tags","propose_draft","apply_draft","undo","redo","save","preview","export_game","get_environments","get_environment","inspect_scene_asset","create_environment","edit_environment","set_environment_reference","open_environment","capture_environment","sync_environment_editor"];
 
     private JsonNode? GetAgentConnection()
     {
@@ -151,16 +151,17 @@ internal sealed partial class EditorWindow
     }
     private object? PickDraftAssets()
     {
-        using var dialog=new OpenFileDialog{Title="批量导入粗稿所需素材（配音请在对白上传）",Filter="模型、背景、动作、音乐、视频|*.vrm;*.vrma;*.fbx;*.png;*.jpg;*.jpeg;*.webp;*.mp3;*.wav;*.ogg;*.mp4;*.webm",Multiselect=true};
+        using var dialog=new OpenFileDialog{Title="批量导入素材（配音请在对白上传）",Filter="模型、背景、动作、音乐、视频|*.vrm;*.vrma;*.fbx;*.glb;*.png;*.jpg;*.jpeg;*.webp;*.mp3;*.wav;*.ogg;*.mp4;*.webm",Multiselect=true};
         return dialog.ShowDialog(this)==DialogResult.OK?ImportDraftAssets(dialog.FileNames):null;
     }
     private object ImportDraftAssets(string[] paths)
     {
         if(projectDirectory==null)throw new Exception("请先打开工程。");
         if(paths.Length is <1 or >500)throw new Exception("一次需要导入 1～500 个素材。");
-        var types=new Dictionary<string,string>{[".vrm"]="vrm",[".vrma"]="motion",[".fbx"]="motion",[".png"]="image",[".jpg"]="image",[".jpeg"]="image",[".webp"]="image",[".mp3"]="audio",[".wav"]="audio",[".ogg"]="audio",[".mp4"]="video",[".webm"]="video"};
+        var types=new Dictionary<string,string>{[".vrm"]="vrm",[".vrma"]="motion",[".fbx"]="motion",[".glb"]="sceneModel",[".png"]="image",[".jpg"]="image",[".jpeg"]="image",[".webp"]="image",[".mp3"]="audio",[".wav"]="audio",[".ogg"]="audio",[".mp4"]="video",[".webm"]="video"};
         var files=paths.Select(p=>new FileInfo(Path.GetFullPath(p))).ToArray();
         foreach(var f in files)if(!f.Exists||!types.ContainsKey(f.Extension.ToLowerInvariant())||f.Length>2L*1024*1024*1024)throw new Exception($"素材不支持、找不到或超过 2 GB：{f.Name}");
+        foreach(var f in files.Where(f=>f.Extension.Equals(".glb",StringComparison.OrdinalIgnoreCase)))ValidateStandaloneGlb(f.FullName);
         var copied=new List<string>();var results=new List<object>();
         try
         {
