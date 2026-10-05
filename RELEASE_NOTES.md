@@ -1,17 +1,19 @@
-# 0.0.15 · MCP 环境场景布置
+# 0.0.16 · FBX 自动生成静态头像
 
-现在可以通过连接的 Agent 布置三维环境：导入 GLB / 图片，查看模型大小，批量摆放、旋转、缩放、分组、吸附，设置地面、远景、灯光、天空球和游戏镜头，再指定给幕或标题。
+FBX 人物没有头像时，现在会自动拍成一张透明 PNG。拍摄方向、头肩范围和显示尺寸与 VRM 一样。**FBX 头像是静态图片，不跟随动作变化；VRM 原来的实时头像保持原样。**
 
-- 新增 9 个环境接口，总计 23 个 MCP 工具；原来的剧情功能保留。
-- 新增“复制场景布置任务”按钮；MCP 能返回实际环境窗口 PNG。
-- 每批布置支持一次撤销；错误整批取消，保护作者未保存修改。
-- 环境随原工程包保存，重新打开和导出游戏正常。
-- 保留 VRM 肩部实时头像、自动保存、天空描边修复与既有功能。
+- 新建角色、选择 FBX 模型或打开旧工程时，自动补上缺少的头像。
+- 角色页新增“重新生成 FBX 头像”，支持先选身体动作和定格帧再拍照。
+- 自动生成保留手动上传的 PNG；主动重拍可以替换当前头像。
+- 头像跟随工程包保存，导出的游戏使用同一张图片。
+- 保留 0.0.15 的 MCP 环境布置及已有功能。
 
-**[完整图文说明和使用步骤](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/MCP环境布置_v0.0.15.md)**
+**[完整图文说明](https://github.com/2396846264/-vrm-galgame-editor/blob/main/docs/FBX静态头像_v0.0.16.md)**
 
-![实际 MCP 布置窗口](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v015/mcp-environment.png)
+![FBX 头像和重新生成按钮](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v016/editor-fbx-portrait.png)
 
-17 组源码检查、Windows 构建、真实 MCP 双窗口操作、加密工程重开、独立游戏验证通过。
+![独立游戏中的静态头像](https://raw.githubusercontent.com/2396846264/-vrm-galgame-editor/main/docs/images/v016/player-fbx-portrait.png)
 
-完整解压新版。MCP 配置需要指向新版文件夹里的 `VRMGalgame.Agent.exe`。本次场景导入使用贴图内嵌 GLB 和图片，FBX/OBJ 场景请先转 GLB。
+用“贝当元帅.fbx”验证了自动生成、手动图片保护、重拍、工程重开和独立游戏。18 组源码检查、网页与 Windows 构建通过。
+
+完整解压新版，双击 `VRMGalgame.exe`，打开原工程即可。旧的独立游戏需重新导出。下载包不包含示例人物、Mixamo 动作或用户工程。

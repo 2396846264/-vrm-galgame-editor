@@ -51,3 +51,4 @@ jobs:
           node scripts/test-live-portrait.mjs
           node scripts/test-environment-agent.mjs
           node scripts/test-environment-agent-window.mjs
+          node scripts/test-portrait-policy.mjs

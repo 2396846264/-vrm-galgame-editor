@@ -1,16 +1,24 @@
-# VRM Galgame 编辑器 · 公开版 0.0.15
+# VRM Galgame 编辑器 · 公开版 0.0.16
 
 [简体中文](README.md) · [English](docs/README.en.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md)
 
-把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.15** 新增 MCP 环境布置：聊天摆放模型、图片远景、灯光和镜头，支持分组、撤销、实际截图和工程保存。保留 VRM 肩部实时头像及既有功能。
+把自己准备的角色、图片、声音和文字，做成可以玩的 Windows 故事游戏。当前公开版 **0.0.16** 为 FBX 人物自动生成静态 PNG 头像，角度和大小与 VRM 一样，支持主动重拍并保留手动图片。保留 VRM 实时头像、MCP 环境布置及既有功能。
 
 **第一次使用？先看 [图文说明书](docs/新手说明书.md)。** 它从下载、准备素材到导出游戏一步一步讲清楚。
 
 ## 下载
 
-到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.15-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
+到 [Releases 下载最新版](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)，下载 `VRMGalgame-0.0.16-win-x64.zip`。把 ZIP **完整解压**，再双击文件夹里的 `VRMGalgame.exe`。适用于 Windows 10/11 x64，需要 Microsoft Edge WebView2 Runtime；下载包自带 .NET 运行环境。
 
 > 公开包不附带示例人物、背景、Mixamo 动作或故事工程。下列图片是**示例与效果图**，展示做出来可以是什么样子；请使用自己有权使用的素材。
+
+## 0.0.16 更新：FBX 静态头像
+
+FBX 人物缺少头像时自动生成透明 PNG。角色页可以重新生成，支持按选定身体动作和定格帧拍照。自动生成不覆盖手动上传的图片。FBX 头像保持静态，VRM 的实时嘴型和表情保持原样。
+
+**[查看图文步骤](docs/FBX静态头像_v0.0.16.md)**
+
+![独立游戏中的 FBX 静态头像](docs/images/v016/player-fbx-portrait.png)
 
 ## 0.0.15 更新：MCP 环境布置
 
@@ -22,7 +30,7 @@
 
 ## 0.0.14 更新：VRM 肩部头像
 
-实时头像恢复原来自动肩部照片的角度和大小，只对 VRM 生效。FBX 和纯图片角色继续使用上传的 PNG。
+实时头像恢复原来自动肩部照片的角度和大小，只对 VRM 生效。0.0.16 已为 FBX 增加静态 PNG 自动生成；纯图片角色继续上传 PNG。
 
 **[打开完整图文说明](docs/VRM肩部头像_v0.0.14.md)**
 

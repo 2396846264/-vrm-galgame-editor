@@ -111,28 +111,37 @@ for (const side of ['Left','Right']) {
 export const assetUrl = asset => asset ? `https://project.galgame/${asset.path.split('/').map(encodeURIComponent).join('/')}${asset.revision ? `?v=${encodeURIComponent(asset.revision)}` : ''}` : '';
 
 // Render a separate, transparent bust portrait without moving the stage actor.
-export async function captureVrmPortrait(modelAsset, motionAsset = null, poseFrame = 1, legacySeconds = null) {
+export async function captureCharacterPortrait(modelAsset, motionAsset = null, poseFrame = 1, legacySeconds = null) {
+  if(!['vrm','fbxCharacter'].includes(modelAsset?.type))throw Error('自动头像需要 VRM 或 FBX 人物模型');
   const loader = new GLTFLoader();
   loader.register(parser => new VRMLoaderPlugin(parser));
   loader.register(parser => new VRMAnimationLoaderPlugin(parser));
-  const gltf = await loader.loadAsync(assetUrl(modelAsset));
-  const vrm = gltf.userData.vrm;
-  if (!vrm) { VRMUtils.deepDispose(gltf.scene); throw new Error('文件里没有找到 VRM 角色'); }
+  const fbxBlobs=new Set(),fbxManager=new THREE.LoadingManager();
+  fbxManager.addHandler(/\.tga$/i,new TGALoader());
+  fbxManager.setURLModifier(url=>{if(url.startsWith('blob:'))fbxBlobs.add(url);return url;});
+  let texturesReady=new Promise(resolve=>fbxManager.onLoad=resolve),gltf,vrm;
   let renderer;
   let motionScene;
+  let mixer;
   let actualFrame = 1;
   try {
+    if(modelAsset.type==='fbxCharacter'){
+      const root=await new FBXLoader(fbxManager).loadAsync(assetUrl(modelAsset));gltf={scene:root};await texturesReady;vrm=createFbxActor(root);
+    }else{gltf=await loader.loadAsync(assetUrl(modelAsset));vrm=gltf.userData.vrm;}
+    if(!vrm)throw Error('文件里没有找到人物模型');
     const scene = new THREE.Scene();
     scene.add(vrm.scene);
-    const bounds = new THREE.Box3().setFromObject(vrm.scene);
+    if(vrm.isFbx){mixer=new THREE.AnimationMixer(vrm.scene);mixer.clipAction(vrm.idleClip).play();mixer.update(0);}
+    const bounds = new THREE.Box3().setFromObject(vrm.scene,vrm.isFbx===true);
     const size = bounds.getSize(new THREE.Vector3());
     if (size.y > 0) vrm.scene.scale.multiplyScalar(1.8 / size.y);
     vrm.scene.updateMatrixWorld(true);
-    vrm.scene.position.y -= new THREE.Box3().setFromObject(vrm.scene).min.y;
+    vrm.scene.position.y -= new THREE.Box3().setFromObject(vrm.scene,vrm.isFbx===true).min.y;
     vrm.scene.updateMatrixWorld(true);
     if (motionAsset) {
       let clip;
       if (motionAsset.path.toLowerCase().endsWith('.vrma')) {
+        if(vrm.isFbx)throw Error('FBX 人物头像请选 Mixamo FBX 动作或保持站立');
         const motion = await loader.loadAsync(assetUrl(motionAsset));
         motionScene = motion.scene;
         const animation = motion.userData.vrmAnimations?.[0];
@@ -140,22 +149,23 @@ export async function captureVrmPortrait(modelAsset, motionAsset = null, poseFra
         clip = createVRMAnimationClip(animation, vrm);
       } else {
         motionScene = await new FBXLoader().loadAsync(assetUrl(motionAsset));
-        clip = VRMStage.loadMixamo(motionScene, vrm);
+        clip = vrm.isFbx?retargetFbxClip(motionScene,vrm):VRMStage.loadMixamo(motionScene, vrm);
       }
       vrm.humanoid.resetNormalizedPose();
-      const mixer = new THREE.AnimationMixer(vrm.scene);
+      mixer?.stopAllAction();mixer?.uncacheRoot(vrm.scene);mixer = new THREE.AnimationMixer(vrm.scene);
       mixer.clipAction(clip).setLoop(THREE.LoopRepeat, Infinity).play();
       const { fps, frames } = motionFrameInfo(clip);
       const requestedFrame = legacySeconds === null ? poseFrame : Math.round(legacySeconds * fps) + 1;
       actualFrame = Math.max(1, Math.min(frames, Math.floor(Number(requestedFrame) || 1)));
       mixer.setTime(Math.max(0, Math.min(clip.duration - 0.00001, (actualFrame - 1) / fps)));
-    } else {
+    } else if(!vrm.isFbx) {
       const leftArm = vrm.humanoid.getNormalizedBoneNode('leftUpperArm');
       const rightArm = vrm.humanoid.getNormalizedBoneNode('rightUpperArm');
       if (leftArm) leftArm.rotation.z = -1.05;
       if (rightArm) rightArm.rotation.z = 1.05;
     }
     vrm.update(0);
+    vrm.scene.updateMatrixWorld(true);
     const head = vrm.humanoid.getNormalizedBoneNode('head');
     const target = head?.getWorldPosition(new THREE.Vector3()) || new THREE.Vector3(0, 1.55, 0);
     const camera = new THREE.OrthographicCamera(-0.20, 0.20, 0.20, -0.20, 0.01, 20);
@@ -169,13 +179,16 @@ export async function captureVrmPortrait(modelAsset, motionAsset = null, poseFra
     renderer.setPixelRatio(1);
     renderer.setClearColor(0x000000, 0);
     renderer.render(scene, camera);
-    return { dataUrl: renderer.domElement.toDataURL('image/png'), frame: actualFrame };
+    return { dataUrl: renderer.domElement.toDataURL('image/png'), frame: actualFrame,framing:{cameraOffset:camera.position.clone().sub(target).toArray(),halfHeight:camera.top,size:512},staticImage:true };
   } finally {
     renderer?.dispose();
+    renderer?.forceContextLoss();mixer?.stopAllAction();if(vrm)mixer?.uncacheRoot(vrm.scene);
     if (motionScene) VRMUtils.deepDispose(motionScene);
-    VRMUtils.deepDispose(gltf.scene);
+    if(gltf)VRMUtils.deepDispose(gltf.scene);
+    for(const url of fbxBlobs)URL.revokeObjectURL(url);
   }
 }
+export const captureVrmPortrait=captureCharacterPortrait;
 
 export class VRMStage {
   constructor(element, onError = () => {}) {

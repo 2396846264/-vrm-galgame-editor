@@ -17,7 +17,8 @@ import './events.css';
 import { createEvents, eventNames, eventSeconds, isEvent, normalizeEvent, newEvent } from './events.js';
 import { normalizeWeather, weatherDefaults, weatherNames, weatherMood } from './weather.js';
 import { colorDefaults, chapterRender, colorFilter, chapterUnlocked } from './chapters.js';
-import { VRMStage, assetUrl, motionFrameInfo, captureVrmPortrait } from './renderer.js';
+import { VRMStage, assetUrl, motionFrameInfo, captureCharacterPortrait } from './renderer.js';
+import {canGeneratePortrait} from './portrait-policy.js';
 import { embeddedVrmThumbnail, internalPortrait } from './vrm-thumbnail.js';
 import {validateEnvironmentLibrary} from './environment-operations.js';
 import {createEnvironment,migrateEnvironments,validateEnvironment} from './environment-schema.js';
@@ -424,6 +425,28 @@ async function applyEnvironmentCommit(message){
   }catch(error){await bridge('environmentCommitReply',{session:message.session,ok:false,error:error.message});}
 }
 let environmentBaselines=new Map();
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeFbxPortrait=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ const fbx=project.characters.find(c=>asset(c.modelId)?.type==='fbxCharacter'),png=asset('portrait-mu');assert(fbx&&png,'缺少 FBX 或测试 PNG');
+ const line=project.acts[0].steps[0];
+ async function show(){if(mode==='player'){playing=true;playAct=0;playStep=0;preparedAct=-1;await showPlayStep();}else{playing=false;activePanel='story';selectedAct=0;selectedStep=0;line.characterId=fbx.id;line.text='FBX 自动生成的是一张静态头像，角度和大小与 VRM 一样。';renderSidebar();renderInspector();await updatePreview();}await updateSpeakerPortrait(fbx.id,true);}
+ async function staticCheck(){await show();const node=document.querySelector('#speaker-portrait'),image=node.querySelector('img'),url=image.src;assert(url===assetUrl(asset(fbx.portraitId))&&!node.classList.contains('live-portrait')&&!stage.livePortrait.record,'FBX 不是静态 PNG');const bytes=await fetch(url).then(r=>r.arrayBuffer()),bitmap=await createImageBitmap(new Blob([bytes]));assert(bitmap.width===512&&bitmap.height===512,'PNG 尺寸不正确');bitmap.close();await wait(750);assert(image.src===url&&!stage.livePortrait.record,'FBX 头像跟着动了');return {ok:true,staticPng:true,pixels:[512,512],source:fbx.portraitSource,bytes:bytes.byteLength};}
+ if(phase==='auto'){
+  await Promise.all([...portraitJobs.values()]);assert(asset(fbx.portraitId)?.generatedPortrait&&fbx.portraitSource==='auto','打开缺头像的 FBX 未自动生成');
+  const result=await staticCheck();activePanel='characters';selectedCharacter=project.characters.indexOf(fbx);renderInspector();assert(document.querySelector('[data-action="capture-character-portrait"]'),'缺少重新生成按钮');assert(!document.querySelector('[data-field="character.autoMouth"]'),'FBX 出现嘴型选项');
+  const capture=await captureCharacterPortrait(asset(fbx.modelId));assert(Math.abs(capture.framing.halfHeight-.2)<1e-9&&capture.framing.cameraOffset.every((x,i)=>Math.abs(x-[-.85,.05,1.7][i])<1e-8),'没有使用 VRM 相同镜头');
+  return {...result,sameVrmFraming:true,automaticOnOpen:true,manualButton:true};
+ }
+ if(phase==='manual'){
+  fbx.portraitId=png.id;fbx.portraitSource='manual';const count=project.assets.length;await ensureCharacterPortrait(fbx,true);assert(fbx.portraitId===png.id&&project.assets.length===count,'自动生成覆盖了手动 PNG');await show();return {ok:true,manualPngPreserved:true};
+ }
+ if(phase==='reshoot'){
+  editorHistory.seal();editorHistory.begin();await ensureCharacterPortrait(fbx,true,true);assert(fbx.portraitSource==='auto'&&fbx.portraitId!==png.id,'明确重新生成没有生效');const id=fbx.portraitId;await ensureCharacterPortrait(fbx,true,true);assert(fbx.portraitId===id,'重拍新增了重复头像');return {...await staticCheck(),reusesAsset:true,explicitReshoot:true};
+ }
+ if(phase==='export'){await show();markDirty();await save();await bridge('saveProjectAs',{project:structuredClone(project),name:'FBX静态头像验证'});await bridge('exportGame',{folderName:'FBX静态头像试玩'});return {ok:true,exported:true};}
+ if(phase==='player'||phase==='reopen')return staticCheck();
+ throw Error('未知 FBX 头像检查');
+};
 if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeShoulderPortrait=async phase=>{
  const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
  const vrm=project.characters.find(c=>c.id==='mu'&&asset(c.modelId)?.type==='vrm')||project.characters.find(c=>asset(c.modelId)?.type==='vrm'),fbx=project.characters.find(c=>asset(c.modelId)?.type==='fbxCharacter'),png=asset('portrait-mu');
@@ -445,9 +468,9 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeShoulderPo
  if(phase==='fbx'){
   playing=false;fbx.portraitId=png.id;fbx.portraitSource='manual';line.characterId=fbx.id;line.text='FBX 人物继续使用我上传的 PNG 头像。';await updatePreview();await wait(150);
   assert(!stage.livePortrait.record,'FBX 使用了实时头像');assert(document.querySelector('#speaker-portrait img').src===assetUrl(png),'FBX PNG 被替换');
-  activePanel='characters';selectedCharacter=project.characters.indexOf(fbx);renderInspector();assert(!document.querySelector('[data-action="capture-character-portrait"]'),'FBX 出现自动拍摄按钮');activePanel='story';renderInspector();
+  activePanel='characters';selectedCharacter=project.characters.indexOf(fbx);renderInspector();assert(document.querySelector('[data-action="capture-character-portrait"]'),'FBX 缺少重新生成头像按钮');activePanel='story';renderInspector();
   const count=project.assets.length;await ensureCharacterPortrait(fbx,true);assert(project.assets.length===count,'FBX 被自动生成头像');
-  return {ok:true,fbxManualPng:true,noAutomaticCapture:true};
+  return {ok:true,fbxManualPng:true,manualPngPreserved:true,staticPng:true};
  }
  if(phase==='png'){
   const role={id:'photo-only-test',name:'图片角色',modelId:'',portraitId:png.id,portraitSource:'manual',autoMouth:true};project.characters.push(role);line.characterId=role.id;line.text='没有模型的角色，也继续显示上传的 PNG。';await updatePreview();await wait(150);
@@ -1591,8 +1614,8 @@ function renderInspector() {
       ${!isFbxModel(item.modelId) ? `<label class="field"><span>自动说话嘴型</span><select data-field="character.autoMouth"><option value="on" ${item.autoMouth !== false ? 'selected' : ''}>开启（默认）</option><option value="off" ${item.autoMouth === false ? 'selected' : ''}>关闭</option></select></label>
       <p class="tip">跟随对白文字显示动嘴，标点处稍作停顿；文字显示完就停止。有 A、I、U、E、O 嘴型的模型可使用。</p>` : '<p class="tip">FBX 人物只播放身体动作。</p>'}
       <div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}
-        <div class="inline-actions">${button('上传 PNG 头像', 'upload-character-portrait')}${asset(item.modelId)?.type==='vrm' ? button('重新拍摄 VRM', 'capture-character-portrait') : ''}</div>
-        <p class="tip">实时头像只用于 VRM，角度和大小与原来的肩部照片一致，嘴型和表情跟随场上人物。FBX 及没有模型的角色使用上传的 PNG 头像。素材缩略图仍使用下方动作和定格帧，已上传的头像文件会保留。</p></div>
+        <div class="inline-actions">${button('上传 PNG 头像', 'upload-character-portrait')}${['vrm','fbxCharacter'].includes(asset(item.modelId)?.type) ? button(isFbxModel(item.modelId)?'重新生成 FBX 头像':'重新拍摄 VRM', 'capture-character-portrait') : ''}</div>
+        <p class="tip">VRM 使用可动头像。FBX 自动生成一张静态 PNG，拍摄角度和头肩大小与 VRM 一样；可用下方动作与定格帧调整拍照姿势，再重新生成。没有模型的角色仍上传 PNG。手动上传的头像不会被自动替换。</p></div>
       ${field('鉴赏姿势 / 动作', select('character.galleryMotionId', byType('motion'), item.galleryMotionId, '保持站立'))}
       <label class="adjustment"><span>鉴赏转身角度</span><input type="range" data-gallery-adjust="galleryYaw" min="-90" max="90" step="5" value="${item.galleryYaw}"><output data-gallery-output="galleryYaw">${item.galleryYaw}°</output></label>
       <label class="adjustment gallery-frame-adjustment"><span>动作定格帧</span><input type="range" data-gallery-adjust="galleryPoseFrame" min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled><output data-gallery-output="galleryPoseFrame">${item.galleryMotionId ? '读取中…' : '先选择动作'}</output></label>
@@ -1944,7 +1967,7 @@ function showBackground(bgAsset) {
 }
 async function ensureCharacterPortrait(item, force = false, userCapture = false) {
   const modelAsset = asset(item?.modelId);
-  if (!item || modelAsset?.type!=='vrm' || (!force && asset(item.portraitId))) return;
+  if (!canGeneratePortrait(item,modelAsset?.type,Boolean(asset(item?.portraitId)),force,userCapture)) return;
   const motionId = item.galleryMotionId || '';
   const motionAsset = asset(motionId);
   const poseFrame = Math.max(1, Math.floor(Number(item.galleryPoseFrame) || 1));
@@ -1952,19 +1975,20 @@ async function ensureCharacterPortrait(item, force = false, userCapture = false)
   const jobKey = `${project.id}:${item.id}:${item.modelId}:${motionId}:${poseFrame}`;
   if (portraitJobs.has(jobKey)) return portraitJobs.get(jobKey);
   const modelId = item.modelId;
+  const portraitAtStart=item.portraitId,sourceAtStart=item.portraitSource;
   const task = (async () => {
-    const { dataUrl, frame } = await captureVrmPortrait(modelAsset, motionAsset, poseFrame, legacySeconds);
+    const { dataUrl, frame } = await captureCharacterPortrait(modelAsset, motionAsset, poseFrame, legacySeconds);
     if (project.characters.find(entry => entry.id === item.id) !== item || item.modelId !== modelId ||
       item.galleryMotionId !== motionId ||
       !(Number(item.galleryPoseFrame) === poseFrame || (legacySeconds !== null && Number(item.galleryPoseFrame) === frame)) ||
-      (!force && asset(item.portraitId))) return;
+      item.portraitId!==portraitAtStart||item.portraitSource!==sourceAtStart||(!force && asset(item.portraitId))) return;
     item.galleryPoseFrame = frame;
     delete item.galleryPoseTime;
     if (mode === 'player') temporaryPortraits.set(item.id, dataUrl);
     else {
       const saved = await bridge('saveGeneratedPortrait', { dataUrl, characterId: item.id, name: item.name, previousRevision: asset(item.portraitId)?.revision || '' });
       if (project.characters.find(entry => entry.id === item.id) !== item || item.modelId !== modelId ||
-        item.galleryMotionId !== motionId || Number(item.galleryPoseFrame) !== frame || (!force && asset(item.portraitId))) return;
+        item.galleryMotionId !== motionId || Number(item.galleryPoseFrame) !== frame ||item.portraitId!==portraitAtStart||item.portraitSource!==sourceAtStart|| (!force && asset(item.portraitId))) return;
       await replaceAutoPortrait(item, saved, true);
       item.portraitSource = 'auto';
       item.portraitPoseKey = `portrait-v3:${item.modelId}:${motionId}:${frame}`;
@@ -3656,9 +3680,11 @@ document.addEventListener('input', event => {
       document.querySelector('[data-field="step.speaker"]')?.setAttribute('placeholder', character(node.value)?.name || '留空时用角色名字');
     }
     if (path === 'character.modelId') {
-      target.portraitId = '';
-      target.portraitSource = '';
-      target.portraitPoseKey = '';
+      if(target.portraitSource!=='manual'||!asset(target.portraitId)){
+        target.portraitId = '';
+        target.portraitSource = '';
+        target.portraitPoseKey = '';
+      }
       temporaryPortraits.delete(target.id);
       if (target.modelId) ensureCharacterPortrait(target);
       renderInspector();
