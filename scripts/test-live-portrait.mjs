@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {LivePortrait} from '../src/live-portrait.js';
+const scene=new THREE.Scene(),anchor=new THREE.Group(),root=new THREE.Group(),head=new THREE.Bone(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());
+head.position.y=1.7;root.add(head,mesh);anchor.add(root);scene.add(anchor,new THREE.DirectionalLight());root.visible=false;scene.background=new THREE.Color('red');
+const other=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());scene.add(other);
+const portrait=new LivePortrait();portrait.set({anchor,vrm:{scene:root,humanoid:{getNormalizedBoneNode:()=>head}}},{isConnected:true,classList:{contains:()=>false},getBoundingClientRect:()=>({left:2,bottom:400,width:100,height:150})});
+let autoClear=true,viewport=new THREE.Vector4(0,0,800,450),scissor=viewport.clone(),scissorTest=false,throws=false,rendered=0;
+const renderer={get autoClear(){return autoClear;},set autoClear(v){autoClear=v;},shadowMap:{autoUpdate:true},getViewport:v=>v.copy(viewport),getScissor:v=>v.copy(scissor),getScissorTest:()=>scissorTest,setViewport:(...args)=>{viewport=args[0].isVector4?args[0].clone():new THREE.Vector4(...args);},setScissor:(...args)=>{scissor=args[0].isVector4?args[0].clone():new THREE.Vector4(...args);},setScissorTest:v=>scissorTest=v,clearDepth(){},render:(s,c)=>{assert.equal(root.visible,true);assert.equal(c.layers.test(mesh.layers),true);assert.equal(c.layers.test(other.layers),false);assert.equal(renderer.shadowMap.autoUpdate,false);if(throws)throw Error('GPU unavailable');rendered++;}};
+const element={getBoundingClientRect:()=>({left:0,bottom:450,width:800,height:450})};
+portrait.render(renderer,scene,element);assert.equal(rendered,1);assert.equal(root.visible,false);assert.equal(mesh.layers.mask,1);assert.equal(scene.background.getHexString(),'ff0000');assert.equal(renderer.autoClear,true);assert.equal(scissorTest,false);assert.deepEqual(viewport.toArray(),[0,0,800,450]);assert.equal(renderer.shadowMap.autoUpdate,true);
+const first=portrait.camera.position.clone();head.position.x=.3;portrait.render(renderer,scene,element);assert.ok(portrait.camera.position.x-first.x>.29);
+throws=true;assert.throws(()=>portrait.render(renderer,scene,element));assert.equal(root.visible,false);assert.equal(mesh.layers.mask,1);assert.equal(renderer.shadowMap.autoUpdate,true);
+portrait.clear();portrait.render(renderer,scene,element);
+console.log(JSON.stringify({ok:true,sameActor:true,isolation:true,tracksAnimatedHead:true,rendererRestored:true,exceptionRestored:true,offstageHidden:true}));

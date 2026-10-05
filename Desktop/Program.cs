@@ -181,7 +181,7 @@ internal sealed partial class EditorWindow : Form
         StartPosition = FormStartPosition.CenterScreen;
         Controls.Add(web);
         Shown += async (_, _) => await InitializeWebAsync();
-        FormClosing += async(_,e)=>{if(environmentOwnerClosing||environmentWindow is not {IsDisposed:false})return;e.Cancel=true;if(await environmentWindow.ConfirmOwnerClose()){environmentOwnerClosing=true;Close();}};
+        FormClosing += async(_,e)=>{if(archiveSaveRunning){e.Cancel=true;MessageBox.Show(this,"工程正在保存，请等保存完成后再关闭。","正在保存");return;}if(environmentOwnerClosing||environmentWindow is not {IsDisposed:false})return;e.Cancel=true;if(await environmentWindow.ConfirmOwnerClose()){environmentOwnerClosing=true;Close();}};
         FormClosed += (_, _) => { StopAgentBridge(); CleanupTemporaryProject(); };
     }
 
@@ -502,7 +502,7 @@ internal sealed partial class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".character-preview.json",
                         await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
-                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations"))
+                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression"))
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=editor-settings]').click(); const interval=document.querySelector('#editor-auto-save-minutes'); interval.value='10'; interval.dispatchEvent(new Event('input',{bubbles:true})); document.querySelector('[data-action=close-editor-settings]').click(); window.prompt=()=> '测试副本'; document.querySelector('[data-action=save-as]').click()");
                     await Task.Delay(2600);
@@ -1033,6 +1033,26 @@ internal sealed partial class EditorWindow : Form
                 await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
                 await Task.Delay(1200);
             }
+            if(Environment.GetCommandLineArgs().Contains("--smoke-render-regression")){
+                bool reopenOnly=Environment.GetCommandLineArgs().Contains("--smoke-render-reopen");
+                string[] phases=playerMode?new[]{"player"}:reopenOnly?new[]{"reopen","texture-sky"}:new[]{"prepare","outline-0","outline-1","outline-2","outline-3","dark","mouth","offstage","fbx","export","environment"};
+                foreach(string phase in phases){
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__renderCheck=null;window.__vrmSmokeRenderRegression("+JsonSerializer.Serialize(phase)+").then(r=>window.__renderCheck=r).catch(e=>window.__renderCheck={error:e.message})");
+                    string check="null";for(int i=0;i<1200;i++){check=await web.CoreWebView2.ExecuteScriptAsync("window.__renderCheck");if(check!="null")break;await Task.Delay(50);}
+                    File.WriteAllText(smokeBase+".render-"+phase+".json",check);
+                    using(var shot=File.Create(smokeBase+".render-"+phase+".png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);
+                    if(check.Contains("\"error\""))throw new Exception(check);
+                }
+                if(!playerMode&&!reopenOnly){
+                    for(int i=0;i<100&&environmentWindow==null;i++)await Task.Delay(100);
+                    if(environmentWindow==null)throw new Exception("环境窗口没有打开");
+                    foreach(string phase in new[]{"countdown","warning","saving","result"}){
+                        string check=await environmentWindow.AutosaveSmoke(phase,smokeBase+".autosave-"+phase+".png");File.WriteAllText(smokeBase+".autosave-"+phase+".json",check);
+                        if(check.Contains("\"error\""))throw new Exception(check);
+                    }
+                    environmentWindow.Close();
+                }
+            }
             if (Environment.GetCommandLineArgs().Contains("--smoke-scene-animations"))
             {
                 string[] phases=Environment.GetCommandLineArgs().Contains("--smoke-scene-reopen")?new[]{"reopen"}:playerMode?new[]{"player"}:new[]{"editor","playback","archive-export"};
@@ -1120,6 +1140,7 @@ internal sealed partial class EditorWindow : Form
             JsonNode message = JsonNode.Parse(e.WebMessageAsJson) ?? throw new Exception("消息为空");
             id = message["id"]?.GetValue<string>() ?? "";
             string action = message["action"]?.GetValue<string>() ?? "";
+            if(archiveSaveRunning && action is not ("environmentCommitReply" or "init"))throw new Exception("工程正在后台保存，请稍候再进行文件操作。");
             JsonNode? payload = message["payload"];
             object? data = action switch
             {
@@ -1138,7 +1159,7 @@ internal sealed partial class EditorWindow : Form
                 "openProject" when !playerMode => OpenProject(),
                 "openRecentProject" when !playerMode => OpenRecentProject(payload?["path"]?.GetValue<string>() ?? ""),
                 "importFolderProject" when !playerMode => ImportFolderProject(),
-                "saveProject" when !playerMode => SaveProject(payload?["project"], payload?["obsoletePortraitPaths"]?.AsArray().Select(node => node?.GetValue<string>() ?? "")),
+                "saveProject" when !playerMode => await SaveProjectAsync(payload?["project"], payload?["obsoletePortraitPaths"]?.AsArray().Select(node => node?.GetValue<string>() ?? "")),
                 "saveProjectAs" when !playerMode => SaveProjectAs(payload?["project"], payload?["name"]?.GetValue<string>() ?? ""),
                 "previewGame" when !playerMode => await PreviewGameAsync(payload?["project"]),
                 "importDialogueVoice" when !playerMode => ImportDialogueVoice(payload?["project"], payload?["actId"]?.GetValue<string>() ?? "", payload?["dialogueId"]?.GetValue<string>() ?? ""),
@@ -1542,7 +1563,22 @@ internal sealed partial class EditorWindow : Form
         return GetProjectInfo();
     }
 
-    private object SaveProject(JsonNode? project, IEnumerable<string>? obsoletePortraitPaths = null)
+    private bool archiveSaveRunning;
+    private async Task<object> SaveProjectAsync(JsonNode? project, IEnumerable<string>? obsoletePortraitPaths = null)
+    {
+        if (archiveSaveRunning) throw new Exception("工程正在后台保存，请稍候。");
+        var result=SaveProject(project,obsoletePortraitPaths,false);
+        string directory=projectDirectory!,archive=projectArchivePath??"";
+        if(archive.Length==0)return result;
+        archiveSaveRunning=true;
+        try
+        {
+            byte[]? bytes=await Task.Run(()=>{WriteArchive(directory,archive);return new FileInfo(archive).Length<=512L*1024*1024?File.ReadAllBytes(archive):null;});
+            loadedArchiveBytes=bytes;RememberProject(archive);return result;
+        }
+        finally {archiveSaveRunning=false;}
+    }
+    private object SaveProject(JsonNode? project, IEnumerable<string>? obsoletePortraitPaths = null,bool writeArchive=true)
     {
         if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
         if (project is not JsonObject) throw new Exception("工程内容无效。");
@@ -1559,7 +1595,7 @@ internal sealed partial class EditorWindow : Form
             foreach (string obsolete in obsoletePortraitPaths)
                 if (!usedPaths.Contains(obsolete)) DeleteAsset(obsolete);
         }
-        if (projectArchivePath != null)
+        if (writeArchive && projectArchivePath != null)
         {
             WriteArchive(projectDirectory, projectArchivePath);
             RefreshArchiveMemory();

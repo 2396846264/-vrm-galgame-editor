@@ -4,6 +4,7 @@ import {normalizeEmbeddedImageNames} from '../src/fbx-embedded-images.js';
 import * as THREE from 'three';
 import {createEnvironment,validateEnvironment,migrateEnvironments} from '../src/environment-schema.js';
 import {createFbxActor,retargetFbxClip} from '../src/fbx-character.js';
+import {EnvironmentRuntime} from '../src/environment-runtime.js';
 const assets=[{id:'image',type:'image'},{id:'model',type:'sceneModel'}];
 const env=createEnvironment();env.nodes=[{id:'group',kind:'group',parentId:null,position:[0,0,0],rotation:[0,0,0],scale:[1,1,1]},{id:'board',kind:'imagePlane',assetId:'image',parentId:'group',position:[0,2,-6],rotation:[0,0,0],scale:[1,1,1],width:8,height:4.5}];
 validateEnvironment(env,assets);assert.deepEqual(validateEnvironment(JSON.parse(JSON.stringify(env)),assets),env);
@@ -19,6 +20,12 @@ const mixer=new THREE.AnimationMixer(target.root);mixer.clipAction(clip).play();
 assert.throws(()=>createFbxActor(new THREE.Group()),/身体/);
 const mixed=rig('mixamorig',100);mixed.root.animations=[new THREE.AnimationClip('body-and-face',1,[new THREE.QuaternionKeyframeTrack(mixed.left.name+'.quaternion',[0,1],[0,0,0,1,0,0,0,1]),new THREE.NumberKeyframeTrack('face.morphTargetInfluences[0]',[0,1],[0,1])])];const bodyOnly=createFbxActor(mixed.root);assert.equal(bodyOnly.idleClip.tracks.length,1);assert.ok(bodyOnly.idleClip.tracks[0].name.endsWith('.quaternion'));
 console.log(JSON.stringify({ok:true,checks:['场景往返保存','层级循环拦截','零缩放拦截','缺失素材拦截','旧背景迁移不重复','Mixamo 骨骼名称对应','动作比例校正','身体动画实际求值','FBX 无表情通道','动作文件不能冒充人物']}));
+const skyEnv=createEnvironment();skyEnv.nodes=[{id:'sky',kind:'sky',name:'天空',position:[0,0,0],rotation:[0,0,0],scale:[1,1,1],color:'#86b8df'}];
+const runtime=new EnvironmentRuntime(new THREE.Scene());await runtime.load(skyEnv,[]);
+assert.equal(runtime.objects.get('sky').children[0].material.userData.outlineParameters.visible,false);
+const sameRoot=runtime.root;await runtime.load({...skyEnv,revision:4},[]);assert.equal(runtime.root,sameRoot);
+const changed=structuredClone(skyEnv);changed.nodes[0].color='#557799';await runtime.load(changed,[]);assert.notEqual(runtime.root,sameRoot);runtime.clear();
+console.log(JSON.stringify({skySkippedByOutline:true,saveRevisionDoesNotReloadScene:true,actualEditReloads:true}));
 
 
 if(process.argv[2]){const file=readFileSync(process.argv[2]);const original=file.buffer.slice(file.byteOffset,file.byteOffset+file.byteLength);const before=new Uint8Array(original).slice();const result=normalizeEmbeddedImageNames(original);assert.equal(result.byteLength,original.byteLength);assert.deepEqual(new Uint8Array(original),before);const changed=new Uint8Array(result).filter((v,i)=>v!==before[i]).length;assert.ok(changed>0&&changed<40);console.log(JSON.stringify({embeddedImageRepair:true,originalUnchanged:true,changedBytes:changed}));}

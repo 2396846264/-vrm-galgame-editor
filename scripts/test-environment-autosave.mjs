@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {createEnvironmentAutosave} from '../src/environment-autosave.js';
+let time=0,dirty=true,available=true,calls=0,release,view;
+const timer=createEnvironmentAutosave({now:()=>time,canSave:()=>available,hasChanges:()=>dirty,render:s=>view=s,save:async()=>{calls++;await new Promise(r=>release=r);dirty=false;}});
+await timer.tick();assert.equal(view.seconds,600);time=595000;await timer.tick();assert.equal(view.seconds,5);assert.equal(calls,0);
+time=600000;available=false;await timer.tick();assert.equal(view.waiting,true);assert.equal(calls,0);
+available=true;const flight=timer.tick();assert.equal(view.saving,true);await timer.tick();assert.equal(calls,1);release();await flight;assert.equal(view.seconds,600);assert.equal(view.saving,false);
+time+=600000;await timer.tick();assert.equal(calls,1);assert.equal(view.seconds,600);
+time+=12345;timer.saved();assert.equal(view.seconds,600);
+const failed=createEnvironmentAutosave({now:()=>time,canSave:()=>true,hasChanges:()=>true,render:s=>view=s,save:async()=>{throw Error('磁盘不足');}});
+time+=600000;await failed.tick();assert.equal(view.failure,'磁盘不足');assert.equal(view.seconds,30);assert.equal(view.saving,false);
+console.log(JSON.stringify({ok:true,countdown:true,deferInteraction:true,singleSave:true,noChangeNoArchive:true,manualReset:true,failureRetry:true}));

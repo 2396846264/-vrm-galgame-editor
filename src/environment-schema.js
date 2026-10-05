@@ -9,6 +9,7 @@ export function validateEnvironment(env, assets) {
   const vector=(v,n)=>Array.isArray(v)&&v.length===n&&v.every(x=>Number.isFinite(x)&&Math.abs(x)<1e6);
   if(!env.camera || !vector(env.camera.position,3)||!vector(env.camera.target,3)||!Number.isFinite(env.camera.fov)||env.camera.fov<10||env.camera.fov>120) throw Error('摄像机参数无效');
   if(!/^#[0-9a-f]{6}$/i.test(env.background)||!/^#[0-9a-f]{6}$/i.test(env.lighting?.color)||!Number.isFinite(env.lighting.intensity)||env.lighting.intensity<0||env.lighting.intensity>10) throw Error('灯光参数无效');
+  if(env.lighting.ambientIntensity!==undefined&&(!Number.isFinite(env.lighting.ambientIntensity)||env.lighting.ambientIntensity<0||env.lighting.ambientIntensity>5))throw Error('环境补光亮度无效');
   for(const n of env.nodes) {
     if(!n.id||ids.has(n.id)||!['model','imagePlane','group','ground','light','sky'].includes(n.kind)) throw Error('场景物体无效'); ids.add(n.id);
     if(!['group','ground','light','sky'].includes(n.kind)&&!assetIds.has(n.assetId)) throw Error('场景素材已丢失');

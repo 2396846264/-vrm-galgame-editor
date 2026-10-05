@@ -13,7 +13,7 @@ export class EnvironmentRuntime {
   constructor(scene,loader=new GLTFLoader()){this.scene=scene;this.loader=loader;this.root=null;this.request=0;this.key='';this.environmentId='';this.objects=new Map();this.animations=new SceneAnimationPlayer();}
   async load(env,assets) {
     const token=++this.request;
-    const key=env?JSON.stringify([env,env.nodes.filter(n=>n.assetId).map(n=>{const a=assets.find(a=>a.id===n.assetId);return [a?.id,a?.path,a?.revision];})]):'';if(key===this.key)return this.objects;
+    const key=env?JSON.stringify([{...env,revision:undefined},env.nodes.filter(n=>n.assetId).map(n=>{const a=assets.find(a=>a.id===n.assetId);return [a?.id,a?.path,a?.revision];})]):'';if(key===this.key)return this.objects;
     if(!env){this.clear(false);this.key='';return this.objects;}
     validateEnvironment(env,assets);
     const root=new THREE.Group(), objects=new Map(),models=new Map();
@@ -29,7 +29,7 @@ export class EnvironmentRuntime {
           const light=new THREE.PointLight(n.color,n.intensity,n.distance,2);light.castShadow=n.castShadow===true;light.shadow.mapSize.set(512,512);light.shadow.normalBias=.02;object.add(light);
         }else if(n.kind==='sky'){
           let map=null;if(n.assetId){map=await new THREE.TextureLoader().loadAsync(url(assets.find(a=>a.id===n.assetId)));map.colorSpace=THREE.SRGBColorSpace;map.repeat.x=-1;map.offset.x=1;}
-          const sky=new THREE.Mesh(new THREE.SphereGeometry(80,48,24),new THREE.MeshBasicMaterial({map,color:map?0xffffff:n.color,side:THREE.BackSide,depthWrite:false}));sky.userData.environmentSky=true;sky.frustumCulled=false;sky.renderOrder=-10;object.add(sky);
+          const sky=new THREE.Mesh(new THREE.SphereGeometry(80,48,24),new THREE.MeshBasicMaterial({map,color:map?0xffffff:n.color,side:THREE.BackSide,depthWrite:false}));sky.material.userData.outlineParameters={visible:false};sky.userData.environmentSky=true;sky.frustumCulled=false;sky.renderOrder=-10;object.add(sky);
         }else if(n.kind==='imagePlane'){
           const texture=await new THREE.TextureLoader().loadAsync(url(assets.find(a=>a.id===n.assetId)));texture.colorSpace=THREE.SRGBColorSpace;
           const material=new (n.unlit===false?THREE.MeshStandardMaterial:THREE.MeshBasicMaterial)({map:texture,side:THREE.DoubleSide,alphaTest:n.alphaCutoff||0});

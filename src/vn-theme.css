@@ -594,3 +594,8 @@
 .gallery-character-seal { position: absolute; top: 44%; left: 8%; right: 8%; z-index: 3; transform: rotate(-12deg);
   border-top: 3px solid #d9474d; border-bottom: 3px solid #d9474d; padding: 8px; color: #ff767e;
   background: #4f1522b5; text-align: center; font-size: clamp(19px, 2.5vw, 36px); font-weight: 800; letter-spacing: .24em; }
+
+.speaker-portrait.live-portrait img { display: none; }
+.stage-frame:has(.speaker-portrait.live-portrait:not(.hidden))::after {
+  background: none;
+}

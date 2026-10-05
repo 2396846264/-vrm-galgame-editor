@@ -13,11 +13,13 @@ internal sealed class EnvironmentWindow : Form {
     public EnvironmentWindow(string webDirectory, string projectDirectory, JsonObject initial, Func<string, JsonNode?, Task<object?>> handle) {
         this.webDirectory=webDirectory;this.projectDirectory=projectDirectory;this.initial=initial;this.handle=handle;
         Text="3D 环境编辑器";Width=1280;Height=850;MinimumSize=new Size(1000,650);Controls.Add(view);
-        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Contains("--smoke-environment")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
-        FormClosing+=async(_,e)=>{if(closing||view.CoreWebView2==null)return;e.Cancel=true;bool dirty=await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentHasChanges?.())")=="true";if(dirty&&MessageBox.Show(this,"场景还有未应用的修改，确定放弃并关闭吗？","关闭环境编辑器",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;closing=true;Close();};
+        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-environment" or "--smoke-render-regression")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
+        FormClosing+=async(_,e)=>{if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(await IsSaving()){MessageBox.Show(this,"正在保存工程，请等保存完成后再关闭。","正在保存");return;}bool dirty=await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentHasChanges?.())")=="true";if(dirty&&MessageBox.Show(this,"场景还有未应用的修改，确定放弃并关闭吗？","关闭环境编辑器",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;closing=true;Close();};
     }
     internal void RefreshScenes(JsonNode? payload){view.CoreWebView2?.PostWebMessageAsJson(JsonSerializer.Serialize(new{environmentRefresh=payload}));}
+    private async Task<bool> IsSaving()=>view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentSaving?.())")=="true";
     internal async Task<bool> ConfirmOwnerClose(){
+        if(await IsSaving()){MessageBox.Show(this,"正在保存工程，请等保存完成后再关闭。","正在保存");return false;}
         bool dirty=view.CoreWebView2!=null && await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentHasChanges?.())")=="true";
         if(dirty&&MessageBox.Show(this,"环境还有未应用的修改，确定放弃并关闭编辑器吗？","未保存的场景",MessageBoxButtons.YesNo)!=DialogResult.Yes)return false;
         closing=true;Close();return true;
@@ -31,6 +33,12 @@ internal sealed class EnvironmentWindow : Form {
         using(var pickerImage=File.Create(Path.ChangeExtension(imagePath,"picker.png")))await view.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,pickerImage);
         await view.CoreWebView2.ExecuteScriptAsync("window.environmentClosePicker?.()");
         return result;
+    }
+    internal async Task<string> AutosaveSmoke(string phase,string imagePath){
+        for(int i=0;i<200;i++){if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentReady?.())")=="true")break;await Task.Delay(100);}
+        await view.CoreWebView2!.ExecuteScriptAsync("window.__autoCheck=null;window.environmentAutosaveSmoke("+JsonSerializer.Serialize(phase)+").then(r=>window.__autoCheck=r).catch(e=>window.__autoCheck={error:e.message})");
+        string result="null";for(int i=0;i<1200;i++){result=await view.CoreWebView2.ExecuteScriptAsync("window.__autoCheck");if(result!="null")break;await Task.Delay(50);}
+        using(var image=File.Create(imagePath))await view.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,image);return result;
     }
     private async void OnMessage(object? sender,CoreWebView2WebMessageReceivedEventArgs e){
         if(!e.Source.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))return;
@@ -52,12 +60,12 @@ internal sealed partial class EditorWindow {
         var appDirectory=AppContext.BaseDirectory;var webDirectory=Path.Combine(appDirectory,"web");
         environmentWindow=new EnvironmentWindow(webDirectory,directory,initial,async(action,data)=>{
             if(environmentSession!=session||projectDirectory!=directory)throw new Exception("工程已切换，请关闭窗口后重新打开");
-            if(action=="import"){string type=data?["type"]?.GetValue<string>()??"";if(type is not ("image" or "sceneModel"))throw new Exception("不支持此素材");return ImportAssets(type);}
+            if(action=="import"){if(archiveSaveRunning)throw new Exception("工程正在保存，请稍候。");string type=data?["type"]?.GetValue<string>()??"";if(type is not ("image" or "sceneModel"))throw new Exception("不支持此素材");return ImportAssets(type);}
             if(action=="commit"){
                 if(environmentCommit!=null)throw new Exception("正在保存，请稍后");
                 var task=new TaskCompletionSource<JsonNode?>();environmentCommit=task;
                 Send(new{environmentCommit=new{session,payload=data}});
-                try{return await task.Task.WaitAsync(TimeSpan.FromSeconds(60));}finally{environmentCommit=null;}
+                try{return await task.Task.WaitAsync(TimeSpan.FromSeconds(180));}finally{environmentCommit=null;}
             }
             throw new Exception("当前操作不可用");
         });environmentWindow.Show(this);return new{opened=true,created=true};

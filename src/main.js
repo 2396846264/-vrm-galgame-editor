@@ -423,6 +423,92 @@ async function applyEnvironmentCommit(message){
   }catch(error){await bridge('environmentCommitReply',{session:message.session,ok:false,error:error.message});}
 }
 let environmentBaselines=new Map();
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeRenderRegression=async phase=>{
+  const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+  const hua=project.characters.find(c=>asset(c.modelId)?.type==='vrm'),fbx=project.characters.find(c=>asset(c.modelId)?.type==='fbxCharacter');
+  assert(hua&&fbx,'需要 VRM 与 FBX 测试人物');
+  const currentAct=project.acts[0],current=currentAct.steps[0];
+  const setting=id=>({characterId:id,motionId:'',motionOptions:{},expressionWeights:{happy:.75},props:[],size:1,offsetX:0,offsetY:0,offsetZ:0,yaw:0,pitch:0});
+  if(phase==='reopen'){
+    const environment=project.environments.find(e=>e.id===currentAct.environmentId);assert(environment?.name==='自动保存验证环境'&&environment.revision>0,'工程包没有保留自动保存的场景');
+    await updatePreview();assert(stage.livePortrait.record===stage.visibleRecords.get(hua.id),'重新打开后头像未同步');
+    return {ok:true,autosaveArchiveReopened:true,revision:environment.revision,ambient:environment.lighting.ambientIntensity};
+  }
+  if(phase==='texture-sky'){
+    const sky=stage.environmentRuntime.objects.get('regression-sky').children[0],canvas=document.createElement('canvas');canvas.width=64;canvas.height=32;
+    const c=canvas.getContext('2d'),gradient=c.createLinearGradient(0,0,0,32);gradient.addColorStop(0,'#527faa');gradient.addColorStop(1,'#b8d8ed');c.fillStyle=gradient;c.fillRect(0,0,64,32);
+    const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;const oldMap=sky.material.map;sky.material.map=map;sky.material.needsUpdate=true;const pixels=[];
+    try{for(const width of [0,1,2,3]){
+      stage.setRenderSettings({outline:width});await wait(100);if(width)stage.outlineEffect.render(stage.scene,stage.camera);else stage.renderer.render(stage.scene,stage.camera);
+      const surface=stage.renderer.domElement,check=document.createElement('canvas');check.width=surface.width;check.height=surface.height;const context=check.getContext('2d');context.drawImage(surface,0,0);
+      const pixel=[...context.getImageData(Math.floor(surface.width*.94),Math.floor(surface.height*.12),1,1).data];pixels.push(pixel);
+      assert(pixel.every((v,i)=>Math.abs(v-pixels[0][i])<=1),'带贴图天空在描边时改变颜色');
+    }}finally{sky.material.map=oldMap;sky.material.needsUpdate=true;map.dispose();}
+    return {ok:true,texturedSkyWidths:[0,1,2,3],pixels};
+  }
+  if(phase==='prepare'){
+    const environment=project.environments.find(e=>e.id===currentAct.environmentId);
+    assert(environment,'缺少环境');environment.name='天空与实时头像验证';environment.background='#86b8df';
+    environment.camera={position:[0,1.3,4.3],target:[0,1.05,0],fov:32};environment.lighting={color:'#ffffff',intensity:2.2,ambientIntensity:.35};
+    environment.nodes=[{id:'regression-ground',kind:'ground',name:'地面',position:[0,0,0],rotation:[-Math.PI/2,0,0],scale:[1,1,1],width:30,height:30,color:'#888888'},
+      {id:'regression-sky',kind:'sky',name:'蓝色天空球',position:[0,0,0],rotation:[0,0,0],scale:[1,1,1],color:'#86b8df',assetId:''}];
+    current.characterId=hua.id;current.text='天空球不会再被描边涂黑。这个实时头像和场上的我，使用同一个人物模型。';
+    current.cast={left:setting(fbx.id),center:setting(hua.id),right:setting('')};
+    project.render.outline=0;project.render.style='original';activePanel='story';selectedAct=0;selectedStep=0;renderSidebar();renderInspector();await updatePreview();
+    markDirty();await save();await bridge('saveProjectAs',{project,name:'天空头像与自动保存验证'});return {ok:true,fixturePrepared:true};
+  }
+  if(phase.startsWith('outline-')){
+    const width=Number(phase.split('-')[1]);project.render.outline=width;currentAct.render=null;
+    stage.setRenderSettings(chapterRender(currentAct,project.render));await wait(400);
+    const sky=stage.environmentRuntime.objects.get('regression-sky').children[0];
+    assert(sky.material.userData.outlineParameters.visible===false,'天空仍参与描边');
+    if(stage.outlineEffect.enabled)stage.outlineEffect.render(stage.scene,stage.camera);else stage.renderer.render(stage.scene,stage.camera);
+    const canvas=stage.renderer.domElement,ctx=document.createElement('canvas');ctx.width=canvas.width;ctx.height=canvas.height;
+    const c=ctx.getContext('2d');c.drawImage(canvas,0,0);const pixel=[...c.getImageData(Math.floor(canvas.width*.94),Math.floor(canvas.height*.12),1,1).data];
+    assert(pixel[0]>75&&pixel[1]>100&&pixel[2]>120,'天空像素变黑 '+pixel);
+    return {ok:true,width,skyPixel:pixel,skyOutlineExcluded:true};
+  }
+  if(phase==='dark'){
+    const environment=project.environments.find(e=>e.id===currentAct.environmentId);environment.lighting.intensity=.08;environment.lighting.ambientIntensity=.015;
+    await stage.setEnvironment(environment,project.assets);await wait(400);
+    const materials=[...stage.visibleRecords.values()].flatMap(r=>[...r.materials.keys()]);assert(stage.ambientLight.intensity===.015,'补光没有随环境变化');
+    assert(materials.every(m=>m.emissiveIntensity===undefined||m.emissiveIntensity===0),'人物仍有自发光');
+    const mtoon=materials.filter(m=>m.isMToonMaterial);assert(mtoon.length>0&&mtoon.every(m=>m.matcapFactor.r===0&&m.parametricRimColorFactor.r===0),'VRM 固定高光仍亮');
+    return {ok:true,ambient:stage.ambientLight.intensity,key:stage.keyLight.intensity,emissionOff:true,rimOff:true,matcapOff:true};
+  }
+  if(phase==='mouth'){
+    const environment=project.environments.find(e=>e.id===currentAct.environmentId);environment.lighting={color:'#ffffff',intensity:2.2,ambientIntensity:.35};
+    playing=true;playAct=0;playStep=0;preparedAct=-1;textSpeed=4;await showPlayStep();if(mode==='editor')startTyping(current.text,hua.id);await wait(450);
+    const record=stage.visibleRecords.get(hua.id);assert(stage.livePortrait.record===record,'头像用了另一份模型');
+    assert(stage.livePortrait.frames>0&&record.talkingMouth?.diagnostics().running,'头像没有实时渲染或嘴型没有启动');
+    assert(record.vrm.expressionManager.getValue('happy')>.5,'表情未应用');
+    let mouth=false;for(let n=0;n<15;n++){await wait(70);if(['aa','ih','ou','ee','oh'].some(k=>record.vrm.expressionManager.getValue(k)>.05))mouth=true;}
+    assert(mouth,'没有实际嘴型变化');clearTyping();
+    return {ok:true,sameModel:true,frames:stage.livePortrait.frames,actualMouthChanges:true,happy:record.vrm.expressionManager.getValue('happy'),castCount:stage.visibleRecords.size};
+  }
+  if(phase==='offstage'){
+    current.cast={left:setting(fbx.id),center:setting(''),right:setting('')};await displayActStep(currentAct,current);await updateSpeakerPortrait(hua.id,true);await wait(250);
+    const record=stage.livePortrait.record;assert(record&&!stage.visibleRecords.has(hua.id),'头像占用了场上位置');assert(record.vrm.scene.visible===false,'头像人物漏到主场景');
+    stage.startTalking(hua.id,true);stage.talkingLetter('你');await wait(200);assert(record.talkingMouth?.diagnostics().running,'场外人物嘴型未启用');stage.stopTalking();
+    return {ok:true,offstagePortrait:true,castCount:stage.visibleRecords.size,modelCount:stage.modelCache.size,noDuplicateModel:true};
+  }
+  if(phase==='fbx'){
+    await updateSpeakerPortrait(fbx.id,true);await wait(200);assert(stage.livePortrait.record===null,'FBX 被替换成实时头像');
+    const node=document.querySelector('#speaker-portrait');assert(!node.classList.contains('live-portrait'),'FBX 实时头像标记未清理');
+    return {ok:true,fbxStaticPortrait:true,faceControlsUnchanged:true};
+  }
+  if(phase==='export'){
+    playing=false;current.cast={left:setting(fbx.id),center:setting(hua.id),right:setting('')};await updatePreview();markDirty();await save();await bridge('exportGame',{folderName:'实时头像试玩'});
+    return {ok:true,saved:true,exported:true};
+  }
+  if(phase==='player'){
+    playing=true;playAct=0;playStep=0;preparedAct=-1;textSpeed=5;await showPlayStep();await wait(300);
+    assert(stage.livePortrait.record===stage.visibleRecords.get(hua.id),'独立游戏头像没有同步');
+    assert(stage.livePortrait.frames>0,'独立游戏头像未渲染');clearTyping();return {ok:true,standaloneLivePortrait:true,skyOutlineExcluded:true};
+  }
+  if(phase==='environment'){playing=false;activePanel='story';await updatePreview();await editEnvironment(currentAct);return {ok:true,opened:true};}
+  throw Error('未知检查 '+phase);
+};
 if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeSceneAnimations=async phase=>{
   const assert=(value,message)=>{if(!value)throw Error(message);};
   const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -1460,7 +1546,7 @@ function renderInspector() {
       <p class="tip">跟随对白文字显示动嘴，标点处稍作停顿；文字显示完就停止。有 A、I、U、E、O 嘴型的模型可使用。</p>` : '<p class="tip">FBX 人物只播放身体动作。</p>'}
       <div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}
         <div class="inline-actions">${button('上传头像', 'upload-character-portrait')}${item.modelId && !isFbxModel(item.modelId) ? button('重新拍摄 VRM', 'capture-character-portrait') : ''}</div>
-        <p class="tip">没有模型也能上传头像说话。VRM 自动头像会采用下方选中的动作和定格帧；选好帧后会重拍。手动上传的头像不会被覆盖。</p></div>
+        <p class="tip">没有模型也能上传头像说话。VRM 对话头像会实时显示模型，嘴型和表情跟随场上人物。素材缩略图仍使用下方动作和定格帧。手动上传的头像不会被覆盖。</p></div>
       ${field('鉴赏姿势 / 动作', select('character.galleryMotionId', byType('motion'), item.galleryMotionId, '保持站立'))}
       <label class="adjustment"><span>鉴赏转身角度</span><input type="range" data-gallery-adjust="galleryYaw" min="-90" max="90" step="5" value="${item.galleryYaw}"><output data-gallery-output="galleryYaw">${item.galleryYaw}°</output></label>
       <label class="adjustment gallery-frame-adjustment"><span>动作定格帧</span><input type="range" data-gallery-adjust="galleryPoseFrame" min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled><output data-gallery-output="galleryPoseFrame">${item.galleryMotionId ? '读取中…' : '先选择动作'}</output></label>
@@ -1507,8 +1593,6 @@ function renderInspector() {
       ${field('抗锯齿', `<select data-render="antialias"><option value="off" ${settings.antialias === 'off' ? 'selected' : ''}>关闭</option><option value="standard" ${settings.antialias === 'standard' ? 'selected' : ''}>标准</option><option value="high" ${settings.antialias === 'high' ? 'selected' : ''}>高清</option></select>`)}
       ${field('人物画风', `<select data-render="style"><option value="original" ${settings.style === 'original' ? 'selected' : ''}>模型原版</option><option value="anime" ${settings.style === 'anime' ? 'selected' : ''}>三渲二（推荐）</option><option value="soft" ${settings.style === 'soft' ? 'selected' : ''}>柔和动漫</option><option value="cinematic" ${settings.style === 'cinematic' ? 'selected' : ''}>电影色调</option></select>`)}
       ${field('人物描边', `<select data-render="outline"><option value="0" ${Number(settings.outline) === 0 ? 'selected' : ''}>关闭</option><option value="1" ${Number(settings.outline) === 1 ? 'selected' : ''}>细</option><option value="2" ${Number(settings.outline) === 2 ? 'selected' : ''}>中</option><option value="3" ${Number(settings.outline) === 3 ? 'selected' : ''}>粗</option></select>`)}
-      ${field('根据背景自动配光', `<select data-render="autoLight"><option value="true" ${settings.autoLight ? 'selected' : ''}>开启</option><option value="false" ${!settings.autoLight ? 'selected' : ''}>关闭</option></select>`)}
-      ${field('背景配光强度', `<input type="range" data-render="lightStrength" min="0" max="100" step="5" value="${Math.round(settings.lightStrength * 100)}"><output id="light-strength-value">${Math.round(settings.lightStrength * 100)}%</output>`)}
       ${field('画面效果', `<select data-render="paintEffect"><option value="none" ${settings.paintEffect !== 'oil' ? 'selected' : ''}>关闭</option><option value="oil" ${settings.paintEffect === 'oil' ? 'selected' : ''}>油画笔触（人物与背景）</option></select>`)}
       ${field('油画笔触强度', `<input type="range" data-render="paintStrength" min="0" max="100" step="5" value="${Math.round((Number(settings.paintStrength) || 0) * 100)}"><output data-render-output="paintStrength">${Math.round((Number(settings.paintStrength) || 0) * 100)}%</output>`)}
       <p class="tip">油画笔触会一起处理背景和人物；对白、菜单保持清晰。开启后会多用一些显卡性能，旧工程默认关闭。</p>
@@ -1649,6 +1733,8 @@ async function updatePreview() {
   if (!current) document.querySelector('#dialogue')?.classList.remove('visible');
   await displayActStep(currentAct, current);
   if (request !== previewRequest || playing) return;
+  await updateSpeakerPortrait(current?.characterId,Boolean(current));
+  if (request !== previewRequest || playing) return;
   if (stage.visibleRecords.size || (current && !stageError))
     placeholder.style.display = 'none';
   else if (modelAsset && !stageError)
@@ -1664,6 +1750,7 @@ function eventBackdrop(node) {
 }
 async function prepareEventScene(node) {
   cancelSceneAnimations();
+  updateSpeakerPortrait('',false);
   clearTyping(); clearAutoAdvance(); titleRequest++; previewRequest++;
   document.querySelector('.stage-frame')?.classList.remove('title-mode');
   document.querySelector('#player-start')?.classList.add('hidden');
@@ -1913,15 +2000,25 @@ async function queueMissingPortraits() {
       `portrait-v3:${item.modelId}:${item.galleryMotionId || ''}:${Math.max(1, Math.floor(Number(item.galleryPoseFrame) || 1))}`));
   (async () => { for (const item of items) await ensureCharacterPortrait(item, Boolean(asset(item.portraitId))); })();
 }
-function updateSpeakerPortrait(characterId, visible) {
-  const node = document.querySelector('#speaker-portrait');
-  const image = node?.querySelector('img');
-  if (!node || !image) return;
-  const item = characterId ? character(characterId) : null;
-  const portraitAsset = asset(item?.portraitId);
-  const url = portraitAsset ? assetUrl(portraitAsset) : temporaryPortraits.get(item?.id) || '';
-  image.src = visible && url ? url : '';
-  node.classList.toggle('hidden', !visible || !url);
+let portraitRequest=0;
+async function updateSpeakerPortrait(characterId, visible) {
+  const token=++portraitRequest,node=document.querySelector('#speaker-portrait'),image=node?.querySelector('img');
+  if(!node||!image)return;
+  const item=characterId?character(characterId):null,model=asset(item?.modelId);
+  if(visible&&model?.type==='vrm'){
+    image.removeAttribute('src');node.classList.add('live-portrait');node.classList.remove('hidden');
+    try{
+      const current=playing?project.acts[playAct]?.steps[playStep]:step();
+      const weights=Object.values(current?.cast||{}).find(c=>c.characterId===characterId)?.expressionWeights||{};
+      const record=await stage.setLivePortrait(model,characterId,node,weights);
+      if(token!==portraitRequest)return;
+      if(record)return;
+    }catch(error){console.warn('实时头像暂时不可用',error.message);}
+  }
+  if(token!==portraitRequest)return;
+  stage?.clearLivePortrait();node.classList.remove('live-portrait');
+  const portraitAsset=asset(item?.portraitId),url=portraitAsset?assetUrl(portraitAsset):temporaryPortraits.get(item?.id)||'';
+  image.src=visible&&url?url:'';node.classList.toggle('hidden',!visible||!url);
 }
 function showDialogue(speaker, text, visible = true, characterId = '') {
   const node = document.querySelector('#dialogue');
@@ -2099,7 +2196,7 @@ async function showPlayStep() {
       if (character(id)) rememberDiscovery('character', id);
     if (mode === 'player' && character(current.characterId)) rememberDiscovery('character', current.characterId);
     showBackground(null);
-    await ensureCharacterPortrait(character(current.characterId));
+    await updateSpeakerPortrait(current.characterId,true);
     if (request !== playRequest || !playing) return;
     await playSceneAnimations(currentAct,current,{sound:true,force:true});
     if(request!==playRequest||!playing)return;
@@ -2622,6 +2719,7 @@ function refreshGalleryFrameControl(item) {
   output.textContent = `第 ${frame} / ${frames} 帧`;
 }
 async function showCharacterEditorPreview() {
+  updateSpeakerPortrait('',false);
   document.querySelector('#title-preview')?.classList.add('hidden');
   document.querySelector('.stage-frame')?.classList.remove('title-mode');
   await stage.setEnvironment(null,project.assets);

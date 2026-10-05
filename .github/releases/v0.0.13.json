@@ -1,0 +1,35 @@
+{
+  "name": "VRMGalgame-0.0.13-win-x64.zip",
+  "bytes": 110497442,
+  "sha256": "020729a213081ccc1b3a25ccfb005f8038b10388318267fe16842f8c1f521c5b",
+  "chunks": [
+    {
+      "sha": "6aeb6db3dd5be5112c257289e053cf3adb62a143",
+      "bytes": 16777216
+    },
+    {
+      "sha": "417565abc2ac16e62cc779ca07e18fc3e274717c",
+      "bytes": 16777216
+    },
+    {
+      "sha": "9438d226c956cda90875301ff0412b1653104281",
+      "bytes": 16777216
+    },
+    {
+      "sha": "b4f2242a33a1aebe517d7a38e67307695a15112b",
+      "bytes": 16777216
+    },
+    {
+      "sha": "89b43c79a9e7a5411f911d40f089b1b4d73bd061",
+      "bytes": 16777216
+    },
+    {
+      "sha": "a3f8d6f694d57114073dc4b53cbc5abb51ca4c8d",
+      "bytes": 16777216
+    },
+    {
+      "sha": "f8b11a1f6d5ec226902c95bcc6d30818ac4a6eb9",
+      "bytes": 9834146
+    }
+  ]
+}

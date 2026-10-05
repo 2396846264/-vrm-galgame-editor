@@ -3,6 +3,8 @@ import {CharacterProps} from './character-props.js';
 ﻿import * as THREE from 'three';
 import {fitEnvironmentShadow,environmentShadowBounds} from './environment-shadows.js';
 import {EnvironmentRuntime} from './environment-runtime.js';
+import {CharacterSceneLighting,environmentAmbient} from './character-scene-lighting.js';
+import {LivePortrait} from './live-portrait.js';
 import {createFbxActor, retargetFbxClip} from './fbx-character.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import {CompatibleFBXLoader as FBXLoader} from './fbx-loader.js';
@@ -215,6 +217,8 @@ export class VRMStage {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.outlineEffect = new OutlineEffect(this.renderer);
     this.originalMaterialSettings = new WeakMap();
+    this.characterSceneLighting=new CharacterSceneLighting();
+    this.livePortrait=new LivePortrait();
     this.paintComposer = null;
     this.paintPass = null;
     this.paintPixelRatio = 1;
@@ -278,6 +282,8 @@ export class VRMStage {
     await this.environmentRuntime.load(environment,assets);
     if(request!==this.environmentRequest)return;
     this.environmentSettings=environment;
+    this.applyLighting(this.currentLightProfile);
+    for(const task of this.modelCache.values())Promise.resolve(task).then(record=>{if(record)this.applyMaterialStyle(record.vrm.scene);}).catch(()=>{});
     this.environmentShadowBounds=environment?environmentShadowBounds(this.environmentRuntime.root):null;this.environmentShadowKey='';
     this.applyShadowSettings();for(const task of this.modelCache.values()){Promise.resolve(task).then(record=>{if(record)this.applyShadowCasting(record.vrm.scene);}).catch(()=>{});}
     this.scene.background=environment?new THREE.Color(environment.background):null;
@@ -312,7 +318,8 @@ export class VRMStage {
     const delta = Math.min(this.clock.getDelta(), 0.1);
     this.averageFrameMs = this.averageFrameMs ? this.averageFrameMs * 0.94 + delta * 1000 * 0.06 : delta * 1000;
     const updated = new Set();
-    for (const record of this.visibleRecords.values()) {
+    for (const record of [...this.visibleRecords.values(),this.livePortrait.record]) {
+      if(!record)continue;
       if (updated.has(record)) continue;
       updated.add(record);
       record.talkingMouth?.restore();
@@ -324,6 +331,7 @@ export class VRMStage {
       this.applyFootLock(record);
       this.weather?.applyWind(record);
       record.vrm.update(delta);
+      if(this.environmentSettings)this.characterSceneLighting.apply(record.vrm.scene,true);
       this.characterProps.update(record);
     }
     this.environmentRuntime.update(this.camera,delta,Boolean(this.sceneAnimationsPaused?.()));this.updateShadowGround();
@@ -331,6 +339,7 @@ export class VRMStage {
     if (this.paintEnabled && this.paintComposer) this.paintComposer.render(delta);
     else if (this.outlineEffect.enabled) this.outlineEffect.render(this.scene, this.camera);
     else this.renderer.render(this.scene, this.camera);
+    this.livePortrait.render(this.renderer,this.scene,this.element);
   }
   destroy() {
     this.bindingView.dispose();
@@ -340,6 +349,7 @@ export class VRMStage {
     this.resizeObserver.disconnect();
     this.clear();
     this.environmentRuntime.clear();
+    this.livePortrait.dispose();
     this.shadowPlane.geometry.dispose();
     this.shadowPlane.material.dispose();
     this.releasePaintBackground();
@@ -410,6 +420,7 @@ export class VRMStage {
           if (material?.color && !materials.has(material)) materials.set(material, material.color.clone());
         }
       });
+      this.characterSceneLighting.capture(vrm.scene);
       this.applyMaterialStyle(vrm.scene);
       this.applyOutline(vrm.scene);
       this.applyShadowCasting(vrm.scene);
@@ -828,13 +839,25 @@ export class VRMStage {
   }
   startTalking(actorKey, enabled = true) {
     this.stopTalking();
-    const record = enabled ? this.visibleRecords.get(actorKey) : null;
+    const record = enabled ? this.visibleRecords.get(actorKey)||(this.portraitActorKey===actorKey?this.livePortrait.record:null) : null;
     if (!record || record.vrm.isFbx) return;
     record.talkingMouth ||= createTalkingMouth(record.vrm.expressionManager);
     if (!record.talkingMouth) return;
     this.talkingRecord = record; record.talkingMouth.start();
   }
   talkingLetter(char) { this.talkingRecord?.talkingMouth?.letter(char); }
+  clearLivePortrait(){this.portraitRequest=(this.portraitRequest||0)+1;this.portraitActorKey='';this.livePortrait.clear();}
+  async setLivePortrait(modelAsset,actorKey,node,weights={}){
+    const token=this.portraitRequest=(this.portraitRequest||0)+1;
+    if(this.portraitActorKey!==actorKey||this.portraitModelId!==modelAsset.id||this.livePortrait.node!==node)this.livePortrait.clear();
+    const record=await this.loadModel(modelAsset,actorKey);
+    if(token!==this.portraitRequest||!record||record.vrm.isFbx)return null;
+    if(!this.visibleRecords.has(actorKey)){
+      if(record.currentMotionId===undefined)this.poseRecord(record,null,null,false,{},`portrait:${actorKey}`);
+      this.expressRecord(record,weights);record.vrm.update(0);
+    }
+    this.portraitActorKey=actorKey;this.portraitModelId=modelAsset.id;this.livePortrait.set(record,node);this.element.style.visibility='visible';return record;
+  }
   stopTalking() {
     if (this.talkingRecord) {
       this.talkingRecord.talkingMouth?.stop(); this.talkingRecord.vrm.update(0);
@@ -1031,6 +1054,7 @@ export class VRMStage {
         }
       }
     });
+    this.characterSceneLighting.apply(scene,Boolean(this.environmentSettings),anime);
   }
   applyOutline(scene) {
     const width = Math.max(0, Math.min(4, Number(this.renderSettings.outline) || 0));
@@ -1094,7 +1118,7 @@ export class VRMStage {
       x: bx / weight / 64, y: by / weight / 36 };
   }
   applyLighting(profile) {
-    if(this.environmentSettings){this.ambientLight.color.set(0xffffff);this.keyLight.color.set(this.environmentSettings.lighting.color);this.keyLight.intensity=this.environmentSettings.lighting.intensity;return;}
+    if(this.environmentSettings){this.ambientLight.color.set(0xffffff);this.ambientLight.intensity=environmentAmbient(this.environmentSettings);this.keyLight.color.set(this.environmentSettings.lighting.color);this.keyLight.intensity=this.environmentSettings.lighting.intensity;return;}
     const style = this.renderSettings?.style || 'original';
     const soft = style === 'soft';
     const strength = this.renderSettings?.autoLight ? Math.max(0, Math.min(1, Number(this.renderSettings.lightStrength) || 0)) : 0;
@@ -1124,6 +1148,7 @@ export class VRMStage {
   }
   clear() {
     this.stopTalking();
+    this.clearLivePortrait();
     this.requestNumber++;
     this.element.style.visibility = this.environmentRuntime.root || this.weather?.active ? 'visible' : 'hidden';
     this.cacheGeneration++;
