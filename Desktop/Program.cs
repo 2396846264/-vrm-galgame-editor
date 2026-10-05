@@ -502,7 +502,7 @@ internal sealed partial class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".character-preview.json",
                         await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
-                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression") && !Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait"))
+                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression") && !Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-preload"))
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=editor-settings]').click(); const interval=document.querySelector('#editor-auto-save-minutes'); interval.value='10'; interval.dispatchEvent(new Event('input',{bubbles:true})); document.querySelector('[data-action=close-editor-settings]').click(); window.prompt=()=> '测试副本'; document.querySelector('[data-action=save-as]').click()");
                     await Task.Delay(2600);
@@ -1040,6 +1040,15 @@ internal sealed partial class EditorWindow : Form
                     await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, shot);
                 await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
                 await Task.Delay(1200);
+            }
+            if(Environment.GetCommandLineArgs().Contains("--smoke-preload")){
+                foreach(string phase in playerMode?new[]{"trigger","player"}:Environment.GetCommandLineArgs().Contains("--smoke-preload-reopen")?new[]{"reopen"}:new[]{"off","trigger","partial","full","dynamic","adopt","export"}){
+                    await web.CoreWebView2.ExecuteScriptAsync("window.__preloadCheck=null;window.__vrmSmokePreload("+JsonSerializer.Serialize(phase)+").then(r=>window.__preloadCheck=r).catch(e=>window.__preloadCheck={error:e.message})");
+                    string check="null";for(int i=0;i<2400;i++){check=await web.CoreWebView2.ExecuteScriptAsync("window.__preloadCheck");if(check!="null")break;await Task.Delay(50);}
+                    File.WriteAllText(smokeBase+".preload-"+phase+".json",check);
+                    using(var shot=File.Create(smokeBase+".preload-"+phase+".png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);
+                    if(!check.Contains("\"ok\":true"))throw new Exception(check);
+                }
             }
             if(Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait")){
                 foreach(string phase in playerMode?new[]{"player"}:Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait-reopen")?new[]{"reopen"}:new[]{"auto","manual","reshoot","export"}){

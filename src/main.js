@@ -19,6 +19,8 @@ import { normalizeWeather, weatherDefaults, weatherNames, weatherMood } from './
 import { colorDefaults, chapterRender, colorFilter, chapterUnlocked } from './chapters.js';
 import { VRMStage, assetUrl, motionFrameInfo, captureCharacterPortrait } from './renderer.js';
 import {canGeneratePortrait} from './portrait-policy.js';
+import {ActPreloader,nextPreloadTarget} from './act-preload.js';
+import './act-preload.css';
 import { embeddedVrmThumbnail, internalPortrait } from './vrm-thumbnail.js';
 import {validateEnvironmentLibrary} from './environment-operations.js';
 import {createEnvironment,migrateEnvironments,validateEnvironment} from './environment-schema.js';
@@ -324,6 +326,80 @@ function castForAct(currentAct, speakingStep = currentAct?.steps?.[0]) {
     return modelAsset?[{actorKey,modelAsset,position,transform:transformOf(settings),expressionWeights:settings.expressionWeights||{},motionAsset:asset(settings.motionId),motionOptions:motionOptionsOf(settings),playbackKey:`step:${speakingStep.id}:${actorKey}`,props:actor.props||[],visiblePropIds:settings.props||[],assets:project.assets,returnToIdle:true}]:[];
   });
 }
+
+window.__vrmSmokePreload=async function(phase){
+ if(!new URLSearchParams(location.search).has('smoke'))throw Error('Smoke only');
+ const assert=(test,message)=>{if(!test)throw Error(message);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ async function ready(full){for(let i=0;i<1200;i++){const state=nextPreloader.snapshot();if(state&&!state.busy&&state.done.includes(full?'graphics:full':'graphics:opening'))return state;await wait(50);}throw Error('预加载没有完成：'+JSON.stringify(nextPreloader.snapshot()));}
+ async function start(fps,index=2){nextPreloader.reset();releasePreparedMedia();window.__preloadTestFps=fps;playing=true;playAct=0;playStep=index;preparedAct=-1;autoPlay=false;await showPlayStep();await wait(250);updateRuntimePreparation();}
+ if(phase==='off'){await start(25);await wait(500);assert(!nextPreloader.snapshot(),'低于30帧仍预加载');assert(document.querySelector('#act-preload-indicator').classList.contains('hidden'),'低帧数转圈没有隐藏');const meter=stage.frameRateMeter.fps;assert(meter>0,'没有真实帧采样');return {ok:true,mode:'off',realFps:meter,display:document.querySelector('#game-fps').textContent};}
+ if(phase==='trigger'){await start(60,1);assert(!nextPreloader.snapshot(),'提前超过最后三句');playStep=2;await showPlayStep();await wait(100);updateRuntimePreparation();assert(nextPreloader.snapshot()?.id===project.acts[1].id,'倒数第三句没有触发');const fps=document.querySelector('#game-fps').getBoundingClientRect(),spinner=document.querySelector('#act-preload-indicator').getBoundingClientRect();assert(fps.right<spinner.left,'帧数和转圈重叠');return {ok:true,lastThree:true,separateIndicators:true};}
+ if(phase==='partial'||phase==='full'){
+   await start(phase==='full'?60:45);const root=stage.environmentRuntime.root,records=[...stage.visibleRecords.values()],camera=stage.camera.position.clone(),sound=music.src;
+   const state=await ready(phase==='full');assert(stage.environmentRuntime.root===root&&camera.distanceTo(stage.camera.position)<1e-8,'提前切换了场景或镜头');assert(records.every(record=>stage.visibleRecords.get(record.anchor.userData.actorKey)||[...stage.visibleRecords.values()].includes(record)),'预加载替换当前人物');assert(records.every(record=>record.vrm.scene.visible),'当前人物消失');assert(music.src===sound,'下一幕音乐提前播放');assert(state.failed.length===0,'预加载资源错误：'+state.failed.join(','));
+   const later=project.acts[1].steps[1].cast.center.characterId;assert(state.done.includes('model:'+later)===(phase==='full'),'完整/部分人物范围错误');
+   return {ok:true,mode:phase,done:state.done,currentScenePreserved:true,currentCastPreserved:true,noEarlySound:true};
+ }
+ if(phase==='dynamic'){
+   await start(45);await ready(false);window.__preloadTestFps=25;updateRuntimePreparation();const before=nextPreloader.snapshot().done.length;await wait(400);assert(nextPreloader.snapshot().done.length===before,'低帧继续开始任务');assert(document.querySelector('#act-preload-indicator').classList.contains('hidden'),'暂停后仍转圈');window.__preloadTestFps=60;updateRuntimePreparation();await ready(true);return {ok:true,pausedBelow30:true,upgradedAbove55:true};
+ }
+ if(phase==='adopt'||phase==='player'||phase==='reopen'){
+   await start(60);await ready(true);const bundle=nextPreloader.record.bundle,root=bundle.environment.root,first=project.acts[1].steps[0].cast.center.characterId,model=await bundle.stage.modelCache.get(first);playAct=1;playStep=0;const begin=performance.now();await showPlayStep();const ms=performance.now()-begin;assert(stage.environmentRuntime.root===root,'换幕重新建立环境');assert(stage.visibleRecords.get(first)===model,'换幕重新加载人物');assert(!nextPreloader.snapshot(),'下一幕准备区没有交接');
+   if(phase==='player'){playStep=1;await showPlayStep();assert(stage.livePortrait.record===stage.visibleRecords.get(project.acts[1].steps[1].characterId),'VRM 实时头像没有复用同一个人物');playStep=0;await showPlayStep();assert(!stage.livePortrait.record,'FBX 头像变成实时模型');delete window.__preloadTestFps;}
+   await wait(1000);return {ok:true,sceneReused:true,actorReused:true,switchMs:ms,adoptions:stage.preloadAdoptions,vrmPortraitPreserved:phase==='player',realFps:stage.frameRateMeter.fps,display:document.querySelector('#game-fps').textContent};
+ }
+ if(phase==='export'){delete window.__preloadTestFps;nextPreloader.reset();playing=false;playAct=0;selectedAct=0;selectedStep=0;markDirty();await save();await bridge('saveProjectAs',{project:structuredClone(project),name:'按帧数预加载验证'});await bridge('exportGame',{folderName:'预加载试玩'});return {ok:true,exported:true};}
+ throw Error('Unknown phase');
+};
+
+const runtimeFps=()=>new URLSearchParams(location.search).has('smoke')&&Number.isFinite(window.__preloadTestFps)?window.__preloadTestFps:stage?.frameRateMeter?.fps||0;
+let activePreparedMedia=new Map(),activePreparedImages=[];
+function releasePreparedMedia(){for(const item of activePreparedMedia.values()){item.pause?.();item.removeAttribute?.('src');item.load?.();}activePreparedMedia.clear();activePreparedImages=[];}
+function takePreparedAudio(id){const item=activePreparedMedia.get(id);if(!item||item.tagName!=='AUDIO')return null;activePreparedMedia.delete(id);return item;}
+function preparationEntries(target,lines){
+ const entries=lines.flatMap(line=>castForAct(target,line));
+ for(const line of lines){const actor=character(line.characterId),modelAsset=asset(actor?.modelId);if(modelAsset?.type==='vrm'&&!entries.some(entry=>entry.actorKey===actor.id))entries.push({actorKey:actor.id,modelAsset,props:[],visiblePropIds:[]});}
+ return entries;
+}
+async function prepareMedia(item,bundle){
+ if(!item)return;
+ const node=item.type==='image'?new Image():document.createElement(item.type==='video'?'video':'audio');
+ node.preload='auto';node.muted=true;bundle.media.push(node);bundle.mediaMap.set(item.id,node);
+ await new Promise(resolve=>{let timer;const finish=()=>{clearTimeout(timer);node.removeEventListener('load',finish);node.removeEventListener('loadeddata',finish);node.removeEventListener('error',finish);resolve();};node.addEventListener(item.type==='image'?'load':'loadeddata',finish,{once:true});node.addEventListener('error',finish,{once:true});timer=setTimeout(finish,5000);node.src=assetUrl(item);node.load?.();});
+}
+function createPreloadBundle(target){
+ const environment=project.environments.find(env=>env.id===target.environmentId),bundle=stage.createActPreparation(chapterRender(target,project.render),environment);
+ bundle.mediaMap=new Map();bundle.openingEntries=preparationEntries(target,(target.steps||[]).slice(0,1));
+ const allEntries=preparationEntries(target,target.steps||[]),opening=bundle.openingEntries,warm=bundle.stage;
+ const models=new Map(),motions=new Map(),clips=new Map(),props=new Map(),media=new Map();
+ for(const entry of allEntries){
+   const partial=opening.some(e=>e.actorKey===entry.actorKey);models.set(entry.actorKey,{item:entry.modelAsset,partial});
+   if(entry.motionAsset){const id=entry.motionAsset.id;motions.set(id,{item:entry.motionAsset,partial:(motions.get(id)?.partial||opening.some(e=>e.motionAsset?.id===id))});const key=entry.actorKey+':'+id;clips.set(key,{entry,partial:opening.some(e=>e.actorKey===entry.actorKey&&e.motionAsset?.id===id)});}
+   for(const binding of entry.props||[])if(entry.visiblePropIds?.includes(binding.id)){const id=binding.assetId;props.set(id,{item:asset(id),partial:props.get(id)?.partial||opening.some(e=>e.actorKey===entry.actorKey&&e.visiblePropIds?.includes(binding.id))});}
+ }
+ const addMedia=(id,partial)=>{const item=asset(id);if(item&&['image','audio','voice','video'].includes(item.type))media.set(id,{item,partial:partial||media.get(id)?.partial});};
+ addMedia(target.bgmId,true);addMedia(target.weather?.soundId,true);addMedia(target.coverImageId,false);
+ for(const [index,line]of(target.steps||[]).entries()){addMedia(line.voiceId,index===0);addMedia(line.seId,index===0);addMedia(character(line.characterId)?.portraitId,index===0);for(const cue of line.sceneAnimations||[])if(cue.enabled)addMedia(cue.soundId,index===0);}
+ if(target.kind==='event'){for(const key of['imageId','videoId','bgmId','voiceId','seId','flagAId','flagBId'])addMedia(target.event?.[key],true);for(const row of target.event?.declarations||[]){addMedia(row.flagAId,false);addMedia(row.flagBId,false);}}
+ const job=(key,partial,run)=>bundle.jobs.push({key,partial:Boolean(partial),run});
+ if(environment)job('environment',true,gate=>bundle.environment.load(environment,project.assets,{beforeNode:gate}));
+ for(const [key,spec]of models)job('model:'+key,spec.partial,async()=>{await warm.loadModel(spec.item,key);await warm.waitTextures();});
+ for(const [key,spec]of motions)job('motion:'+key,spec.partial,async()=>{await warm.loadMotionSource(spec.item);await warm.waitTextures();});
+ for(const [key,spec]of clips)job('clip:'+key,spec.partial,()=>warm.prepareClip(spec.entry.modelAsset,spec.entry.motionAsset,spec.entry.actorKey));
+ for(const [key,spec]of props)job('prop:'+key,spec.partial,()=>warm.characterProps.load(spec.item));
+ for(const [key,spec]of media)job('media:'+key,spec.partial,()=>prepareMedia(spec.item,bundle));
+ job('graphics:opening',true,gate=>stage.warmPreparedGraphics(bundle,gate));job('graphics:full',false,gate=>stage.warmPreparedGraphics(bundle,gate));
+ return bundle;
+}
+const nextPreloader=new ActPreloader({fps:runtimeFps,allowed:()=>playing&&!transitioning&&!saveModalMode&&!document.hidden,create:createPreloadBundle,dispose:bundle=>bundle.dispose(),status:state=>{const node=document.querySelector('#act-preload-indicator');node?.classList.toggle('hidden',!state.busy);if(node)node.dataset.mode=state.mode;},defer:()=>new Promise(resolve=>window.requestIdleCallback?requestIdleCallback(resolve,{timeout:100}):setTimeout(resolve,16))});
+function updateRuntimePreparation(){
+ const counter=document.querySelector('#game-fps');counter?.classList.toggle('hidden',!(mode==='player'||playing));if(counter)counter.textContent=runtimeFps()>0?Math.round(runtimeFps())+' FPS':'— FPS';
+ if(playing&&!transitioning)nextPreloader.update(nextPreloadTarget(project?.acts||[],playAct,playStep));
+ else if(!playing)nextPreloader.reset();
+ else document.querySelector('#act-preload-indicator')?.classList.add('hidden');
+}
+setInterval(updateRuntimePreparation,200);
+
 async function displayActStep(currentAct, current) {
   const cast=castForAct(currentAct,current),speaker=cast.find(entry=>entry.actorKey===current?.characterId);
   await stage.showCast(cast,speaker||null,playing);
@@ -1238,6 +1314,7 @@ function renderEditor() {
           <div id="choice-list"></div>
           <div id="play-controls">${button('退出试玩', 'stop-play')}</div>
           <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
+          <div id="game-fps" class="game-fps hidden" aria-label="当前帧数">— FPS</div><div id="act-preload-indicator" class="act-preload-indicator hidden" role="status"><i aria-hidden="true"></i><span>准备下一幕</span></div>
         </div>
         <div class="stage-hint">选中左侧对白即可预览。试玩时点击画面空白处，或按空格 / Enter 继续。</div>
         <section class="asset-dock" aria-label="常驻素材库"><div class="asset-dock-heading"><strong>素材库</strong><small>图片直接显示缩略图；在这里导入、分类、删除素材</small></div><div id="asset-dock-tabs" class="asset-dock-tabs" role="tablist" aria-label="素材类型"></div><div id="asset-dock-body" class="asset-dock-body"></div></section>
@@ -2142,7 +2219,8 @@ function startTyping(value, characterId = project.acts[playAct]?.steps[playStep]
 function playEffect(id,preparedSound) {
   const item = asset(id);
   if (!item || item.type!=='audio') return false;
-  const sound = preparedSound || new Audio(assetUrl(item));
+  const sound = preparedSound || takePreparedAudio(id) || new Audio(assetUrl(item));
+  sound.muted=false;
   sound.volume = audioSettings.master * audioSettings.effects;
   activeEffects.add(sound);
   const remove = () => activeEffects.delete(sound);
@@ -2176,7 +2254,8 @@ function setMusic(id) {
     return;
   }
   music.pause();
-  music.src = url;
+  music=takePreparedAudio(id)||music;music.loop=true;music.muted=false;music.volume=audioSettings.master*audioSettings.music;
+  if(music.src!==url)music.src = url;
   if (url) music.play().then(() => rememberDiscovery('music', id)).catch(() => {});
 }
 const audioKey = () => `vrm-audio-${project.id || project.name}`;
@@ -2240,7 +2319,11 @@ async function showPlayStep() {
     if (preparedAct !== playAct) {
       loading?.classList.remove('hidden');
       const entries=currentAct.steps.flatMap(line=>castForAct(currentAct,line));
-      await stage.prepareAct(entries);
+      const prepared=await nextPreloader.take(currentAct.id);
+      if(request!==playRequest||!playing){prepared?.dispose();return;}
+      releasePreparedMedia();
+      if(prepared){activePreparedMedia=prepared.mediaMap;activePreparedImages=prepared.media.filter(item=>item.tagName==='IMG');}
+      await stage.prepareAct(prepared?prepared.openingEntries:entries,prepared);
       if (request !== playRequest || !playing) return;
       preparedAct = playAct;
     }
@@ -2278,7 +2361,8 @@ async function showPlayStep() {
     voice.pause();
     const voiceAsset = asset(current.voiceId);
     if (voiceAsset) {
-      voice.src = assetUrl(voiceAsset);
+      const onended=voice.onended;voice=takePreparedAudio(current.voiceId)||voice;voice.onended=onended;voice.muted=false;voice.volume=audioSettings.master*audioSettings.voice;
+      if(voice.src!==assetUrl(voiceAsset))voice.src = assetUrl(voiceAsset);
       voice.play().catch(() => {
         if (request === playRequest && autoPlay) scheduleAutoAdvance(current);
       });
@@ -2301,11 +2385,12 @@ async function showPlayStep() {
     if (request === playRequest) {
       transitioning = false;
       loading?.classList.add('hidden');
-      if (displayed) scheduleAutoAdvance(current);
+      if (displayed) { scheduleAutoAdvance(current); updateRuntimePreparation(); }
     }
   }
 }
 function startPlay() {
+  nextPreloader.reset();releasePreparedMedia();
   restoredEventRemaining = undefined;
   const firstAct = mode === 'player' || activePanel === 'title' ? 0 : selectedAct;
   if (!project.acts[firstAct]?.steps.length) { toast('先写一句对白再试玩', true); return; }
@@ -2318,6 +2403,7 @@ function startPlay() {
   showPlayStep();
 }
 function stopPlay() {
+  nextPreloader.reset();releasePreparedMedia();
   sceneAnimationDialog.close(false);
   cancelSceneAnimations();
   events.cancel(); restoredEventRemaining = undefined; musicFadeToken++;
@@ -2978,6 +3064,7 @@ function renderPlayer() {
     </div>
     <div id="player-start" class="title-composition"></div>
     <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
+          <div id="game-fps" class="game-fps hidden" aria-label="当前帧数">— FPS</div><div id="act-preload-indicator" class="act-preload-indicator hidden" role="status"><i aria-hidden="true"></i><span>准备下一幕</span></div>
   </div></div>`;
   stageError = '';
   stage = new VRMStage(document.querySelector('#stage-canvas'), message => {

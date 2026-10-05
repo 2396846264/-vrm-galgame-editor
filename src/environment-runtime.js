@@ -11,7 +11,7 @@ export function disposeTree(root) {
 }
 export class EnvironmentRuntime {
   constructor(scene,loader=new GLTFLoader()){this.scene=scene;this.loader=loader;this.root=null;this.request=0;this.key='';this.environmentId='';this.objects=new Map();this.animations=new SceneAnimationPlayer();}
-  async load(env,assets) {
+  async load(env,assets,{beforeNode=null}={}) {
     const token=++this.request;
     const key=env?JSON.stringify([{...env,revision:undefined},env.nodes.filter(n=>n.assetId).map(n=>{const a=assets.find(a=>a.id===n.assetId);return [a?.id,a?.path,a?.revision];})]):'';if(key===this.key)return this.objects;
     if(!env){this.clear(false);this.key='';return this.objects;}
@@ -20,6 +20,8 @@ export class EnvironmentRuntime {
     try {
       // Sequential decode bounds peak memory and makes cleanup deterministic.
       for(const n of env.nodes){
+        if(beforeNode)await beforeNode();
+        if(token!==this.request){disposeTree(root);return this.objects;}
         let object=new THREE.Group();root.add(object);
         if(n.kind==='ground'){object.add(new THREE.Mesh(new THREE.PlaneGeometry(n.width,n.height),new THREE.MeshStandardMaterial({color:n.color||'#b7bfae',roughness:1,side:THREE.DoubleSide})));object.children[0].receiveShadow=true;object.children[0].castShadow=true;}else if(n.kind==='model'){
           const gltf=await this.loader.loadAsync(url(assets.find(a=>a.id===n.assetId)));object.add(gltf.scene);

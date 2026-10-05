@@ -1,5 +1,6 @@
 import {BindingView} from './binding-view.js';
 import {CharacterProps} from './character-props.js';
+import {FrameRateMeter} from './act-preload.js';
 ﻿import * as THREE from 'three';
 import {fitEnvironmentShadow,environmentShadowBounds} from './environment-shadows.js';
 import {EnvironmentRuntime} from './environment-runtime.js';
@@ -256,6 +257,7 @@ export class VRMStage {
     this.fbxLoader = new FBXLoader(fbxManager);
     this.clock = new THREE.Clock();
     this.averageFrameMs = 0;
+    this.frameRateMeter=new FrameRateMeter();
     this.vrm = null;
     this.mixer = null;
     this.activeRecord = null;
@@ -328,7 +330,9 @@ export class VRMStage {
   animate() {
     if (!this.running) return;
     this.frame = requestAnimationFrame(() => this.animate());
-    const delta = Math.min(this.clock.getDelta(), 0.1);
+    const elapsed=this.clock.getDelta();
+    this.frameRateMeter.sample(elapsed,document.hidden);
+    const delta = Math.min(elapsed, 0.1);
     this.averageFrameMs = this.averageFrameMs ? this.averageFrameMs * 0.94 + delta * 1000 * 0.06 : delta * 1000;
     const updated = new Set();
     for (const record of [...this.visibleRecords.values(),this.livePortrait.record]) {
@@ -444,7 +448,8 @@ export class VRMStage {
         currentMotionId: undefined, idleClip, currentAction: null, fadeOutActions: [], footLock: null,
         segmentClips: new Map(), currentMotionToken: '', currentMotionOptions: null
       };
-      record.mixer.addEventListener('finished', event => this.onMotionFinished(record, event.action));
+      record.finishedHandler=event=>this.onMotionFinished(record,event.action);
+      record.mixer.addEventListener('finished',record.finishedHandler);
       return record;
     }).catch(error => {
       if (this.modelCache.get(actorKey) === task) this.modelCache.delete(actorKey);
@@ -498,8 +503,43 @@ export class VRMStage {
     this.clipCache.set(key, task);
     return task;
   }
-  async prepareAct(entries) {
+  createActPreparation(settings,environment){
+    // A detached scene and independent caches prevent preparation from changing the live cast.
+    const warm=Object.create(VRMStage.prototype);
+    Object.assign(warm,{scene:new THREE.Scene(),renderSettings:{...this.renderSettings,...settings},environmentSettings:environment,originalMaterialSettings:new WeakMap(),characterSceneLighting:new CharacterSceneLighting(),cacheGeneration:0,modelCache:new Map(),motionCache:new Map(),clipCache:new Map(),visibleRecords:new Map(),characterProps:new CharacterProps(assetUrl),livePortrait:new LivePortrait(),element:{style:{}},onError:()=>{}});
+    warm.loader=new GLTFLoader();warm.loader.register(parser=>new VRMLoaderPlugin(parser));warm.loader.register(parser=>new VRMAnimationLoaderPlugin(parser));
+    const blobs=new Set(),manager=new THREE.LoadingManager();let textures=Promise.resolve(),resolveTextures;
+    manager.onStart=()=>{textures=new Promise(resolve=>resolveTextures=resolve);};
+    manager.onLoad=()=>{resolveTextures?.();for(const url of blobs)URL.revokeObjectURL(url);blobs.clear();};
+    manager.setURLModifier(url=>{if(url.startsWith('blob:'))blobs.add(url);return url;});manager.addHandler(/\.tga$/i,new TGALoader());warm.fbxLoader=new FBXLoader(manager);warm.waitTextures=()=>textures;
+    const runtime=new EnvironmentRuntime(warm.scene);
+    warm.environmentRuntime=runtime;
+    const ambient=this.ambientLight.clone(),key=this.keyLight.clone();key.castShadow=Boolean(environment);if(environment){key.color.set(environment.lighting.color);key.intensity=environment.lighting.intensity;ambient.intensity=environmentAmbient(environment);}
+    warm.scene.add(ambient,key,key.target);
+    const camera=this.camera.clone();if(environment){camera.position.fromArray(environment.camera.position);camera.lookAt(...environment.camera.target);camera.fov=environment.camera.fov;camera.far=300;camera.updateProjectionMatrix();}
+    return {stage:warm,environment:runtime,camera,jobs:[],media:[],dispose(){warm.clear();runtime.clear();for(const item of this.media){item.pause?.();item.removeAttribute?.('src');item.load?.();}for(const url of blobs)URL.revokeObjectURL(url);blobs.clear();}};
+  }
+  async warmPreparedGraphics(bundle,gate){
+    const renderer=this.renderer,visible=[],props=[];
+    try{
+      for(const task of bundle.stage.modelCache.values()){const record=await task;if(record){visible.push(record.vrm.scene);record.vrm.scene.visible=true;}}
+      for(const task of bundle.stage.characterProps.cache.values()){const root=await task;if(root){props.push(root);bundle.stage.scene.add(root);}}
+      const textures=new Set();bundle.stage.scene.traverse(object=>{for(const material of(Array.isArray(object.material)?object.material:[object.material]))if(material)for(const value of Object.values(material))if(value?.isTexture)textures.add(value);});
+      for(const texture of textures){await gate();if(renderer!==this.renderer)return;renderer.initTexture(texture);}
+      await gate();if(renderer===this.renderer)await renderer.compileAsync(bundle.stage.scene,bundle.camera);
+    }finally{for(const object of visible)object.visible=false;for(const root of props)root.removeFromParent();}
+  }
+  async prepareAct(entries,prepared=null) {
     this.clear();
+    if(prepared){
+      const warm=prepared.stage;
+      this.modelCache=warm.modelCache;this.motionCache=warm.motionCache;this.clipCache=warm.clipCache;
+      this.characterProps=warm.characterProps;this.originalMaterialSettings=warm.originalMaterialSettings;this.characterSceneLighting=warm.characterSceneLighting;
+      for(const task of this.modelCache.values()){const record=await task;if(record){this.scene.add(record.anchor);record.mixer.removeEventListener('finished',record.finishedHandler);record.finishedHandler=event=>this.onMotionFinished(record,event.action);record.mixer.addEventListener('finished',record.finishedHandler);}}
+      warm.modelCache=new Map();warm.motionCache=new Map();warm.clipCache=new Map();warm.characterProps=new CharacterProps(assetUrl);
+      if(prepared.environment?.root){this.environmentRuntime.clear();this.environmentRuntime=prepared.environment;this.environmentRuntime.scene=this.scene;this.scene.add(this.environmentRuntime.root);}
+      this.preloadAdoptions=(this.preloadAdoptions||0)+1;
+    }
     const models = new Map();
     const motions = new Map();
     for (const { modelAsset, motionAsset, actorKey } of entries) {
