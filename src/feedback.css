@@ -7,3 +7,10 @@ body[data-editor-theme] .editor.story-editor .topbar nav { gap: 4px; flex: 0 0 1
 body[data-editor-theme] .editor.story-editor .topbar nav button { font-size: 13px; padding: 6px 7px; }
 body[data-editor-theme] .editor.story-editor .topbar nav button { flex: none; white-space: nowrap; }
 @media (max-width: 1100px) { .editor .status { gap: 10px; } .editor .status .status-note { display: none; } }
+
+.editor .topbar .editor-tools-row{flex:0 0 100%;width:100%;min-width:0;display:flex;align-items:flex-start;gap:8px}
+body[data-editor-theme] .editor .topbar .editor-tools-row>nav{flex:1 1 0;width:auto;min-width:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px}
+body[data-editor-theme] .editor .topbar .editor-tools-row>nav button{flex:none;white-space:nowrap}
+.editor-tools-row .story-current{flex:0 1 auto;width:clamp(180px,25vw,430px);min-width:160px;max-width:430px;padding:5px 9px;font-size:11px;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.editor .center{padding:10px 12px;gap:8px}
+.module-context-caption{display:block;font-weight:400;font-size:11px;color:var(--ui-muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
