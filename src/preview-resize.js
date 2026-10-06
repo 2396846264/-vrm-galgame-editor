@@ -9,7 +9,7 @@ export function createPreviewResizer(center){
  for(const [kind,label]of[['right','拖动右边调整预览大小，固定16比9'],['bottom','拖动底边调整预览大小，固定16比9'],['corner','拖动右下角调整预览大小，固定16比9；双击恢复默认']]){
   const node=document.createElement('button');node.type='button';node.className='preview-resize-handle preview-resize-'+kind;node.dataset.previewResize=kind;node.setAttribute('aria-label',label);node.title=label;if(kind==='corner')node.innerHTML='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 17L17 6M11 17L17 11M16 17L17 16"/></svg>';frame.append(node);handles.push(node);
  }
- function limits(){const css=getComputedStyle(center),height=center.clientHeight-parseFloat(css.paddingTop)-parseFloat(css.paddingBottom),width=center.clientWidth-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight);const max=Math.max(160,Math.min(width,Math.max(160,height-400)*ratio));return {max,min:Math.min(320,max),defaultWidth:Math.min(max,960,height*.5*ratio)};}
+ function limits(){const css=getComputedStyle(center),height=center.clientHeight-parseFloat(css.paddingTop)-parseFloat(css.paddingBottom),width=center.clientWidth-parseFloat(css.paddingLeft)-parseFloat(css.paddingRight);const max=Math.max(140,Math.min(width,Math.max(140,height-460)*ratio));return {max,min:Math.min(240,max),defaultWidth:Math.min(max,960,height*.5*ratio)};}
  function apply(){const limit=limits(),width=Math.max(limit.min,Math.min(limit.max,preference||limit.defaultWidth));frame.style.width=width+'px';frame.style.height=width/ratio+'px';frame.dataset.previewWidth=String(Math.round(width));}
  function persist(){try{preference?localStorage.setItem(storageKey,String(preference)):localStorage.removeItem(storageKey);}catch{}}
  const schedule=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(apply);};

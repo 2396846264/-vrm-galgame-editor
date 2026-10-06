@@ -1,0 +1,22 @@
+.workspace.story-workspace{grid-template-columns:340px minmax(280px,1fr) 300px}
+.story-left{min-width:0;min-height:0;display:grid;grid-template-rows:minmax(250px,2fr) minmax(160px,1fr);border-right:1px solid var(--editor-border,#d8dce2)}
+.story-left>.inspector{border-left:0;border-bottom:1px solid #d8dce2;min-height:0;overflow:auto}
+.story-left>.sidebar{border-right:0;min-height:0;overflow:auto}
+.story-left .inspector-heading{position:sticky;top:0;z-index:3}
+.dialogue-column{min-width:0;min-height:0;overflow:auto;background:var(--editor-panel,#fff);border-left:1px solid #d8dce2}
+.dialogue-column .section-heading{position:sticky;top:0;background:var(--editor-panel,#fff);z-index:3;display:block;padding:12px}
+.dialogue-column .heading-actions{display:flex;gap:6px;margin-top:8px}
+.dialogue-column .list-row{align-items:flex-start;padding:12px 9px;min-height:65px}
+.dialogue-column .list-row small{white-space:normal;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;line-height:1.6}
+.dialogue-column .list-row b{font-size:13px;margin-bottom:5px}
+.story-current{border-radius:7px;border:1px solid #08a286;background:#dff5ed;color:#087661;padding:7px 10px;font-size:12px;line-height:1.5;flex:none}
+.story-left .act-list .selected,.dialogue-column .selected{position:relative;border-color:#13a58a!important;animation:story-selection-glow 2.4s ease-in-out infinite}
+@keyframes story-selection-glow{0%,100%{box-shadow:inset 4px 0 #0ca387,0 0 0 1px #10ac8c33}50%{box-shadow:inset 4px 0 #0ca387,0 0 0 3px #10ac8c33,0 0 14px #0ba78c44}}
+body[data-editor-theme=dark] .dialogue-column,body[data-editor-theme=dark] .dialogue-column .section-heading{background:#172334;color:#dce5ed}
+body[data-editor-theme=dark] .story-current{background:#153b35;color:#9fdccb;border-color:#277d6b}
+.module-editor .tabs{display:none}
+.module-editor .module-sidebar-title{padding:16px;font-weight:700;border-bottom:1px solid #d8dce2}
+.module-editor .stage-hint{font-size:12px}
+.stage-toolbar button{font-size:11px;padding:3px 6px;margin-left:8px}
+@media(max-width:1250px){.workspace.story-workspace{grid-template-columns:300px minmax(260px,1fr) 250px}.story-left{grid-template-rows:minmax(230px,2fr) minmax(160px,1fr)}}
+@media(prefers-reduced-motion:reduce){.story-left .act-list .selected,.dialogue-column .selected{animation:none;box-shadow:inset 4px 0 #0ca387,0 0 0 2px #10ac8c55}}

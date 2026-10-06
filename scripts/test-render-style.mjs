@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {normalizeRender,effectiveStyle,mergeRender,customFilterSpecs} from '../src/render-style.js';
+import {normalizeRender,effectiveStyle,mergeRender,customFilterSpecs,renderPresets} from '../src/render-style.js';
 import {dialogueRender,colorFilter} from '../src/chapters.js';
 import {applyStylizedMaterials} from '../src/stylized-materials.js';
 import {StylizedPipeline} from '../src/stylized-render.js';
+assert.deepEqual(renderPresets,{zzz:'明彩动画',custom:'自定义风格',tno:'复古荧屏'});
 const legacy=normalizeRender({style:'anime',paintEffect:'oil',outline:3,brightness:120,temperature:100});assert.equal(legacy.preset,'zzz');assert.equal(legacy.brightness,120);assert.equal(legacy.paintEffect,undefined);assert.equal(legacy.outline,undefined);assert.equal(legacy.temperature,undefined);
 assert.equal(normalizeRender({style:'original'}).preset,'custom');assert.equal(mergeRender(legacy,{style:'original'}).preset,'custom');
 assert.equal(normalizeRender({strength:5,filters:{gamma:0,outlineColor:'javascript:bad',pixelSize:999}}).strength,1);assert.equal(normalizeRender({filters:{gamma:0}}).filters.gamma,.5);
@@ -14,4 +15,5 @@ const act={render:{preset:'tno',brightness:80}},line={render:{brightness:150,sat
 assert.ok(customFilterSpecs.length>=25);assert.equal(new Set(customFilterSpecs.map(spec=>spec[0])).size,customFilterSpecs.length);
 const material=new THREE.MeshStandardMaterial(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),originals=new WeakMap();applyStylizedMaterials(mesh,z,null,originals);const compile=material.onBeforeCompile,shader={uniforms:{},fragmentShader:'#include <lights_fragment_end>'};compile.call(material,shader,{});assert.ok(shader.fragmentShader.includes('nprBand'));assert.equal(shader.uniforms.nprStrength.value,1);applyStylizedMaterials(mesh,zero,null,originals);assert.equal(material.onBeforeCompile,compile);assert.equal(shader.uniforms.nprStrength.value,0);assert.equal(material.userData.outlineParameters.visible,false);
 const stage={renderer:{getPixelRatio:()=>1,getSize:target=>target.set(800,450)},renderSettings:{preset:'tno'}};const pipeline=new StylizedPipeline(stage);assert.equal(pipeline.filterPass.uniforms.tNormal.value,pipeline.scenePass.normalTarget.texture);assert.equal(pipeline.filterPass.uniforms.tDepth.value,pipeline.scenePass.normalTarget.depthTexture);pipeline.dispose();
-console.log('PASS: legacy migration, three presets, fixed TNO, concentration, per-dialogue inheritance/calibration, 29 custom filters, reversible material uniforms and live geometry textures.');
+const resizeStage={renderer:{getPixelRatio:()=>1,getSize:target=>target.set(640,360)},renderSettings:{preset:'custom'},graphicsSettings:{aa:'ssaa4'}};const resizePipeline=new StylizedPipeline(resizeStage);resizePipeline.resize(640,360);assert.equal(resizePipeline.scenePass.normalTarget.depthTexture.image.width,1280);assert.equal(resizePipeline.scenePass.normalTarget.depthTexture.image.height,720);resizeStage.graphicsSettings={upscale:'quality'};resizePipeline.resize(640,360);assert.equal(resizePipeline.scenePass.normalTarget.depthTexture.image.width,426);assert.equal(resizePipeline.scenePass.normalTarget.depthTexture.image.height,240);resizePipeline.update({preset:'zzz'});assert.equal(resizePipeline.filterPass.uniforms.tDepth.value,resizePipeline.scenePass.normalTarget.depthTexture);resizePipeline.dispose();
+console.log('PASS: preset migration, calibration, 29 custom filters, reversible materials and depth size synchronization across SSAA/FSR passed.');

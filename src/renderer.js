@@ -1,4 +1,5 @@
 import {BindingView} from './binding-view.js';
+import {motionPlayback,motionFeetLocked,loopMotionClip,rootTravel,updateMotionRoot,motionFinishTarget} from './character-motion.js';
 import {CharacterProps} from './character-props.js';
 import {FrameRateMeter} from './act-preload.js';
 ﻿import * as THREE from 'three';
@@ -14,6 +15,7 @@ import {TGALoader} from 'three/addons/loaders/TGALoader.js';
 import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
 import { VRMAnimationLoaderPlugin, createVRMAnimationClip } from '@pixiv/three-vrm-animation';
 import {StylizedPipeline} from './stylized-render.js';
+import {normalizeGraphics,graphicsPlan,graphicsLimits,shadowMapSize} from './player-graphics.js';
 import {normalizeRender,effectiveStyle} from './render-style.js';
 import {applyStylizedMaterials} from './stylized-materials.js';
 
@@ -51,14 +53,7 @@ export function motionFrameInfo(clip) {
   return { fps, frames: Math.max(1, Math.round(clip.duration * fps) + 1) };
 }
 function playbackSettings(value = {}) {
-  return {
-    loop: value?.loop !== false,
-    startFrame: Math.max(1, Math.floor(Number(value?.startFrame) || 1)),
-    endFrame: Number(value?.endFrame) > 0 ? Math.floor(Number(value.endFrame)) : null,
-    after: value?.after === 'idle' ? 'idle' : 'hold',
-    placement: value?.placement === 'free' ? 'free' : 'bounded',
-    feet: value?.feet === 'lock' || value?.feet === 'free' ? value.feet : 'auto'
-  };
+  return motionPlayback(value);
 }
 export function boundedMotionOffset(x, z, radius = 0.45) {
   const distance = Math.hypot(x, z);
@@ -230,6 +225,7 @@ export class VRMStage {
     this.scene.add(this.shadowPlane);
     this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.aaMode = 'standard';
+    this.graphicsSettings=normalizeGraphics();
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.originalMaterialSettings = new WeakMap();
     this.characterSceneLighting=new CharacterSceneLighting();
@@ -274,6 +270,9 @@ export class VRMStage {
     if (!width || !height) return;
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
+    const limits=graphicsLimits(this.renderer),ratio=Math.min(window.devicePixelRatio||1,2,limits.maxDimension/width,limits.maxDimension/height,Math.sqrt(limits.maxPixels/(width*height)));
+    this.renderer.setPixelRatio(ratio);
+    if(!graphicsPlan(this.graphicsSettings,width*ratio,height*ratio,limits).supported){this.graphicsSettings=normalizeGraphics({...this.graphicsSettings,aa:'fxaa',upscale:'off',renderScale:100});this.onGraphicsFallback?.(this.graphicsSettings);}
     this.renderer.setSize(width, height, false);
     this.stylePipeline?.resize(width,height);
   }
@@ -316,6 +315,7 @@ export class VRMStage {
   animate() {
     if (!this.running) return;
     this.frame = requestAnimationFrame(() => this.animate());
+    if(window.__editorModulePreviewActive===false){this.clock.getDelta();return;}
     const elapsed=this.clock.getDelta();
     this.frameRateMeter.sample(elapsed,document.hidden);
     const delta = Math.min(elapsed, 0.1);
@@ -334,6 +334,7 @@ export class VRMStage {
       this.applyFootLock(record);
       this.weather?.applyWind(record);
       record.vrm.update(delta);
+      this.applyRawFootLock(record);
       if(this.environmentSettings)this.characterSceneLighting.apply(record.vrm.scene,true);
       this.characterProps.update(record);
     }
@@ -434,6 +435,8 @@ export class VRMStage {
       };
       record.finishedHandler=event=>this.onMotionFinished(record,event.action);
       record.mixer.addEventListener('finished',record.finishedHandler);
+      record.loopHandler=event=>{if(event.action===record.currentAction)record.motionLoops=(record.motionLoops||0)+event.loopDelta;};
+      record.mixer.addEventListener('loop',record.loopHandler);
       return record;
     }).catch(error => {
       if (this.modelCache.get(actorKey) === task) this.modelCache.delete(actorKey);
@@ -658,14 +661,15 @@ export class VRMStage {
     const settings = playbackSettings(options);
     const source = clip || record.idleClip;
     const segment = motionAsset ? motionSegment(source, settings, record.segmentClips) : { clip: source };
+    const hips=record.vrm.humanoid.getNormalizedBoneNode('hips');
+    if(settings.loop)segment.clip=loopMotionClip(segment.clip,hips,record.segmentClips);
     const token = JSON.stringify([motionId, settings.loop, segment.start, segment.end, settings.after, settings.placement, settings.feet,
       settings.loop ? '' : playbackKey]);
     if (record.currentMotionToken === token && record.vrm.scene.visible) return;
     record.mixer.timeScale = 1;
     const previousLock = record.footLock;
     this.restoreFootPose(record);
-    const plantedSource = motionAsset || (record.vrm.isFbx && record.idleClip.name !== '原始站姿' ? { name: record.idleClip.name } : null);
-    const lockFeet = settings.feet === 'lock' || (settings.feet === 'auto' && isPlantedMotion(plantedSource));
+    const lockFeet = motionFeetLocked(settings,motionAsset || (record.vrm.isFbx?{name:source.name}:record.returnMotionAsset));
     record.footLock = lockFeet ? previousLock || {
       left: this.footChain(record.vrm, 'left'), right: this.footChain(record.vrm, 'right'), prePose: null
     } : null;
@@ -690,27 +694,22 @@ export class VRMStage {
     record.currentMotionId = motionId;
     record.currentMotionToken = token;
     record.currentMotionOptions = settings;
+    record.motionLoops=0;record.rootLoopTravel=rootTravel(segment.clip,hips);record.motionCarry=record.nextFinishTarget?new THREE.Vector3(record.nextFinishTarget.x-record.referenceHips.x,0,record.nextFinishTarget.z-record.referenceHips.z):new THREE.Vector3();record.finishWorldTarget=record.nextFinishTarget;record.nextFinishTarget=null;record.motionRoot.position.copy(record.motionCarry);
+    record.anchor.updateMatrixWorld(true);record.motionOrigin=hips?record.motionRoot.worldToLocal(hips.getWorldPosition(new THREE.Vector3())):record.referenceHips.clone();
   }
   applyMotionPlacement(record) {
-    const root = record.motionRoot;
-    if (record.currentMotionOptions?.placement === 'free') {
-      root.position.set(0, 0, 0);
-      return;
-    }
-    const hips = record.vrm.humanoid.getNormalizedBoneNode('hips');
-    if (!hips) return;
-    record.anchor.updateMatrixWorld(true);
-    const local = root.worldToLocal(hips.getWorldPosition(new THREE.Vector3()));
-    const [x, z] = boundedMotionOffset(local.x - record.referenceHips.x,
-      local.z - record.referenceHips.z);
-    root.position.set(x, 0, z);
-    root.updateMatrixWorld(true);
+    updateMotionRoot(record);
   }
   onMotionFinished(record, action) {
     if (action !== record.currentAction || record.currentMotionOptions?.loop) return;
-    if (record.currentMotionOptions.after === 'idle' && record.vrm.scene.visible)
+    if (record.currentMotionOptions.after === 'idle' && record.vrm.scene.visible){
+      record.nextFinishTarget=motionFinishTarget(record);
       this.poseRecord(record, record.returnMotionClip, record.returnMotionAsset, true,
-        { loop: true }, 'finished-base-motion');
+        { loop: true,feet:record.currentMotionOptions.feet }, 'finished-base-motion');
+    }
+  }
+  restartCharacterPreview(){
+    for(const record of this.visibleRecords.values()){this.restoreFootPose(record);for(const chain of [record.footLock?.left,record.footLock?.right])if(chain)chain.anchor=null;record.motionLoops=0;record.motionCarry=new THREE.Vector3();record.finishWorldTarget=null;record.currentAction?.reset().play();record.mixer.update(0);this.applyMotionPlacement(record);this.applyFootLock(record);record.vrm.update(0);this.applyRawFootLock(record);}
   }
   footChain(vrm, side) {
     const upper = vrm.humanoid.getNormalizedBoneNode(`${side}UpperLeg`);
@@ -787,6 +786,23 @@ export class VRMStage {
       chain.lastResidual = foot.getWorldPosition(new THREE.Vector3()).distanceTo(chain.anchor);
       foot.position.copy(chain.anchor.clone().applyMatrix4(foot.parent.matrixWorld.clone().invert()));
       foot.updateMatrixWorld(true);
+    }
+  }
+  applyRawFootLock(record) {
+    const lock=record.footLock;
+    if(!lock?.prePose||record.vrm.isFbx)return;
+    record.vrm.scene.updateWorldMatrix(true,true);
+    // VRM only transfers the hips position from its normalized rig. Preserve
+    // the rendered ankle as well, then restore this correction next frame.
+    for(const side of ['left','right']){
+      const chain=lock[side],foot=record.vrm.humanoid.getRawBoneNode?.(`${side}Foot`);
+      if(!chain?.anchor||!foot||foot===chain.foot)continue;
+      if(chain.rawForAnchor!==chain.anchor){chain.rawForAnchor=chain.anchor;chain.rawAnchor=foot.getWorldPosition(new THREE.Vector3());chain.rawRotation=foot.getWorldQuaternion(new THREE.Quaternion());}
+      lock.prePose.push({bone:foot,position:foot.position.clone(),quaternion:foot.quaternion.clone()});
+      foot.position.copy(foot.parent.worldToLocal(chain.rawAnchor.clone()));
+      const parentRotation=foot.parent.getWorldQuaternion(new THREE.Quaternion());
+      foot.quaternion.copy(parentRotation.invert().multiply(chain.rawRotation));foot.updateMatrixWorld(true);
+      chain.rawLastResidual=foot.getWorldPosition(new THREE.Vector3()).distanceTo(chain.rawAnchor);
     }
   }
   transformRecord(record, position = 'center', transform = {}, smooth = false) {
@@ -915,7 +931,6 @@ export class VRMStage {
   }
   setRenderSettings(settings = {}) {
     this.renderSettings={...normalizeRender(settings),antialias:'standard',shadowEnabled:true,shadowAngle:0,shadowOpacity:.35,shadowHeight:0};
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     this.renderer.toneMapping=THREE.NoToneMapping;this.renderer.toneMappingExposure=1;
     if(!this.stylePipeline)this.stylePipeline=new StylizedPipeline(this);else this.stylePipeline.update(this.renderSettings);
     this.applyShadowSettings();
@@ -924,10 +939,18 @@ export class VRMStage {
     this.applyLighting(null);this.resize();
   }
   setPaintBackground(){}
+  graphicsPlan(settings=this.graphicsSettings){const {width,height}=this.element.getBoundingClientRect(),limits=graphicsLimits(this.renderer),ratio=Math.min(window.devicePixelRatio||1,2,limits.maxDimension/Math.max(width,1),limits.maxDimension/Math.max(height,1),Math.sqrt(limits.maxPixels/Math.max(width*height,1)));return graphicsPlan(settings,width*ratio,height*ratio,limits);}
+  setGraphicsSettings(settings){const quality=normalizeGraphics(settings),plan=this.graphicsPlan(quality);if(!plan.supported)throw Error(plan.reason);this.graphicsSettings=quality;this.environmentShadowKey='';this.applyShadowSettings();this.resize();return this.stylePipeline.plan;}
+  applyGraphicsShadowQuality(){
+    const size=shadowMapSize(this.graphicsSettings.shadows);
+    for(const light of [this.keyLight,this.shadowLight]){if(size&&light.shadow.mapSize.x!==size){light.shadow.map?.dispose();light.shadow.map=null;light.shadow.mapSize.set(size,size);}if(!size)light.castShadow=false;}
+    this.environmentRuntime?.root?.traverse(light=>{if(!light.isLight||!light.shadow)return;light.userData.qualityOriginalCastShadow??=light.castShadow;light.castShadow=Boolean(size&&light.userData.qualityOriginalCastShadow);});
+    if(!size)this.renderer.shadowMap.enabled=false;
+  }
   applyShadowSettings() {
-    if(this.environmentSettings){this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.shadowLight.castShadow=false;this.shadowPlane.visible=false;this.keyLight.castShadow=true;this.scene.add(this.keyLight.target);this.element.closest('.stage-frame')?.classList.remove('shadows-on');this.updateShadowGround();return;}
+    if(this.environmentSettings){this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.shadowLight.castShadow=false;this.shadowPlane.visible=false;this.keyLight.castShadow=true;this.scene.add(this.keyLight.target);this.element.closest('.stage-frame')?.classList.remove('shadows-on');this.applyGraphicsShadowQuality();this.updateShadowGround();return;}
     this.keyLight.castShadow=false;this.keyLight.target.position.set(0,0,0);this.keyLight.target.updateMatrixWorld();
-    const enabled = this.renderSettings.shadowEnabled === true && Number(this.renderSettings.shadowOpacity) > 0;
+    const enabled = this.renderSettings.shadowEnabled === true && Number(this.renderSettings.shadowOpacity) > 0&&this.graphicsSettings.shadows!=='off';
     this.renderer.shadowMap.enabled = enabled;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.shadowLight.castShadow = enabled;
@@ -938,6 +961,7 @@ export class VRMStage {
     this.shadowLight.position.set(-Math.sin(angle) * 4, 5, -Math.cos(angle) * 4);
     this.shadowLight.target.position.set(0, 0, 0);
     this.shadowLight.target.updateMatrixWorld();
+    this.applyGraphicsShadowQuality();
   }
   shadowGroundHeightAt(x, z) {
     if (!this.shadowGroundPoints.length) return -0.02 + (Number(this.renderSettings.shadowHeight) || 0);
@@ -953,7 +977,7 @@ export class VRMStage {
     return weightedHeight / totalWeight;
   }
   updateShadowGround() {
-    if(this.environmentSettings){const bounds=this.environmentShadowBounds.clone();for(const record of this.visibleRecords.values()){const p=record.anchor.position,s=record.anchor.scale.x;bounds.expandByPoint(new THREE.Vector3(p.x-s,p.y-.1,p.z-s));bounds.expandByPoint(new THREE.Vector3(p.x+s,p.y+2.5*s,p.z+s));}const key=[...bounds.min.toArray(),...bounds.max.toArray()].map(v=>v.toFixed(2)).join(',');if(key!==this.environmentShadowKey){fitEnvironmentShadow(this.keyLight,bounds);this.environmentShadowKey=key;}return;}
+    if(this.environmentSettings){if(this.graphicsSettings.shadows==='off')return;const bounds=this.environmentShadowBounds.clone();for(const record of this.visibleRecords.values()){const hips=record.vrm.humanoid.getNormalizedBoneNode('hips'),p=hips?hips.getWorldPosition(new THREE.Vector3()):record.anchor.position,s=record.anchor.scale.x;bounds.expandByPoint(new THREE.Vector3(p.x-s,p.y-1.5*s,p.z-s));bounds.expandByPoint(new THREE.Vector3(p.x+s,p.y+1.5*s,p.z+s));}const key=[...bounds.min.toArray(),...bounds.max.toArray()].map(v=>v.toFixed(2)).join(',');if(key!==this.environmentShadowKey){fitEnvironmentShadow(this.keyLight,bounds,shadowMapSize(this.graphicsSettings.shadows));this.environmentShadowKey=key;}return;}
     if (!this.shadowPlane.visible) return;
     const heightOffset = Math.max(-0.4, Math.min(0.4, Number(this.renderSettings.shadowHeight) || 0));
     const points = [...this.visibleRecords.values()]

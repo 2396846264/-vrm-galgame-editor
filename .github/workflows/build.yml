@@ -33,25 +33,6 @@ jobs:
           dotnet build Desktop/Desktop.csproj -c Release
           dotnet build AgentHost/AgentHost.csproj -c Release
       - name: Run source tests
+        shell: pwsh
         run: |
-          node scripts/test-story-draft.mjs
-          node scripts/test-editor-history.mjs
-          node scripts/test-dialogue-voices.mjs
-          node scripts/test-talking-mouth.mjs
-          node scripts/test-environment.mjs
-          node scripts/test-environment-camera.mjs
-          node scripts/test-environment-operations.mjs
-          node scripts/test-vrm-thumbnail.mjs
-          node scripts/test-dialogue-cast-props.mjs
-          node scripts/test-title-actors.mjs
-          node scripts/test-mixamo-fbx.mjs
-          node scripts/test-scene-animations.mjs
-          node scripts/test-environment-autosave.mjs
-          node scripts/test-character-scene-lighting.mjs
-          node scripts/test-live-portrait.mjs
-          node scripts/test-environment-agent.mjs
-          node scripts/test-environment-agent-window.mjs
-          node scripts/test-portrait-policy.mjs
-          node scripts/test-act-preload.mjs
-          node scripts/test-render-style.mjs
-          node scripts/test-inventory.mjs
+          Get-ChildItem scripts/test-*.mjs | ForEach-Object { node $_.FullName; if ($LASTEXITCODE -ne 0) { throw "Source check failed" } }

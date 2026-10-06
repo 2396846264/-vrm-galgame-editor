@@ -1,4 +1,4 @@
-export const renderPresets={zzz:'绝区零风格',custom:'自定义风格',tno:'TNO 风格'};
+export const renderPresets={zzz:'明彩动画',custom:'自定义风格',tno:'复古荧屏'};
 export const colorAdjustments={brightness:100,contrast:100,saturation:100};
 export const filterGroups={lighting:'光照与色块',detail:'轮廓与细节',color:'颜色与胶片',print:'像素与印刷',crt:'CRT 显示器'};
 export const customFilterSpecs=[

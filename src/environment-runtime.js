@@ -4,6 +4,12 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {validateEnvironment} from './environment-schema.js';
 import {SceneAnimationPlayer} from './scene-animations.js';
 const url=a=>`https://project.galgame/${a.path.split('/').map(encodeURIComponent).join('/')}${a.revision?'?v='+encodeURIComponent(a.revision):''}`;
+export function createImagePlaneMaterial(texture,node={}) {
+  return new (node.unlit===false?THREE.MeshStandardMaterial:THREE.MeshBasicMaterial)({
+    map:texture,side:THREE.DoubleSide,transparent:true,depthWrite:false,forceSinglePass:true,
+    alphaTest:Math.max(.001,Math.min(1,Number(node.alphaCutoff)||0))
+  });
+}
 export function disposeTree(root) {
   const geometries=new Set(),materials=new Set(),textures=new Set();
   root.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m){materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v);}});
@@ -34,7 +40,7 @@ export class EnvironmentRuntime {
           const sky=new THREE.Mesh(new THREE.SphereGeometry(80,48,24),new THREE.MeshBasicMaterial({map,color:map?0xffffff:n.color,side:THREE.BackSide,depthWrite:false}));sky.material.userData.outlineParameters={visible:false};sky.userData.environmentSky=true;sky.frustumCulled=false;sky.renderOrder=-10;object.add(sky);
         }else if(n.kind==='imagePlane'){
           const texture=await new THREE.TextureLoader().loadAsync(url(assets.find(a=>a.id===n.assetId)));texture.colorSpace=THREE.SRGBColorSpace;
-          const material=new (n.unlit===false?THREE.MeshStandardMaterial:THREE.MeshBasicMaterial)({map:texture,side:THREE.DoubleSide,alphaTest:n.alphaCutoff||0});
+          const material=createImagePlaneMaterial(texture,n);
           const board=new THREE.Mesh(new THREE.PlaneGeometry(n.width,n.height),material);board.castShadow=n.unlit===false;board.receiveShadow=n.unlit===false;object.add(board);
         }
         object.name=n.name||n.kind;object.userData.nodeId=n.id;object.position.fromArray(n.position);object.rotation.set(...n.rotation);object.scale.fromArray(n.scale);object.visible=n.visible!==false;objects.set(n.id,object);

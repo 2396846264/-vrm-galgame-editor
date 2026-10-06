@@ -5,6 +5,8 @@ import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {FXAAShader} from 'three/addons/shaders/FXAAShader.js';
 import {effectiveStyle} from './render-style.js';
+import {normalizeGraphics,graphicsPlan,graphicsLimits} from './player-graphics.js';
+import {GraphicsPresenter} from './graphics-presenter.js';
 
 class ScenePass extends Pass{
  constructor(stage){super();this.stage=stage;this.needsSwap=false;this.normalTarget=new THREE.WebGLRenderTarget(1,1,{minFilter:THREE.NearestFilter,magFilter:THREE.NearestFilter});this.normalTarget.depthTexture=new THREE.DepthTexture(1,1,THREE.UnsignedIntType);this.normalMaterials=new WeakMap();this.ownedNormals=new Set();}
@@ -16,7 +18,7 @@ class ScenePass extends Pass{
   }
   variants[kind]=material;this.ownedNormals.add(material);return material;
  }
- setSize(w,h){this.normalTarget.setSize(w,h);}
+ setSize(w,h){this.normalTarget.setSize(w,h);const depth=this.normalTarget.depthTexture;if(depth.image.width!==w||depth.image.height!==h){depth.dispose();depth.image.width=w;depth.image.height=h;depth.needsUpdate=true;}}
  render(renderer,_write,read){
   const s=this.stage,old={target:renderer.getRenderTarget(),background:s.scene.background,override:s.scene.overrideMaterial,shadow:renderer.shadowMap.autoUpdate,autoClear:renderer.autoClear,color:renderer.getClearColor(new THREE.Color()),alpha:renderer.getClearAlpha()};const hidden=[],materials=[];
   try{
@@ -37,7 +39,7 @@ const fragmentShader=`
 uniform sampler2D tDiffuse,tNormal,tDepth;
 uniform vec2 resolution;
 uniform mat4 inverseProjection;
-uniform float time,hasGeometry,simplify,posterize,posterMix,outline,outlineBackgroundAlpha,outlineDetail,ao,aoRadius,sharpen,blur,emboss,exposure,gamma,hue,temperature,tint,sepia,monochrome,invert,vignette,bloom,pixelSize,halftone,hatch,dither,grain,scanlines,chromatic,tear,saturationBoost,contrastBoost,motion;
+uniform float outlineRenderScale,time,hasGeometry,simplify,posterize,posterMix,outline,outlineBackgroundAlpha,outlineDetail,ao,aoRadius,sharpen,blur,emboss,exposure,gamma,hue,temperature,tint,sepia,monochrome,invert,vignette,bloom,pixelSize,halftone,hatch,dither,grain,scanlines,chromatic,tear,saturationBoost,contrastBoost,motion;
 uniform vec3 outlineColor;
 varying vec2 vUv;
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
@@ -88,7 +90,7 @@ void main(){
  if(hatch>0.){float line=step(.76,fract((gl_FragCoord.x+gl_FragCoord.y)/6.));color*=1.-hatch*line*(1.-lum(color))*.6;}
  float edge=0.,characterMask=texture2D(tNormal,uv).a;
  if(outline>0.&&hasGeometry>.5){
-  for(int i=0;i<4;i++){float a=float(i)*1.5707963;vec2 at=uv+vec2(cos(a),sin(a))*pixel*max(outline,1.);float nd=depthAt(at);
+  for(int i=0;i<4;i++){float a=float(i)*1.5707963;vec2 at=uv+vec2(cos(a),sin(a))*pixel*max(outline,1.)*outlineRenderScale;float nd=depthAt(at);
    characterMask=max(characterMask,texture2D(tNormal,at).a);float mask=abs(step(depth,.99999)-step(nd,.99999));float z1=-viewPosition(uv,depth).z,z2=-viewPosition(at,nd).z;
    float boundary=smoothstep(.012,.075,abs(z1-z2)/max(1.,min(z1,z2)));
    float bend=smoothstep(mix(.7,.12,outlineDetail),mix(.95,.5,outlineDetail),1.-max(dot(normal,normalAt(at)),0.));
@@ -105,15 +107,15 @@ void main(){
 export class StylizedPipeline{
  constructor(stage){
   this.stage=stage;this.composer=new EffectComposer(stage.renderer);this.scenePass=new ScenePass(stage);this.composer.addPass(this.scenePass);
-  const uniforms={tDiffuse:{value:null},tNormal:{value:null},tDepth:{value:null},resolution:{value:new THREE.Vector2(1,1)},inverseProjection:{value:new THREE.Matrix4()},time:{value:0},hasGeometry:{value:0},motion:{value:1},outlineColor:{value:new THREE.Color()}};
+  const uniforms={tDiffuse:{value:null},tNormal:{value:null},tDepth:{value:null},resolution:{value:new THREE.Vector2(1,1)},inverseProjection:{value:new THREE.Matrix4()},time:{value:0},outlineRenderScale:{value:1},hasGeometry:{value:0},motion:{value:1},outlineColor:{value:new THREE.Color()}};
   for(const key of Object.keys(effectiveStyle({preset:'custom'})))if(key!=='outlineColor')uniforms[key]={value:0};
   this.filterPass=new ShaderPass({uniforms,vertexShader,fragmentShader});
   // ShaderPass clones texture uniforms; restore the live render-target attachments.
   this.filterPass.uniforms.tNormal.value=this.scenePass.normalTarget.texture;this.filterPass.uniforms.tDepth.value=this.scenePass.normalTarget.depthTexture;
-  this.composer.addPass(this.filterPass);this.outputPass=new OutputPass();this.composer.addPass(this.outputPass);this.fxaaPass=new ShaderPass(FXAAShader);this.composer.addPass(this.fxaaPass);this.update(stage.renderSettings);
+  this.composer.addPass(this.filterPass);this.outputPass=new OutputPass();this.composer.addPass(this.outputPass);this.fxaaPass=new ShaderPass(FXAAShader);this.composer.addPass(this.fxaaPass);this.composer.renderToScreen=false;this.presenter=new GraphicsPresenter();this.update(stage.renderSettings);
  }
  update(settings){this.settings=settings;this.style=effectiveStyle(settings);for(const[key,value]of Object.entries(this.style)){const uniform=this.filterPass.uniforms[key];if(uniform)key==='outlineColor'?uniform.value.set(value).convertLinearToSRGB():uniform.value=value;}this.needsGeometry=this.style.outline>0||this.style.ao>0||this.style.simplify>0;this.filterPass.uniforms.hasGeometry.value=this.needsGeometry?1:0;}
- resize(w,h){const ratio=this.stage.renderer.getPixelRatio();this.composer.setPixelRatio(ratio);this.composer.setSize(w,h);this.filterPass.uniforms.resolution.value.set(Math.max(1,w*ratio),Math.max(1,h*ratio));this.fxaaPass.uniforms.resolution.value.set(1/Math.max(1,w*ratio),1/Math.max(1,h*ratio));}
- render(delta){this.filterPass.uniforms.time.value+=delta;this.filterPass.uniforms.inverseProjection.value.copy(this.stage.camera.projectionMatrixInverse);this.filterPass.uniforms.motion.value=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches?0:1;this.composer.render(delta);}
- dispose(){this.scenePass.dispose();this.filterPass.dispose();this.outputPass.dispose();this.fxaaPass.dispose();this.composer.dispose();}
+ resize(w,h){const ratio=this.stage.renderer.getPixelRatio(),quality=normalizeGraphics(this.stage.graphicsSettings);let plan=graphicsPlan(quality,w*ratio,h*ratio,graphicsLimits(this.stage.renderer));if(!plan.supported)plan=graphicsPlan({},w*ratio,h*ratio,graphicsLimits(this.stage.renderer));this.plan=plan;this.filterPass.uniforms.outlineRenderScale.value=plan.scale;this.composer.setPixelRatio(1);this.composer.setSize(plan.inputWidth,plan.inputHeight);for(const target of [this.composer.renderTarget1,this.composer.renderTarget2])if(target.samples!==plan.samples){target.samples=plan.samples;target.dispose();}this.fxaaPass.enabled=plan.quality.aa==='fxaa'||plan.quality.aa.startsWith('msaa');this.filterPass.uniforms.resolution.value.set(plan.inputWidth,plan.inputHeight);this.fxaaPass.uniforms.resolution.value.set(1/plan.inputWidth,1/plan.inputHeight);this.presenter.configure(plan);}
+ render(delta){this.filterPass.uniforms.time.value+=delta;this.filterPass.uniforms.inverseProjection.value.copy(this.stage.camera.projectionMatrixInverse);this.filterPass.uniforms.motion.value=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches?0:1;this.composer.render(delta);this.presenter.render(this.stage.renderer,this.composer.readBuffer.texture);}
+ dispose(){this.scenePass.dispose();this.filterPass.dispose();this.outputPass.dispose();this.fxaaPass.dispose();this.presenter.dispose();this.composer.dispose();}
 }

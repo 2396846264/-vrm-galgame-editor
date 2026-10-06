@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {mergeEditorProject,rebaseEditorHistoryProject} from '../src/editor-project-merge.js';
+import {createEditorHistory} from '../src/editor-history.js';
+const original={id:'project',characters:[{id:'a',name:'人物',props:[]}],acts:[{id:'act',name:'第一幕',steps:[{id:'s',text:'旧对白'}]}],assets:[],title:{logoMode:'name'}};
+const current=structuredClone(original),draft=structuredClone(original);current.acts[0].steps[0].text='主窗口新对白';draft.characters[0].name='新名字';draft.assets.push({id:'texture',path:'assets/p.png'});
+const merged=mergeEditorProject(original,current,draft);assert.equal(merged.acts[0].steps[0].text,'主窗口新对白');assert.equal(merged.characters[0].name,'新名字');assert.equal(merged.assets[0].id,'texture');
+current.assets.push({id:'other',path:'assets/other.png'});assert.equal(mergeEditorProject(original,current,draft).assets.length,2);
+const concurrent=structuredClone(original);concurrent.characters[0].name='另一个名字';assert.throws(()=>mergeEditorProject(original,concurrent,draft),/同一处/);assert.equal(concurrent.characters[0].name,'另一个名字');
+concurrent.characters=[];assert.throws(()=>mergeEditorProject(original,concurrent,draft),/同一处/);
+const removed=structuredClone(original);removed.characters=[];current.acts[0].name='第二个名字';assert.equal(mergeEditorProject(original,current,removed).characters.length,0);
+assert.throws(()=>mergeEditorProject(original,{...current,id:'other'},draft),/工程已切换/);
+const addedReference=structuredClone(original);addedReference.acts[0].steps.push({id:'new-reference',characterId:'a',text:'另一个窗口的新对白'});assert.throws(()=>mergeEditorProject(original,addedReference,removed),/仍在使用/);
+const next=structuredClone(original);next.acts[0].steps.push({id:'new',text:'新对白'});assert.equal(mergeEditorProject(original,current,next).acts[0].steps.length,2);
+let local=structuredClone(original);const history=createEditorHistory({project:()=>local,selection:()=>({})});history.reset();local.characters[0].name='本窗口改名';history.commit();
+const external=structuredClone(original);external.acts[0].steps[0].text='其他窗口的新对白';history.amend(snapshot=>{Object.assign(snapshot,rebaseEditorHistoryProject(original,external,snapshot));return true;});
+local=history.peek(-1).project;assert.equal(local.characters[0].name,'人物');assert.equal(local.acts[0].steps[0].text,'其他窗口的新对白','Module undo reverted the main dialogue');
+console.log('Editor windows: independent edits, asset additions, deletion, atomic conflict rejection, dialogue preservation and project identity passed.');

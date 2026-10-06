@@ -1,0 +1,11 @@
+#editor-save-notice[hidden]{display:none}
+#editor-save-notice{position:fixed;z-index:140;bottom:42px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;min-width:290px;max-width:calc(100vw - 32px);padding:14px 20px;border:1px solid #23aa91;border-radius:12px;background:#f1fbf8;color:#15443b;box-shadow:0 8px 30px #132c3b35;pointer-events:none}
+#editor-save-notice b{display:block;font-size:14px}#editor-save-notice small{display:block;font-size:12px;margin-top:4px;color:#477568}
+.editor-save-spinner{width:24px;height:24px;flex:none;border:3px solid #0a9e7f35;border-top-color:#0a9e7f;border-radius:50%;animation:editor-save-spin .9s linear infinite}
+.editor-save-progress{height:4px;margin-top:10px;border-radius:4px;background:#0a9e7f25;overflow:hidden}
+.editor-save-progress i{display:block;width:35%;height:100%;background:#0a9e7f;border-radius:4px;animation:editor-save-slide 1.5s ease-in-out infinite}
+#save-state.project-saving{color:#087b64!important;font-weight:600}
+.editor .topbar [data-save-pending=true]{opacity:.5;cursor:wait}
+@keyframes editor-save-spin{to{transform:rotate(360deg)}}@keyframes editor-save-slide{from{transform:translateX(-110%)}to{transform:translateX(300%)}}
+body[data-editor-theme=dark] #editor-save-notice{background:#153b35;color:#d0f6e9;border-color:#278c77}body[data-editor-theme=dark] #editor-save-notice small{color:#a1d5c6}
+@media(prefers-reduced-motion:reduce){.editor-save-spinner,.editor-save-progress i{animation:none}.editor-save-progress i{width:100%;opacity:.6}}

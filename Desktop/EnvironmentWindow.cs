@@ -10,15 +10,33 @@ internal sealed class EnvironmentWindow : Form {
     private readonly Func<string, JsonNode?, Task<object?>> handle;
     private readonly string webDirectory, projectDirectory;
     private bool closing;
+    private bool closePending;
     private readonly Dictionary<string,TaskCompletionSource<JsonNode?>> agentControlReplies=new();
     public EnvironmentWindow(string webDirectory, string projectDirectory, JsonObject initial, Func<string, JsonNode?, Task<object?>> handle) {
         this.webDirectory=webDirectory;this.projectDirectory=projectDirectory;this.initial=initial;this.handle=handle;
         FormClosed+=(_,_)=>{foreach(var task in agentControlReplies.Values)task.TrySetException(new Exception("环境窗口已关闭。"));agentControlReplies.Clear();};
         Text="3D 环境编辑器";Width=1280;Height=850;MinimumSize=new Size(1000,650);Controls.Add(view);
-        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-environment" or "--smoke-render-regression" or "--smoke-agent-environment")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
-        FormClosing+=async(_,e)=>{if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(await IsSaving()){MessageBox.Show(this,"正在保存工程，请等保存完成后再关闭。","正在保存");return;}bool dirty=await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentHasChanges?.())")=="true";if(dirty&&MessageBox.Show(this,"场景还有未应用的修改，确定放弃并关闭吗？","关闭环境编辑器",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;closing=true;Close();};
+        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-environment" or "--smoke-render-regression" or "--smoke-agent-environment" or "--smoke-close-guard")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
+        FormClosing+=async(_,e)=>{
+            if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(closePending)return;closePending=true;
+            try{
+                await SetClosePendingAsync(true);
+                if(await IsBusyForCloseAsync()){MessageBox.Show(this,"当前场景操作或保存还没完成，请稍后关闭。","正在操作");return;}
+                if(await HasChangesForCloseAsync()){
+                    using var dialog=new UnsavedCloseDialog("环境还有未保存的修改。\n要保存后关闭，还是直接关闭？");dialog.ShowDialog(this);
+                    if(dialog.Choice==UnsavedCloseChoice.Cancel)return;
+                    if(dialog.Choice==UnsavedCloseChoice.Save)await SaveForCloseAsync();
+                }
+                CloseWithoutPrompt();
+            }catch(Exception error){MessageBox.Show(this,"没有关闭环境编辑器："+error.Message+"\n修改仍保留在窗口里。","保存未完成");}
+            finally{closePending=false;if(!IsDisposed&&!closing)await SetClosePendingAsync(false);}
+        };
     }
     internal void RefreshScenes(JsonNode? payload){view.CoreWebView2?.PostWebMessageAsJson(JsonSerializer.Serialize(new{environmentRefresh=payload}));}
+    internal async Task CaptureReadySmoke(string path){
+        for(int i=0;i<400;i++){if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentReady?.())")=="true")break;await Task.Delay(50);}
+        await Task.Delay(250);using var image=File.Create(path);await view.CoreWebView2!.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,image);
+    }
     internal async Task<JsonNode?> AgentControl(JsonNode? payload){
         for(int i=0;i<200;i++){
             if(IsDisposed)throw new Exception("环境窗口已关闭，请重新打开。");
@@ -47,12 +65,19 @@ internal sealed class EnvironmentWindow : Form {
         await view.CoreWebView2!.ExecuteScriptAsync("window.__agentEdit=null;window.environmentAgentEditSmoke().then(v=>window.__agentEdit=v).catch(e=>window.__agentEdit={error:e.message})");
         for(int i=0;i<200;i++){string result=await view.CoreWebView2.ExecuteScriptAsync("window.__agentEdit");if(result!="null")return result;await Task.Delay(50);}throw new Exception("环境编辑验证超时");
     }
-    private async Task<bool> IsSaving()=>view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentSaving?.())")=="true";
-    internal async Task<bool> ConfirmOwnerClose(){
-        if(await IsSaving()){MessageBox.Show(this,"正在保存工程，请等保存完成后再关闭。","正在保存");return false;}
-        bool dirty=view.CoreWebView2!=null && await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentHasChanges?.())")=="true";
-        if(dirty&&MessageBox.Show(this,"环境还有未应用的修改，确定放弃并关闭编辑器吗？","未保存的场景",MessageBoxButtons.YesNo)!=DialogResult.Yes)return false;
-        closing=true;Close();return true;
+    internal async Task<bool> HasChangesForCloseAsync()=>view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentCloseState?.().dirty)")=="true";
+    internal async Task<bool> IsBusyForCloseAsync()=>view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentCloseState?.().busy || window.environmentSaving?.())")=="true";
+    internal async Task SetClosePendingAsync(bool pending){view.Enabled=!pending;if(view.CoreWebView2!=null)await view.CoreWebView2.ExecuteScriptAsync("window.environmentClosePending="+(pending?"true":"false"));}
+    internal void CloseWithoutPrompt(){closing=true;Close();}
+    internal async Task SaveForCloseAsync(){
+        if(view.CoreWebView2==null)throw new Exception("环境窗口尚未就绪。");
+        await view.CoreWebView2.ExecuteScriptAsync("window.__environmentCloseSave=null;window.environmentSaveBeforeClose().then(result=>window.__environmentCloseSave=result).catch(error=>window.__environmentCloseSave={error:error.message})");
+        for(int i=0;i<6000;i++){
+            string json=await view.CoreWebView2.ExecuteScriptAsync("window.__environmentCloseSave");
+            if(json!="null"){var result=JsonNode.Parse(json)!;if(result["error"]!=null)throw new Exception(result["error"]!.GetValue<string>());if(result["saved"]?.GetValue<bool>()!=true)throw new Exception("环境没有保存完成。");return;}
+            await Task.Delay(50);
+        }
+        throw new TimeoutException("环境保存尚未完成，请稍后关闭。");
     }
     internal async Task<string> Smoke(string imagePath){
         for(int i=0;i<100;i++){if(view.CoreWebView2!=null && await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentReady?.())")=="true")break;await Task.Delay(100);}
@@ -86,7 +111,6 @@ internal sealed partial class EditorWindow {
         return await environmentWindow.AgentControl(payload);
     }
     private EnvironmentWindow? environmentWindow;
-    private bool environmentOwnerClosing;
     private string environmentSession="";
     private string openEnvironmentId="";
     private TaskCompletionSource<JsonNode?>? environmentCommit;

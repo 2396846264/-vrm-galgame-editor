@@ -1,4 +1,9 @@
 .editor .topbar nav { flex: 1 1 auto; }
-.editor-feedback { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: none; white-space: nowrap; padding: 6px 10px; border: 1px solid var(--ui-border); border-radius: 8px; font-size: 12px; color: var(--ui-text); background: var(--ui-surface-soft); }
-.editor-feedback strong { font-size: 14px; letter-spacing: .035em; color: var(--ui-text); }
-@media (max-width: 1100px) { .editor-feedback { padding: 6px 8px; gap: 5px; } }
+.editor .status #project-path { flex: 1; min-width: 0; }
+.editor .status .status-note { flex: none; white-space: nowrap; }
+.editor .status .editor-feedback { display: flex; align-items: center; gap: 4px; flex: none; white-space: nowrap; font-size: 10px; color: var(--ui-muted); }
+.editor .status .editor-feedback strong { font-size: 10px; font-weight: 500; letter-spacing: 0; color: inherit; }
+body[data-editor-theme] .editor.story-editor .topbar nav { gap: 4px; flex: 0 0 100%; width: 100%; min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding-bottom: 2px; }
+body[data-editor-theme] .editor.story-editor .topbar nav button { font-size: 13px; padding: 6px 7px; }
+body[data-editor-theme] .editor.story-editor .topbar nav button { flex: none; white-space: nowrap; }
+@media (max-width: 1100px) { .editor .status { gap: 10px; } .editor .status .status-note { display: none; } }

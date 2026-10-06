@@ -75,7 +75,6 @@ internal sealed partial class EditorWindow : Form
     private readonly string? smokeArchiveParent;
     private readonly bool smokeNewArchive;
     private readonly bool smokeSaveTwice;
-    private readonly string? smokeImportFolderPath;
     private readonly string? smokeAvatarFile;
     private bool smokeStarted;
     private bool fullscreen;
@@ -141,9 +140,6 @@ internal sealed partial class EditorWindow : Form
         int smokeArchiveIndex = Array.IndexOf(arguments, "--smoke-archive-ops");
         if (smokeArchiveIndex >= 0 && smokeArchiveIndex + 1 < arguments.Length)
             smokeArchiveParent = Path.GetFullPath(arguments[smokeArchiveIndex + 1]);
-        int smokeImportIndex = Array.IndexOf(arguments, "--smoke-import-folder");
-        if (smokeImportIndex >= 0 && smokeImportIndex + 1 < arguments.Length)
-            smokeImportFolderPath = Path.GetFullPath(arguments[smokeImportIndex + 1]);
         int smokeAvatarIndex = Array.IndexOf(arguments, "--smoke-avatar");
         if (smokeAvatarIndex >= 0 && smokeAvatarIndex + 1 < arguments.Length)
             smokeAvatarFile = Path.GetFullPath(arguments[smokeAvatarIndex + 1]);
@@ -181,8 +177,8 @@ internal sealed partial class EditorWindow : Form
         StartPosition = FormStartPosition.CenterScreen;
         Controls.Add(web);
         Shown += async (_, _) => await InitializeWebAsync();
-        FormClosing += async(_,e)=>{if(archiveSaveRunning){e.Cancel=true;MessageBox.Show(this,"工程正在保存，请等保存完成后再关闭。","正在保存");return;}if(environmentOwnerClosing||environmentWindow is not {IsDisposed:false})return;e.Cancel=true;if(await environmentWindow.ConfirmOwnerClose()){environmentOwnerClosing=true;Close();}};
-        FormClosed += (_, _) => { StopAgentBridge(); CleanupTemporaryProject(); };
+        FormClosing += OnEditorClosing;
+        FormClosed += (_, _) => { StopAgentBridge(); foreach(var child in moduleWindows.Values.ToArray())child.CloseWithoutPrompt(); CleanupTemporaryProject(); playerResources?.Dispose(); };
     }
 
     private async Task InitializeWebAsync()
@@ -193,6 +189,7 @@ internal sealed partial class EditorWindow : Form
             if (!File.Exists(Path.Combine(webDirectory, "index.html")))
                 throw new Exception("程序文件不完整：找不到 web/index.html。请重新解压完整安装包。");
             ProtectedResources.Verify(appDirectory);
+            OpenPlayerResources();
             var environment = await CoreWebView2Environment.CreateAsync(
                 userDataFolder: Environment.GetCommandLineArgs().Contains("--smoke-fresh-audio")
                     ? Path.Combine(Path.GetTempPath(), "VRMGalgame", "AudioSmoke", Guid.NewGuid().ToString("N"))
@@ -209,11 +206,16 @@ internal sealed partial class EditorWindow : Form
                     request.State = CoreWebView2PermissionState.Allow;
             };
             web.CoreWebView2.Settings.AreDevToolsEnabled = !playerMode;
+            if (playerMode) {
+                web.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+                web.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
+            }
             web.CoreWebView2.Settings.IsStatusBarEnabled = false;
             web.CoreWebView2.SetVirtualHostNameToFolderMapping(AppHost, webDirectory, CoreWebView2HostResourceAccessKind.DenyCors);
             if (!playerMode && startupProjectPath != null)
             {
-                if (Directory.Exists(startupProjectPath) && File.Exists(Path.Combine(startupProjectPath, "project.json")))
+                // Folder workspaces are accepted only by the internal smoke harness.
+                if (smokeBase != null && Directory.Exists(startupProjectPath) && File.Exists(Path.Combine(startupProjectPath, "project.json")))
                     projectDirectory = startupProjectPath;
                 else LoadArchive(startupProjectPath);
                 RememberProject(startupProjectPath);
@@ -246,6 +248,8 @@ internal sealed partial class EditorWindow : Form
     {
         try
         {
+            if(Environment.GetCommandLineArgs().Contains("--smoke-player-graphics")){await RunPlayerGraphicsSmoke();Close();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-editor-fixes")){await RunEditorFixSmoke();Close();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-editor-layout")){
                 await Task.Delay(1600);
                 foreach(var size in new[]{new Size(2560,1600),new Size(2048,1280),new Size(1707,1067),new Size(1280,800),new Size(1280,720)}){
@@ -304,15 +308,6 @@ internal sealed partial class EditorWindow : Form
                         "document.querySelector('#new-name').value='测试压缩工程'; document.querySelector('[data-action=new-project]').click()");
                     await Task.Delay(1700);
                     File.WriteAllText(smokeBase + ".new-archive.json", await web.CoreWebView2.ExecuteScriptAsync(
-                        "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})"));
-                }
-                if (smokeImportFolderPath != null)
-                {
-                    await Task.Delay(150);
-                    await web.CoreWebView2.ExecuteScriptAsync(
-                        "document.querySelector('[data-action=import-folder-project]').click()");
-                    await Task.Delay(1700);
-                    File.WriteAllText(smokeBase + ".import-folder.json", await web.CoreWebView2.ExecuteScriptAsync(
                         "JSON.stringify(window.__vrmDiagnostics ? window.__vrmDiagnostics() : {error:'UI not ready'})"));
                 }
                 await Task.Delay(smokeFastPlay ? 50 : smokePlay || smokeSaveSlots || smokeGallery || smokeGalleryProgress ? 1500 : 7000);
@@ -538,7 +533,7 @@ internal sealed partial class EditorWindow : Form
                     File.WriteAllText(smokeBase + ".character-preview.json",
                         await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify(window.__vrmDiagnostics())"));
                 }
-                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression") && !Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-preload") && !Environment.GetCommandLineArgs().Contains("--smoke-npr") && !Environment.GetCommandLineArgs().Contains("--smoke-inventory"))
+                if (smokeFileOpsParent != null && !playerMode && !Environment.GetCommandLineArgs().Contains("--smoke-chapters") && !Environment.GetCommandLineArgs().Contains("--smoke-props") && !Environment.GetCommandLineArgs().Contains("--smoke-scene-animations") && !Environment.GetCommandLineArgs().Contains("--smoke-render-regression") && !Environment.GetCommandLineArgs().Contains("--smoke-shoulder-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-fbx-portrait") && !Environment.GetCommandLineArgs().Contains("--smoke-preload") && !Environment.GetCommandLineArgs().Contains("--smoke-npr") && !Environment.GetCommandLineArgs().Contains("--smoke-inventory") && !Environment.GetCommandLineArgs().Contains("--smoke-resource-package") && !Environment.GetCommandLineArgs().Contains("--smoke-dialogue-camera"))
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=editor-settings]').click(); const interval=document.querySelector('#editor-auto-save-minutes'); interval.value='10'; interval.dispatchEvent(new Event('input',{bubbles:true})); document.querySelector('[data-action=close-editor-settings]').click(); window.prompt=()=> '测试副本'; document.querySelector('[data-action=save-as]').click()");
                     await Task.Delay(2600);
@@ -1077,6 +1072,11 @@ internal sealed partial class EditorWindow : Form
                 await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=save]')?.click()");
                 await Task.Delay(1200);
             }
+            if(Environment.GetCommandLineArgs().Contains("--smoke-dialogue-camera"))await RunDialogueCameraSmoke();
+            if(Environment.GetCommandLineArgs().Contains("--smoke-editor-modules"))await RunEditorModulesSmoke();
+            if(Environment.GetCommandLineArgs().Contains("--smoke-walk-audit"))await RunWalkAuditSmoke();
+            if(Environment.GetCommandLineArgs().Contains("--smoke-close-guard"))await RunCloseGuardSmoke();
+            if(Environment.GetCommandLineArgs().Contains("--smoke-resource-package"))await RunResourcePackageSmoke();
             if(Environment.GetCommandLineArgs().Contains("--smoke-inventory")){
                 foreach(string phase in playerMode?new[]{"player"}:Environment.GetCommandLineArgs().Contains("--smoke-inventory-reopen")?new[]{"reopen"}:new[]{"prepare","locked","reward","reload-pending","spend","gallery","detail","export"}){
                     await web.CoreWebView2.ExecuteScriptAsync("window.__inventoryCheck=null;window.__vrmSmokeInventory("+JsonSerializer.Serialize(phase)+").then(r=>window.__inventoryCheck=r).catch(e=>window.__inventoryCheck={error:e.message})");
@@ -1215,6 +1215,7 @@ internal sealed partial class EditorWindow : Form
     private void MapProject()
     {
         environmentSession = "";
+        if (playerResources != null) { MapProtectedPlayerResources(); return; }
         if (projectDirectory == null) return;
         web.CoreWebView2.SetVirtualHostNameToFolderMapping(
             ProjectHost, projectDirectory, CoreWebView2HostResourceAccessKind.Allow);
@@ -1229,11 +1230,27 @@ internal sealed partial class EditorWindow : Form
             JsonNode message = JsonNode.Parse(e.WebMessageAsJson) ?? throw new Exception("消息为空");
             id = message["id"]?.GetValue<string>() ?? "";
             string action = message["action"]?.GetValue<string>() ?? "";
-            if(archiveSaveRunning && action is not ("environmentCommitReply" or "init"))throw new Exception("工程正在后台保存，请稍候再进行文件操作。");
+            if(archiveSaveRunning && action is not ("environmentCommitReply" or "editorModuleCommitReply" or "init"))throw new Exception("工程正在后台保存，请稍候再进行文件操作。");
             JsonNode? payload = message["payload"];
-            object? data = action switch
+            object? data = await HandleEditorAction(action,payload);
+            Send(new { id, ok = true, data });
+        }
+        catch (Exception ex)
+        {
+            Send(new { id, ok = false, error = ex.Message });
+        }
+        await Task.CompletedTask;
+    }
+
+    private async Task<object?> HandleEditorAction(string action,JsonNode? payload)
+    {
+        if(action is "newProject" or "openProject" or "openRecentProject" && moduleWindows.Values.Any(window=>!window.IsDisposed))throw new Exception("请先保存并关闭其他编辑窗口，再切换工程。");
+        return action switch
             {
                 "init" => GetProjectInfo(),
+                "openEditorModule" when !playerMode => OpenEditorModule(payload),
+                "notifyEditorModules" when !playerMode => NotifyEditorModules(payload),
+                "editorModuleCommitReply" when !playerMode => EditorModuleCommitReply(payload),
                 "openEnvironment" when !playerMode => OpenEnvironment(payload),
                 "agentEnvironmentControl" when !playerMode => await AgentEnvironmentControl(payload),
                 "environmentCommitReply" when !playerMode => EnvironmentCommitReply(payload),
@@ -1248,7 +1265,6 @@ internal sealed partial class EditorWindow : Form
                 "newProject" when !playerMode => NewProject(payload?["name"]?.GetValue<string>() ?? "新游戏"),
                 "openProject" when !playerMode => OpenProject(),
                 "openRecentProject" when !playerMode => OpenRecentProject(payload?["path"]?.GetValue<string>() ?? ""),
-                "importFolderProject" when !playerMode => ImportFolderProject(),
                 "saveProject" when !playerMode => await SaveProjectAsync(payload?["project"], payload?["obsoletePortraitPaths"]?.AsArray().Select(node => node?.GetValue<string>() ?? "")),
                 "saveProjectAs" when !playerMode => SaveProjectAs(payload?["project"], payload?["name"]?.GetValue<string>() ?? ""),
                 "previewGame" when !playerMode => await PreviewGameAsync(payload?["project"]),
@@ -1267,13 +1283,6 @@ internal sealed partial class EditorWindow : Form
                 "exitGame" when playerMode => ExitGame(),
                 _ => throw new Exception("当前操作不可用")
             };
-            Send(new { id, ok = true, data });
-        }
-        catch (Exception ex)
-        {
-            Send(new { id, ok = false, error = ex.Message });
-        }
-        await Task.CompletedTask;
     }
 
     private object ExitGame()
@@ -1337,6 +1346,10 @@ internal sealed partial class EditorWindow : Form
 
     private JsonNode? ReadProject()
     {
+        if (playerResources != null) {
+            byte[] bytes = playerResources.ReadSmallFile("project.json");
+            try { return JsonNode.Parse(bytes); } finally { CryptographicOperations.ZeroMemory(bytes); }
+        }
         if (projectDirectory == null) return null;
         string file = Path.Combine(projectDirectory, "project.json");
         return File.Exists(file) ? JsonNode.Parse(File.ReadAllText(file)) : null;
@@ -1403,7 +1416,7 @@ internal sealed partial class EditorWindow : Form
     {
         path = Path.GetFullPath(path);
         if (!File.Exists(path) || !new[] { ".vrmg", ".zip" }.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase))
-            throw new Exception("请选择 .vrmg 工程包；旧版文件夹请用“导入旧工程”。");
+            throw new Exception("请选择 .vrmg 单文件工程包，已不支持旧版文件夹工程。");
         string workspace = CreateWorkspace();
         byte[]? archiveBytes = null;
         try
@@ -1581,7 +1594,7 @@ internal sealed partial class EditorWindow : Form
         try
         {
             var paths = JsonSerializer.Deserialize<string[]>(File.ReadAllText(RecentProjectsFile)) ?? [];
-            return paths.Where(path => File.Exists(path) || Directory.Exists(path))
+            return paths.Where(path => File.Exists(path) && Path.GetExtension(path).Equals(".vrmg",StringComparison.OrdinalIgnoreCase))
                 .Distinct(StringComparer.OrdinalIgnoreCase).Take(10).ToArray();
         }
         catch { return []; }
@@ -1604,70 +1617,32 @@ internal sealed partial class EditorWindow : Form
         string full = Path.GetFullPath(path);
         if (!ReadRecentProjects().Contains(full, StringComparer.OrdinalIgnoreCase))
             throw new Exception("这个工程不在最近打开列表中，或文件已被移动。请重新选择工程包。");
-        if (Directory.Exists(full) && File.Exists(Path.Combine(full, "project.json")))
-        {
-            CleanupTemporaryProject();
-            projectDirectory = full;
-            projectArchivePath = null;
-        }
-        else LoadArchive(full);
+        LoadArchive(full);
         RememberProject(full);
         MapProject();
         return GetProjectInfo();
     }
 
-    private object? ImportFolderProject()
-    {
-        string source;
-        if (smokeImportFolderPath != null) source = smokeImportFolderPath;
-        else
-        {
-            using var dialog = new FolderBrowserDialog
-            { Description = "选择旧版工程文件夹（里面有 project.json）", UseDescriptionForTitle = true };
-            if (dialog.ShowDialog(this) != DialogResult.OK) return null;
-            source = Path.GetFullPath(dialog.SelectedPath);
-        }
-        if (!File.Exists(Path.Combine(source, "project.json")))
-            throw new Exception("所选文件夹没有 project.json，不是旧版工程。");
-        JsonNode? content = JsonNode.Parse(File.ReadAllText(Path.Combine(source, "project.json")));
-        if (content is not JsonObject) throw new Exception("旧版工程内容无效。");
-        string? archive = ChooseArchiveDestination(SafeName(content["name"]?.GetValue<string>() ?? Path.GetFileName(source)), "将旧工程保存为工程包");
-        if (archive == null) return null;
-        string workspace = CreateWorkspace();
-        try
-        {
-            CopyDirectory(source, workspace);
-            WriteArchive(workspace, archive);
-        }
-        catch
-        {
-            try { Directory.Delete(workspace, recursive: true); } catch { }
-            throw;
-        }
-        CleanupTemporaryProject();
-        temporaryProjectDirectory = workspace;
-        projectDirectory = workspace;
-        projectArchivePath = archive;
-        RememberProject(archive);
-        RefreshArchiveMemory();
-        MapProject();
-        return GetProjectInfo();
-    }
-
     private bool archiveSaveRunning;
+    private void NotifyProjectSaving(bool saving)
+    {
+        if(web.CoreWebView2!=null)Send(new{projectSaving=saving});
+        foreach(var window in moduleWindows.Values.ToArray())if(!window.IsDisposed)window.SetProjectSaving(saving);
+    }
     private async Task<object> SaveProjectAsync(JsonNode? project, IEnumerable<string>? obsoletePortraitPaths = null)
     {
         if (archiveSaveRunning) throw new Exception("工程正在后台保存，请稍候。");
-        var result=SaveProject(project,obsoletePortraitPaths,false);
-        string directory=projectDirectory!,archive=projectArchivePath??"";
-        if(archive.Length==0)return result;
         archiveSaveRunning=true;
+        NotifyProjectSaving(true);
         try
         {
+            var result=SaveProject(project,obsoletePortraitPaths,false);
+            string directory=projectDirectory!,archive=projectArchivePath??"";
+            if(archive.Length==0)return result;
             byte[]? bytes=await Task.Run(()=>{WriteArchive(directory,archive);return new FileInfo(archive).Length<=512L*1024*1024?File.ReadAllBytes(archive):null;});
             loadedArchiveBytes=bytes;RememberProject(archive);return result;
         }
-        finally {archiveSaveRunning=false;}
+        finally {archiveSaveRunning=false;NotifyProjectSaving(false);}
     }
     private object SaveProject(JsonNode? project, IEnumerable<string>? obsoletePortraitPaths = null,bool writeArchive=true)
     {
@@ -1704,7 +1679,7 @@ internal sealed partial class EditorWindow : Form
         if (destination == null) return null;
         string source = Path.GetFullPath(projectDirectory);
         if (destination.StartsWith(source + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
-            throw new Exception("新工程包不能放在旧工程文件夹里面。");
+            throw new Exception("工程副本不能放在程序内部工作目录里面。");
         string workspace = projectArchivePath == null ? CreateWorkspace() : source;
         if (workspace != source) CopyDirectory(source, workspace);
         project["name"] = requestedName.Trim();
@@ -2104,11 +2079,23 @@ internal sealed partial class EditorWindow : Form
         }
         CopyDirectory(Path.Combine(appDirectory, "web"), Path.Combine(destination, "web"));
         File.Copy(Path.Combine(appDirectory,"web.integrity.json"),Path.Combine(destination,"web.integrity.json"));
-        CopyCurrentProject(projectDirectory, Path.Combine(destination, "game"));
+        if(Directory.Exists(Path.Combine(appDirectory,"licenses")))CopyDirectory(Path.Combine(appDirectory,"licenses"),Path.Combine(destination,"licenses"));
         var playerProject=gameProject.DeepClone();
         if(playerProject is JsonObject playerObject)playerObject.Remove("authoring");
-        File.WriteAllText(Path.Combine(destination, "game", "project.json"), playerProject.ToJsonString(JsonOptions));
-        File.WriteAllText(Path.Combine(destination, "game.config.json"), "{}");
+        var sources = new List<GameResourcePackage.Source> {
+            new("project.json", null, Encoding.UTF8.GetBytes(playerProject.ToJsonString(JsonOptions)))
+        };
+        // Export only the snapshot's asset allowlist, never editor history,
+        // backups, author notes, or unrelated files in the working directory.
+        foreach (string relative in (playerProject["assets"]?.AsArray() ?? new JsonArray())
+            .Select(item => (item?["path"]?.GetValue<string>() ?? "").Replace('\\', '/'))
+            .Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(path => path, StringComparer.Ordinal)) {
+            GameResourcePackage.NormalizePath(relative);
+            if (!relative.StartsWith("assets/", StringComparison.OrdinalIgnoreCase)) throw new Exception("素材必须位于工程 assets 文件夹内。");
+            sources.Add(new(relative, Path.Combine(projectDirectory, relative.Replace('/', Path.DirectorySeparatorChar))));
+        }
+        GameResourcePackage.Write(Path.Combine(destination, GameResourcePackage.FileName), sources);
+        File.WriteAllText(Path.Combine(destination, "game.config.json"), "{\"resourceProtection\":\"aes-gcm-v1\"}");
     }
 
     private static void CopyDirectory(string source, string destination)
