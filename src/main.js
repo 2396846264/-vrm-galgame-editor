@@ -1,3 +1,4 @@
+import {assetsOfType,syncAssetOrganization,motionsForCharacter,motionFolderId,commonMotionFolderId,setAudioKind,copyCharacterMotions} from './asset-organization.js';
 import {DialogueCameraController,snapshotCamera,applyDialogueCamera,resolveDialogueCamera} from './dialogue-camera.js';
 import './dialogue-camera.css';
 import './story-workspace.css';
@@ -7,9 +8,17 @@ import * as THREE from 'three';
 import {createSceneAnimationDialog} from './scene-animation-dialog.js';
 import {normalizeSceneAnimations} from './scene-animations.js';
 import {migrateTitleActors,newTitleActor} from './title-actors.js';
-import {migrateDialogueCast, emptyDialogueCast, copyDialogueCast, setDialogueActor} from './dialogue-cast.js';
-import {availablePropBones,propBoneLabels,propBone} from './character-props.js';
+import {dialogueSlots,dialogueSlotLabel,dialogueSlotPosition,migrateDialogueCast, emptyDialogueCast, copyDialogueCast, setDialogueActor} from './dialogue-cast.js';
+import {availablePropBones,propBoneLabels,propBone,setPropRotation} from './character-props.js';
 import './style.css';
+import {preciseTransform,routePreciseInput} from './precise-transform.js';
+import './precise-transform.css';
+import {showExportChooser} from './export-game.js';
+import {createContextMenu} from './context-menu.js';
+import {GalleryCache} from './gallery-cache.js';
+import './gallery-cache.css';
+import {copyLabels,insertEditorCopy,projectClipboard} from './editor-copy.js';
+import './android-export.css';
 import {createEditorSaveNotice} from './editor-save-notice.js';
 import './editor-save-notice.css';
 import './skin.css';
@@ -31,8 +40,8 @@ import { VRMStage, assetUrl, motionFrameInfo, captureCharacterPortrait } from '.
 import {canGeneratePortrait} from './portrait-policy.js';
 import {normalizeRender,renderPresets,customFilterSpecs,filterGroups,colorAdjustments} from './render-style.js';
 import './render-style.css';
-import {ActPreloader,nextPreloadTarget} from './act-preload.js';
-import './act-preload.css';
+import {actResourceEntries,actMediaAssets} from './act-resources.js';
+import './frame-rate.css';
 import { embeddedVrmThumbnail, internalPortrait } from './vrm-thumbnail.js';
 import {validateEnvironmentLibrary} from './environment-operations.js';
 import {createEnvironment,migrateEnvironments,validateEnvironment} from './environment-schema.js';
@@ -65,7 +74,7 @@ let propPreviewMode=false,selectedBindingPropId='';
 const openAssetFolders = new Set(['unfiled:vrm', 'unfiled:motion', 'unfiled:image', 'unfiled:audio', 'unfiled:video']);
 let dockInitializedProjectId = '';
 let activeAssetType = 'image';
-const currentAssetFolder = { image: '', vrm: '', fbxCharacter: '', sceneModel: '', motion: '', audio: '', voice: '', video: '' };
+const currentAssetFolder = { image: '', vrm: '', fbxCharacter: '', sceneModel: '', motion: '', audio: '', music:'',effect:'', voice: '', video: '' };
 let draggingStory = null;
 let playing = false;
 let playAct = 0;
@@ -113,6 +122,8 @@ let galleryCharacterId = '';
 let galleryStoryIndex = 0;
 let editorGalleryStoryIndex = 0;
 let galleryStage = null;
+const editorGalleryKeys=[];
+let galleryCache=null,gallerySelection=Promise.resolve(false);
 let galleryTrackIndex = 0;
 let galleryRepeatOne = false;
 const galleryMusic = new Audio();
@@ -149,6 +160,7 @@ function bridge(action, payload = {}) {
 }
 window.chrome?.webview?.addEventListener('message', event => {
   const message = event.data;
+
   if(typeof message.projectSaving==='boolean'){editorSaveNotice.set('native',message.projectSaving);return;}
   if(typeof message.modulePreviewActive==='boolean'){window.__editorModulePreviewActive=message.modulePreviewActive;return;}
   if (message.agentRequest) {
@@ -177,6 +189,7 @@ const library = createLibrary({ project: () => project, escape, assetUrl, bridge
   progress: () => lifetimeProgress, refresh: () => { renderSidebar(); renderInspector(); updatePreview(); },
   openModal: view => { closePlayerModal(); document.querySelector('#player-modal')?.remove(); saveModalMode = view; } });
 const events = createEvents({ project: () => project, escape, asset, assetUrl,
+  volume:()=>audioSettings.master,
   paused: () => Boolean(saveModalMode || document.querySelector('#player-modal.closing')),
   player: () => mode === 'player', prepare: prepareEventScene,
   audio: e => {
@@ -212,7 +225,7 @@ const character = id => project.characters.find(item => item.id === id);
 const options = (items, value, empty = '无') =>
   `<option value="">${escape(empty)}</option>${items.map(item =>
     `<option value="${escape(item.id)}" ${item.id === value ? 'selected' : ''}>${escape(item.name)}</option>`).join('')}`;
-const byType = type => project.assets.filter(item => item.type === type && !internalPortrait(project, item));
+const byType = type => assetsOfType(project,type).filter(item => !internalPortrait(project, item));
 const vrmThumbnails = new Map();
 let thumbnailProject = null;
 function refreshVrmThumbnails() {
@@ -281,8 +294,8 @@ const transformOf = entry => ({
   pitch: Number(entry?.pitch) || 0
 });
 const modelForStep = entry => asset(character(entry?.characterId)?.modelId);
-const castSlots = ['left', 'center', 'right'];
-const castSlotLabels = { left: '左侧', center: '中间', right: '右侧' };
+const castSlots = dialogueSlots;
+const castSlotLabels = Object.fromEntries(castSlots.map(slot=>[slot,dialogueSlotLabel(slot)]));
 const castSettingsOf = (currentAct, slot) => step()?.cast?.[slot] || {};
 const motionOptionsOf = holder => holder?.motionOptions || {};
 function motionAdvanced(holder, scope) {
@@ -428,7 +441,7 @@ window.__vrmSmokeNpr=async function(phase){
  if(!new URLSearchParams(location.search).has('smoke'))throw Error('Smoke only');
  const assert=(test,message)=>{if(!test)throw Error(message);},wait=ms=>new Promise(r=>setTimeout(r,ms));
  const index=project.acts.findIndex(a=>a.id==='act-school');assert(index>=0,'没有校园测试场景');
- async function show(settings,lineSettings){nextPreloader.reset();playing=false;selectedAct=index;selectedStep=0;activePanel='render';project.acts[index].render=normalizeRender(settings);project.acts[index].steps[0].render=lineSettings;renderSidebar();renderInspector();await updatePreview();await wait(650);stage.stylePipeline.render(.016);}
+ async function show(settings,lineSettings){playing=false;selectedAct=index;selectedStep=0;activePanel='render';project.acts[index].render=normalizeRender(settings);project.acts[index].steps[0].render=lineSettings;renderSidebar();renderInspector();await updatePreview();await wait(650);stage.stylePipeline.render(.016);}
  function pixels(){stage.stylePipeline.render(.016);const gl=stage.renderer.getContext(),w=stage.renderer.domElement.width,h=stage.renderer.domElement.height;const sample=new Uint8Array(4),values=[];for(let y=1;y<8;y++)for(let x=1;x<12;x++){gl.readPixels(Math.floor(w*x/12),Math.floor(h*y/8),1,1,gl.RGBA,gl.UNSIGNED_BYTE,sample);values.push(...sample.slice(0,3));}const brightness=values.reduce((a,b)=>a+b,0)/values.length;assert(brightness>8,'渲染画面黑屏');const bad=stage.renderer.info.programs.filter(p=>p.diagnostics&&!p.diagnostics.runnable);assert(!bad.length,'着色器编译失败：'+JSON.stringify(bad.map(p=>p.diagnostics)));return {values,brightness};}
  function difference(a,b){return a.reduce((total,v,i)=>total+Math.abs(v-b[i]),0)/a.length;}
  if(phase==='neutral'){await show({preset:'custom'});window.__nprNeutral=pixels();return {ok:true,brightness:window.__nprNeutral.brightness};}
@@ -445,7 +458,7 @@ window.__vrmSmokeNpr=async function(phase){
    await show({preset:'zzz'},{preset:'tno',brightness:125,contrast:115,saturation:120});activePanel='story';renderInspector();await updatePreview();assert(document.querySelector('[data-render="preset"][data-render-scope="step"]'),'对白不能选择风格');assert(!document.querySelector('[data-render="strength"]'),'对白TNO出现浓度');for(const key of ['brightness','contrast','saturation'])assert(document.querySelector('[data-render="'+key+'"][data-render-scope="step"]'),'对白缺少微调');assert(stage.renderSettings.preset==='tno'&&stage.renderSettings.brightness===125,'对白覆盖未应用');return {ok:true,dialoguePreset:true,calibrationAlwaysAvailable:true};
  }
  if(phase==='fbx'){
-   nextPreloader.reset();playing=false;selectedAct=project.acts.findIndex(a=>a.id==='act-shadow-test');selectedStep=0;activePanel='render';project.acts[selectedAct].render=normalizeRender({preset:'zzz',strength:.85});delete project.acts[selectedAct].steps[0].render;renderSidebar();renderInspector();await updatePreview();await wait(650);pixels();assert([...stage.visibleRecords.values()].some(record=>record.vrm.isFbx),'FBX 不在场');return {ok:true,fbxPreset:true,vrmTogether:true,noShaderErrors:true};
+   playing=false;selectedAct=project.acts.findIndex(a=>a.id==='act-shadow-test');selectedStep=0;activePanel='render';project.acts[selectedAct].render=normalizeRender({preset:'zzz',strength:.85});delete project.acts[selectedAct].steps[0].render;renderSidebar();renderInspector();await updatePreview();await wait(650);pixels();assert([...stage.visibleRecords.values()].some(record=>record.vrm.isFbx),'FBX 不在场');return {ok:true,fbxPreset:true,vrmTogether:true,noShaderErrors:true};
  }
  if(phase==='export'){
    await show({preset:'zzz',strength:.85});for(const line of project.acts[index].steps)delete line.render;project.acts[index].steps[1].render={preset:'tno',brightness:110,contrast:105,saturation:115};project.acts[index].steps[2].render={preset:'custom',filters:{outline:1,posterize:10,pixelSize:2,ao:.35}};markDirty();await save();await bridge('saveProjectAs',{project:structuredClone(project),name:'新渲染三种风格验证'});await bridge('exportGame',{folderName:'新渲染试玩'});return {ok:true,exported:true};
@@ -456,76 +469,22 @@ window.__vrmSmokeNpr=async function(phase){
  throw Error('Unknown phase');
 };
 
-window.__vrmSmokePreload=async function(phase){
- if(!new URLSearchParams(location.search).has('smoke'))throw Error('Smoke only');
- const assert=(test,message)=>{if(!test)throw Error(message);},wait=ms=>new Promise(r=>setTimeout(r,ms));
- async function ready(full){for(let i=0;i<1200;i++){const state=nextPreloader.snapshot();if(state&&!state.busy&&state.done.includes(full?'graphics:full':'graphics:opening'))return state;await wait(50);}throw Error('预加载没有完成：'+JSON.stringify(nextPreloader.snapshot()));}
- async function start(fps,index=2){nextPreloader.reset();releasePreparedMedia();window.__preloadTestFps=fps;playing=true;playAct=0;playStep=index;preparedAct=-1;autoPlay=false;await showPlayStep();await wait(250);updateRuntimePreparation();}
- if(phase==='off'){await start(25);await wait(500);assert(!nextPreloader.snapshot(),'低于30帧仍预加载');assert(document.querySelector('#act-preload-indicator').classList.contains('hidden'),'低帧数转圈没有隐藏');const meter=stage.frameRateMeter.fps;assert(meter>0,'没有真实帧采样');return {ok:true,mode:'off',realFps:meter,display:document.querySelector('#game-fps').textContent};}
- if(phase==='trigger'){await start(60,1);assert(!nextPreloader.snapshot(),'提前超过最后三句');playStep=2;await showPlayStep();await wait(100);updateRuntimePreparation();assert(nextPreloader.snapshot()?.id===project.acts[1].id,'倒数第三句没有触发');const fps=document.querySelector('#game-fps').getBoundingClientRect(),spinner=document.querySelector('#act-preload-indicator').getBoundingClientRect();assert(fps.right<spinner.left,'帧数和转圈重叠');return {ok:true,lastThree:true,separateIndicators:true};}
- if(phase==='partial'||phase==='full'){
-   await start(phase==='full'?60:45);const root=stage.environmentRuntime.root,records=[...stage.visibleRecords.values()],camera=stage.camera.position.clone(),sound=music.src;
-   const state=await ready(phase==='full');assert(stage.environmentRuntime.root===root&&camera.distanceTo(stage.camera.position)<1e-8,'提前切换了场景或镜头');assert(records.every(record=>stage.visibleRecords.get(record.anchor.userData.actorKey)||[...stage.visibleRecords.values()].includes(record)),'预加载替换当前人物');assert(records.every(record=>record.vrm.scene.visible),'当前人物消失');assert(music.src===sound,'下一幕音乐提前播放');assert(state.failed.length===0,'预加载资源错误：'+state.failed.join(','));
-   const later=project.acts[1].steps[1].cast.center.characterId;assert(state.done.includes('model:'+later)===(phase==='full'),'完整/部分人物范围错误');
-   return {ok:true,mode:phase,done:state.done,currentScenePreserved:true,currentCastPreserved:true,noEarlySound:true};
- }
- if(phase==='dynamic'){
-   await start(45);await ready(false);window.__preloadTestFps=25;updateRuntimePreparation();const before=nextPreloader.snapshot().done.length;await wait(400);assert(nextPreloader.snapshot().done.length===before,'低帧继续开始任务');assert(document.querySelector('#act-preload-indicator').classList.contains('hidden'),'暂停后仍转圈');window.__preloadTestFps=60;updateRuntimePreparation();await ready(true);return {ok:true,pausedBelow30:true,upgradedAbove55:true};
- }
- if(phase==='adopt'||phase==='player'||phase==='reopen'){
-   await start(60);await ready(true);const bundle=nextPreloader.record.bundle,root=bundle.environment.root,first=project.acts[1].steps[0].cast.center.characterId,model=await bundle.stage.modelCache.get(first);playAct=1;playStep=0;const begin=performance.now();await showPlayStep();const ms=performance.now()-begin;assert(stage.environmentRuntime.root===root,'换幕重新建立环境');assert(stage.visibleRecords.get(first)===model,'换幕重新加载人物');assert(!nextPreloader.snapshot(),'下一幕准备区没有交接');
-   if(phase==='player'){playStep=1;await showPlayStep();assert(stage.livePortrait.record===stage.visibleRecords.get(project.acts[1].steps[1].characterId),'VRM 实时头像没有复用同一个人物');playStep=0;await showPlayStep();assert(!stage.livePortrait.record,'FBX 头像变成实时模型');delete window.__preloadTestFps;}
-   await wait(1000);return {ok:true,sceneReused:true,actorReused:true,switchMs:ms,adoptions:stage.preloadAdoptions,vrmPortraitPreserved:phase==='player',realFps:stage.frameRateMeter.fps,display:document.querySelector('#game-fps').textContent};
- }
- if(phase==='export'){delete window.__preloadTestFps;nextPreloader.reset();playing=false;playAct=0;selectedAct=0;selectedStep=0;markDirty();await save();await bridge('saveProjectAs',{project:structuredClone(project),name:'按帧数预加载验证'});await bridge('exportGame',{folderName:'预加载试玩'});return {ok:true,exported:true};}
- throw Error('Unknown phase');
-};
-
-const runtimeFps=()=>new URLSearchParams(location.search).has('smoke')&&Number.isFinite(window.__preloadTestFps)?window.__preloadTestFps:stage?.frameRateMeter?.fps||0;
+const runtimeFps=()=>stage?.frameRateMeter?.fps||0;
 let activePreparedMedia=new Map(),activePreparedImages=[];
 function releasePreparedMedia(){for(const item of activePreparedMedia.values()){item.pause?.();item.removeAttribute?.('src');item.load?.();}activePreparedMedia.clear();activePreparedImages=[];}
 function takePreparedAudio(id){const item=activePreparedMedia.get(id);if(!item||item.tagName!=='AUDIO')return null;activePreparedMedia.delete(id);return item;}
-function preparationEntries(target,lines){
- const entries=lines.flatMap(line=>castForAct(target,line));
- for(const line of lines){const actor=character(line.characterId),modelAsset=asset(actor?.modelId);if(modelAsset?.type==='vrm'&&!entries.some(entry=>entry.actorKey===actor.id))entries.push({actorKey:actor.id,modelAsset,props:[],visiblePropIds:[]});}
- return entries;
-}
+function preparationEntries(target,lines){return actResourceEntries(project,{...target,steps:lines});}
 async function prepareMedia(item,bundle){
  if(!item)return;
  const node=item.type==='image'?new Image():document.createElement(item.type==='video'?'video':'audio');
  node.preload='auto';node.muted=true;bundle.media.push(node);bundle.mediaMap.set(item.id,node);
  await new Promise(resolve=>{let timer;const finish=()=>{clearTimeout(timer);node.removeEventListener('load',finish);node.removeEventListener('loadeddata',finish);node.removeEventListener('error',finish);resolve();};node.addEventListener(item.type==='image'?'load':'loadeddata',finish,{once:true});node.addEventListener('error',finish,{once:true});timer=setTimeout(finish,5000);node.src=assetUrl(item);node.load?.();});
 }
-function createPreloadBundle(target){
- const environment=project.environments.find(env=>env.id===target.environmentId),bundle=stage.createActPreparation(dialogueRender(target,target.steps?.[0],project.render),environment);
- bundle.mediaMap=new Map();bundle.openingEntries=preparationEntries(target,(target.steps||[]).slice(0,1));
- const allEntries=preparationEntries(target,target.steps||[]),opening=bundle.openingEntries,warm=bundle.stage;
- const models=new Map(),motions=new Map(),clips=new Map(),props=new Map(),media=new Map();
- for(const entry of allEntries){
-   const partial=opening.some(e=>e.actorKey===entry.actorKey);models.set(entry.actorKey,{item:entry.modelAsset,partial});
-   if(entry.motionAsset){const id=entry.motionAsset.id;motions.set(id,{item:entry.motionAsset,partial:(motions.get(id)?.partial||opening.some(e=>e.motionAsset?.id===id))});const key=entry.actorKey+':'+id;clips.set(key,{entry,partial:opening.some(e=>e.actorKey===entry.actorKey&&e.motionAsset?.id===id)});}
-   for(const binding of entry.props||[])if(entry.visiblePropIds?.includes(binding.id)){const id=binding.assetId;props.set(id,{item:asset(id),partial:props.get(id)?.partial||opening.some(e=>e.actorKey===entry.actorKey&&e.visiblePropIds?.includes(binding.id))});}
- }
- const addMedia=(id,partial)=>{const item=asset(id);if(item&&['image','audio','voice','video'].includes(item.type))media.set(id,{item,partial:partial||media.get(id)?.partial});};
- addMedia(target.bgmId,true);addMedia(target.weather?.soundId,true);addMedia(target.coverImageId,false);
- for(const [index,line]of(target.steps||[]).entries()){addMedia(line.voiceId,index===0);addMedia(line.seId,index===0);addMedia(character(line.characterId)?.portraitId,index===0);for(const cue of line.sceneAnimations||[])if(cue.enabled)addMedia(cue.soundId,index===0);}
- if(target.kind==='event'){for(const key of['imageId','videoId','bgmId','voiceId','seId','flagAId','flagBId'])addMedia(target.event?.[key],true);for(const row of target.event?.declarations||[]){addMedia(row.flagAId,false);addMedia(row.flagBId,false);}}
- const job=(key,partial,run)=>bundle.jobs.push({key,partial:Boolean(partial),run});
- if(environment)job('environment',true,gate=>bundle.environment.load(environment,project.assets,{beforeNode:gate}));
- for(const [key,spec]of models)job('model:'+key,spec.partial,async()=>{await warm.loadModel(spec.item,key);await warm.waitTextures();});
- for(const [key,spec]of motions)job('motion:'+key,spec.partial,async()=>{await warm.loadMotionSource(spec.item);await warm.waitTextures();});
- for(const [key,spec]of clips)job('clip:'+key,spec.partial,()=>warm.prepareClip(spec.entry.modelAsset,spec.entry.motionAsset,spec.entry.actorKey));
- for(const [key,spec]of props)job('prop:'+key,spec.partial,()=>warm.characterProps.load(spec.item));
- for(const [key,spec]of media)job('media:'+key,spec.partial,()=>prepareMedia(spec.item,bundle));
- job('graphics:opening',true,gate=>stage.warmPreparedGraphics(bundle,gate));job('graphics:full',false,gate=>stage.warmPreparedGraphics(bundle,gate));
- return bundle;
+async function prepareCurrentActMedia(target,valid=()=>true){
+ releasePreparedMedia();const bundle={media:[],mediaMap:new Map()};await Promise.all(actMediaAssets(project,target).map(item=>prepareMedia(item,bundle)));if(!valid()){for(const item of bundle.media){item.pause?.();item.removeAttribute('src');item.load?.();}return;}activePreparedMedia=bundle.mediaMap;activePreparedImages=bundle.media.filter(item=>item.tagName==='IMG');
 }
-const nextPreloader=new ActPreloader({fps:runtimeFps,allowed:()=>playing&&!transitioning&&!saveModalMode&&!document.hidden,create:createPreloadBundle,dispose:bundle=>bundle.dispose(),status:state=>{const node=document.querySelector('#act-preload-indicator');node?.classList.toggle('hidden',!state.busy);if(node)node.dataset.mode=state.mode;},defer:()=>new Promise(resolve=>window.requestIdleCallback?requestIdleCallback(resolve,{timeout:100}):setTimeout(resolve,16))});
 function updateRuntimePreparation(){
  const counter=document.querySelector('#game-fps');counter?.classList.toggle('hidden',!(mode==='player'||playing));if(counter)counter.textContent=runtimeFps()>0?Math.round(runtimeFps())+' FPS':'— FPS';
- if(playing&&!transitioning)nextPreloader.update(nextPreloadTarget(project?.acts||[],playAct,playStep));
- else if(!playing)nextPreloader.reset();
- else document.querySelector('#act-preload-indicator')?.classList.add('hidden');
 }
 setInterval(updateRuntimePreparation,200);
 
@@ -539,13 +498,13 @@ const titleSlider = (key, label, value, min, max, stepSize, display) =>
   `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-title-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-title-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-title-output="${key}">${display}</output></label>`;
 function titleActorEditor(actor,index){
   const role=character(actor.characterId);
-  const transforms=[['size','大小',50,500,5],['offsetX','左右位置',-10,10,.01],['offsetY','上下位置',-10,10,.01],['offsetZ','前后位置',-100,100,.01],['yaw','左右转身',-120,120,1],['pitch','上下转角',-60,60,1]];
-  return `<details class="title-actor-editor" open><summary>人物 ${index+1} · ${escape(asset(actor.modelId)?.name||'未选择模型')}</summary>
+  const transforms=[['size','大小',50,500,5],['offsetX','左右位置',-100,100,.01],['offsetY','上下位置',-100,100,.01],['offsetZ','前后位置',-100,100,.01],['yaw','左右转身',-360,360,.1],['pitch','上下转角',-360,360,.1]];
+  return `<details class="title-actor-editor" data-copy-id="${actor.id}" open><summary>人物 ${index+1} · ${escape(asset(actor.modelId)?.name||'未选择模型')}</summary>
     ${field('人物模型',`<select data-title-actor-id="${actor.id}" data-title-actor-field="modelId">${options(actorModels(),actor.modelId,'不显示人物')}</select>`)}
     ${field('使用角色及其物品',`<select data-title-actor-id="${actor.id}" data-title-actor-field="characterId">${options(project.characters.filter(c=>c.modelId),actor.characterId,'直接使用模型')}</select>`)}
-    ${field('人物动作',`<select data-title-actor-id="${actor.id}" data-title-actor-field="motionId">${options(byType('motion'),actor.motionId,'保持站立')}</select>`)}
+    ${field('人物动作',`<select data-title-actor-id="${actor.id}" data-title-actor-field="motionId">${options(motionsForCharacter(project,actor.characterId),actor.motionId,'保持站立')}</select>`)}
     ${motionAdvanced(actor,`titleActor:${actor.id}`)}
-    ${transforms.map(([key,label,min,max,step])=>{const value=key==='size'?Math.round(actor.size*100):actor[key];return `<label class="adjustment depth-adjustment"><span>${label}${key==='size'?' (%)':''}</span><input type="range" data-title-actor-id="${actor.id}" data-title-actor-adjust="${key}" min="${min}" max="${max}" step="any" value="${value}"><input class="depth-number" type="number" data-title-actor-id="${actor.id}" data-title-actor-adjust="${key}" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}精确数值"></label>`;}).join('')}
+    ${transforms.map(([key,label,min,max,step])=>preciseTransform(label,key==='size'?Math.round(actor.size*100):actor[key],min,max,`data-title-actor-id="${actor.id}" data-title-actor-adjust="${key}"`,'',key==='size'?' (%)':'',step)).join('')}
     ${role?.modelId===actor.modelId?(role.props||[]).map(prop=>`<label class="motion-option-row"><span>显示 ${escape(prop.name)}</span><input type="checkbox" data-title-actor-id="${actor.id}" data-title-actor-prop="${prop.id}" ${actor.props.includes(prop.id)?'checked':''}></label>`).join(''):''}
     ${actor.modelId&&!isFbxModel(actor.modelId)?`<h3>人物表情</h3><div data-title-actor-expressions="${actor.id}" class="expression-controls"></div>`:''}
     ${button('删除这个标题人物','delete-title-actor',`data-id="${actor.id}"`)}
@@ -573,16 +532,16 @@ async function showTitleScene(interactive = false) {
   events.cancel();
   eventMusicActive = false;
   setSceneWeather();
-  applySceneColor(colorDefaults);
+  applySceneColor(project.title.render||project.render);
   const request = ++titleRequest;
   const frame = document.querySelector('.stage-frame');
   frame?.classList.add('title-mode');
   showBackground(null);
   if (interactive && asset(project.title.logoImageId)) rememberDiscovery('image', project.title.logoImageId);
   stage.sceneAnimationsPaused=()=>Boolean(saveModalMode||document.hidden);
-  stage.setRenderSettings(project.render);
+  stage.setRenderSettings(project.title.render||project.render);
   stage.setBackgroundLighting(asset(project.title.backgroundId));
-  stage.setCameraAngle(project.title.cameraAngle);
+  stage.setCameraAngle(0);
   await showEnvironment(project.title);
   const overlay = document.querySelector(interactive ? '#player-start' : '#title-preview');
   if (overlay) {
@@ -663,7 +622,7 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeShoulderPo
   await updateSpeakerPortrait(vrm.id,true);await wait(250);
   const record=stage.livePortrait.record,camera=stage.livePortrait.camera,head=record.vrm.humanoid.getNormalizedBoneNode('head').getWorldPosition(new THREE.Vector3());
   const scale=record.anchor.getWorldScale(new THREE.Vector3()).y,orientation=record.anchor.getWorldQuaternion(new THREE.Quaternion()),offset=camera.position.clone().sub(head).applyQuaternion(orientation.clone().invert()).divideScalar(scale);
-  assert(camera.isOrthographicCamera,'没有使用原照片镜头');assert(offset.distanceTo(new THREE.Vector3(-.85,.05,1.7))<.01,'头像拍摄方向没有对齐');assert(Math.abs(camera.top/scale-.2)<1e-8,'头像放大比例没有对齐');
+  assert(camera.isOrthographicCamera,'没有使用原照片镜头');assert(offset.distanceTo(new THREE.Vector3(-.85,.05,1.7))<.01,'头像拍摄方向没有对齐');const portraitRect=stage.livePortrait.node.getBoundingClientRect();assert(Math.abs(camera.top/scale-(-.2+.4*Math.max(1,portraitRect.height/portraitRect.width)))<1e-8,'头像上方空间没有扩展');
   assert(stage.livePortrait.record===stage.visibleRecords.get(vrm.id),'没有复用场上 VRM');
   stage.startTalking(vrm.id,true);stage.talkingLetter('你');let mouth=false;
   for(let i=0;i<15;i++){await wait(50);if(['aa','ih','ou','ee','oh'].some(k=>record.vrm.expressionManager.getValue(k)>.05))mouth=true;}
@@ -1166,7 +1125,7 @@ function normalize() {
     if (!item.cast && item.steps.some(entry=>!entry.cast)) {
       const distinct = [...new Set(item.steps.map(entry => entry.characterId).filter(Boolean))];
       item.cast = { left: '', center: '', right: '' };
-      for (const id of distinct.slice(0, 3)) {
+      for (const id of distinct.slice(0, castSlots.length)) {
         const preferred = item.steps.find(entry => entry.characterId === id)?.position || 'center';
         const slot = castSlots.includes(preferred) && !item.cast[preferred] ? preferred : castSlots.find(key => !item.cast[key]);
         if (slot) item.cast[slot] = id;
@@ -1174,7 +1133,7 @@ function normalize() {
     }
     for (const entry of item.steps) entry.choices ||= [];
   }
-  migrateDialogueCast(project);
+  migrateDialogueCast(project);syncAssetOrganization(project,uid);
 }
 async function init() {
   try {
@@ -1265,6 +1224,7 @@ function historyInputContext(node) {
   return { key, label: `修改${label.slice(0, 24)}`, continuous: historyPointer === node };
 }
 document.addEventListener('input', event => {
+  if(event.target.hasAttribute('data-precise-fine'))return;
   if (mode !== 'editor' || !project || historyBusy) return;
   historyInput = historyInputContext(event.target);
   if (historyInput) editorHistory.begin();
@@ -1329,7 +1289,7 @@ async function restoreEditorHistory(direction) {
 }
 function markDirty(options) {
   if(project)migrateEnvironments(project);
-  if (project) syncDialogueVoices(project);
+  if (project){syncDialogueVoices(project);syncAssetOrganization(project,uid);}
   changeRevision++;
   dirty = true;
   if(!modulePanel)scheduleModuleRefresh();
@@ -1487,7 +1447,7 @@ function renderEditor() {
           <div id="choice-list"></div>
           <div id="play-controls">${button('退出试玩', 'stop-play')}</div>
           <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
-          <div id="game-fps" class="game-fps hidden" aria-label="当前帧数">— FPS</div><div id="act-preload-indicator" class="act-preload-indicator hidden" role="status"><i aria-hidden="true"></i><span>准备下一幕</span></div>
+          <div id="game-fps" class="game-fps hidden" aria-label="当前帧数">— FPS</div>
         </div>
         <section class="asset-dock" aria-label="常驻素材库"><div class="asset-dock-heading"><strong>素材库</strong><small>图片直接显示缩略图；在这里导入、分类、删除素材</small></div><div id="asset-dock-tabs" class="asset-dock-tabs" role="tablist" aria-label="素材类型"></div><div id="asset-dock-body" class="asset-dock-body"></div></section>
       </main>
@@ -1522,11 +1482,11 @@ function renderSidebar() {
   const body = document.querySelector('#sidebar-body');
   if (activePanel === 'knowledge') { library.editor(); renderAssetDock(); return; }
   if(activePanel==='items'){body.innerHTML=`<div class="section-heading">玩家物品 ${button('＋ 新增','add-inventory-item')}</div><div class="list inventory-editor-list">${project.items.map((item,index)=>`<button class="list-row ${index===selectedItem?'selected':''}" data-action="select-inventory-item" data-index="${index}">${escape(item.name||'未命名物品')}</button>`).join('')}</div><p class="sidebar-note">这是玩家背包里的物品。先补全名字、立绘和介绍，再到对白里设置获得与分支条件。</p>`;}else if (activePanel === 'story') {
-    body.innerHTML = `<div class="section-heading">剧情 <span class="heading-actions">${button('＋ 幕', 'add-act')}${button('＋ 事件', 'event-add')}</span></div>
+    body.innerHTML = `<div class="section-heading">剧情 <span class="heading-actions">${button('＋ 幕', 'add-act')}${button('＋ 事件', 'event-add')}${button('＋ 过场','event-add-cutscene')}</span></div>
       <div class="list act-accordion" data-order-list="act">${project.acts.map((item, index) =>
         `<section class="act-group ${isEvent(item) ? 'event-group' : ''} ${index === selectedAct ? 'expanded' : ''}"><button class="list-row sortable-row ${index === selectedAct ? 'selected' : ''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" aria-expanded="${index === selectedAct}">
           <span class="number">${index === selectedAct ? '▾' : '▸'} ${String(index + 1).padStart(2, '0')}</span><span>${isEvent(item) ? '▤ ' : ''}${escape(item.name)}</span><small>${isEvent(item) ? eventNames[item.event.type] : `${item.steps.length} 句`}</small><span class="drag-grip" aria-hidden="true">⋮⋮</span></button>
-          ${index === selectedAct ? isEvent(item) ? `<div class="act-dialogues event-sidebar-info"><p>${escape(item.event.title || '在右侧填写事件内容')}</p><small>${eventSeconds[item.event.type] ? `观看 ${eventSeconds[item.event.type]} 秒后继续` : '可以立即关闭'}</small><div class="inline-actions">${button('预览', 'event-preview')}${button('复制', 'event-duplicate')}</div></div>` : `<div class="act-dialogues"><div class="section-heading">本幕对白 <span class="heading-actions">${button('复制', 'duplicate-step', item.steps.length ? '' : 'disabled')}${button('＋ 新增', 'add-step')}</span></div>
+          ${index === selectedAct ? isEvent(item) ? `<div class="act-dialogues event-sidebar-info"><p>${escape(item.event.title || '在右侧填写事件内容')}</p><small>${eventSeconds[item.event.type] ? `观看 ${eventSeconds[item.event.type]} 秒后继续` : '可以立即关闭'}</small><div class="inline-actions">${button('预览', 'event-preview')}</div></div>` : `<div class="act-dialogues"><div class="section-heading">本幕对白 <span class="heading-actions">${button('＋ 新增', 'add-step')}</span></div>
           <div class="list step-list" data-order-list="step">${item.steps.map((line, stepIndex) => `<button class="list-row sortable-row ${stepIndex === selectedStep ? 'selected' : ''}" draggable="true" data-order-kind="step" data-order-index="${stepIndex}" data-action="select-step" data-index="${stepIndex}"><span class="number">${stepIndex + 1}</span><span><b>${escape(line.speaker || character(line.characterId)?.name || '旁白')}</b><small>${escape(line.text || '空对白')}</small></span><span class="drag-grip" aria-hidden="true">⋮⋮</span></button>`).join('') || '<p class="tip">点击“新增”写第一句对白。</p>'}</div></div>` : ''}</section>`).join('')}</div>
       <div class="sidebar-note">拖动幕或事件可以调整播放顺序。点击“＋ 事件”，会插入到当前选中项后面。</div>`;
   } else if (activePanel === 'characters') {
@@ -1549,12 +1509,80 @@ function renderSidebar() {
   }
   renderAssetDock();
 }
+const objectMenu=createContextMenu(error=>toast(error.message,true));
+function objectContext(target){
+ const row=target.closest('[data-action="select-act"],[data-action="select-step"],[data-action="select-character"],[data-action="select-inventory-item"],[data-action="book-select"]');
+ if(row){const index=Number(row.dataset.index),kind={'select-act':'act','select-step':'step','select-character':'character','select-inventory-item':'item','book-select':'book'}[row.dataset.action],list={act:project.acts,step:act()?.steps,character:project.characters,item:project.items,book:project.knowledgeBooks}[kind];return{kind,source:list?.[index],ownerId:kind==='step'?act()?.id:undefined};}
+ const prop=target.closest('.prop-binding');if(prop)return{kind:'prop',source:project.characters[selectedCharacter]?.props?.find(p=>p.id===prop.dataset.copyId),ownerId:project.characters[selectedCharacter]?.id};
+ if(target.closest('.prop-editor'))return{kind:'prop',source:null,ownerId:project.characters[selectedCharacter]?.id};
+ const actor=target.closest('.title-actor-editor');if(actor)return{kind:'titleActor',source:project.title.actors.find(a=>a.id===actor.dataset.copyId)};
+ const choice=target.closest('.choice-editor');if(choice)return{kind:'choice',source:step()?.choices[Number(choice.dataset.copyIndex)],ownerId:step()?.id};
+ const file=target.closest('[data-copy-asset-id]');if(file)return{kind:'asset',source:asset(file.dataset.copyAssetId),folderId:currentAssetFolder[activeAssetType]||'',assetType:activeAssetType};
+ const folder=target.closest('[data-action="asset-open-folder"]');if(folder){const source=project.assetFolders.find(f=>f.id===folder.dataset.folderId);return{kind:'folder',source:source&&{...source,contents:project.assets.filter(a=>a.folderId===source.id)}};}
+ const scene=target.closest('[data-copy-environment]');if(scene){const owner=activePanel==='title'?project.title:act();return{kind:'environment',source:project.environments.find(e=>e.id===owner?.environmentId),sceneOwner:owner};}
+ if(target.closest('.asset-dock'))return{kind:projectClipboard(project.id,localStorage).read()?.kind==='folder'?'folder':'asset',source:null,folderId:currentAssetFolder[activeAssetType]||'',assetType:activeAssetType};
+ if(target.closest('#dialogue-list-body'))return isEvent(act())?{kind:'act',source:act()}:{kind:'step',source:step(),ownerId:act()?.id};
+ if(target.closest('#sidebar-body')){const kind={story:'act',render:'act',characters:'character',items:'item',knowledge:'book',title:'titleActor'}[activePanel];return{kind,source:null};}
+ if(target.closest('#inspector-body')){if(isEvent(act())&&activePanel==='story')return{kind:'act',source:act()};const kind={story:'step',characters:'character',items:'item',knowledge:'book',title:'titleActor'}[activePanel];return{kind,source:{step:step(),character:project.characters[selectedCharacter],item:project.items[selectedItem],book:project.knowledgeBooks?.[library.editorState().selected]}[kind],ownerId:kind==='step'?act()?.id:undefined};}
+ return null;
+}
+function captureObject(context){
+ if(!context.source)throw Error('先选择要复制的内容');
+ if(context.kind==='folder'&&context.source.locked)throw Error('固定文件夹由系统创建，不能复制成其他文件夹');
+ projectClipboard(project.id,localStorage).write(context.kind,context.source);toast('已复制'+copyLabels[context.kind]+'，右键选择粘贴');
+}
+async function pasteObject(context,duplicate=false){
+ if(historyBusy||playing)throw Error('请先结束当前操作');
+ const clipboard=duplicate?{kind:context.kind,data:context.source}:projectClipboard(project.id,localStorage).read();
+ if(!clipboard||clipboard.kind!==context.kind)throw Error('请在同类内容的列表中粘贴');
+ if(clipboard.kind==='folder'&&(clipboard.data.locked||context.source?.locked))throw Error('固定文件夹由系统创建');
+ if(context.assetType&&clipboard.kind==='asset'&&clipboard.data.type!==(['music','effect'].includes(context.assetType)?'audio':context.assetType))throw Error('请在对应的素材类型中粘贴');
+ editorHistory.seal();editorHistory.begin();
+ const copy=insertEditorCopy(project,context.kind,clipboard.data,{ownerId:context.ownerId,afterId:context.source?.id,folderId:context.folderId},uid);
+ if(context.kind==='asset'&&copy.type==='audio'&&['music','effect'].includes(context.assetType))copy.audioKind=context.assetType;
+ if(context.kind==='folder'){project.assets.push(...(copy.contents||[]));delete copy.contents;}
+ if(context.kind==='asset'&&copy.type==='voice')delete copy.dialogueId;
+ if(context.kind==='act'){selectedAct=project.acts.indexOf(copy);selectedStep=0;}
+ if(context.kind==='step'){selectedAct=project.acts.findIndex(a=>a.id===context.ownerId);selectedStep=act().steps.indexOf(copy);}
+ if(context.kind==='character'){copyCharacterMotions(project,clipboard.data,copy,uid);selectedCharacter=project.characters.indexOf(copy);editorGalleryStoryIndex=0;}
+ if(context.kind==='item')selectedItem=project.items.indexOf(copy);
+ if(context.kind==='book')library.restoreEditorState({selected:project.knowledgeBooks.indexOf(copy)});
+ if(context.kind==='environment'&&context.sceneOwner)context.sceneOwner.environmentId=copy.id;
+ markDirty({label:'粘贴'+copyLabels[context.kind]});editorHistory.seal();renderSidebar();renderInspector();await updatePreview();toast('已添加副本，可继续修改');return copy;
+}
+async function deleteContextObject(context){
+ const currentId=act()?.id;if(!context.source)return;
+ if(context.kind==='act'){
+  if(project.acts.length<=1){toast('至少保留一幕或一个事件。',true);return;}
+  const index=project.acts.findIndex(a=>a.id===context.source.id);if(index<0)return;
+  if(!confirm('删除“'+context.source.name+'”及里面的全部对白？'))return;editorHistory.seal();editorHistory.begin();project.acts.splice(index,1);
+  for(const chapter of project.acts)for(const line of chapter.steps||[])for(const choice of line.choices||[])if(choice.actId===context.source.id)choice.actId='';
+  for(const book of project.knowledgeBooks||[])if(book.unlockActId===context.source.id)book.unlockActId='';
+  selectedAct=context.source.id===currentId?Math.min(index,project.acts.length-1):Math.max(0,project.acts.findIndex(a=>a.id===currentId));selectedStep=0;
+ }else if(context.kind==='step'){
+  const chapter=project.acts.find(a=>a.id===context.ownerId),index=chapter?.steps.findIndex(s=>s.id===context.source.id);if(index==null||index<0)return;
+  if(!confirm('删除这句对白？'))return;editorHistory.seal();editorHistory.begin();chapter.steps.splice(index,1);selectedAct=project.acts.indexOf(chapter);selectedStep=Math.max(0,Math.min(index,chapter.steps.length-1));
+ }else return;
+ markDirty({label:'删除'+copyLabels[context.kind]});editorHistory.seal();renderSidebar();renderInspector();await updatePreview();
+}
+document.addEventListener('contextmenu',event=>{
+ if(mode!=='editor'||!project||playing||historyBusy||event.target.closest('input[type=text],input:not([type]),textarea,[contenteditable=true],#player-modal,#book-reader'))return;
+ const context=objectContext(event.target);if(!context?.kind)return;event.preventDefault();
+ const clipboard=projectClipboard(project.id,localStorage).read(),pasteDisabled=clipboard?.kind!==context.kind||context.kind==='step'&&act()?.kind==='event';
+ const locked=context.kind==='folder'&&context.source?.locked;
+ const audioActions=context.kind==='asset'&&context.source?.type==='audio'?['music','effect'].map(kind=>({key:'classify-'+kind,label:kind==='music'?'归类为音乐':'归类为音效',disabled:context.source.audioKind===kind,run:()=>{editorHistory.seal();editorHistory.begin();setAudioKind(project,context.source,kind);markDirty({label:'更改声音分类'});editorHistory.seal();renderAssetDock();renderInspector();}})):[];
+ objectMenu.open(event,context.source?.name||copyLabels[context.kind],[{key:'copy',label:'复制',disabled:!context.source||locked,run:()=>captureObject(context)},{key:'paste',label:'粘贴',disabled:pasteDisabled||locked,run:()=>pasteObject(context)},{key:'duplicate',label:'创建副本',disabled:!context.source||locked,run:()=>pasteObject(context,true)},...(['act','step'].includes(context.kind)?[{key:'delete',label:'删除',disabled:!context.source||context.kind==='act'&&project.acts.length<=1,run:()=>deleteContextObject(context)}]:[]),...audioActions]);
+});
+document.addEventListener('keydown',event=>{
+ if(mode!=='editor'||!project||playing||historyBusy||!event.ctrlKey&&!event.metaKey||event.altKey||event.target.closest('input,textarea,select,[contenteditable=true],.editor-context-menu'))return;
+ const key=event.key.toLowerCase();if(!['c','v'].includes(key))return;const context=objectContext(event.target);if(!context?.kind)return;event.preventDefault();try{if(key==='c')captureObject(context);else pasteObject(context).catch(error=>toast(error.message,true));}catch(error){toast(error.message,true);}
+});
 let storyListAct='',storyListStep='';
 function renderStoryLists(){
  const body=document.querySelector('#sidebar-body'),right=document.querySelector('#dialogue-list-body');if(!body||!right||!project)return;
  const current=act(),changed=storyListAct!==current?.id;storyListAct=current?.id||'';
- body.innerHTML=`<div class="section-heading">幕列表 <span class="heading-actions">${button('＋ 幕','add-act')}${button('＋ 事件','event-add')}</span></div><div class="list act-list" data-order-list="act">${project.acts.map((item,index)=>`<button class="list-row sortable-row ${index===selectedAct?'selected':''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" ${index===selectedAct?'aria-current="true"':''}><span class="number">${String(index+1).padStart(2,'0')}</span><span>${isEvent(item)?'▤ ':''}${escape(item.name)}</span><small>${isEvent(item)?'事件':item.steps.length+'句'}</small><span class="drag-grip">⋮⋮</span></button>`).join('')}</div>`;
- right.innerHTML=`<div class="section-heading"><strong id="stage-caption">${escape(current?.name||'本幕对白')}</strong><small> · 只显示当前幕</small><span class="heading-actions">${button('复制','duplicate-step',step()?'':'disabled')}${button('＋ 新增对白','add-step',current&&!isEvent(current)?'':'disabled')}</span></div>${current&&!isEvent(current)?`<div class="list step-list" data-order-list="step">${current.steps.map((line,index)=>`<button class="list-row sortable-row ${index===selectedStep?'selected':''}" draggable="true" data-order-kind="step" data-order-index="${index}" data-action="select-step" data-index="${index}" ${index===selectedStep?'aria-current="true"':''}><span class="number">${index+1}</span><span><b>${escape(line.speaker||character(line.characterId)?.name||'旁白')}</b><small>${escape(line.text||'空对白')}</small></span><span class="drag-grip">⋮⋮</span></button>`).join('')||'<p class="tip">点击“新增对白”写第一句。</p>'}</div>`:'<p class="sidebar-note">当前是事件，内容在左上方编辑。</p>'}`;
+ body.innerHTML=`<div class="section-heading">幕列表 <span class="heading-actions">${button('＋ 幕','add-act')}${button('＋ 事件','event-add')}${button('＋ 过场','event-add-cutscene')}</span></div><div class="list act-list" data-order-list="act">${project.acts.map((item,index)=>`<button class="list-row sortable-row ${index===selectedAct?'selected':''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" ${index===selectedAct?'aria-current="true"':''}><span class="number">${String(index+1).padStart(2,'0')}</span><span>${isEvent(item)?'▤ ':''}${escape(item.name)}</span><small>${isEvent(item)?(item.event?.type==='cutscene'?'过场':'事件'):item.steps.length+'句'}</small><span class="drag-grip">⋮⋮</span></button>`).join('')}</div>`;
+ right.innerHTML=`<div class="section-heading"><strong id="stage-caption">${escape(current?.name||'本幕对白')}</strong><small> · 只显示当前幕</small><span class="heading-actions">${button('＋ 新增对白','add-step',current&&!isEvent(current)?'':'disabled')}</span></div>${current&&!isEvent(current)?`<div class="list step-list" data-order-list="step">${current.steps.map((line,index)=>`<button class="list-row sortable-row ${index===selectedStep?'selected':''}" draggable="true" data-order-kind="step" data-order-index="${index}" data-action="select-step" data-index="${index}" ${index===selectedStep?'aria-current="true"':''}><span class="number">${index+1}</span><span><b>${escape(line.speaker||character(line.characterId)?.name||'旁白')}</b><small>${escape(line.text||'空对白')}</small></span><span class="drag-grip">⋮⋮</span></button>`).join('')||'<p class="tip">点击“新增对白”写第一句。</p>'}</div>`:'<p class="sidebar-note">当前是事件或过场，内容在左上方编辑。</p>'}`;
  if(changed)right.parentElement.scrollTop=0;
  if(storyListStep!==step()?.id){storyListStep=step()?.id||'';right.querySelector('.selected')?.scrollIntoView({block:'nearest'});}
  updateStoryCurrent();
@@ -1764,7 +1792,7 @@ function renderVoiceLibrary(body, folderId, folders, selectedFolder, scroll) {
     <p class="voice-library-note">配音请到对应对白上传；这里只能试听、删除。角色文件夹固定保留。</p>
     <div class="asset-file-area" data-asset-dropzone="voice" aria-label="角色配音文件区"><div class="asset-tile-grid">
     ${!folderId ? folders.map(folder => renderAssetFolderTile(folder)).join('') : ''}
-    ${visible.map(item => `<div class="asset-tile asset-file-tile asset-voice-tile" title="${escape(item.name)}"><div class="asset-tile-picture"><span class="asset-tile-icon" aria-hidden="true">🎙</span></div>
+    ${visible.map(item => `<div class="asset-tile asset-file-tile asset-voice-tile" data-copy-asset-id="${escape(item.id)}" title="${escape(item.name)}"><div class="asset-tile-picture"><span class="asset-tile-icon" aria-hidden="true">🎙</span></div>
       <span class="asset-tile-name">${escape(item.name)}</span><div class="asset-tile-tools">
       ${button(previewVoiceId === item.id && !editorVoicePreview.paused ? 'Ⅱ 停止' : '▶ 试听', 'preview-voice-asset', `data-asset-id="${escape(item.id)}"`)}
       ${button('删除', 'delete-asset', `data-asset-id="${escape(item.id)}" class="asset-delete"`)}</div></div>`).join('')}</div>
@@ -1782,13 +1810,13 @@ function renderAssetDock() {
     dockInitializedProjectId = project.id;
   }
   const type = activeAssetType;
-  const folders = project.assetFolders.filter(folder => folder.type === type && !folder.hidden && folder.id !== autoPortraitFolderId);
+  const folders = project.assetFolders.filter(folder => (folder.type===type||['music','effect'].includes(type)&&folder.type==='audio'&&folder.audioKind===type)&&!folder.hidden&&folder.id!==autoPortraitFolderId&&(type!=='motion'||folder.motionScope));
   if (currentAssetFolder[type] && !folders.some(folder => folder.id === currentAssetFolder[type])) currentAssetFolder[type] = '';
   const folderId = currentAssetFolder[type];
   const selectedFolder = folders.find(folder => folder.id === folderId);
   const scroll = body.scrollTop;
   const settingsOpen = body.querySelector('.asset-dock-settings')?.open || false;
-  const tabs = [['image', '图像'], ['vrm', 'VRM'], ['fbxCharacter','FBX 人物'], ['sceneModel','物品与模型'], ['motion', '动作'], ['audio', '音乐与音效'], ['voice', '配音'], ['video', '视频']];
+  const tabs = [['image', '图像'], ['vrm', 'VRM'], ['fbxCharacter','FBX 人物'], ['sceneModel','物品与模型'], ['motion', '动作'], ['music', '音乐'], ['effect', '音效'], ['voice', '配音'], ['video', '视频']];
   document.querySelector('#asset-dock-tabs').innerHTML = tabs.map(([key, label]) =>
     `<button type="button" role="tab" aria-selected="${type === key}" class="${type === key ? 'active' : ''}" data-action="asset-tab" data-type="${key}">${label}<small>${byType(key).length}</small></button>`).join('');
   if (type === 'voice') { renderVoiceLibrary(body, folderId, folders, selectedFolder, scroll); return; }
@@ -1796,7 +1824,7 @@ function renderAssetDock() {
   const visible = byType(type).filter(item => folderId ? item.folderId === folderId : !folders.some(folder => folder.id === item.folderId));
   body.innerHTML = `<div class="asset-browser-toolbar">
       <div class="asset-browser-location">${folderId ? button('← 返回', 'asset-folder-back') : '<strong>全部文件夹</strong>'}<span>${escape(selectedFolder?.name || (folderId ? '文件夹' : '未分类素材'))}</span></div>
-      <div class="asset-browser-actions">${folderId ? button('改名', 'rename-asset-folder', `data-folder-id="${escape(folderId)}"`) : button('＋ 文件夹', 'add-asset-folder', `data-type="${type}"`)}${button('＋ 导入', 'import', `data-type="${type}" data-folder-id="${escape(folderId)}"`)}</div>
+      <div class="asset-browser-actions">${selectedFolder?.locked||type==='motion'&&!folderId?'':folderId?button('改名','rename-asset-folder',`data-folder-id="${escape(folderId)}"`):button('＋ 文件夹','add-asset-folder',`data-type="${type}"`)}${button('＋ 导入', 'import', `data-type="${type}" data-folder-id="${escape(folderId)}"`)}</div>
     </div><div class="asset-file-area" data-asset-dropzone="${type}" aria-label="${escape(type)} 素材文件区">
       <div class="asset-tile-grid">${!folderId ? folders.map(folder => renderAssetFolderTile(folder)).join('') : ''}${visible.map(item => renderAssetTile(item, folders)).join('')}</div>
       <div class="asset-drop-hint">双击空白处上传素材，或将文件、文件夹拖到这里</div>
@@ -1806,7 +1834,7 @@ function renderAssetDock() {
     <h3>图片鉴赏</h3><p class="tip">勾选后，玩家在游戏里见过的图片可进入图像鉴赏。</p>
     ${byType('image').length ? byType('image').map(item => `<label class="gallery-audio-check gallery-image-check"><input type="checkbox" data-gallery-image="${escape(item.id)}" ${item.galleryImage === false ? '' : 'checked'}><span>${escape(item.name)}</span></label>`).join('') : '<p class="tip">还没有导入图片。</p>'}
     <h3>音乐鉴赏</h3><p class="tip">勾选要收录的音乐；音效可以取消勾选。角色配音在单独的配音栏管理。</p>
-    ${byType('audio').length ? byType('audio').map(item => `<div class="gallery-audio-editor"><label class="gallery-audio-check"><input type="checkbox" data-gallery-music="${escape(item.id)}" ${item.galleryMusic === false ? '' : 'checked'}><span>${escape(item.name)}</span></label>
+    ${byType('music').length ? byType('music').map(item => `<div class="gallery-audio-editor"><label class="gallery-audio-check"><input type="checkbox" data-gallery-music="${escape(item.id)}" ${item.galleryMusic === false ? '' : 'checked'}><span>${escape(item.name)}</span></label>
       <input data-audio-title="${escape(item.id)}" value="${escape(item.galleryTitle || '')}" placeholder="歌名：${escape(item.name.replace(/\.[^.]+$/, ''))}"></div>`).join('') : '<p class="tip">还没有导入音频。</p>'}
     <p class="tip">支持 VRM 人物、VRMA / Mixamo FBX 动作、PNG / JPG / WebP 图片、MP3 / WAV / OGG 声音和 MP4 / WebM 视频。</p>
   </div></details>`;
@@ -1815,7 +1843,7 @@ function renderAssetDock() {
 function renderAssetFolderTile(folder) {
   const count = byType(folder.type).filter(item => item.folderId === folder.id).length;
   return `<button type="button" class="asset-tile asset-folder-tile" data-action="asset-open-folder" data-folder-id="${escape(folder.id)}" title="打开 ${escape(folder.name)}">
-    <span class="asset-folder-picture" aria-hidden="true">📁</span><span class="asset-tile-name">${escape(folder.name)}</span><small>${count} 个素材${folder.type === 'voice' ? (folder.characterDeleted ? ' · 角色已删除，文件夹保留' : ' · 固定文件夹') : ''}</small></button>`;
+    <span class="asset-folder-picture" aria-hidden="true">📁</span><span class="asset-tile-name">${escape(folder.name)}</span><small>${count} 个素材${folder.locked?(folder.characterDeleted?' · 角色已删除，文件夹保留':' · 固定文件夹'):''}</small></button>`;
 }
 function renderAssetTile(item, folders) {
   const icons = { vrm: '♟', motion: '▶', audio: '♫', video: '▣' };
@@ -1824,10 +1852,10 @@ function renderAssetTile(item, folders) {
     : item.type === 'vrm' && vrmThumbnails.get(assetUrl(item))?.url
       ? `<img class="asset-tile-preview vrm-embedded-thumbnail" src="${escape(vrmThumbnails.get(assetUrl(item)).url)}" alt="${escape(item.name)}自带的头像">`
     : `<span class="asset-tile-icon asset-tile-icon-${item.type}" aria-hidden="true">${icons[item.type] || '▣'}</span>`;
-  return `<div class="asset-tile asset-file-tile" title="${escape(item.name)}"><div class="asset-tile-picture">${preview}</div><span class="asset-tile-name">${escape(item.name)}</span>
+  return `<div class="asset-tile asset-file-tile" data-copy-asset-id="${escape(item.id)}" title="${escape(item.name)}"><div class="asset-tile-picture">${preview}</div><span class="asset-tile-name">${escape(item.name)}</span>
     <div class="asset-tile-tools"><select data-asset-folder="${escape(item.id)}" aria-label="把 ${escape(item.name)} 移动到文件夹" title="移动到文件夹">
-      <option value="" ${!item.folderId ? 'selected' : ''}>未分类</option>${folders.map(folder => `<option value="${escape(folder.id)}" ${item.folderId === folder.id ? 'selected' : ''}>${escape(folder.name)}</option>`).join('')}
-    </select>${button('删除', 'delete-asset', `data-asset-id="${escape(item.id)}" class="asset-delete"`)}</div></div>`;
+      ${item.type==='motion'?'':`<option value="" ${!item.folderId?'selected':''}>未分类</option>`}${folders.map(folder => `<option value="${escape(folder.id)}" ${item.folderId === folder.id ? 'selected' : ''}>${escape(folder.name)}</option>`).join('')}
+    </select>${item.type==='audio'?`<select data-audio-kind="${escape(item.id)}" aria-label="声音分类"><option value="music" ${item.audioKind==='music'?'selected':''}>音乐</option><option value="effect" ${item.audioKind==='effect'?'selected':''}>音效</option></select>`:''}${button('删除', 'delete-asset', `data-asset-id="${escape(item.id)}" class="asset-delete"`)}</div></div>`;
 }
 function reorderStory(kind, source, target, after) {
   const items = kind === 'act' ? project.acts : act()?.steps;
@@ -1937,13 +1965,15 @@ async function importDroppedEntries(transfer) {
   for (const { file, folderName } of entries) {
     const type = droppedAssetType(file.name);
     if (!type) { skipped++; continue; }
-    let folderId = type === activeAssetType ? currentAssetFolder[type] : '';
-    if (folderName) {
+    const audioKind=type==='audio'&&['music','effect'].includes(activeAssetType)?activeAssetType:null;
+    let folderId = audioKind?currentAssetFolder[audioKind]||'':type === activeAssetType ? currentAssetFolder[type] : '';
+    if(type==='motion')folderId=folderId||commonMotionFolderId;
+    if (folderName&&type!=='motion') {
       const key = `${type}:${folderName.toLowerCase()}`;
       if (!folderCache.has(key)) {
-        let folder = project.assetFolders.find(item => item.type === type && item.name.toLowerCase() === folderName.toLowerCase());
+        let folder = project.assetFolders.find(item => item.type === type && item.name.toLowerCase() === folderName.toLowerCase()&&(!audioKind||item.audioKind===audioKind));
         if (!folder) {
-          folder = { id: uid(), type, name: folderName.slice(0, 64) };
+          folder = { id: uid(), type, name: folderName.slice(0, 64),...(audioKind?{audioKind}:{}) };
           project.assetFolders.push(folder);
         }
         folderCache.set(key, folder.id);
@@ -1961,6 +1991,7 @@ async function importDroppedEntries(transfer) {
       }
       const assetItem = await bridge('importAssetChunk', { command: 'finish', transferId });
       assetItem.folderId = folderId;
+      if(audioKind)assetItem.audioKind=audioKind;
       if (type === 'image') assetItem.galleryImage = false;
       project.assets.push(assetItem);
       imported++;
@@ -1981,7 +2012,7 @@ document.addEventListener('toggle', event => {
 function propEditor(item) {
   const record=stage?.visibleRecords.get(`gallery:${item.id}`);
   const bones=availablePropBones(record),choices=bones.length?bones:Object.entries(propBoneLabels).map(([value,label])=>({value,label}));
-  return `<section class="prop-editor"><h2>绑定物品</h2><p class="tip">先导入 GLB，添加物品，再选手或其他骨骼。角色页会显示所有已绑定物品，方便调整；对白里勾选后才会显示。</p><div class="inline-actions">${button('导入物品 GLB','import-prop-model')}${button('＋ 添加物品','add-character-prop')}${item.props?.length?button('调整视角与物品','binding-view-open'):''}</div>${(item.props||[]).map((prop,index)=>`<details class="prop-binding" ${index===0?'open':''}><summary>${escape(prop.name||'物品')}</summary>
+  return `<section class="prop-editor"><h2>绑定物品</h2><p class="tip">先导入 GLB，添加物品，再选手或其他骨骼。角色页会显示所有已绑定物品，方便调整；对白里勾选后才会显示。</p><div class="inline-actions">${button('导入物品 GLB','import-prop-model')}${button('＋ 添加物品','add-character-prop')}${item.props?.length?button('调整视角与物品','binding-view-open'):''}</div>${(item.props||[]).map((prop,index)=>`<details class="prop-binding" data-copy-id="${escape(prop.id)}" ${index===0?'open':''}><summary>${escape(prop.name||'物品')}</summary>
     ${field('物品名称',`<input data-prop-field="name" data-prop-id="${escape(prop.id)}" value="${escape(prop.name)}">`)}
     ${field('物品模型',`<select data-prop-field="assetId" data-prop-id="${escape(prop.id)}">${options(byType('sceneModel'),prop.assetId,'请选择 GLB')}</select>`)}
     ${field('绑定骨骼',`<select data-prop-field="bone" data-prop-id="${escape(prop.id)}">${choices.map(b=>`<option value="${escape(b.value)}" ${b.value===prop.bone?'selected':''}>${escape(b.label)}</option>`).join('')}${!choices.some(b=>b.value===prop.bone)?`<option selected value="${escape(prop.bone)}">${escape(prop.bone)}（等待模型读取）</option>`:''}</select>`)}
@@ -1989,24 +2020,24 @@ function propEditor(item) {
     ${['position','rotation','scale'].map((kind,i)=>`<details class="prop-vector" ${i===0?'open':''}><summary>${['位置（米）','旋转（度）','缩放'][i]}</summary>${prop[kind].map((value,axis)=>{
       const lower=kind==='scale'?.001:kind==='rotation'?-180:-2,upper=kind==='scale'?5:kind==='rotation'?180:2;
       const data=`data-prop-transform="${escape(prop.id)}" data-vector="${kind}" data-axis="${axis}"`;
-      return `<div class="prop-axis" data-prop-axis="${escape(prop.id)}.${kind}.${axis}"><label class="prop-number"><span>${['X · 左右','Y · 上下','Z · 前后'][axis]}</span><input type="number" ${data} data-mode="number" min="${kind==='scale'?.001:-10000}" max="10000" step="${kind==='rotation'?.1:.001}" value="${Number(value.toFixed(5))}"></label><label><span>粗调</span><input type="range" ${data} data-mode="coarse" min="${Math.min(lower,value)}" max="${Math.max(upper,value)}" step="any" value="${value}"></label><label><span>细调</span><input type="range" ${data} data-mode="fine" min="-100" max="100" step="1" value="0"></label></div>`;
+      return `<div class="prop-axis" data-prop-axis="${escape(prop.id)}.${kind}.${axis}"><label class="prop-number"><span>${['X · 左右','Y · 上下','Z · 前后'][axis]}</span><input type="number" ${data} data-mode="number" min="${kind==='scale'?.001:-10000}" max="10000" step="${kind==='rotation'?.1:.001}" value="${Number(value.toFixed(5))}"></label><label><span>细调</span><input type="range" ${data} data-mode="fine" min="-100" max="100" step="1" value="0"></label></div>`;
     }).join('')}</details>`).join('')}<p class="tip">细调一次：位置 0.001 米、旋转 0.1 度、缩放 0.001。松开细调滑块后会回到中间，保留修改结果。模型先按最长边约 0.8 米摆放。</p>${button('移除这个绑定','remove-character-prop',`data-prop-id="${escape(prop.id)}" class="danger"`)}</details>`).join('')}</section>`;
 }
 function castEditor(currentAct, slot) {
   const settings = castSettingsOf(currentAct, slot);
   const actorId = settings.characterId;
-  const slider = (key, label, value, min, max, stepSize, unit = '') =>
-    `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-cast-adjust="${slot}.${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-cast-adjust="${slot}.${key}" aria-label="${castSlotLabels[slot]}前后精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-cast-output="${slot}.${key}">${value}${unit}</output></label>`;
+  const slider=(key,label,value,min,max,stepSize,unit='')=>preciseTransform(label,value,key.startsWith('offset')?-100:key==='yaw'||key==='pitch'?-360:min,key.startsWith('offset')?100:key==='yaw'||key==='pitch'?360:max,`data-cast-adjust="${slot}.${key}"`,`data-cast-output="${slot}.${key}"`,unit,key==='yaw'||key==='pitch'?.1:key==='size'?.1:.01);
   return `<details class="cast-editor" ${actorId && actorId===step()?.characterId?'open':''}><summary>${castSlotLabels[slot]} · ${escape(character(actorId)?.name || '未选择')}</summary>
     <div class="cast-editor-body">
       ${field('角色', `<select data-cast-slot="${slot}">${options(project.characters.filter(item => item.modelId || item.id === actorId), actorId, '此位置无人')}</select>`)}
-      ${actorId ? `${field('这一句的动作', `<select data-cast-motion="${slot}">${options(byType('motion'), settings.motionId, '保持站立')}</select>`)}
+      ${actorId ? `${field('这一句的动作', `<select data-cast-motion="${slot}">${options(motionsForCharacter(project,actorId), settings.motionId, '保持站立')}</select>`)}
         ${motionAdvanced(settings, `cast:${slot}`)}
         ${slider('size', '大小', Math.round((settings.size ?? defaultSize) * 100), 50, 250, 5, '%')}
         ${slider('offsetX', '左右', Number(settings.offsetX) || 0, -1.5, 1.5, 0.05)}
         ${slider('offsetY', '上下', Number(settings.offsetY) || 0, -3, 2, 0.05)}
         ${slider('offsetZ', '前后', Number(settings.offsetZ) || 0, -100, 100, 0.1)}
-        ${slider('yaw', '转身角度', Number(settings.yaw) || 0, -90, 90, 5, '°')}
+        ${slider('yaw', '转身角度', Number(settings.yaw) || 0, -360, 360, .1, '°')}
+        ${slider('pitch','俯仰角度',Number(settings.pitch)||0,-360,360,.1,'°')}
 ${!isFbxModel(character(actorId)?.modelId) ? `<div class="field"><span>这一句的表情</span><div id="cast-expression-${slot}" class="expression-controls"></div></div>` : ''}<div class="dialogue-props"><b>这一句显示的物品</b>${(character(actorId)?.props||[]).map(prop=>`<label><input type="checkbox" data-cast-prop="${slot}" data-prop-id="${escape(prop.id)}" ${(settings.props||[]).includes(prop.id)?'checked':''}>${escape(prop.name||asset(prop.assetId)?.name||'物品')}</label>`).join('')||'<small>先到角色页绑定物品。</small>'}</div>` : ''}
     </div></details>`;
 }
@@ -2044,6 +2075,12 @@ function itemGalleryMarkup(backpack=false){
 function renderBackpack(){clearAutoAdvance();saveModalMode='inventory';document.querySelector('#player-modal')?.remove();document.querySelector('.stage-frame').insertAdjacentHTML('beforeend',`<section id="player-modal" class="player-modal"><div class="modal-box"><header><h2>物品栏</h2>${button('关闭 ×','close-modal')}</header>${itemGalleryMarkup(true)}</div></section>`);}
 function renderItemDetail(id){const item=inventoryItem(id),state=itemViewState(),known=new Set([...(loadLifetimeProgress().seenItemIds||[]),...state.known]);if(!item||mode!=='editor'&&!known.has(id)&&!state.counts[id])return;const gallery=saveModalMode==='gallery';document.querySelector('#player-modal .gallery-content, #player-modal .inventory-grid')?.replaceWith(Object.assign(document.createElement('div'),{className:'inventory-detail',innerHTML:`<img src="${escape(assetUrl(asset(item.imageId)))}" alt="${escape(item.name)}"><h3>${escape(item.name)}</h3><p class="inventory-count">当前持有：${state.counts[id]||0}</p><p>${escape(item.description)}</p>${button('返回物品列表',gallery?'inventory-gallery-back':'open-inventory')}`}));}
 
+function renderCastRows(currentAct){
+ return castSlots.slice(0,3).map(slot=>castEditor(currentAct,slot)).join('')+Array.from({length:9},(_,i)=>{
+  const slots=castSlots.slice((i+1)*3,(i+2)*3),count=slots.filter(s=>step()?.cast?.[s]?.characterId).length,open=slots.some(s=>step()?.cast?.[s]?.characterId&&step().cast[s].characterId===step().characterId);
+  return `<details class="cast-queue-row" ${open?'open':''}><summary>第 ${i+2} 排 · ${count} / 3 人</summary>${slots.map(s=>castEditor(currentAct,s)).join('')}</details>`;
+ }).join('');
+}
 function renderStyleEditor(settings,scope,override=null){
  const attr=`data-render-scope="${scope}"`,slider=(key,label,value,min,max,step=1)=>field(label,`<div class="npr-slider"><input type="range" data-render="${key}" ${attr} min="${min}" max="${max}" step="${step}" value="${value}"><input type="number" data-render="${key}" ${attr} min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}精确数值"></div>`);
  const preset=scope==='step'?(override?.preset||''):settings.preset;
@@ -2067,10 +2104,8 @@ function renderInspector() {
       ${field('人物模型', select('character.modelId', actorModels(), item.modelId, '请选择模型'))}
       ${!isFbxModel(item.modelId) ? `<label class="field"><span>自动说话嘴型</span><select data-field="character.autoMouth"><option value="on" ${item.autoMouth !== false ? 'selected' : ''}>开启（默认）</option><option value="off" ${item.autoMouth === false ? 'selected' : ''}>关闭</option></select></label>
       <p class="tip">跟随对白文字显示动嘴，标点处稍作停顿；文字显示完就停止。有 A、I、U、E、O 嘴型的模型可使用。</p>` : '<p class="tip">FBX 人物只播放身体动作。</p>'}
-      <div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}
-        <div class="inline-actions">${button('上传 PNG 头像', 'upload-character-portrait')}${['vrm','fbxCharacter'].includes(asset(item.modelId)?.type) ? button(isFbxModel(item.modelId)?'重新生成 FBX 头像':'重新拍摄 VRM', 'capture-character-portrait') : ''}</div>
-        <p class="tip">VRM 使用可动头像。FBX 自动生成一张静态 PNG，拍摄角度和头肩大小与 VRM 一样；可用下方动作与定格帧调整拍照姿势，再重新生成。没有模型的角色仍上传 PNG。手动上传的头像不会被自动替换。</p></div>
-      ${field('鉴赏姿势 / 动作', select('character.galleryMotionId', byType('motion'), item.galleryMotionId, '保持站立'))}
+      ${asset(item.modelId)?.type==='vrm'?'<div class="portrait-editor"><span>说话头像 · 实时 VRM 模型</span><p class="tip">固定使用此角色的可动模型头像，表情和嘴型与场上人物同步。无需上传或拍摄图片。</p></div>':`<div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}<div class="inline-actions">${button('上传 PNG 头像', 'upload-character-portrait')}${isFbxModel(item.modelId)?button('重新生成 FBX 头像','capture-character-portrait'):''}</div><p class="tip">FBX 使用静态图片头像，可自动生成或手动上传。没有模型的角色仍可上传 PNG。</p></div>`}
+      ${field('鉴赏姿势 / 动作', select('character.galleryMotionId', motionsForCharacter(project,item.id), item.galleryMotionId, '保持站立'))}
       <label class="adjustment"><span>鉴赏转身角度</span><input type="range" data-gallery-adjust="galleryYaw" min="-90" max="90" step="5" value="${item.galleryYaw}"><output data-gallery-output="galleryYaw">${item.galleryYaw}°</output></label>
       <label class="adjustment gallery-frame-adjustment"><span>动作定格帧</span><input type="range" data-gallery-adjust="galleryPoseFrame" min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled><output data-gallery-output="galleryPoseFrame">${item.galleryMotionId ? '读取中…' : '先选择动作'}</output></label>
       <label class="gallery-frame-number"><span>输入帧号</span><input type="number" data-gallery-frame-number min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled></label>
@@ -2094,11 +2129,11 @@ function renderInspector() {
     body.innerHTML = `<div class="inspector-content"><h2>标题画面</h2>
       ${title.logoImageId==='__none__'?'':field('游戏名称', `<input id="project-name" value="${escape(project.name)}" aria-label="游戏名称">`)}
       ${field('Logo 图片', `<select data-title-field="logoImageId"><option value="__none__" ${title.logoImageId==='__none__'?'selected':''}>不显示（留空）</option>${options(byType('image'), title.logoImageId, '使用游戏名称')}</select>`)}
-      ${field('标题场景', `<select data-title-field="environmentId">${options(project.environments || [], title.environmentId, '默认天空')}</select>`)}${button('编辑标题环境（独立窗口）','edit-environment')}
-      ${field('标题音乐', `<select data-title-field="bgmId">${options(byType('audio'), title.bgmId, '无音乐')}</select>`)}
-      ${field('按钮点击音效', `<select data-ui-field="clickSoundId">${options(byType('audio'), project.ui.clickSoundId, '使用内置轻提示音')}</select>`)}
+      <div data-copy-environment>${field('标题场景', `<select data-title-field="environmentId">${options(project.environments || [], title.environmentId, '默认天空')}</select>`)}${button('编辑标题环境（独立窗口）','edit-environment')}</div>
+      ${field('标题音乐', `<select data-title-field="bgmId">${options(byType('music'), title.bgmId, '无音乐')}</select>`)}
+      ${field('按钮点击音效', `<select data-ui-field="clickSoundId">${options(byType('effect'), project.ui.clickSoundId, '使用内置轻提示音')}</select>`)}
       <p class="tip">选“不显示（留空）”后，左边的标题板会全部隐藏。底部菜单照常显示。</p>
-      ${titleSlider('cameraAngle', '镜头俯视角', title.cameraAngle, 0, 65, 1, `${title.cameraAngle}°`)}
+      <details><summary>标题渲染与调色</summary>${renderStyleEditor(title.render||normalizeRender(project.render),'title')}</details>
       <hr><h2>标题人物 (${title.actors.length})</h2>${button('＋ 添加标题人物','add-title-actor')}
       <p class="tip">可以添加多个 VRM 或 FBX 人物，每个人分别调整。选择角色后，也能显示他绑定的物品。</p>
       ${title.actors.map(titleActorEditor).join('')}
@@ -2120,8 +2155,8 @@ function renderInspector() {
     ${field('章节封面', select('act.coverImageId', byType('image'), currentAct.coverImageId, '默认使用背景图'))}
     ${asset(currentAct.coverImageId || currentAct.backgroundId)?.type === 'image' ? `<img class="act-cover-preview" src="${escape(assetUrl(asset(currentAct.coverImageId || currentAct.backgroundId)))}" alt="本幕封面">` : '<p class="tip">还没有封面。建议上传竖图，人物放在图片中央。</p>'}
     <div class="inline-actions">${button('上传本幕封面', 'upload-act-cover')}${button('本幕渲染与调色', 'edit-act-render')}</div>
-    ${field('3D 场景', select('act.environmentId', project.environments || [], currentAct.environmentId, '默认天空'))}<div class="inline-actions">${button('编辑环境（独立窗口）','edit-environment')}${button('新建场景','new-environment')}</div>
-    ${field('背景音乐', select('act.bgmId', byType('audio'), currentAct.bgmId, '无音乐'))}
+    <div data-copy-environment>${field('3D 场景', select('act.environmentId', project.environments || [], currentAct.environmentId, '默认天空'))}<div class="inline-actions">${button('编辑环境（独立窗口）','edit-environment')}${button('新建场景','new-environment')}</div></div>
+    ${field('背景音乐', select('act.bgmId', byType('music'), currentAct.bgmId, '无音乐'))}
     ${weatherEditor(currentAct)}
     <div class="inline-actions">${button('删除本幕', 'delete-act', 'class="danger"')}</div>
     </details><hr><h2>第 ${selectedStep + 1} 句对白</h2>
@@ -2130,16 +2165,16 @@ function renderInspector() {
       ${field('显示名字', input('step.speaker', current.speaker, '留空时用角色名字'))}
     <section class="dialogue-camera-options"><b>本句镜头</b><p class="tip">${current.camera?'已设置独立镜头':'沿用之前对白的镜头；本幕开始时使用初始镜头'}</p><div class="inline-actions">${button('镜头 · WASD 调整','edit-dialogue-camera')}${current.camera?button('清除本句镜头','clear-dialogue-camera'):''}</div></section>
       ${field('对白内容', textarea('step.text', current.text, '在这里写台词'))}
-      <hr><h3>这一句在场的人物</h3><p class="tip">左、中、右各选一人。动作、位置、表情和物品只在这里设置；上面的说话角色只决定谁说台词。新增对白会复制上一句的站位，可以单独修改。</p>
-      ${castSlots.map(slot => castEditor(currentAct, slot)).join('')}
+      <hr><h3>这一句在场的人物</h3><p class="tip">最多 30 人，默认每排 3 人、共 10 排。前排左、中、右保持原来的位置，后面各排依次向后。人物的位置仍可单独调整；说话角色可以不在队列中。</p>
+      ${renderCastRows(currentAct)}
       ${dialogueVoiceField(current)}
-      ${field('本句音效', select('step.seId', byType('audio'), current.seId, '无音效'))}
+      ${field('本句音效', select('step.seId', byType('effect'), current.seId, '无音效'))}
       <div id="scene-animation-controls"></div>
       ${itemAcquisitionEditor(current)}
       <details class="dialogue-render-editor"><summary>这一句的渲染风格与微调</summary>${renderStyleEditor(dialogueRender(currentAct,current,project.render),'step',current.render)}</details>
-      <div class="inline-actions">${button('复制本句', 'duplicate-step')}${button('上移', 'move-up')}${button('下移', 'move-down')}${button('删除', 'delete-step', 'class="danger"')}</div>
+      <div class="inline-actions">${button('上移', 'move-up')}${button('下移', 'move-down')}${button('删除', 'delete-step', 'class="danger"')}</div>
       <hr><div class="section-heading">选择分支 ${button('＋ 选项', 'add-choice')}</div>
-      ${current.choices.map((choice,index) => `<div class="choice-editor">
+      ${current.choices.map((choice,index) => `<div class="choice-editor" data-copy-index="${index}">
         <input data-choice-index="${index}" data-choice-field="text" value="${escape(choice.text)}" placeholder="玩家看到的选项">
         <select data-choice-index="${index}" data-choice-field="actId">${options(project.acts,choice.actId,'选择跳转到哪一幕')}</select>
         <details><summary>所需物品条件</summary>${inventoryRows(choice.requirements,'requirement',index)}${button('＋ 物品条件','add-inventory-condition',`data-choice="${index}"`)}<label class="inventory-consume-toggle"><input type="checkbox" data-choice-consume="${index}" ${choice.consumeRequired?'checked':''}>选择后扣除所需物品</label><p class="tip">全部条件满足才能选。勾选后扣除上面列出的数量；不勾选只检查持有数量。</p></details>${button('删除选项', 'delete-choice', `data-index="${index}"`)}</div>`).join('')}
@@ -2271,6 +2306,7 @@ async function prepareEventScene(node) {
   document.querySelector('#character-preview')?.classList.add('hidden');
   document.querySelector('#auto-play-button')?.classList.add('hidden');
   document.querySelector('#act-loading')?.classList.add('hidden');
+  if(node.event.type==='cutscene'){document.querySelector('#scene-bg video')?.pause();setSceneWeather();await stage.showCast([], '', false);return;}
   const backdrop = eventBackdrop(node), bg = asset(backdrop.backgroundId);
   const sameBackground = displayedBackgroundId === backdrop.backgroundId;
   setSceneWeather();
@@ -2321,7 +2357,10 @@ function playEventSignal() {
 async function handleEventAction(action, node) {
   if (action === 'event-confirm') { events.confirm(); return; }
   if (playing) return;
-  if (action === 'event-add') {
+  if(action==='event-add-cutscene'){
+    const item=newEvent(uid(),uid());item.name='新过场动画';item.event.type='cutscene';project.acts.splice(selectedAct+1,0,item);selectedAct++;selectedStep=0;activePanel='story';
+  }
+  else if (action === 'event-add') {
     const item = newEvent(uid(), uid()); project.acts.splice(selectedAct + 1, 0, item); selectedAct++; selectedStep = 0; activePanel = 'story';
   } else if (!isEvent(act())) return;
   else if (action === 'event-preview') { await events.show(act(), true); return; }
@@ -2334,10 +2373,13 @@ async function handleEventAction(action, node) {
     if (act().event.declarations.length >= 59) return;
     act().event.declarations.push({ countryA: '', countryB: '', flagAId: '', flagBId: '', body: '' });
   } else if (action === 'event-remove-row') act().event.declarations.splice(Number(node.dataset.index), 1);
+  else if(action==='event-upload-cutscene'){
+    const imported=await bridge('importCutsceneVideo');if(!imported?.length)return;project.assets.push(imported[0]);act().event.videoId=imported[0].id;
+  }
   else if (action === 'event-upload') {
-    const imported = await bridge('importAsset', { type: node.dataset.type });
+    const kind=node.dataset.type,imported = await bridge('importAsset', {type:['music','effect'].includes(kind)?'audio':kind});
     if (!imported?.length) return;
-    for (const item of imported) { item.galleryImage = false; project.assets.push(item); }
+    for (const item of imported) { item.galleryImage = false;if(['music','effect'].includes(kind))item.audioKind=kind;project.assets.push(item); }
     act().event[node.dataset.eventKey] = imported[0].id;
   } else return;
   markDirty(); renderSidebar(); renderInspector(); updatePreview();
@@ -2375,7 +2417,7 @@ function weatherEditor(chapter) {
     ${w.type==='sunny' ? slider('sunX','阳光位置（左 → 右）') : ''}
     ${toggle('windMotion','风吹动模型的头发与衣物（模型需要支持）')}
     ${toggle('atmosphere','柔和光束 / 空气薄雾')}${toggle('autoMood','天气自动配色与人物配光')}
-    ${field('天气声音', `<select data-weather="soundId"><option value="">静音</option><option value="auto" ${w.soundId==='auto'?'selected':''}>内置雨声 / 风声</option>${byType('audio').map(a => `<option value="${escape(a.id)}" ${w.soundId===a.id?'selected':''}>${escape(a.name)}</option>`).join('')}</select>`)}
+    ${field('天气声音', `<select data-weather="soundId"><option value="">静音</option><option value="auto" ${w.soundId==='auto'?'selected':''}>内置雨声 / 风声</option>${byType('effect').map(a => `<option value="${escape(a.id)}" ${w.soundId===a.id?'selected':''}>${escape(a.name)}</option>`).join('')}</select>`)}
     ${slider('volume','天气音量')}
     <p class="tip">只改变这一幕。雨雪有远近层次；水花请对准背景的地面，室内可以关闭水花。预览不播放天气声，试玩会播放；声音跟随游戏设置中的音效音量。</p>` : '<p class="tip">当前没有天气。选择天气后，可以马上在中间预览。</p>'}
     </section>`;
@@ -2528,6 +2570,8 @@ async function updateSpeakerPortrait(characterId, visible) {
       if(token!==portraitRequest)return;
       if(record)return;
     }catch(error){console.warn('实时头像暂时不可用',error.message);}
+    if(token!==portraitRequest)return;
+    stage?.clearLivePortrait();node.classList.add('hidden');return;
   }
   if(token!==portraitRequest)return;
   stage?.clearLivePortrait();node.classList.remove('live-portrait');
@@ -2642,7 +2686,8 @@ function loadAudioSettings() {
   const savedSpeed = Number(localStorage.getItem(`vrm-text-speed-${project.id || project.name}`));
   textSpeed = Number.isFinite(savedSpeed) && savedSpeed >= 5 && savedSpeed <= 100 ? savedSpeed : 35;
   cameraSpeed=Math.max(.85,Math.min(1.15,Number(localStorage.getItem('vrm-camera-speed-'+project.id))||1));
-  try{graphicsPreferences=normalizeGraphics(JSON.parse(localStorage.getItem('vrm-player-graphics-'+project.id)||'{}'));}catch{graphicsPreferences=normalizeGraphics();}
+  const initialGraphics=window.__vrmAndroid?{aa:'fxaa',renderScale:75,shadows:'medium'}:{};
+  try{graphicsPreferences=normalizeGraphics(JSON.parse(localStorage.getItem('vrm-player-graphics-'+project.id)||JSON.stringify(initialGraphics)));}catch{graphicsPreferences=normalizeGraphics(initialGraphics);}
   applyAudioSettings();
 }
 function clearAutoAdvance() {
@@ -2683,7 +2728,11 @@ async function showPlayStep() {
   const currentAct = project.acts[playAct];
   const current = currentAct?.steps[playStep];
   if (!current) { stopPlay(); toast('故事播放完毕'); return; }
-  if (isEvent(currentAct)) { preparedAct = -1; transitioning = false; const remaining = restoredEventRemaining; restoredEventRemaining = undefined; await events.show(currentAct, false, remaining); return; }
+  if (isEvent(currentAct)) {
+    preparedAct=-1;transitioning=true;const loading=document.querySelector('#act-loading');loading?.classList.remove('hidden');
+    try{await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,30)));await prepareCurrentActMedia(currentAct,()=>request===playRequest&&playing);if(request!==playRequest||!playing)return;const remaining=restoredEventRemaining;restoredEventRemaining=undefined;await events.show(currentAct,false,remaining);}
+    finally{if(request===playRequest){transitioning=false;loading?.classList.add('hidden');}}return;
+  }
   const leavingEvent = events.active() || eventMusicActive;
   events.cancel();
   transitioning = true;
@@ -2692,12 +2741,11 @@ async function showPlayStep() {
   try {
     if (preparedAct !== playAct) {
       loading?.classList.remove('hidden');
-      const entries=currentAct.steps.flatMap(line=>castForAct(currentAct,line));
-      const prepared=await nextPreloader.take(currentAct.id);
-      if(request!==playRequest||!playing){prepared?.dispose();return;}
-      releasePreparedMedia();
-      if(prepared){activePreparedMedia=prepared.mediaMap;activePreparedImages=prepared.media.filter(item=>item.tagName==='IMG');}
-      await stage.prepareAct(prepared?prepared.openingEntries:entries,prepared);
+      await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,30)));
+      const entries=preparationEntries(currentAct,currentAct.steps);
+      await stage.prepareAct(entries);
+      if(request!==playRequest||!playing)return;
+      await prepareCurrentActMedia(currentAct,()=>request===playRequest&&playing);
       if (request !== playRequest || !playing) return;
       preparedAct = playAct;
     }
@@ -2716,6 +2764,7 @@ async function showPlayStep() {
     applySceneColor(dialogueRender(currentAct,current,project.render));
     stage.setBackgroundLighting(null);
     await showEnvironment(currentAct);
+    if(!stage.residentActId||stage.residentActId!==currentAct.id){await stage.warmPreparedGraphics({stage,environment:stage.environmentRuntime,camera:stage.camera},async()=>{await new Promise(r=>setTimeout(r,0));});stage.residentActId=currentAct.id;}
     if(request!==playRequest||!playing)return;
     await displayActStep(currentAct, current);
     if (request !== playRequest || !playing) return;
@@ -2770,7 +2819,7 @@ async function showPlayStep() {
 function startPlay() {
   cameraActId="";cameraStepId="";
   playerInventory=normalizeInventory({},project.items);inventorySession=true;
-  nextPreloader.reset();releasePreparedMedia();
+  releasePreparedMedia();
   restoredEventRemaining = undefined;
   const firstAct = mode === 'player' || activePanel === 'title' ? 0 : selectedAct;
   if (!project.acts[firstAct]?.steps.length) { toast('先写一句对白再试玩', true); return; }
@@ -2785,7 +2834,7 @@ function startPlay() {
 function stopPlay() {
   dialogueCamera?.cancelTravel();cameraActId="";cameraStepId="";
   document.querySelector('#inventory-reward')?.remove();
-  nextPreloader.reset();releasePreparedMedia();
+  releasePreparedMedia();
   sceneAnimationDialog.close(false);
   cancelSceneAnimations();
   events.cancel(); restoredEventRemaining = undefined; musicFadeToken++;
@@ -2980,12 +3029,12 @@ function readSaveSlots() {
   return slots;
 }
 function closePlayerModal() {
-  if (saveModalMode === 'gallery') {
+  if (saveModalMode === 'gallery'||galleryStage||galleryCache) {
     stopGalleryMusic();
-    galleryStage?.destroy();
+    galleryCache?.dispose();galleryCache=null;galleryStage?.destroy();
     galleryStage = null;
   }
-  saveModalMode = '';
+  saveModalMode = '';if(stage)stage.renderSuspended=false;
   const modal = document.querySelector('#player-modal');
   if (modal) {
     modal.classList.add('closing');
@@ -3135,14 +3184,112 @@ function renderSettingsModal() {
       <h3>画面</h3>
       <div id="player-graphics-controls">${graphicsSettingsMarkup()}</div>
       <label class="volume-line"><span>镜头移动速度</span><input type="range" data-camera-speed min="85" max="115" step="1" value="${Math.round(cameraSpeed*100)}"><output data-camera-speed-output>${Math.round(cameraSpeed*100)}%</output></label><p>镜头移动时间由距离决定；连续点击画面可立即到达目标镜头。</p>
-      <label class="field"><span>窗口大小（全部为 16:9）</span><select id="window-resolution" ${playerFullscreen ? 'disabled' : ''}>${resolutions.map(value => `<option value="${value}" ${value === playerResolution ? 'selected' : ''}>${value.replace('x', ' × ')}</option>`).join('')}</select></label>
+      ${window.__vrmAndroid?'':`<label class="field"><span>窗口大小（全部为 16:9）</span><select id="window-resolution" ${playerFullscreen ? 'disabled' : ''}>${resolutions.map(value => `<option value="${value}" ${value === playerResolution ? 'selected' : ''}>${value.replace('x', ' × ')}</option>`).join('')}</select></label>
       ${button('应用窗口大小', 'apply-resolution', playerFullscreen ? 'disabled' : '')}
-      <div class="settings-line"><span>全屏显示</span>${button(playerFullscreen ? '退出全屏' : '进入全屏', 'toggle-fullscreen')}</div>
+      <div class="settings-line"><span>全屏显示</span>${button(playerFullscreen ? '退出全屏' : '进入全屏', 'toggle-fullscreen')}</div>`}
       <p>无论窗口大小或显示器比例如何，游戏画面始终保持 16:9。</p>
       <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
     </div></div></section>`);
 }
-const galleryTracks = () => byType('audio').filter(item => item.galleryMusic !== false);
+window.__androidBack=()=>{if(mode==='player'){if(document.querySelector('#player-modal'))closePlayerModal();else renderSettingsModal();}};
+window.__androidPause=()=>{if(mode==='player'){renderSettingsModal();music.pause();voice.pause();galleryMusic.pause();}};
+window.__vrmSmokeGallery32=async()=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));await Promise.all([...portraitJobs.values()]);
+ const originals=project.characters.filter(c=>asset(c.modelId)),vrm=originals.find(c=>asset(c.modelId).type==='vrm'),fbx=originals.find(c=>asset(c.modelId).type==='fbxCharacter'),pool=[vrm,fbx,...originals.filter(c=>c!==vrm&&c!==fbx)].filter(Boolean);assert(pool.length>=4,'Need four gallery actors');
+ project.id='gallery-smoke32-'+uid();lifetimeProgress=null;mode='player';playing=false;renderPlayer();audioSettings.master=0;applyAudioSettings();for(const c of pool)rememberDiscovery('character',c.id);galleryTab='characters';galleryCharacterId=pool[0].id;renderGalleryModal();await gallerySelection;
+ const viewer=galleryStage,renderer=viewer.renderer,canvas=renderer.domElement,host=viewer.element;assert(viewer.vrm,'First gallery actor missing');let misses=0;const load=viewer.loadModel.bind(viewer);viewer.loadModel=(m,key)=>{if(m&&viewer.modelCache.get(key)?.modelAssetId!==m.id)misses++;return load(m,key);};
+ async function choose(role){galleryCharacterId=role.id;galleryStoryIndex=0;const start=performance.now();await selectGalleryCharacter();assert(galleryStage===viewer&&viewer.renderer===renderer&&viewer.renderer.domElement===canvas&&viewer.element===host,'Renderer recreated');return performance.now()-start;}
+ await choose(pool[1]);const count=misses,fast=await choose(pool[0]);assert(misses===count,'Seen actor loaded again');const times=[fast,await choose(pool[1]),await choose(pool[0])];assert(misses===count,'Repeated switches loaded resources');
+ let release;viewer.loadModel=(m,key)=>key==='gallery:'+pool[2].id&&!viewer.modelCache.has(key)?new Promise(r=>release=()=>r(load(m,key))):load(m,key);
+ galleryCharacterId=pool[2].id;const cold=selectGalleryCharacter();for(let i=0;i<100&&!release;i++)await wait(20);assert(release,'Cold actor did not start');assert(viewer.visibleRecords.has('gallery:'+pool[0].id),'Old actor disappeared during load');galleryCharacterId=pool[3].id;const skipped=selectGalleryCharacter();galleryCharacterId=pool[1].id;const final=selectGalleryCharacter();release();await Promise.all([cold,skipped,final]);assert(viewer.visibleRecords.has('gallery:'+pool[1].id)&&!viewer.modelCache.has('gallery:'+pool[3].id),'Last click did not win');viewer.loadModel=load;
+ await choose(pool[3]);assert(viewer.modelCache.size<=3&&galleryCache.cache.size<=3,'Gallery cache exceeds three');assert(!viewer.modelCache.has('gallery:'+pool[0].id),'Oldest actor not evicted');
+ galleryTab='music';renderGalleryModal();assert(galleryStage===viewer&&viewer.renderSuspended,'Tab switch did not pause viewer');galleryTab='characters';renderGalleryModal();await gallerySelection;assert(galleryStage===viewer,'Tab switch rebuilt viewer');
+ const locked={...structuredClone(pool[0]),id:uid(),name:'未解锁测试'};project.characters.push(locked);galleryCharacterId=locked.id;await selectGalleryCharacter();assert(viewer.element.style.display==='none'&&document.querySelector('.gallery-character-seal'),'Locked actor exposed previous model');galleryCharacterId=pool[1].id;await selectGalleryCharacter();assert(viewer.element.style.display!=='none','Unlocked actor did not return');
+ closePlayerModal();assert(!galleryStage&&!galleryCache&&!stage.renderSuspended&&!viewer.running,'Closing gallery leaked renderer');await wait(220);galleryTab='characters';galleryCharacterId=pool[1].id;renderGalleryModal();await gallerySelection;
+ return{ok:true,vrmAndFbx:true,singleRendererAcrossSelections:true,cacheHitLoads:0,warmSwitchMilliseconds:times,recentThreeLimit:true,oldFrameWhileLoading:true,lastClickWins:true,tabPauseAndReuse:true,lockedActorProtected:true,closeDisposesViewer:true};
+};
+window.__vrmSmokeOrganize31=async()=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);};await Promise.all([...portraitJobs.values()]);
+ const roles=project.characters.slice(0,2),motions=project.assets.filter(a=>a.type==='motion');assert(roles.length===2&&motions.length,'工程缺少角色或动作');syncAssetOrganization(project,uid);
+ assert(project.assetFolders.find(f=>f.id===commonMotionFolderId)?.locked,'通用动作文件夹未锁定');for(const role of project.characters)assert(project.assetFolders.find(f=>f.id===motionFolderId(role.id))?.locked,'缺少角色动作文件夹');
+ const privateMotion={...structuredClone(motions[0]),id:uid(),name:'专属动作检查',folderId:motionFolderId(roles[0].id)};project.assets.push(privateMotion);markDirty();
+ activePanel='characters';selectedCharacter=0;renderInspector();let select=document.querySelector('[data-field="character.galleryMotionId"]');assert([...select.options].some(o=>o.value===privateMotion.id),'自己的动作未显示');selectedCharacter=1;renderInspector();select=document.querySelector('[data-field="character.galleryMotionId"]');assert(![...select.options].some(o=>o.value===privateMotion.id),'其他角色的动作泄露');
+ activeAssetType='motion';currentAssetFolder.motion='';renderAssetDock();assert(!document.querySelector('#asset-dock-body [data-action=add-asset-folder]'),'允许创建普通动作文件夹');currentAssetFolder.motion=commonMotionFolderId;renderAssetDock();assert(!document.querySelector('#asset-dock-body [data-action=rename-asset-folder]'),'通用动作文件夹可以改名');
+ activeAssetType='music';currentAssetFolder.music='';renderAssetDock();assert(document.querySelector('[data-type=music][role=tab]')&&document.querySelector('[data-type=effect][role=tab]')&&!document.querySelector('[data-type=audio][role=tab]'),'音乐与音效未分开');
+ activePanel='story';const source=project.acts.find(a=>!isEvent(a)&&a.steps.length),copy=await pasteObject({kind:'act',source},true),before=copy.steps.length,line=copy.steps[0],confirmOriginal=window.confirm;window.confirm=()=>true;
+ try{activePanel='story';selectedAct=project.acts.findIndex(a=>a.id===copy.id);selectedStep=0;renderSidebar();renderInspector();document.querySelector('[data-action=select-step][data-index="0"]').dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,clientX:10,clientY:10}));assert(document.querySelector('[data-context-command=delete]'),'对白右键菜单缺少删除');objectMenu.close();await deleteContextObject({kind:'step',source:line,ownerId:copy.id});assert(act().steps.length===before-1,'对白未删除');await restoreEditorHistory(-1);assert(act().steps.length===before,'删除对白无法撤销');const count=project.acts.length;await deleteContextObject({kind:'act',source:act()});assert(project.acts.length===count-1,'幕未删除');await restoreEditorHistory(-1);assert(project.acts.length===count,'删除幕无法撤销');await restoreEditorHistory(1);}finally{window.confirm=confirmOriginal;}
+ await handleEventAction('event-add',{});renderInspector();for(const [key,kind]of [['bgmId','music'],['seId','effect']]){const field=document.querySelector(`[data-event-field="${key}"]`);assert(field,'没有事件声音控件');assert([...field.options].filter(o=>o.value).every(o=>asset(o.value)?.audioKind===kind),'事件声音仍混在一起');}
+ activeAssetType='music';currentAssetFolder.music='';renderAssetDock();return{ok:true,musicAssets:byType('music').length,effectAssets:byType('effect').length,commonMotions:project.assets.filter(a=>a.type==='motion'&&a.folderId===commonMotionFolderId).length,perRoleFolders:project.characters.length,motionIsolation:true,lockedFolders:true,separateEventSelectors:true,deleteActAndDialogue:true,deleteUndoRedo:true};
+};
+window.__vrmSmokeLoad31=async()=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},fbxAsset=project.assets.find(a=>a.type==='fbxCharacter'),base=project.characters.find(c=>asset(c.modelId)?.type==='fbxCharacter')||(fbxAsset?{id:'test-fbx-role',name:'FBX??',modelId:fbxAsset.id,portraitId:project.assets.find(a=>a.type==='image')?.id||'',portraitSource:'manual',props:[],stories:[]}:null),vrm=project.characters.find(c=>asset(c.modelId)?.type==='vrm');assert(base&&vrm,'Missing crowd fixture');
+ const crowd=Array.from({length:30},(_,i)=>({...structuredClone(base),id:'queue31-'+i,name:'队列人物 '+(i+1),props:i===0?(base.props||[]).map(p=>({...structuredClone(p),id:uid()})):[]}));
+ const portraitRole={...structuredClone(vrm),id:'portrait-only31',name:'场外说话者'},photoRole={...structuredClone(base),id:'photo-only31',name:'场外 FBX'},futureRole={...structuredClone(vrm),id:'future-only31',name:'下一幕人物'};
+ project.characters.push(...crowd,portraitRole,photoRole,futureRole);const environment=createEnvironment('30 人队列验证');environment.nodes[0].width=30;environment.nodes[0].height=50;environment.camera={position:[10,10,20],target:[0,1,-9],fov:45};project.environments.push(environment);
+ const makeLine=(speaker,text)=>({id:uid(),characterId:speaker,text,choices:[],cast:emptyDialogueCast()});
+ const lines=[makeLine(crowd[0].id,'30 人已经排成三列、十排。'),makeLine(portraitRole.id,'我不在队伍里，但我的模型和物品已在切幕时准备好。'),makeLine(photoRole.id,'只用图片头像说话的 FBX 角色也在资源名单里。'),makeLine(crowd[0].id,'当前对白不会再提前加载下一幕。')];
+ for(const line of lines)dialogueSlots.forEach((slot,i)=>line.cast[slot].characterId=crowd[i].id);
+ const chapter={id:uid(),name:'队列与完整名单验证',environmentId:environment.id,render:normalizeRender({preset:'custom'}),weather:normalizeWeather(),steps:lines};
+ const future={...structuredClone(chapter),id:uid(),name:'尚未加载的下一幕',steps:[makeLine(futureRole.id,'现在才开始加载下一幕。')]};future.steps[0].cast.center.characterId=futureRole.id;project.acts=[chapter,future];
+ playing=true;syncAssetOrganization(project,uid);activePanel='story';selectedAct=0;selectedStep=0;renderSidebar();renderInspector();assert(document.querySelectorAll('[data-cast-slot]').length===30,'编辑界面不是 30 个位置');
+ playAct=0;playStep=0;preparedAct=-1;await showPlayStep();finishTyping();assert(stage.visibleRecords.size===30,'未显示 30 人');
+ const cacheCount=stage.modelCache.size;assert([...crowd,portraitRole,photoRole].every(c=>stage.modelCache.has(c.id)),'漏掉了场外说话者：'+JSON.stringify([...stage.modelCache.keys()]));const liveRecord=await stage.modelCache.get(portraitRole.id),photoRecord=await stage.modelCache.get(photoRole.id);assert(liveRecord&&photoRecord,'头像角色没有提前加载');assert(!liveRecord.vrm.scene.visible&&!photoRecord.vrm.scene.visible,'场外角色出现在队伍里');
+ for(let i=0;i<30;i++){const record=await stage.modelCache.get(crowd[i].id),base=dialogueSlotPosition(dialogueSlots[i],true);assert(Math.abs(record.anchor.position.x-base.x)<.001&&Math.abs(record.anchor.position.z-base.z)<.001,'队列位置不正确');}
+ playStep=1;await showPlayStep();finishTyping();assert(stage.livePortrait.record===liveRecord,'场外 VRM 头像重新加载');assert(stage.modelCache.size===cacheCount,'说话时临时加载人物');
+ playStep=2;await showPlayStep();finishTyping();assert(await stage.modelCache.get(photoRole.id)===photoRecord,'场外 FBX 角色重新加载');await new Promise(r=>setTimeout(r,1000));assert(!stage.modelCache.has(futureRole.id),'当前幕里加载了下一幕人物');assert(!document.querySelector('#act-preload-indicator'),'预加载图标仍在');assert(document.querySelector('#act-loading').classList.contains('hidden'),'对白时仍在转圈');
+ playStep=3;await showPlayStep();finishTyping();await new Promise(r=>setTimeout(r,400));assert(!stage.modelCache.has(futureRole.id),'最后一句开始预加载');
+ const eventCase=newEvent(uid(),uid());eventCase.name='事件前台加载验证';eventCase.event.title='事件资源已经准备好';eventCase.event.bgmId=byType('music')[0]?.id||'';eventCase.event.seId=byType('effect')[0]?.id||'';eventCase.event.imageId=project.assets.find(a=>a.type==='image')?.id||'';project.acts.splice(1,0,eventCase);
+ const master=audioSettings.master;audioSettings.master=0;applyAudioSettings();playAct=1;playStep=0;await showPlayStep();assert(document.querySelector('#world-event'),'事件没有显示');assert(!transitioning&&document.querySelector('#act-loading').classList.contains('hidden'),'事件加载没有结束');events.cancel();playAct=0;playStep=3;preparedAct=-1;await showPlayStep();finishTyping();audioSettings.master=master;applyAudioSettings();
+ return{ok:true,onstageActors:30,residentActActors:cacheCount,formation:'3x10',originalFrontPositions:true,portraitOnlyVrmReady:true,portraitOnlyFbxReady:true,noNewActorLoadsDuringDialogue:true,noNextActPreload:true,thirtyEditorSlots:true,eventForegroundLoading:true};
+};
+window.__vrmSmokeSave31=async()=>{stopPlay();activePanel='story';selectedAct=0;selectedStep=0;renderSidebar();renderInspector();markDirty();await save();return{ok:true,slots:Object.keys(project.acts[0].steps[0].cast).length};};
+window.__vrmSmokeCopy30=async()=>{
+ const assert=(v,message)=>{if(!v)throw Error(message);},index=project.acts.findIndex(a=>!isEvent(a)&&a.steps.length);
+ activePanel='story';selectedAct=index;selectedStep=0;renderSidebar();renderInspector();
+ const original=act(),before=project.acts.length,row=document.querySelector(`[data-action=select-act][data-index="${index}"]`);
+ row.dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,clientX:20,clientY:20}));assert(document.querySelector('.editor-context-menu [data-context-command=copy]'),'右键菜单未打开');
+ document.querySelector('[data-context-command=copy]').click();const context={kind:'act',source:original};const copy=await pasteObject(context);assert(copy.id!==original.id&&copy.steps.every((s,i)=>s.id!==original.steps[i].id),'幕复制编号重复');assert(JSON.stringify(copy.steps[0].camera)===JSON.stringify(original.steps[0].camera),'镜头没有复制');
+ await restoreEditorHistory(-1);assert(project.acts.length===before,'复制无法撤销');await restoreEditorHistory(1);assert(project.acts.length===before+1,'复制无法重做');
+ const current=act(),first=current.steps[0];captureObject({kind:'step',source:first,ownerId:current.id});const line=await pasteObject({kind:'step',source:first,ownerId:current.id});assert(line.text===first.text&&line.id!==first.id,'对白粘贴错误');
+ await handleEventAction('event-add',{});const event=act(),eventCopy=await pasteObject({kind:'act',source:event},true);assert(eventCopy.kind==='event'&&eventCopy.event.type===event.event.type,'事件幕未复制');
+ activePanel='characters';selectedCharacter=0;renderSidebar();renderInspector();const role=project.characters[0],roleCopy=await pasteObject({kind:'character',source:role},true);assert(roleCopy.modelId===role.modelId&&roleCopy.id!==role.id,'角色未复制');assert((roleCopy.props||[]).every((p,i)=>p.id!==role.props[i].id),'角色物品编号重复');
+ if(roleCopy.props?.length){const binding=roleCopy.props[0];await pasteObject({kind:'prop',source:binding,ownerId:roleCopy.id},true);assert(roleCopy.props.length===(role.props.length+1),'物品绑定未复制');}
+ const image=project.assets.find(a=>a.type==='image');project.items||=[];const item={id:uid(),name:'右键测试物品',imageId:image.id,description:'用于检查物品复制与保存。'};project.items.push(item);activePanel='items';selectedItem=project.items.length-1;renderSidebar();renderInspector();const itemCopy=await pasteObject({kind:'item',source:item},true);assert(itemCopy.imageId===item.imageId&&itemCopy.id!==item.id,'玩家物品未复制');
+ activePanel='title';renderSidebar();renderInspector();const sceneOwner=project.title,environment=project.environments[0];const sceneCopy=await pasteObject({kind:'environment',source:environment,sceneOwner},true);assert(sceneCopy.nodes.length===environment.nodes.length&&sceneCopy.nodes.every((n,i)=>n.id!==environment.nodes[i].id),'场景节点编号重复');
+ const titleActor=project.title.actors[0];if(titleActor){const titleCopy=await pasteObject({kind:'titleActor',source:titleActor},true);assert(titleCopy.id!==titleActor.id&&titleCopy.modelId===titleActor.modelId,'标题人物未复制');}
+ const model=project.assets.find(a=>a.type==='sceneModel'),assetCopy=await pasteObject({kind:'asset',source:model},true);assert(assetCopy.id!==model.id&&assetCopy.path===model.path,'素材复制错误');
+ const folder={id:uid(),name:'复制检查素材',type:model.type};project.assetFolders.push(folder);const folderCopy=await pasteObject({kind:'folder',source:{...folder,contents:[{...assetCopy,folderId:folder.id}]}},true);assert(project.assets.some(a=>a.folderId===folderCopy.id),'文件夹素材未复制');
+ showExportChooser();assert(document.querySelector('[data-action=export-windows]')&&!document.querySelector('[data-action=export-android]')&&!document.querySelector('#apk-app-name'),'仍可导出安卓');document.querySelector('#export-game-modal').remove();
+ activePanel='story';selectedAct=project.acts.findIndex(a=>a.id===copy.id);selectedStep=0;const choice={text:'复制分支条件',actId:copy.id,requirements:[{itemId:itemCopy.id,quantity:5}],consumeRequired:true};step().choices.push(choice);const choiceCopy=await pasteObject({kind:'choice',source:choice,ownerId:step().id},true);assert(choiceCopy!==choice&&choiceCopy.requirements[0].quantity===5&&choiceCopy.consumeRequired,'分支条件未复制');renderSidebar();renderInspector();await updatePreview();assert(!document.querySelector('[data-action=duplicate-step]'),'复制按钮未移入右键菜单');await save();
+ document.querySelector(`[data-action=select-act][data-index="${selectedAct}"]`).dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,clientX:35,clientY:420}));
+ return{ok:true,rightClick:true,act:true,event:true,dialogue:true,character:true,prop:true,item:true,environment:true,asset:true,folder:true,titleActor:true,choice:true,uniqueIds:true,undoRedo:true,androidEntryRemoved:true};
+};
+window.__vrmSmokeControls29=async()=>{
+ const assert=(value,text)=>{if(!value)throw Error(text);},input=(selector,value)=>{const n=document.querySelector(selector);assert(n,'Missing control '+selector);n.value=String(value);n.dispatchEvent(new Event('input',{bubbles:true}));};
+ activePanel='story';selectedAct=0;selectedStep=0;renderSidebar();renderInspector();const slot=castSlots.find(s=>step().cast?.[s]?.characterId);assert(slot,'Missing actor fixture');
+ input(`[data-cast-adjust="${slot}.offsetX"]`,72);assert(step().cast[slot].offsetX===72,'100 metre position failed');const fine=document.querySelector(`[data-cast-adjust="${slot}.offsetX"]`).closest('[data-precise-control]').querySelector('[data-precise-fine]');fine.value='50';fine.dispatchEvent(new Event('input',{bubbles:true}));assert(step().cast[slot].offsetX===72.5,'Fine position failed');input(`[data-cast-adjust="${slot}.yaw"]`,330);assert(step().cast[slot].yaw===330,'360-degree actor rotation failed');
+ const previous=JSON.stringify(act().render);activePanel='title';renderInspector();assert(!document.querySelector('[data-title-adjust=cameraAngle]'),'Obsolete camera angle retained');input('[data-render=preset][data-render-scope=title]','custom');input('[data-render=brightness][data-render-scope=title]',143);assert(project.title.render.brightness===143&&JSON.stringify(act().render)===previous,'Title style not independent');return{ok:true,position100m:true,finePosition:true,rotation360:true,titleRenderIndependent:true,cameraAngleRemoved:true};
+};
+window.__vrmSmokeResidency29=async()=>{
+ const assert=(v,text)=>{if(!v)throw Error(text);},chapter=project.acts.find(a=>a.kind!=='event'&&a.steps.length>1),entries=preparationEntries(chapter,chapter.steps);assert(entries.length,'No fixture cast');
+ playing=true;window.__preloadTestFps=25;await stage.prepareAct(entries);
+ const keys=[...new Set(entries.filter(e=>e.modelAsset).map(e=>e.actorKey||e.modelAsset.id))],records=new Map(),props=new Map(),culling=new Map();
+ for(const key of keys){const record=await stage.modelCache.get(key);assert(record&&record.anchor.parent===stage.scene,'Actor not resident in scene');assert(!record.vrm.scene.visible,'Dormant actor is visible');records.set(key,record);for(const [id,attached]of record.attachedProps||[])props.set(key+':'+id,attached.root);}
+ stage.scene.traverse(o=>{if(o.isMesh)culling.set(o,o.frustumCulled);});
+ await stage.warmPreparedGraphics({stage,environment:stage.environmentRuntime,camera:stage.camera},async()=>{});
+ for(const record of records.values())assert(!record.vrm.scene.visible,'Warmup exposed hidden actor');for(const root of props.values())assert(!root.visible,'Warmup exposed hidden item');for(const [o,value]of culling)assert(o.frustumCulled===value,'Warmup changed visibility culling');
+ await displayActStep(chapter,chapter.steps[0]);await displayActStep(chapter,chapter.steps[1]);
+ for(const [key,record]of records){assert(await stage.modelCache.get(key)===record,'Actor reconstructed');for(const [id,attached]of record.attachedProps||[])assert(props.get(key+':'+id)===attached.root,'Item reconstructed');}
+ return{ok:true,residentActors:keys.length,residentProps:props.size,hiddenUntilNeeded:true,sameInstancesAfterDialogueSwitch:true,gpuWarm:true,warmupStateRestored:true};
+};
+window.__vrmSmokeVrmPortrait28=async()=>{
+ const assert=(value,label)=>{if(!value)throw Error(label);},role=project.characters.find(c=>asset(c.modelId)?.type==='vrm');assert(role,'Missing VRM fixture');
+ role.portraitSource='manual';role.portraitId=byType('image')[0]?.id||'';activePanel='characters';selectedCharacter=project.characters.indexOf(role);renderInspector();assert(!document.querySelector('[data-action=upload-character-portrait]')&&!document.querySelector('[data-action=capture-character-portrait]'),'VRM has photo controls');
+ activePanel='story';selectedAct=0;selectedStep=0;step().characterId=role.id;renderSidebar();renderInspector();await updatePreview();await updateSpeakerPortrait(role.id,true);await new Promise(r=>setTimeout(r,500));
+ const node=document.querySelector('#speaker-portrait'),record=stage.livePortrait.record;assert(record&&node.classList.contains('live-portrait')&&!node.querySelector('img').getAttribute('src'),'Legacy PNG replaced VRM');const rect=node.getBoundingClientRect(),frame=node.closest('.stage-frame').getBoundingClientRect();assert(rect.height/frame.height>.67,'Portrait height too low');assert(stage.livePortrait.camera.top>0.4*record.anchor.getWorldScale(new THREE.Vector3()).y,'Headroom not extended');
+ return {ok:true,vrmPhotoControlsRemoved:true,legacyPngIgnored:true,liveModel:true,heightRatio:rect.height/frame.height,headroom:true};
+};
+const galleryTracks = () => byType('music').filter(item => item.galleryMusic !== false);
 function nextUnlockedTrack(direction) {
   const tracks = galleryTracks();
   for (let offset = 1; offset <= tracks.length; offset++) {
@@ -3310,18 +3457,20 @@ async function showCharacterEditorPreview() {
   updateSpeakerPortrait('',false);
   document.querySelector('#title-preview')?.classList.add('hidden');
   document.querySelector('.stage-frame')?.classList.remove('title-mode');
-  await stage.setEnvironment(null,project.assets);
+  if(stage.environmentSettings||stage.environmentRuntime.root)await stage.setEnvironment(null,project.assets);
+  if(activePanel!=='characters')return;
   setSceneWeather();
   applySceneColor(colorDefaults);
   const overlay = document.querySelector('#character-preview');
   const frame = document.querySelector('.editor .stage-frame');
   if (!overlay || !frame || !stage) return;
   const item = project.characters[selectedCharacter];
-  if (stage.element.parentElement !== frame) frame.insertBefore(stage.element, overlay);
-  stage.setPaintBackground(null);
   const bindingMode=propPreviewMode && Boolean(item?.props?.length);
+  if(stage.element.parentElement!==frame&&(bindingMode||!overlay.querySelector('.character-preview-box')))frame.insertBefore(stage.element,overlay);
+  stage.setPaintBackground(null);
   frame.classList.toggle('binding-view-mode',bindingMode);overlay.classList.toggle('binding-preview',bindingMode);
   if(bindingMode){overlay.innerHTML=`<div class="binding-preview-tools"><div>${button('看整个人物','binding-view-reset')}${button('放大绑定部位','binding-view-bone')}${button('返回人物鉴赏','binding-view-close')}</div><small>左键拖动旋转 · Shift＋左键拖动平移 · 滚轮缩放 · 右键拖动也能平移</small></div>`;}
+  else if(overlay.querySelector('.character-preview-box')){stage.bindingView.disable();refreshCharacterGallery(overlay,true);}
   else {stage.bindingView.disable();overlay.innerHTML = `<div class="gallery-box gallery-box-character character-preview-box">
     <header><div><small>EXTRAS</small><h2>附加鉴赏</h2></div></header>
     <div class="gallery-main-tabs"><button type="button" disabled>图像鉴赏</button><button type="button" disabled>乐曲鉴赏</button><button type="button" class="active">人物鉴赏</button></div>
@@ -3340,26 +3489,48 @@ async function showCharacterEditorPreview() {
   }
   const portrait = bindingMode?frame:overlay.querySelector('#gallery-character-canvas');
   if (!portrait) return;
-  if(bindingMode)frame.insertBefore(stage.element,overlay);else portrait.appendChild(stage.element);
+  if(bindingMode)frame.insertBefore(stage.element,overlay);else if(stage.element.parentElement!==portrait)portrait.appendChild(stage.element);
   stage.resize();
   stage.sceneAnimationsPaused=()=>Boolean(saveModalMode||document.hidden);
-  stage.setRenderSettings(project.render);
+  if(JSON.stringify(stage.renderSettings)!==JSON.stringify(normalizeRender(project.render)))stage.setRenderSettings(project.render);
   if(!bindingMode){if(item.props?.length)stage.setCameraAngle(0);else stage.setPortraitCamera();}
   await stage.show(asset(item.modelId), asset(item.galleryMotionId), {}, 'center',
     { size: 1.23, yaw: item.galleryYaw || 0 }, `gallery:${item.id}`,{},'',{bindings:item.props||[],visibleIds:(item.props||[]).map(p=>p.id),assets:project.assets});
   if (activePanel === 'characters' && project.characters[selectedCharacter]?.id === item.id) {
     const record=stage.visibleRecords.get(`gallery:${item.id}`);
+    const key=`gallery:${item.id}`,old=editorGalleryKeys.indexOf(key);if(old>=0)editorGalleryKeys.splice(old,1);editorGalleryKeys.push(key);while(editorGalleryKeys.length>3)await stage.releaseModel(editorGalleryKeys.shift());
     if(bindingMode)stage.bindingView.enable(record,`gallery:${item.id}`);
     for(const select of document.querySelectorAll('[data-prop-field=bone]')){const value=select.value;select.innerHTML=availablePropBones(record).map(b=>`<option value="${escape(b.value)}">${escape(b.label)}</option>`).join('');select.value=value;}
     refreshGalleryFrameControl(item);
     if (item.galleryMotionId) stage.setMotionPoseFrame(item.galleryPoseFrame);
   }
 }
+function refreshCharacterGallery(root,editor=false){
+ const data=editor?{item:project.characters[selectedCharacter],count:Infinity}:galleryCharacterData(),item=data.item;if(!item)return;
+ const index=editor?editorGalleryStoryIndex:galleryStoryIndex,unlocked=editor||hasDiscovered('character',item.id),action=editor?'preview-story':'gallery-story';
+ for(const button of root.querySelectorAll('.gallery-character-picker button'))button.classList.toggle('active',button.dataset.characterId===item.id);
+ const text=root.querySelector('#gallery-character-text');if(text)text.innerHTML=galleryStoryMarkup(item,data.count,index,editor);
+ const tabs=root.querySelector('.gallery-story-tabs');if(tabs)tabs.innerHTML=button('角色详情',action,`data-index="0" class="${index===0?'active':''}"`)+(item.stories||[]).map((story,i)=>story.text?.trim()?button(`角色故事 · ${i+1}${data.count>=Math.max(0,Number(story.unlockLines)||0)?'':' 🔒'}`,action,`data-index="${i+1}"`):'').join('');
+ const note=root.querySelector('.gallery-progress-note');if(note)note.textContent=editor?'编辑预览 · 作者可查看全部角色故事':unlocked?`累计看过这位角色的 ${data.count} 句对白`:'尚未在故事中遇见这位角色';
+ const portrait=root.querySelector('.gallery-character-portrait');if(portrait){portrait.classList.toggle('locked',!unlocked);portrait.querySelector('.gallery-character-seal')?.remove();if(!unlocked)portrait.insertAdjacentHTML('beforeend','<div class="gallery-character-seal">未解锁</div>');}
+}
+function galleryLoadStatus(busy,item,error){const portrait=document.querySelector('#player-modal .gallery-character-portrait');if(!portrait)return;let node=portrait.querySelector('.gallery-load-notice');if(!node){node=document.createElement('div');node.className='gallery-load-notice';node.setAttribute('role','status');node.innerHTML='<i aria-hidden="true"></i><span></span>';portrait.append(node);}node.hidden=!busy&&!error;node.classList.toggle('failed',Boolean(error));node.querySelector('span').textContent=error?'加载失败，请再点一次人物':busy?'正在切换到 '+(item?.name||'人物')+'…':'';}
+function ensureGalleryViewer(target){
+ if(galleryStage){if(galleryStage.element.parentElement!==target){target.appendChild(galleryStage.element);galleryStage.resize();}return;}
+ const host=document.createElement('div');host.className='gallery-render-host';target.appendChild(host);const viewer=galleryStage=new VRMStage(host,error=>galleryLoadStatus(false,null,Error(error)));viewer.setRenderSettings(project.render);viewer.setPortraitCamera();
+ galleryCache=new GalleryCache({limit:3,status:(busy,value,error)=>galleryLoadStatus(busy,value?.item,error),load:async value=>{await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,20)));if(galleryStage!==viewer)throw Error('?????');const record=await viewer.loadModel(value.model,value.key);if(!record)throw Error('人物模型不可用');if(value.motion)await viewer.prepareClip(value.model,value.motion,value.key);viewer.renderSuspended=true;try{await viewer.warmPreparedGraphics({stage:viewer,environment:viewer.environmentRuntime,camera:viewer.camera},async()=>{if(galleryStage!==viewer)throw Error('?????');});}finally{if(galleryStage===viewer)viewer.renderSuspended=saveModalMode!=='gallery'||galleryTab!=='characters'||!viewer.element.isConnected||viewer.element.style.display==='none';}return record;},show:async(value,record,valid)=>{if(!valid()||galleryStage!==viewer||galleryTab!=='characters'||saveModalMode!=='gallery')return;viewer.element.style.display='';viewer.renderSuspended=false;await viewer.show(value.model,value.motion,{},'center',{size:1.23,yaw:value.item.galleryYaw||0},value.key);if(valid()&&galleryStage===viewer&&value.motion)viewer.setMotionPoseFrame(value.item.galleryPoseFrame);},evict:async(key,value)=>{await viewer.releaseModel(key);const kept=new Set([...galleryCache?.cache.values()||[]].map(v=>v.value.motion?.id));for(const id of viewer.motionCache.keys())if(!kept.has(id))await viewer.releaseMotion(id);}});
+}
+function selectGalleryCharacter(){
+ const target=document.querySelector('#player-modal #gallery-character-canvas'),item=galleryCharacterData().item;if(!target||!item)return Promise.resolve(false);refreshCharacterGallery(document.querySelector('#player-modal'));
+ target.querySelector('.gallery-flat-portrait')?.remove();const unlocked=hasDiscovered('character',item.id);
+ if(!unlocked||!item.modelId){galleryCache?.cancel();if(galleryStage){galleryStage.renderSuspended=true;galleryStage.element.style.display='none';}if(unlocked&&asset(item.portraitId))target.insertAdjacentHTML('beforeend',`<img class="gallery-flat-portrait" src="${escape(assetUrl(asset(item.portraitId)))}" alt="${escape(item.name)}">`);return Promise.resolve(true);}
+ ensureGalleryViewer(target);galleryStage.requestNumber++;galleryStage.element.style.display='';galleryStage.renderSuspended=false;const model=asset(item.modelId),motion=asset(item.galleryMotionId),key='gallery:'+item.id;
+ return gallerySelection=galleryCache.select(key,{key,item,model,motion,fingerprint:JSON.stringify([model?.id,motion?.id])});
+}
 function renderGalleryModal() {
   clearAutoAdvance();
-  saveModalMode = 'gallery';
-  galleryStage?.destroy();
-  galleryStage = null;
+  saveModalMode = 'gallery';if(stage)stage.renderSuspended=true;
+  galleryCache?.cancel();if(galleryStage){galleryStage.renderSuspended=true;galleryStage.element.remove();}
   const content = galleryTab === 'images' ? galleryImageMarkup()
     : galleryTab === 'music' ? galleryMusicMarkup() : galleryTab==='items'?itemGalleryMarkup():galleryCharacterMarkup();
   document.querySelector('#player-modal')?.remove();
@@ -3376,14 +3547,7 @@ function renderGalleryModal() {
     const item = galleryCharacterData().item;
     if (target && item && !item.modelId && hasDiscovered('character', item.id) && asset(item.portraitId))
       target.innerHTML = `<img class="gallery-flat-portrait" src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}">`;
-    if (target && item?.modelId && hasDiscovered('character', item.id)) {
-      galleryStage = new VRMStage(target, message => toast(message, true));
-      galleryStage.setRenderSettings(project.render);
-      galleryStage.setPortraitCamera();
-      const portrait = galleryStage;
-      portrait.show(asset(item.modelId), asset(item.galleryMotionId), {}, 'center', { size: 1.23, yaw: item.galleryYaw || 0 }, `gallery:${item.id}`)
-        .then(() => { if (galleryStage === portrait && item.galleryMotionId) portrait.setMotionPoseFrame(item.galleryPoseFrame); });
-    }
+    gallerySelection=selectGalleryCharacter();
   }
 }
 function progressStatistics() {
@@ -3459,10 +3623,11 @@ function renderImageImportModal(folderId = '', titleImport = '') {
 }
 async function importAssets(type, folderId = '', titleImport = '', galleryImage = false) {
   if (type === 'voice') { redirectVoiceUpload(); return; }
-  const imported = await bridge('importAsset', { type });
+  const imported = await bridge('importAsset', {type:['music','effect'].includes(type)?'audio':type});
   if (!imported?.length) return;
   for (const item of imported) {
-    item.folderId = folderId;
+    item.folderId = type==='motion'?(folderId||commonMotionFolderId):folderId;
+    if(['music','effect'].includes(type))item.audioKind=type;
     if (type === 'image') item.galleryImage = galleryImage;
   }
   if (folderId) openAssetFolders.add(folderId);
@@ -3494,12 +3659,12 @@ function renderPlayer() {
         <button type="button" data-action="load-game" title="读档">读档</button>
         <button type="button" data-action="save-game" title="存档">存档</button>
         <button type="button" data-action="open-inventory" title="物品栏">物品栏</button>
-        <button type="button" data-action="toggle-fullscreen" title="切换全屏">${playerFullscreen ? '窗口' : '全屏'}</button>
+        ${window.__vrmAndroid?'':`<button type="button" data-action="toggle-fullscreen" title="切换全屏">${playerFullscreen ? '窗口' : '全屏'}</button>`}
       </div>
     </div>
     <div id="player-start" class="title-composition"></div>
     <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
-          <div id="game-fps" class="game-fps hidden" aria-label="当前帧数">— FPS</div><div id="act-preload-indicator" class="act-preload-indicator hidden" role="status"><i aria-hidden="true"></i><span>准备下一幕</span></div>
+          <div id="game-fps" class="game-fps hidden" aria-label="当前帧数">— FPS</div>
   </div></div>`;
   stageError = '';
   stage = new VRMStage(document.querySelector('#stage-canvas'), message => {
@@ -3556,7 +3721,7 @@ document.addEventListener('click', async event => {
     if(action==='inventory-detail'){renderItemDetail(node.dataset.itemId);return;}
     if(action==='inventory-gallery-back'){galleryTab='items';renderGalleryModal();return;}
     if (action === 'remove-dialogue-voice') { if (step()) { stopEditorVoicePreview(); step().voiceId = ''; markDirty(); renderInspector(); renderAssetDock(); } return; }
-    if (action === 'delete-asset-folder' && project.assetFolders.find(folder => folder.id === node.dataset.folderId)?.type === 'voice') { toast('角色配音文件夹不能删除。', true); return; }
+    if (action === 'delete-asset-folder' && project.assetFolders.find(folder => folder.id === node.dataset.folderId)?.locked) { toast('角色和通用动作等固定文件夹不能删除。', true); return; }
     if (action === 'editor-undo' || action === 'editor-redo') { await restoreEditorHistory(action === 'editor-undo' ? -1 : 1); return; }
     if (action.startsWith('event-')) { await handleEventAction(action, node); return; }
     if (action.startsWith('book-') || action.startsWith('search-') || action === 'knowledge-open') {
@@ -3627,7 +3792,11 @@ document.addEventListener('click', async event => {
       if (select) select.value = editorSettings.theme;
     }
     else if (action === 'close-editor-settings') document.querySelector('#editor-settings-modal')?.remove();
-    else if (action === 'export') {
+    else if(action==='export')showExportChooser();
+    else if(action==='close-export'){document.querySelector('#export-game-modal')?.remove();document.querySelector('#android-export-settings')?.remove();}
+    else if(['export-android','start-android-export'].includes(action))throw Error('此版本已移除安卓导出');
+    else if (action === 'export-windows') {
+      document.querySelector('#export-game-modal')?.remove();
       validateInventoryProject(project);
       await save();
       const entered = prompt('导出的游戏文件夹叫什么名字？\n模型、图片、声音和剧情将自动放入加密资源包。', `${project.name}_可游玩版`);
@@ -3739,6 +3908,7 @@ document.addEventListener('click', async event => {
       else await importAssets(node.dataset.type, node.dataset.folderId || '', node.dataset.titleImport || '');
     } else if (action === 'upload-character-portrait') {
       const item = project.characters[selectedCharacter];
+      if(asset(item?.modelId)?.type==='vrm'){toast('VRM 固定使用可动模型头像，无需上传图片。');return;}
       const imported = await bridge('importAsset', { type:'image', single:true });
       if (item && imported?.length) {
         imported[0].galleryImage = false;
@@ -3747,6 +3917,7 @@ document.addEventListener('click', async event => {
       }
     } else if (action === 'capture-character-portrait') {
       const item = project.characters[selectedCharacter];
+      if(asset(item?.modelId)?.type==='vrm')return;
       if (item?.modelId) await ensureCharacterPortrait(item, true, true);
     } else if (action === 'cancel-image-import') {
       document.querySelector('#image-import-modal')?.remove();
@@ -3756,20 +3927,21 @@ document.addEventListener('click', async event => {
       await importAssets('image', node.dataset.folderId || '', node.dataset.titleImport || '', galleryImage);
     } else if (action === 'add-asset-folder') {
       const type = node.dataset.type;
+      if(type==='motion'){toast('动作使用自动创建的角色文件夹和通用文件夹。',true);return;}
       if (type === 'voice') { redirectVoiceUpload(); return; }
       const name = prompt('新文件夹叫什么名字？', '新文件夹')?.trim();
       if (!name) return;
       if (project.assetFolders.some(folder => folder.type === type && folder.name.toLowerCase() === name.toLowerCase())) {
         toast('这个分类里已有同名文件夹', true); return;
       }
-      const folder = { id: uid(), type, name: name.slice(0, 64) };
+      const folder = {id:uid(),type:['music','effect'].includes(type)?'audio':type,name:name.slice(0,64),...(['music','effect'].includes(type)?{audioKind:type}:{})};
       project.assetFolders.push(folder);
       currentAssetFolder[type] = folder.id;
       markDirty(); renderSidebar();
     } else if (action === 'rename-asset-folder') {
       const folder = project.assetFolders.find(item => item.id === node.dataset.folderId);
       if (!folder) return;
-      if (folder.type === 'voice') { toast('配音文件夹跟随角色名字，不能单独改名。', true); return; }
+      if (folder.locked) { toast('固定文件夹跟随角色名字，不能单独改名。', true); return; }
       const name = prompt('修改文件夹名字', folder.name)?.trim();
       if (!name || name === folder.name) return;
       if (project.assetFolders.some(item => item !== folder && item.type === folder.type && item.name.toLowerCase() === name.toLowerCase())) {
@@ -3877,7 +4049,7 @@ document.addEventListener('click', async event => {
     else if (action === 'gallery-character') {
       galleryCharacterId = node.dataset.characterId;
       galleryStoryIndex = 0;
-      renderGalleryModal();
+      gallerySelection=selectGalleryCharacter();
     }
     else if (action === 'gallery-story') {
       galleryStoryIndex = Number(node.dataset.index);
@@ -3930,6 +4102,7 @@ document.addEventListener('click', async event => {
 });
 
 document.addEventListener('input', event => {
+  if(routePreciseInput(event.target))return;
   if (library.input(event.target)) return;
   const node = event.target;
   if (node.dataset.eventField && isEvent(act())) {
@@ -3952,9 +4125,8 @@ document.addEventListener('input', event => {
     if(node.dataset.mode==='fine'){
       node.__propFineBase ??= String(prop[kind][axis]);value=Number(node.__propFineBase)+value*unit;
     }else{const fine=row.querySelector('[data-mode=fine]');fine.value='0';delete fine.__propFineBase;}
-    value=Number(Math.max(kind==='scale'?.001:-10000,Math.min(10000,value)).toFixed(5));prop[kind][axis]=value;
-    const number=row.querySelector('[data-mode=number]'),coarse=row.querySelector('[data-mode=coarse]');number.value=String(value);
-    coarse.min=String(Math.min(Number(coarse.min),value));coarse.max=String(Math.max(Number(coarse.max),value));coarse.value=String(value);
+    value=Number(Math.max(kind==='scale'?.001:-10000,Math.min(10000,value)).toFixed(5));if(kind==='rotation')setPropRotation(prop,axis,value);else prop[kind][axis]=value;
+    const number=row.querySelector('[data-mode=number]');number.value=String(value);
     markDirty();updatePreview();return;
   }
   if (node.dataset.motionOptions && project) {
@@ -4033,7 +4205,7 @@ document.addEventListener('input', event => {
       if(node.value===''||!Number.isFinite(node.valueAsNumber))return;
       const key=node.dataset.titleActorAdjust,value=Math.max(Number(node.min),Math.min(Number(node.max),node.valueAsNumber));
       actor[key]=key==='size'?value/100:value;
-      for(const control of node.closest('.adjustment').querySelectorAll('input'))control.value=String(value);
+      for(const control of node.closest('.adjustment').querySelectorAll('input:not([data-precise-fine])'))control.value=String(value);
     }else if(node.dataset.titleActorExpression){actor.expressionWeights[node.dataset.titleActorExpression]=Number(node.value)/100;node.closest('label').querySelector('output').textContent=node.value+'%';}
     else if(node.dataset.titleActorProp){actor.props=actor.props.filter(id=>id!==node.dataset.titleActorProp);if(node.checked)actor.props.push(node.dataset.titleActorProp);}
     markDirty();updatePreview();return;
@@ -4053,7 +4225,7 @@ document.addEventListener('input', event => {
   if ([node.dataset.titleAdjust, node.dataset.castAdjust?.split('.')[1], node.dataset.adjust].includes('offsetZ')) {
     if (node.value === '' || !Number.isFinite(node.valueAsNumber)) return;
     const value = Math.max(-100, Math.min(100, node.valueAsNumber));
-    for (const control of node.closest('.adjustment').querySelectorAll('input'))
+    for (const control of node.closest('.adjustment').querySelectorAll('input:not([data-precise-fine])'))
       if (control !== node || Number(node.value) !== value) control.value = String(value);
   }
   if (node.dataset.titleAdjust && project) {
@@ -4099,6 +4271,7 @@ document.addEventListener('input', event => {
     }
     return;
   }
+  if(node.dataset.audioKind&&project){const item=asset(node.dataset.audioKind);if(item){setAudioKind(project,item,node.value);markDirty();renderAssetDock();renderInspector();}return;}
   if (node.dataset.assetFolder && project) {
     const item = asset(node.dataset.assetFolder);
     if (!item) return;
@@ -4135,14 +4308,14 @@ document.addEventListener('input', event => {
     markDirty();updatePreview();return;
   }
   if((node.dataset.render||node.dataset.nprFilter)&&project){
-    const scope=node.dataset.renderScope||'act',holder=scope==='step'?step():act();if(!holder)return;
-    holder.render ||= scope==='step'?{}:normalizeRender();
+    const scope=node.dataset.renderScope||'act',holder=scope==='step'?step():scope==='title'?project.title:act();if(!holder)return;
+    holder.render ||= scope==='step'?{}:normalizeRender(scope==='title'?project.render:undefined);
     const key=node.dataset.render||node.dataset.nprFilter;
     if(node.dataset.nprFilter){const spec=customFilterSpecs.find(spec=>spec[0]===key);if(!spec)return;if(spec[2]!=='color'&&(node.value===''||!Number.isFinite(Number(node.value))))return;holder.render.filters||={};holder.render.filters[key]=spec[2]==='color'?node.value:Number(node.value);}
     else if(key==='preset'){if(node.value)holder.render.preset=node.value;else{delete holder.render.preset;delete holder.render.strength;delete holder.render.filters;}}
     else {if(node.value===''||!Number.isFinite(Number(node.value)))return;holder.render[key]=key==='strength'?Number(node.value)/100:Number(node.value);}
     const selector=node.dataset.nprFilter?'data-npr-filter':'data-render';for(const other of document.querySelectorAll(`[${selector}="${key}"][data-render-scope="${scope}"]`))if(other!==node)other.value=node.value;
-    markDirty();const settings=scope==='act'&&activePanel==='render'?chapterRender(act(),project.render):dialogueRender(act(),step(),project.render);stage?.setRenderSettings(settings);applySceneColor(settings);if(key==='preset')renderInspector();return;
+    markDirty();const settings=scope==='title'?normalizeRender(project.title.render):scope==='act'&&activePanel==='render'?chapterRender(act(),project.render):dialogueRender(act(),step(),project.render);stage?.setRenderSettings(settings);applySceneColor(settings);if(key==='preset')renderInspector();return;
   }
   if (node.dataset.weather && act()) {
     const key = node.dataset.weather;
@@ -5155,4 +5328,3 @@ init();
 document.addEventListener('change',event=>{
   if(event.target.dataset.propTransform && event.target.dataset.mode==='fine'){event.target.value='0';delete event.target.__propFineBase;}
 });
-

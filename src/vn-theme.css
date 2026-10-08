@@ -596,6 +596,7 @@
   background: #4f1522b5; text-align: center; font-size: clamp(19px, 2.5vw, 36px); font-weight: 800; letter-spacing: .24em; }
 
 .speaker-portrait.live-portrait img { display: none; }
+.speaker-portrait.live-portrait { height: 68%; }
 .stage-frame:has(.speaker-portrait.live-portrait:not(.hidden))::after {
   background: none;
 }

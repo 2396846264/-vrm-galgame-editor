@@ -131,7 +131,7 @@ internal sealed partial class EditorWindow {
                 try{return await task.Task.WaitAsync(TimeSpan.FromSeconds(180));}finally{environmentCommit=null;}
             }
             throw new Exception("当前操作不可用");
-        });environmentWindow.Show(this);return new{opened=true,created=true};
+        });if(Icon is {} parentIcon)environmentWindow.Icon=(System.Drawing.Icon)parentIcon.Clone();environmentWindow.Show(this);return new{opened=true,created=true};
     }
     private static void ValidateStandaloneGlb(string file){
         using var stream=File.OpenRead(file);using var reader=new BinaryReader(stream);

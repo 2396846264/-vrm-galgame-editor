@@ -91,7 +91,7 @@ internal sealed partial class EditorWindow
             if(action is not ("importAsset" or "importAssetChunk" or "saveInventoryImage" or "saveGeneratedPortrait" or "organizeGeneratedPortrait" or "restoreHistoryAssets" or "organizeDialogueVoices" or "pickStoryDocuments" or "agentReadDocument" or "importDialogueVoice"))throw new Exception("这个操作请在主窗口执行。");
             return await HandleEditorAction(action,data);
         });
-        moduleWindows[module]=child;child.FormClosed+=(_,_)=>{if(moduleWindows.GetValueOrDefault(module)==child)moduleWindows.Remove(module);};child.Show(this);
+        if(Icon is {} parentIcon)child.Icon=(System.Drawing.Icon)parentIcon.Clone();moduleWindows[module]=child;child.FormClosed+=(_,_)=>{if(moduleWindows.GetValueOrDefault(module)==child)moduleWindows.Remove(module);};child.Show(this);
         return new{opened=true,reused=false};
     }
 }

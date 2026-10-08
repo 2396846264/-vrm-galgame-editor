@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {GalleryCache} from '../src/gallery-cache.js';
+const wait=()=>new Promise(r=>setTimeout(r,0));let unlock,loads=[],shown=[],removed=[];
+const controller=new GalleryCache({load:async(value,key)=>{loads.push(key);if(key==='A')await new Promise(r=>unlock=r);return{key};},show:async(value,data,valid)=>{if(valid())shown.push(data.key);},evict:async key=>removed.push(key)});
+const a=controller.select('A',{fingerprint:'1'});await wait();const b=controller.select('B',{fingerprint:'1'}),c=controller.select('C',{fingerprint:'1'});unlock();assert.equal(await a,false);assert.equal(await b,false);assert.equal(await c,true);assert.deepEqual(loads,['A','C']);assert.deepEqual(shown,['C']);
+await controller.select('A',{fingerprint:'1'});assert.deepEqual(loads,['A','C']);await controller.select('D',{fingerprint:'1'});await controller.select('E',{fingerprint:'1'});assert.equal(controller.cache.size,3);assert(removed.includes('C'));assert(controller.cache.has('E'));
+await controller.select('E',{fingerprint:'2'});assert.equal(loads.filter(k=>k==='E').length,2);
+let pending;const close=new GalleryCache({load:()=>new Promise(r=>pending=r),show:()=>{throw Error('Closed viewer displayed');},evict:async()=>{}});const flight=close.select('cold',{fingerprint:'1'});await wait();close.dispose();pending({});assert.equal(await flight,false);await wait();assert.equal(close.cache.size,0);
+const failure=new GalleryCache({load:async()=>{throw Error('bad model');},show:async()=>{},evict:async()=>{}});assert.equal(await failure.select('bad',{}),false);
+console.log('PASS: recent-three cache, cache-hit reuse, last-click coalescing, resource change invalidation, close-during-load protection and failure cleanup.');

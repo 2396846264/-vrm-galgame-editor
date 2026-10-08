@@ -11,6 +11,7 @@ export function createSceneAnimationDialog({save, preview, stop}) {
     stop(restore); old.focus?.focus();
   };
   function open({catalog, assets, cues, owner}) {
+    const soundAssets=assets.filter(a=>a.type==='audio'&&a.audioKind==='effect');
     close(false);
     if (!catalog.length) return;
     const existing = normalizeSceneAnimations(cues, catalog, assets);
@@ -26,7 +27,7 @@ export function createSceneAnimationDialog({save, preview, stop}) {
           <label class="scene-animation-enabled"><input type="checkbox" data-scene-field="enabled" ${cue.enabled ? 'checked' : ''}>这一句播放动画</label>
           <div class="scene-animation-fields"><label>选择动画<select data-scene-field="clipIndex">${model.clips.map(clip => `<option value="${clip.index}" ${clip.index === cue.clipIndex ? 'selected' : ''}>${escape(clip.name || `动作 ${clip.index + 1}`)}（${clip.duration.toFixed(1)} 秒）</option>`).join('')}</select></label>
           <label>延迟几秒再播放<input type="number" data-scene-field="delaySeconds" min="0" max="600" step="0.1" value="${cue.delaySeconds}"><small>0 表示立即播放，例如 1 或 2 秒。</small></label>
-          <label>播放时的声音<select data-scene-field="soundId"><option value="">无声音</option>${assets.filter(a => a.type === 'audio').map(a => `<option value="${escape(a.id)}" ${a.id === cue.soundId ? 'selected' : ''}>${escape(a.name)}</option>`).join('')}</select><small>先把声音导入“音乐与音效”素材库。</small></label></div></article>`;
+          <label>播放时的声音<select data-scene-field="soundId"><option value="">无声音</option>${soundAssets.map(a => `<option value="${escape(a.id)}" ${a.id === cue.soundId ? 'selected' : ''}>${escape(a.name)}</option>`).join('')}</select><small>先把声音导入“音乐与音效”素材库。</small></label></div></article>`;
       }).join('')}</div>
       <p class="scene-animation-note">切到下一句时，会停止本句动画和声音，并取消还没开始的延迟播放。</p>
       <footer><button data-scene-preview>▶ 试播本句</button><span role="status" class="scene-animation-status"></span><button data-scene-close>取消</button><button data-scene-save>保存</button></footer></section>`;

@@ -1,7 +1,8 @@
 import {BindingView} from './binding-view.js';
 import {motionPlayback,motionFeetLocked,loopMotionClip,rootTravel,updateMotionRoot,motionFinishTarget} from './character-motion.js';
 import {CharacterProps} from './character-props.js';
-import {FrameRateMeter} from './act-preload.js';
+import {dialogueSlotPosition} from './dialogue-cast.js';
+import {FrameRateMeter} from './frame-rate.js';
 ﻿import * as THREE from 'three';
 import {fitEnvironmentShadow,environmentShadowBounds} from './environment-shadows.js';
 import {EnvironmentRuntime} from './environment-runtime.js';
@@ -315,7 +316,7 @@ export class VRMStage {
   animate() {
     if (!this.running) return;
     this.frame = requestAnimationFrame(() => this.animate());
-    if(window.__editorModulePreviewActive===false){this.clock.getDelta();return;}
+    if(this.renderSuspended||window.__editorModulePreviewActive===false){this.clock.getDelta();return;}
     const elapsed=this.clock.getDelta();
     this.frameRateMeter.sample(elapsed,document.hidden);
     const delta = Math.min(elapsed, 0.1);
@@ -490,44 +491,25 @@ export class VRMStage {
     this.clipCache.set(key, task);
     return task;
   }
-  createActPreparation(settings,environment){
-    // A detached scene and independent caches prevent preparation from changing the live cast.
-    const warm=Object.create(VRMStage.prototype);
-    Object.assign(warm,{scene:new THREE.Scene(),renderSettings:{...normalizeRender(settings),shadowEnabled:true,shadowOpacity:.35},environmentSettings:environment,originalMaterialSettings:new WeakMap(),characterSceneLighting:new CharacterSceneLighting(),cacheGeneration:0,modelCache:new Map(),motionCache:new Map(),clipCache:new Map(),visibleRecords:new Map(),characterProps:new CharacterProps(assetUrl),livePortrait:new LivePortrait(),element:{style:{}},onError:()=>{}});
-    warm.loader=new GLTFLoader();warm.loader.register(parser=>new VRMLoaderPlugin(parser));warm.loader.register(parser=>new VRMAnimationLoaderPlugin(parser));
-    const blobs=new Set(),manager=new THREE.LoadingManager();let textures=Promise.resolve(),resolveTextures;
-    manager.onStart=()=>{textures=new Promise(resolve=>resolveTextures=resolve);};
-    manager.onLoad=()=>{resolveTextures?.();for(const url of blobs)URL.revokeObjectURL(url);blobs.clear();};
-    manager.setURLModifier(url=>{if(url.startsWith('blob:'))blobs.add(url);return url;});manager.addHandler(/\.tga$/i,new TGALoader());warm.fbxLoader=new FBXLoader(manager);warm.waitTextures=()=>textures;
-    const runtime=new EnvironmentRuntime(warm.scene);
-    warm.environmentRuntime=runtime;
-    const ambient=this.ambientLight.clone(),key=this.keyLight.clone();key.castShadow=Boolean(environment);if(environment){key.color.set(environment.lighting.color);key.intensity=environment.lighting.intensity;ambient.intensity=environmentAmbient(environment);}
-    warm.scene.add(ambient,key,key.target);
-    const camera=this.camera.clone();if(environment){camera.position.fromArray(environment.camera.position);camera.lookAt(...environment.camera.target);camera.fov=environment.camera.fov;camera.far=300;camera.updateProjectionMatrix();}
-    return {stage:warm,environment:runtime,camera,jobs:[],media:[],dispose(){warm.clear();runtime.clear();for(const item of this.media){item.pause?.();item.removeAttribute?.('src');item.load?.();}for(const url of blobs)URL.revokeObjectURL(url);blobs.clear();}};
-  }
   async warmPreparedGraphics(bundle,gate){
-    const renderer=this.renderer,visible=[],props=[];
+    const renderer=this.renderer,visible=new Map(),props=[],culling=new Map();
     if(bundle.environment.root)bundle.stage.applyMaterialStyle(bundle.environment.root);
     try{
-      for(const task of bundle.stage.modelCache.values()){const record=await task;if(record){visible.push(record.vrm.scene);record.vrm.scene.visible=true;}}
+      for(const task of bundle.stage.modelCache.values()){const record=await task;if(record){visible.set(record.vrm.scene,record.vrm.scene.visible);record.vrm.scene.visible=true;for(const attached of record.attachedProps?.values()||[]){visible.set(attached.root,attached.root.visible);attached.root.visible=true;}}}
       for(const task of bundle.stage.characterProps.cache.values()){const root=await task;if(root){props.push(root);bundle.stage.scene.add(root);}}
-      const textures=new Set();bundle.stage.scene.traverse(object=>{for(const material of(Array.isArray(object.material)?object.material:[object.material]))if(material)for(const value of Object.values(material))if(value?.isTexture)textures.add(value);});
+      const textures=new Set();bundle.stage.scene.traverse(object=>{if(object.isMesh){culling.set(object,object.frustumCulled);object.frustumCulled=false;}for(const material of(Array.isArray(object.material)?object.material:[object.material]))if(material)for(const value of Object.values(material))if(value?.isTexture)textures.add(value);});
       for(const texture of textures){await gate();if(renderer!==this.renderer)return;renderer.initTexture(texture);}
-      await gate();if(renderer===this.renderer)await renderer.compileAsync(bundle.stage.scene,bundle.camera);
-    }finally{for(const object of visible)object.visible=false;for(const root of props)root.removeFromParent();}
+      await gate();if(renderer===this.renderer){
+        await renderer.compileAsync(bundle.stage.scene,bundle.camera);
+        await gate();if(renderer!==this.renderer||!this.running)return;
+        const target=new THREE.WebGLRenderTarget(1,1),previous=renderer.getRenderTarget(),viewport=renderer.getViewport(new THREE.Vector4()),scissor=renderer.getScissor(new THREE.Vector4()),test=renderer.getScissorTest(),auto=renderer.autoClear,shadow=renderer.shadowMap.autoUpdate;
+        try{renderer.setRenderTarget(target);renderer.setViewport(0,0,1,1);renderer.setScissorTest(false);renderer.autoClear=true;renderer.shadowMap.autoUpdate=false;renderer.render(bundle.stage.scene,bundle.camera);}finally{renderer.setRenderTarget(previous);renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(test);renderer.autoClear=auto;renderer.shadowMap.autoUpdate=shadow;target.dispose();}
+      }
+    }finally{for(const [object,value]of visible)object.visible=value;for(const [object,value]of culling)object.frustumCulled=value;for(const root of props)root.removeFromParent();}
   }
-  async prepareAct(entries,prepared=null) {
+  async prepareAct(entries) {
+    this.residentActId='';
     this.clear();
-    if(prepared){
-      const warm=prepared.stage;
-      this.modelCache=warm.modelCache;this.motionCache=warm.motionCache;this.clipCache=warm.clipCache;
-      this.characterProps=warm.characterProps;this.originalMaterialSettings=warm.originalMaterialSettings;this.characterSceneLighting=warm.characterSceneLighting;
-      for(const task of this.modelCache.values()){const record=await task;if(record){this.scene.add(record.anchor);record.mixer.removeEventListener('finished',record.finishedHandler);record.finishedHandler=event=>this.onMotionFinished(record,event.action);record.mixer.addEventListener('finished',record.finishedHandler);}}
-      warm.modelCache=new Map();warm.motionCache=new Map();warm.clipCache=new Map();warm.characterProps=new CharacterProps(assetUrl);
-      if(prepared.environment?.root){this.environmentRuntime.clear();this.environmentRuntime=prepared.environment;this.environmentRuntime.scene=this.scene;this.scene.add(this.environmentRuntime.root);}
-      this.preloadAdoptions=(this.preloadAdoptions||0)+1;
-    }
     const models = new Map();
     const motions = new Map();
     for (const { modelAsset, motionAsset, actorKey } of entries) {
@@ -543,6 +525,8 @@ export class VRMStage {
     for (const { modelAsset, motionAsset, actorKey } of entries)
       if (modelAsset && motionAsset) pairs.set(`${actorKey || modelAsset.id}:${motionAsset.id}`, { modelAsset, motionAsset, actorKey: actorKey || modelAsset.id });
     (await Promise.allSettled([...pairs.values()].map(pair => this.prepareClip(pair.modelAsset, pair.motionAsset, pair.actorKey)))).forEach(report);
+    const bindings=new Map();for(const entry of entries)if(entry.modelAsset){const key=entry.actorKey||entry.modelAsset.id;if(!bindings.has(key))bindings.set(key,entry);}
+    for(const [key,entry]of bindings){const record=await this.loadModel(entry.modelAsset,key);if(record)await this.characterProps.sync(record,entry.props||[],[],entry.assets||[],()=>true);}
   }
   async show(modelAsset, motionAsset, expressionWeights = {}, position = 'center', transform = {}, actorKey = modelAsset?.id,
     motionOptions = {}, playbackKey = '', propSettings = {}) {
@@ -708,6 +692,12 @@ export class VRMStage {
         { loop: true,feet:record.currentMotionOptions.feet }, 'finished-base-motion');
     }
   }
+  async releaseModel(actorKey){
+    if(this.visibleRecords.has(actorKey))return false;const task=this.modelCache.get(actorKey);if(!task)return false;this.modelCache.delete(actorKey);
+    for(const key of this.clipCache.keys())if(key.startsWith(actorKey+':'))this.clipCache.delete(key);
+    const record=await task;if(record){record.propToken=(record.propToken||0)+1;for(const prop of record.attachedProps?.values()||[])prop.root.removeFromParent();record.attachedProps?.clear();record.mixer.stopAllAction();record.mixer.uncacheRoot(record.vrm.scene);record.anchor.removeFromParent();VRMUtils.deepDispose(record.vrm.scene);}return true;
+  }
+  async releaseMotion(motionId){if([...this.clipCache.keys()].some(k=>k.endsWith(':'+motionId)))return;const task=this.motionCache.get(motionId);if(!task)return;this.motionCache.delete(motionId);const source=await task;if(source)VRMUtils.deepDispose(source.scene||source.fbx);}
   restartCharacterPreview(){
     for(const record of this.visibleRecords.values()){this.restoreFootPose(record);for(const chain of [record.footLock?.left,record.footLock?.right])if(chain)chain.anchor=null;record.motionLoops=0;record.motionCarry=new THREE.Vector3();record.finishWorldTarget=null;record.currentAction?.reset().play();record.mixer.update(0);this.applyMotionPlacement(record);this.applyFootLock(record);record.vrm.update(0);this.applyRawFootLock(record);}
   }
@@ -810,12 +800,12 @@ export class VRMStage {
     const offsetX = Number(transform?.offsetX) || 0;
     const offsetY = Number(transform?.offsetY) || 0;
     const offsetZ = Number(transform?.offsetZ) || 0;
-    const yaw = Math.max(-120, Math.min(120, Number(transform?.yaw) || 0));
-    const pitch = Math.max(-60, Math.min(60, Number(transform?.pitch) || 0));
+    const yaw = Math.max(-360, Math.min(360, Number(transform?.yaw) || 0));
+    const pitch = Math.max(-360, Math.min(360, Number(transform?.pitch) || 0));
     const multiple = this.visibleRecords.size > 1;
-    const baseX = position === 'left' ? (multiple ? -1.22 : -0.7) : position === 'right' ? (multiple ? 1.22 : 0.7) : 0;
+    const base = dialogueSlotPosition(position,multiple);
     const targetScale = new THREE.Vector3(size, size, size);
-    const targetPosition = new THREE.Vector3(baseX + offsetX, offsetY, offsetZ);
+    const targetPosition = new THREE.Vector3(base.x + offsetX, offsetY, base.z + offsetZ);
     const targetYaw = THREE.MathUtils.degToRad(yaw);
     const targetPitch = THREE.MathUtils.degToRad(pitch);
     const oldTarget = record.transformTarget;

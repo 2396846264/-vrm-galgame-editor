@@ -1,0 +1,52 @@
+name: Publish tested Windows release 0.0.32
+on:
+  push:
+    branches: [main]
+    paths: ['.github/releases/v0.0.32.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: release-v0.0.32
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reconstruct and verify the tested Windows package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/assemble-tested-package.mjs .github/releases/v0.0.32.json
+      - name: Verify application integrity and build installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          Expand-Archive -LiteralPath VRMGalgame-0.0.32-win-x64.zip -DestinationPath tested-package
+          $package=(Resolve-Path tested-package/VRMGalgame-0.0.32-win-x64).Path
+          & "$package/VRMGalgame.exe" --check-package-integrity $package "$package/integrity-check.json"
+          if($LASTEXITCODE -ne 0){throw 'Application integrity check failed'}
+          $check=Get-Content "$package/integrity-check.json" -Raw | ConvertFrom-Json
+          if(!$check.ok){throw 'Application integrity check failed'}
+          choco install innosetup --no-progress -y
+          if($LASTEXITCODE -ne 0){throw 'Installer compiler installation failed'}
+          $compiler=Get-ChildItem ${env:ProgramFiles(x86)} -Filter ISCC.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
+          if(!$compiler){throw 'Installer compiler unavailable'}
+          & $compiler "/DPackageRoot=$package" "/O$env:GITHUB_WORKSPACE/installer-output" scripts/windows-setup.iss
+          if($LASTEXITCODE -ne 0){throw 'Installer build failed'}
+      - name: Publish Windows installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $installer='installer-output/VRMGalgame-Setup-0.0.32.exe'
+          if(!(Test-Path -LiteralPath $installer)){throw 'Installer missing'}
+          $existing=gh release list --repo $env:GITHUB_REPOSITORY --limit 100 --json tagName --jq '.[].tagName'
+          if($LASTEXITCODE -ne 0){throw 'Cannot check releases'}
+          if($existing -contains 'v0.0.32'){throw 'Release already exists'}
+          gh release create v0.0.32 $installer --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title "0.0.32 · 人物鉴赏优化" --notes-file RELEASE_NOTES.md --latest
+          if($LASTEXITCODE -ne 0){throw 'Release publication failed'}

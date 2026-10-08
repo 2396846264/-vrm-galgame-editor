@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {dialogueSlots,emptyDialogueCast,dialogueSlotPosition,migrateDialogueCast,setDialogueActor} from '../src/dialogue-cast.js';
+import {actResourceEntries,actMediaAssets} from '../src/act-resources.js';
+import {FrameRateMeter} from '../src/frame-rate.js';
+const fps=new FrameRateMeter();for(let i=0;i<120;i++)fps.sample(1/60);assert(Math.abs(fps.fps-60)<.001);fps.sample(1/60,true);assert.equal(fps.fps,0);
+assert.equal(dialogueSlots.length,30);assert.equal(new Set(dialogueSlots).size,30);
+assert.deepEqual(dialogueSlotPosition('left'),{x:-1.22,z:0});assert.deepEqual(dialogueSlotPosition('right',false),{x:.7,z:0});assert.deepEqual(dialogueSlotPosition('row10-right'),{x:1.22,z:-18});
+for(let row=0;row<10;row++)for(let column=0;column<3;column++)assert.deepEqual(dialogueSlotPosition(dialogueSlots[row*3+column]),{x:(column-1)*1.22,z:row?-row*2:0});
+const characters=Array.from({length:32},(_,i)=>({id:'c'+i,modelId:i===31?'fbx':'vrm',portraitId:'portrait'+i,props:[{id:'binding'+i,assetId:'gun'+i,bone:'rightHand'}]}));
+const assets=[{id:'vrm',type:'vrm'},{id:'fbx',type:'fbxCharacter'},{id:'motion',type:'motion'},{id:'voice',type:'voice'},{id:'cue',type:'audio'},...characters.flatMap((c,i)=>[{id:c.portraitId,type:'image'},{id:'gun'+i,type:'sceneModel'}])];
+const line={id:'s1',characterId:'c30',cast:emptyDialogueCast(),voiceId:'voice',sceneAnimations:[{soundId:'cue'}]};dialogueSlots.forEach((slot,i)=>{line.cast[slot].characterId='c'+i;line.cast[slot].motionId='motion';});
+const later={id:'s2',characterId:'c31',cast:emptyDialogueCast()},act={steps:[line,later]},project={characters,assets,acts:[act]};migrateDialogueCast(project);
+const entries=actResourceEntries(project,act);assert.equal(new Set(entries.map(e=>e.actorKey)).size,32);for(const role of characters)assert(entries.some(e=>e.actorKey===role.id&&e.props[0].assetId==='gun'+characters.indexOf(role)));assert(entries.some(e=>e.actorKey==='c31'&&e.modelAsset.type==='fbxCharacter'));assert(entries.some(e=>e.actorKey==='c30'&&e.portraitOnly));
+const media=actMediaAssets(project,act);assert.equal(media.filter(a=>a.type==='image').length,32);assert(media.some(a=>a.id==='cue'));assert(media.some(a=>a.id==='voice'));
+project.assets.push({id:'reward-img',type:'image'},{id:'movie',type:'video'});project.items=[{id:'reward',imageId:'reward-img'}];line.itemGrants=[{itemId:'reward',quantity:1}];assert(actMediaAssets(project,act).some(a=>a.id==='reward-img'));assert(actMediaAssets(project,{kind:'event',event:{videoId:'movie',imageId:'reward-img',bgmId:'cue'},steps:[]}).some(a=>a.id==='movie'));
+setDialogueActor(line,'row10-right','c0');assert.equal(line.cast['row10-right'].characterId,'c0');assert.equal(line.cast.left.characterId,'c29');assert.equal(new Set(Object.values(line.cast).map(c=>c.characterId)).size,30);
+const original=structuredClone(line.cast);migrateDialogueCast(project);assert.deepEqual(line.cast,original);
+console.log('PASS: 30 slots in 3x10 formation, unchanged front row, 32 act roles including VRM and FBX portrait-only speakers, all props/media, actor swaps and save normalization.');

@@ -1,4 +1,6 @@
-export const dialogueSlots = ['left', 'center', 'right'];
+export const dialogueSlots = ['left','center','right',...Array.from({length:9},(_,i)=>['left','center','right'].map(column=>`row${i+2}-${column}`)).flat()];
+export function dialogueSlotLabel(slot){const index=dialogueSlots.indexOf(slot),column=['左侧','中间','右侧'][index%3];return index<3?column:`第 ${Math.floor(index/3)+1} 排 · ${column}`;}
+export function dialogueSlotPosition(slot,multiple=true){const index=dialogueSlots.indexOf(slot);if(index<0)return{x:0,z:0};const row=Math.floor(index/3),column=index%3;return{x:(column-1)*(row||multiple?1.22:.7),z:row?-row*2:0};}
 const defaultSize = 1.15;
 const number = (n, fallback = 0) => n == null || n === '' ? fallback : Number.isFinite(Number(n)) ? Number(n) : fallback;
 export const emptyDialogueCast = () => Object.fromEntries(dialogueSlots.map(slot => [slot, {characterId:'', size:defaultSize, motionId:'', props:[]}])) ;
@@ -43,7 +45,7 @@ export function migrateDialogueCast(project) {
     }
     delete act.cast;delete act.castSettings;
   }
-  project.dialogueCastVersion=1;
+  project.dialogueCastVersion=2;
 }
 export function setDialogueActor(line,slot,characterId) {
   if(!dialogueSlots.includes(slot))throw Error('人物位置无效');

@@ -13,7 +13,8 @@ portrait.render(renderer,scene,element);assert.equal(rendered,1);assert.equal(ro
 assert.equal(portrait.camera.isOrthographicCamera,true);
 const old=new THREE.OrthographicCamera(-.2,.2,.2,-.2,.01,20);old.position.set(-.85,1.75,1.7);old.lookAt(0,1.73,0);old.updateProjectionMatrix();
 assert.ok(old.position.distanceTo(portrait.camera.position)<1e-9);assert.ok(old.quaternion.angleTo(portrait.camera.quaternion)<1e-7);
-const framed=mesh.position.clone();assert.equal(portrait.camera.left,-.2);assert.equal(portrait.camera.top,.2);
+const framed=mesh.position.clone();assert.equal(portrait.camera.left,-.2);assert.ok(Math.abs(portrait.camera.top-.4)<1e-9);
+const hair=head.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0,.35,0));assert.ok(hair.clone().project(old).y>1);assert.ok(hair.clone().project(portrait.camera).y<1,'Animated hair should fit extended portrait');
 const scaled=new THREE.OrthographicCamera();setShoulderPortraitCamera(scaled,new THREE.Vector3(0,3.4,0),2);
 assert.equal(scaled.left,-.4);assert.ok(scaled.position.distanceTo(new THREE.Vector3(-1.7,3.5,3.4))<1e-9);
 const turned=new THREE.OrthographicCamera();setShoulderPortraitCamera(turned,new THREE.Vector3(0,1.7,0),1,new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2));

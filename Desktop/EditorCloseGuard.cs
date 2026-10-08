@@ -16,7 +16,7 @@ internal sealed partial class EditorWindow
         editorClosePending=true;
         try
         {
-            if(archiveSaveRunning){ShowCloseError("工程正在保存，请等保存完成后再关闭。");return;}
+            if(archiveSaveRunning){ShowCloseError("工程正在保存或导出，请等处理完成后再关闭。");return;}
             await web.CoreWebView2.ExecuteScriptAsync("window.editorClosePending=true");
             var scene=environmentWindow is {IsDisposed:false}?environmentWindow:null;
             var panels=moduleWindows.Values.Where(window=>!window.IsDisposed).ToArray();

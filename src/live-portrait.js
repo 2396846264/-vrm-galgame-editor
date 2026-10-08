@@ -29,7 +29,7 @@ export class LivePortrait {
     const head=record.vrm.humanoid.getNormalizedBoneNode('head');if(!head)return;
     record.anchor.updateWorldMatrix(true,true);
     const scale=record.anchor.getWorldScale(new THREE.Vector3()).y;
-    setShoulderPortraitCamera(camera,head.getWorldPosition(new THREE.Vector3()),scale,record.anchor.getWorldQuaternion(new THREE.Quaternion()));
+    setShoulderPortraitCamera(camera,head.getWorldPosition(new THREE.Vector3()),scale,record.anchor.getWorldQuaternion(new THREE.Quaternion()),rect.height/rect.width);
     camera.layers.set(31);
     const viewport=renderer.getViewport(new THREE.Vector4()),scissor=renderer.getScissor(new THREE.Vector4());
     const state={background:scene.background,autoClear:renderer.autoClear,scissor:renderer.getScissorTest(),shadow:renderer.shadowMap.autoUpdate,visible:record.vrm.scene.visible};
@@ -38,9 +38,9 @@ export class LivePortrait {
     try{
       record.vrm.scene.visible=true;scene.background=null;renderer.autoClear=false;renderer.shadowMap.autoUpdate=false;
       this.overlay(renderer,element);
-      // The old PNG is square and uses object-fit:contain, centered at the bottom.
-      const side=Math.min(rect.width,rect.height),x=rect.left-area.left+(rect.width-side)/2,y=area.bottom-rect.bottom;
-      renderer.setViewport(x,y,side,side);renderer.setScissor(x,y,side,side);renderer.setScissorTest(true);
+      // Preserve shoulder size and angle, but extend the view upward for hair/headroom.
+      const x=rect.left-area.left,y=area.bottom-rect.bottom;
+      renderer.setViewport(x,y,rect.width,rect.height);renderer.setScissor(x,y,rect.width,rect.height);renderer.setScissorTest(true);
       renderer.clearDepth();renderer.render(scene,camera);this.frames++;
     }finally{
       for(const [object,mask]of layers)object.layers.mask=mask;

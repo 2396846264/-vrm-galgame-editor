@@ -32,7 +32,7 @@ internal sealed class GameResourcePackage : IDisposable
     private static byte[] WrappingKey() => SHA256.HashData(Encoding.UTF8.GetBytes(
         "VRMGalgame/game-resource-envelope/v1\0" + ProtectedBuildConstants.ArchivePassword()));
 
-    internal static void Write(string destination, IEnumerable<Source> sources)
+    internal static void Write(string destination, IEnumerable<Source> sources, byte[]? envelopeKey = null)
     {
         string temporary = destination + "." + Guid.NewGuid().ToString("N") + ".tmp";
         byte[] key = RandomNumberGenerator.GetBytes(32), id = RandomNumberGenerator.GetBytes(16);
@@ -72,7 +72,7 @@ internal sealed class GameResourcePackage : IDisposable
                 BinaryPrimitives.WriteInt32LittleEndian(header.AsSpan(24), indexBytes.Length);
                 id.CopyTo(header, 28);
                 RandomNumberGenerator.Fill(header.AsSpan(44, 12));
-                byte[] wrapping = WrappingKey();
+                byte[] wrapping = envelopeKey?.ToArray() ?? WrappingKey();
                 try { using var envelope = new AesGcm(wrapping, 16); envelope.Encrypt(header.AsSpan(44, 12), key, header.AsSpan(72, 32), header.AsSpan(56, 16), header.AsSpan(0, 44)); }
                 finally { CryptographicOperations.ZeroMemory(wrapping); }
                 NextNonce(prefix, ref sequence, nonce);

@@ -1,5 +1,6 @@
-export const eventNames = { news: '一般新闻', war: '宣战消息', major: '重大事件' };
-export const eventSeconds = { news: 3, war: 0, major: 10 };
+import {assetsOfType} from './asset-organization.js';
+export const eventNames = { news: '一般新闻', war: '宣战消息', major: '重大事件',cutscene:'过场动画' };
+export const eventSeconds = { news: 3, war: 0, major: 10,cutscene:0 };
 export const isEvent = node => node?.kind === 'event';
 export function normalizeEvent(value = {}) {
   const type = Object.hasOwn(eventNames, value.type) ? value.type : 'news';
@@ -25,11 +26,12 @@ export function createEvents(ctx) {
     const attr = `data-event-field="${key}"${row === null ? '' : ` data-event-row="${row}"`}`;
     return multiline ? `<textarea ${attr}>${esc(value)}</textarea>` : `<input ${attr} value="${esc(value)}">`;
   };
-  const choice = (key, value, type, empty, row = null) => `<select data-event-field="${key}"${row === null ? '' : ` data-event-row="${row}"`}><option value="">${empty}</option>${ctx.project().assets.filter(a => a.type === type).map(a => `<option value="${esc(a.id)}" ${a.id === value ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</select>`;
+  const choice = (key, value, type, empty, row = null) => `<select data-event-field="${key}"${row === null ? '' : ` data-event-row="${row}"`}><option value="">${empty}</option>${assetsOfType(ctx.project(),type).map(a => `<option value="${esc(a.id)}" ${a.id === value ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</select>`;
   const field = (label, html) => `<label class="field"><span>${label}</span>${html}</label>`;
   const upload = (key, type) => `<button data-action="event-upload" data-event-key="${key}" data-type="${type}">上传素材</button>`;
   function editor(node) {
     const e = node.event = normalizeEvent(node.event);
+    if(e.type==='cutscene')return `<div class="inspector-content event-editor"><h2>过场动画</h2>${field('幕列表中的名字',control('name',node.name))}${field('MP4 视频',`<select data-event-field="videoId"><option value="">请选择 MP4 视频</option>${ctx.project().assets.filter(a=>a.type==='video'&&/\.mp4$/i.test(a.path||'')).map(a=>`<option value="${esc(a.id)}" ${e.videoId===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select>`)}<button data-action="event-upload-cutscene">上传 / 替换 MP4 视频</button><p class="tip">每个过场只播放一个视频。播放完自动进入下一项剧情，玩家双击画面可以跳过。</p><div class="inline-actions"><button data-action="event-preview">重新预览</button><button data-action="event-duplicate">复制过场</button><button data-action="event-delete">删除过场</button></div></div>`;
     const countries = (row, index = null) => `<div class="event-country-editor">${field('宣战国名称', control('countryA', row.countryA, false, index))}${field('宣战国国旗', choice('flagAId', row.flagAId, 'image', '选择国旗图片', index))}${field('被宣战国名称', control('countryB', row.countryB, false, index))}${field('被宣战国国旗', choice('flagBId', row.flagBId, 'image', '选择国旗图片', index))}${field('补充说明', control('body', row.body, true, index))}</div>`;
     return `<div class="inspector-content event-editor"><h2>事件设置</h2>
       ${field('剧情列表中的名字', control('name', node.name))}
@@ -39,7 +41,7 @@ export function createEvents(ctx) {
       ${e.type === 'news' ? `${field('报纸名称', control('paperName', e.paperName))}${field('日期 / 刊号', control('date', e.date))}${field('新闻内容（建议约 100 字）', control('body', e.body, true))}${field('新闻插图', choice('imageId', e.imageId, 'image', '不放插图'))}${upload('imageId', 'image')}` : ''}
       ${e.type === 'war' ? `<label class="weather-toggle"><input type="checkbox" data-event-field="burst" ${e.burst ? 'checked' : ''}><span>连续弹出多条宣战消息</span></label>${countries(e)}${e.burst ? `<h3>后续宣战消息（总计最多 60 条）</h3><p class="tip">上面的消息先出现，下面的消息按顺序接着弹出。玩家随时可以关闭全部窗口。</p>${field('每条消息的间隔（秒）', `<input type="number" data-event-field="burstInterval" min="0.12" max="3" step="0.02" value="${e.burstInterval}">`)}${e.declarations.map((row, index) => `<details class="event-row"><summary>第 ${index + 2} 条 · ${esc(row.countryA || '宣战国')} → ${esc(row.countryB || '被宣战国')}</summary>${countries(row, index)}<button data-action="event-remove-row" data-index="${index}">删除这一条</button></details>`).join('')}<button data-action="event-add-row" ${e.declarations.length >= 59 ? 'disabled' : ''}>＋ 添加宣战消息</button>` : ''}<p class="tip">国旗在下方素材库中导入，推荐横向 PNG 图片。</p>` : ''}
       ${e.type === 'major' ? `${field('重大事件说明（建议 100～200 字）', control('body', e.body, true))}${field('主画面图片', choice('imageId', e.imageId, 'image', '不放图片'))}${upload('imageId', 'image')}${field('主画面视频（选了视频就优先显示）', choice('videoId', e.videoId, 'video', '不播放视频'))}${upload('videoId', 'video')}${field('结尾短句 / 引言', control('quote', e.quote, true))}` : ''}
-      <hr><h3>声音与背景</h3>${field('事件背景音乐（循环）', choice('bgmId', e.bgmId, 'audio', '静音'))}${upload('bgmId', 'audio')}${field('开场音效', choice('seId', e.seId, 'audio', '不播放音效'))}${field('播报语音', choice('voiceId', e.voiceId, 'audio', '不播放语音'))}
+      <hr><h3>声音与背景</h3>${field('事件背景音乐（循环）', choice('bgmId', e.bgmId, 'music', '静音'))}${upload('bgmId', 'music')}${field('开场音效', choice('seId', e.seId, 'effect', '不播放音效'))}${field('播报语音', choice('voiceId', e.voiceId, 'effect', '不播放语音'))}
       <p class="tip">背后的三维环境沿用前一幕；图片远景请在环境窗口里摆放。</p>
       ${field('继续按钮文字', control('buttonText', e.buttonText))}
       <p class="tip">事件期间人物和对白隐藏，天气暂停。播放完会进入后面的剧情。</p>
@@ -49,6 +51,7 @@ export function createEvents(ctx) {
     return `<article class="event-crt ${burst ? 'event-crt-burst' : ''}" style="--stack:${index % 7};--side:${index % 3 - 1}"><div class="crt-case"><header><span>紧急通讯 / ${String(index + 1).padStart(2, '0')}</span><span class="crt-led">● LIVE</span></header><div class="crt-screen"><div class="crt-flags"><div>${image(e.flagAId, e.countryA + '国旗')}<strong>${esc(e.countryA || '宣战国')}</strong></div><b>→</b><div>${image(e.flagBId, e.countryB + '国旗')}<strong>${esc(e.countryB || '被宣战国')}</strong></div></div><h2>${esc(e.countryA || '宣战国')}<br><em>向 ${esc(e.countryB || '被宣战国')} 宣战</em></h2>${e.body ? `<p>${esc(e.body)}</p>` : ''}</div><footer><span>WORLD COMMUNICATION NETWORK</span><i></i></footer></div></article>`;
   }
   function content(e) {
+    if(e.type==='cutscene'){const video=ctx.asset(e.videoId);return video?.type==='video'&&/\.mp4$/i.test(video.path||'')?`<video class="cutscene-video" src="${esc(assetUrl(video))}" playsinline preload="auto"></video>`:'<p class="cutscene-missing">尚未选择 MP4 视频。双击画面可跳过。</p>';}
     if (e.type === 'news') return `<article class="event-paper"><div class="paper-masthead">${esc(e.paperName || '世界新闻')}</div><div class="paper-dateline"><span>${esc(e.date || '特别报道')}</span><span>WORLD NEWS</span></div><div class="paper-content"><h1>${esc(e.title || '新闻标题')}</h1>${image(e.imageId, '新闻插图', 'paper-picture')}<p>${esc(e.body || '在事件设置中写下这条新闻。')}</p></div><div class="paper-end">◆</div></article>`;
     if (e.type === 'war') return `<div class="event-war-header"><small>BREAKING TRANSMISSION</small><h1>${esc(e.title || '世界局势突变')}</h1><span class="war-message-count"></span></div><div class="event-war-stack ${e.burst ? 'burst' : ''}">${warCard(e, 0, e.burst)}</div>${e.burst ? `<details class="event-transmission-log"><summary>查看已收到的消息</summary><ol>${[e, ...e.declarations].map((row, i) => `<li data-transmission="${i}" ${i ? 'hidden' : ''}><strong>${String(i + 1).padStart(2, '0')} · ${esc(row.countryA || '宣战国')} 向 ${esc(row.countryB || '被宣战国')}宣战</strong>${row.body ? `<p>${esc(row.body)}</p>` : ''}</li>`).join('')}</ol></details>` : ''}`;
     const video = ctx.asset(e.videoId);
@@ -78,7 +81,9 @@ export function createEvents(ctx) {
       }
     }
     const video = s.root.querySelector('video');
+    if(video&&s.event.type==='cutscene')video.volume=Math.max(0,Math.min(1,ctx.volume?.()??1));
     if (video) { if (paused) video.pause(); else if (video.paused && !video.ended) video.play().catch(() => {}); }
+    if(s.event.type==='cutscene'&&s.ended&&!paused&&confirm('ended'))return;
     const count = s.root.querySelector('.war-message-count');
     if (count) count.textContent = s.event.burst ? `已收到 ${s.shown + 1} / ${s.event.declarations.length + 1} 条消息` : '';
     const button = s.root.querySelector('[data-action="event-confirm"]');
@@ -102,10 +107,18 @@ export function createEvents(ctx) {
     const root = document.querySelector('#world-event');
     state = { nodeId: node.id, event: e, root, preview, remaining: Number.isFinite(remaining) ? Math.max(0, Math.min(total, remaining)) : total,
       total, ready: e.type === 'war', last: performance.now(), visibleTime: 0, shown: 0, objectUrls: [], mediaAbort: new AbortController() };
-    if (!preview) ctx.audio(e);
+    if(e.type==='cutscene'){
+      root.querySelector('.event-confirm').hidden=true;root.querySelector('.event-top-tools').hidden=true;root.querySelector('.event-actions').hidden=true;
+      root.insertAdjacentHTML('beforeend',`<span class="cutscene-skip-hint">${preview?'过场预览':'双击跳过'}</span>`);
+      const current=state;root.addEventListener('dblclick',event=>{event.preventDefault();if(state===current&&!preview)confirm('double');});
+      let lastTap=0,lastX=0,lastY=0;root.addEventListener('pointerup',event=>{if(event.pointerType!=='touch'||preview||state!==current)return;const now=performance.now();if(lastTap&&now-lastTap<400&&Math.hypot(event.clientX-lastX,event.clientY-lastY)<35){lastTap=0;confirm('double');}else{lastTap=now;lastX=event.clientX;lastY=event.clientY;}});
+      root.querySelector('video')?.addEventListener('ended',()=>{if(state===current){current.ended=true;if(!preview)confirm('ended');}});
+    }
+    if (!preview) ctx.audio(e.type==='cutscene'?{bgmId:'',seId:'',voiceId:''}:e);
     frame = requestAnimationFrame(tick);
     const waits = [...root.querySelectorAll('img')].map(img => img.complete ? Promise.resolve() : new Promise(resolve => { img.onload = img.onerror = resolve; }));
     const video = root.querySelector('video');
+    if(video&&e.type==='cutscene'){video.muted=preview;video.controls=preview;}
     if (video && video.readyState < 2) waits.push(new Promise(resolve => { video.addEventListener('loadeddata', resolve, { once: true }); video.addEventListener('error', resolve, { once: true }); }));
     await Promise.all([backdrop, Promise.race([Promise.all(waits), new Promise(resolve => setTimeout(resolve, 6000))])]);
     if (generation !== token || !state || state.root !== root) return;
@@ -135,8 +148,10 @@ export function createEvents(ctx) {
     state.ready = true; state.last = performance.now();
     root.querySelector('[data-action="event-confirm"]').disabled = total > 0 && state.remaining > 0;
   }
-  function confirm() {
-    if (!state?.ready || state.remaining > 0 || ctx.paused() || document.hidden) return false;
+  function confirm(reason='button') {
+    if (!state || ctx.paused() || document.hidden) return false;
+    if(state.event.type==='cutscene'){if(state.preview||!['double','ended'].includes(reason))return false;}
+    else if(!state.ready||state.remaining>0)return false;
     if (state.preview) { state.root.querySelector('.event-confirm').textContent = '预览结束 · 可重新预览'; return true; }
     const id = state.nodeId;
     cancel(); ctx.finish(id); return true;

@@ -248,6 +248,16 @@ internal sealed partial class EditorWindow : Form
     {
         try
         {
+            if(Environment.GetCommandLineArgs().Contains("--smoke-apk-ui")){await RunAndroidUISmoke();Close();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-portrait28")){await RunVrmPortrait28Smoke();Close();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-cutscene")){await RunCutsceneSmoke();Close();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-gallery32")){await RunGallery32Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-load31")){await RunLoad31Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-copy30")){await RunCopy30Smoke();Close();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-controls29")){await RunControls29Smoke();Close();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-resident29")){await RunResidency29Smoke();Close();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-android-repair-export")){await RunAndroidRepairExportSmoke();Close();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-optional-motions")){await RunBlankProjectSmoke();Close();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-player-graphics")){await RunPlayerGraphicsSmoke();Close();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-editor-fixes")){await RunEditorFixSmoke();Close();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-editor-layout")){
@@ -1244,6 +1254,7 @@ internal sealed partial class EditorWindow : Form
 
     private async Task<object?> HandleEditorAction(string action,JsonNode? payload)
     {
+        if(archiveSaveRunning && action is not ("environmentCommitReply" or "editorModuleCommitReply" or "init"))throw new Exception("工程正在保存或导出，请稍候。");
         if(action is "newProject" or "openProject" or "openRecentProject" && moduleWindows.Values.Any(window=>!window.IsDisposed))throw new Exception("请先保存并关闭其他编辑窗口，再切换工程。");
         return action switch
             {
@@ -1271,6 +1282,7 @@ internal sealed partial class EditorWindow : Form
                 "importDialogueVoice" when !playerMode => ImportDialogueVoice(payload?["project"], payload?["actId"]?.GetValue<string>() ?? "", payload?["dialogueId"]?.GetValue<string>() ?? ""),
                 "organizeDialogueVoices" when !playerMode => OrganizeDialogueVoices(payload?["project"]),
                 "importAsset" when !playerMode => ImportAssets(payload?["type"]?.GetValue<string>() ?? "", payload?["single"]?.GetValue<bool>() ?? false),
+                "importCutsceneVideo" when !playerMode => ImportAssets("video",true,true),
                 "importAssetChunk" when !playerMode => ImportAssetChunk(payload),
                 "saveInventoryImage" when !playerMode => SaveInventoryImage(payload?["dataUrl"]?.GetValue<string>()??"",payload?["itemId"]?.GetValue<string>()??"",payload?["name"]?.GetValue<string>()??"物品"),
                 "saveGeneratedPortrait" when !playerMode => SaveGeneratedPortrait(payload?["dataUrl"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "角色", payload?["previousRevision"]?.GetValue<string>() ?? ""),
@@ -1278,6 +1290,7 @@ internal sealed partial class EditorWindow : Form
                 "restoreHistoryAssets" when !playerMode => RestoreHistoryAssets(payload?["project"]),
                 "deleteAsset" when !playerMode => DeleteAsset(payload?["path"]?.GetValue<string>() ?? ""),
                 "exportGame" when !playerMode => ExportGame(payload?["folderName"]?.GetValue<string>() ?? ""),
+                "exportAndroid" when !playerMode => await ExportAndroidAsync(payload),
                 "setWindowResolution" when playerMode => SetWindowResolution(payload?["value"]?.GetValue<string>() ?? ""),
                 "setFullscreen" when playerMode => SetFullscreen(payload?["value"]?.GetValue<bool>() ?? false),
                 "exitGame" when playerMode => ExitGame(),
@@ -1360,7 +1373,6 @@ internal sealed partial class EditorWindow : Form
         string name = SafeName(requestedName);
         string? archive = ChooseArchiveDestination(name, "选择新工程包的保存位置");
         if (archive == null) return null;
-        ValidatePresetMotions();
         string directory = CreateWorkspace();
         Directory.CreateDirectory(Path.Combine(directory, "assets"));
         var presetAssets = CopyPresetMotions(directory);
@@ -1513,44 +1525,7 @@ internal sealed partial class EditorWindow : Form
 
     private List<object> CopyPresetMotions(string directory)
     {
-        string sourceDirectory = Path.Combine(appDirectory, "preset-motions");
-        string manifestPath = Path.Combine(sourceDirectory, "manifest.json");
-        if (!File.Exists(manifestPath)) throw new Exception("安装包缺少预制动作，请重新解压完整文件夹。");
-        var manifest = JsonNode.Parse(File.ReadAllText(manifestPath))?.AsArray()
-            ?? throw new Exception("预制动作清单无效。");
-        string destination = Path.Combine(directory, "assets", "motion", "预制动作");
-        Directory.CreateDirectory(destination);
-        var assets = new List<object>();
-        foreach (JsonNode? entry in manifest)
-        {
-            string filename = entry?["file"]?.GetValue<string>() ?? "";
-            string id = entry?["id"]?.GetValue<string>() ?? "";
-            string name = entry?["name"]?.GetValue<string>() ?? "";
-            if (filename != Path.GetFileName(filename) || !filename.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase)
-                || string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(name))
-                throw new Exception("预制动作清单里有无效文件名。");
-            string source = Path.Combine(sourceDirectory, filename);
-            if (!File.Exists(source)) throw new Exception($"安装包缺少动作：{filename}");
-            File.Copy(source, Path.Combine(destination, filename));
-            assets.Add(new { id, name, path = $"assets/motion/预制动作/{filename}", type = "motion", folderId = "preset-motion-folder" });
-        }
-        return assets;
-    }
-
-    private void ValidatePresetMotions()
-    {
-        string sourceDirectory = Path.Combine(appDirectory, "preset-motions");
-        string manifestPath = Path.Combine(sourceDirectory, "manifest.json");
-        if (!File.Exists(manifestPath)) throw new Exception("安装包缺少预制动作，请重新解压完整文件夹。");
-        var manifest = JsonNode.Parse(File.ReadAllText(manifestPath))?.AsArray()
-            ?? throw new Exception("预制动作清单无效。");
-        foreach (JsonNode? entry in manifest)
-        {
-            string filename = entry?["file"]?.GetValue<string>() ?? "";
-            if (filename != Path.GetFileName(filename) || !filename.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase)
-                || !File.Exists(Path.Combine(sourceDirectory, filename)))
-                throw new Exception($"安装包缺少预制动作：{filename}");
-        }
+        return OptionalPresetMotions.Copy(Path.Combine(appDirectory,"preset-motions"),directory);
     }
 
     private object DeleteAsset(string relative)
@@ -1762,7 +1737,7 @@ internal sealed partial class EditorWindow : Form
         return new { assets = updates, warnings };
     }
 
-    private object? ImportAssets(string type, bool single = false)
+    private object? ImportAssets(string type, bool single = false,bool mp4Only=false)
     {
         if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
         if (type == "voice") throw new Exception("配音不能从素材库导入，请到对应对白上传。");
@@ -1772,7 +1747,7 @@ internal sealed partial class EditorWindow : Form
             ["motion"] = [".vrma", ".fbx"],
             ["image"] = [".png", ".jpg", ".jpeg", ".webp"],
             ["audio"] = [".mp3", ".wav", ".ogg"],
-            ["video"] = [".mp4", ".webm"],
+            ["video"] = mp4Only?[".mp4"]:[".mp4", ".webm"],
             ["pdf"] = [".pdf"]
         };
         if (!extensions.TryGetValue(type, out var allowed)) throw new Exception("不支持的素材类型。");

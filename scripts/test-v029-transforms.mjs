@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {setPropRotation,updatePropTransform} from '../src/character-props.js';
+import {uniformScaleValue,uniformScaleVector} from '../src/uniform-scale.js';
+const binding={position:[0,0,0],rotation:[-202.3,90,-88.8],scale:[1,1,1]};
+const old=new THREE.Quaternion().setFromEuler(new THREE.Euler(...binding.rotation.map(THREE.MathUtils.degToRad)));
+const x=structuredClone(binding),z=structuredClone(binding);setPropRotation(x,0,x.rotation[0]+10);setPropRotation(z,2,z.rotation[2]+10);
+assert.ok(new THREE.Quaternion().fromArray(x.rotationQuaternion).angleTo(new THREE.Quaternion().fromArray(z.rotationQuaternion))>.1,'X/Z axes collapsed near 90 degrees');
+const unchanged=structuredClone(binding);setPropRotation(unchanged,0,unchanged.rotation[0]);assert.ok(old.angleTo(new THREE.Quaternion().fromArray(unchanged.rotationQuaternion))<1e-7,'Migration changed existing orientation');
+assert.deepEqual(uniformScaleVector([2,1,.5],2),[4,2,1]);assert.equal(uniformScaleValue([2,1,.5]),1);assert.throws(()=>uniformScaleVector([1,1,1],0));
+console.log('PASS: independent prop axes at gimbal singularity, preserved legacy orientation and ratio-preserving uniform scaling.');
