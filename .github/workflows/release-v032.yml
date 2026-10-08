@@ -27,8 +27,8 @@ jobs:
           $ErrorActionPreference='Stop'
           Expand-Archive -LiteralPath VRMGalgame-0.0.32-win-x64.zip -DestinationPath tested-package
           $package=(Resolve-Path tested-package/VRMGalgame-0.0.32-win-x64).Path
-          & "$package/VRMGalgame.exe" --check-package-integrity $package "$package/integrity-check.json"
-          if($LASTEXITCODE -ne 0){throw 'Application integrity check failed'}
+          $process=Start-Process -FilePath "$package/VRMGalgame.exe" -ArgumentList @("--check-package-integrity",('"'+$package+'"'),('"'+$package+'/integrity-check.json"')) -Wait -PassThru -WindowStyle Hidden
+          if($process.ExitCode -ne 0){throw 'Application integrity check failed'}
           $check=Get-Content "$package/integrity-check.json" -Raw | ConvertFrom-Json
           if(!$check.ok){throw 'Application integrity check failed'}
           choco install innosetup --no-progress -y
