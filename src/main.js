@@ -31,6 +31,14 @@ import './ios7-theme.css';
 import './chapters.css';
 import './menu-motion.css';
 import './game-glass.css';
+import {gameUiPresets,normalizeGameUi,gameUiPicker} from './game-ui.js';
+import './game-ui.css';
+import {captureSaveThumbnail,validSaveThumbnail} from './save-thumbnail.js';
+import './save-thumbnail.css';
+import {createRoleDetails} from './role-details.js';
+import {createDetailIdle} from './detail-idle.js';
+import './role-details.css';
+import {portraitBodyFrame} from './portrait-body-frame.js';
 import './weather.css';
 import './events.css';
 import { createEvents, eventNames, eventSeconds, isEvent, normalizeEvent, newEvent } from './events.js';
@@ -43,6 +51,7 @@ import './render-style.css';
 import {actResourceEntries,actMediaAssets} from './act-resources.js';
 import './frame-rate.css';
 import { embeddedVrmThumbnail, internalPortrait } from './vrm-thumbnail.js';
+import {createModelThumbnailQueue} from './model-thumbnails.js';
 import {validateEnvironmentLibrary} from './environment-operations.js';
 import {createEnvironment,migrateEnvironments,validateEnvironment} from './environment-schema.js';
 import {verifyImageAlpha} from './editor-fix-smoke.js';
@@ -64,6 +73,7 @@ let mode = 'editor';
 let directory = '';
 let recentProjects = [];
 let stage = null;
+const roleDetails=createRoleDetails({project:()=>project,asset:id=>asset(id),url:assetUrl,unlocked:id=>hasDiscovered('character',id),lineCount:id=>Math.max(0,Number(loadLifetimeProgress().characterLineCounts[id])||0),idleMotion:role=>motionsForCharacter(project,role.id).find(motion=>motion.id===role.detailsIdleId)||null,createStage:(node,error)=>{const viewer=new VRMStage(node,error);viewer.setGraphicsSettings(graphicsPreferences);return viewer;},closed:()=>closePlayerModal()});
 let previewResizer=null;
 let selectedAct = 0;
 let selectedStep = 0;
@@ -74,7 +84,7 @@ let propPreviewMode=false,selectedBindingPropId='';
 const openAssetFolders = new Set(['unfiled:vrm', 'unfiled:motion', 'unfiled:image', 'unfiled:audio', 'unfiled:video']);
 let dockInitializedProjectId = '';
 let activeAssetType = 'image';
-const currentAssetFolder = { image: '', vrm: '', fbxCharacter: '', sceneModel: '', motion: '', audio: '', music:'',effect:'', voice: '', video: '' };
+const currentAssetFolder = { image: '', vrm: '', fbxCharacter: '', mmdCharacter:'', sceneModel: '', motion: '', audio: '', music:'',effect:'', voice: '', video: '' };
 let draggingStory = null;
 let playing = false;
 let playAct = 0;
@@ -90,6 +100,7 @@ const moduleLabels={characters:"角色",items:"物品",title:"标题",render:"�
 let dirty = false;
 let changeRevision = 0;
 let saveInFlight = null;
+let saveScreenshotBusy=false;
 const editorSaveNotice=createEditorSaveNotice({status:()=>dirty?(modulePanel?'● 未应用':'● 未保存'):(modulePanel?'✓ 已应用到工程':'✓ 已保存')});
 let editorSettings = { autoSaveMinutes: 5, theme: 'light' };
 let feedbackGroup = '';
@@ -228,6 +239,7 @@ const options = (items, value, empty = '无') =>
 const byType = type => assetsOfType(project,type).filter(item => !internalPortrait(project, item));
 const vrmThumbnails = new Map();
 let thumbnailProject = null;
+const modelThumbnails=createModelThumbnailQueue({project:()=>project,allowed:()=>mode==='editor'&&!playing,capture:captured=>captureCharacterPortrait(captured,null,1,null,true),save:(model,dataUrl)=>bridge('saveModelThumbnail',{modelId:model.id,dataUrl}),changed:()=>markDirty({derived:true}),repaint:()=>renderAssetDock(),error:(model,error)=>console.warn('人物素材缩略图暂时不可用',model.name,error.message)});
 function refreshVrmThumbnails() {
   if (thumbnailProject !== project) {
     for (const result of vrmThumbnails.values()) if (result.url) URL.revokeObjectURL(result.url);
@@ -518,7 +530,7 @@ function titleMarkup(interactive) {
     : `<div class="title-logo-fallback"><small>VRM GALGAME</small><strong>${escape(project.name)}</strong></div>`;
   const items = [
     ['继续游戏', 'continue-game'], ['开始游戏', 'play'], ['载入游戏', 'load-game'],
-    ['系统设置', 'settings'], ['附加鉴赏', 'gallery'], ['游玩进度', 'play-progress'], ['退出游戏', 'exit-game']
+    ['系统设置', 'settings'], ['附加鉴赏', 'gallery'], ['角色详情', 'role-details'], ['游玩进度', 'play-progress'], ['退出游戏', 'exit-game']
   ];
   const hasSave = interactive && readSaveSlots().some(Boolean);
   const menu = items.map(([label, action]) => interactive
@@ -565,9 +577,8 @@ async function showTitleScene(interactive = false) {
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     if (request === titleRequest && !playing) loading?.classList.add('hidden');
   }
-  if (interactive)
-    for (const item of project.characters.filter(item => entries.some(entry=>entry.modelAsset.id===item.modelId)))
-      rememberDiscovery('character', item.id);
+  // Title decorations alone do not unlock character details. Gameplay still
+  // records both onstage actors and offstage speakers when they are encountered.
   if (!interactive && activePanel === 'title') refreshMotionHints();
   if (!interactive && activePanel === 'title') renderTitleExpressionControls();
 }
@@ -1064,7 +1075,8 @@ const sceneAnimationDialog=createSceneAnimationDialog({
 });
 async function showEnvironment(owner){const env=project.environments?.find(e=>e.id===owner?.environmentId);await stage.setEnvironment(env,project.assets);return Boolean(env);}
 const isFbxModel=id=>asset(id)?.type==='fbxCharacter';
-const actorModels=()=>project.assets.filter(a=>['vrm','fbxCharacter'].includes(a.type));
+const isLiveModel=id=>['vrm','mmdCharacter'].includes(asset(id)?.type);
+const actorModels=()=>project.assets.filter(a=>['vrm','fbxCharacter','mmdCharacter'].includes(a.type));
 function defaultProject(name) {
   return {
     version: 1, id: uid(), name: name || '我的 VRM 故事', ui: { dialogueImageId: '', clickSoundId: '' },
@@ -1096,6 +1108,7 @@ function normalize() {
     item.title ||= '';
     item.description ||= '';
     item.galleryMotionId ||= '';
+    item.detailsIdleId ||= '';
     item.galleryYaw = Number.isFinite(Number(item.galleryYaw)) ? Number(item.galleryYaw) : 0;
     item.galleryPoseFrame = Number.isFinite(Number(item.galleryPoseFrame)) && Number(item.galleryPoseFrame) >= 1
       ? Math.floor(Number(item.galleryPoseFrame))
@@ -1107,6 +1120,7 @@ function normalize() {
   project.acts ||= [];
   project.ui ||= { dialogueImageId: '', clickSoundId: '' };
   project.ui.clickSoundId ||= '';
+  project.ui.gameTheme = normalizeGameUi(project.ui.gameTheme);
   project.title = { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
     size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12, ...project.title };
   migrateTitleActors(project.title, uid);
@@ -1397,7 +1411,7 @@ function renderEditorSettings() {
       </select></label><label class="field"><span>界面外观</span><select id="editor-theme">
         <option value="light" ${editorSettings.theme === 'light' ? 'selected' : ''}>日间 · 白色</option>
         <option value="dark" ${editorSettings.theme === 'dark' ? 'selected' : ''}>夜间 · 深灰色</option>
-      </select></label><p>外观设置只影响编辑器；导出的游戏保持白色界面。</p>
+      </select></label><p>外观设置只影响编辑器；游戏外观在“游戏 UI”中选择。</p>
       <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
     </div></div>`);
 }
@@ -1423,6 +1437,7 @@ function renderRecentProjectsModal() {
       ${recentProjects.length ? recentProjectButtons() : '<p>还没有打开过工程包。</p>'}</div></div>`);
 }
 function renderEditor() {
+  roleDetails.close(false);
   dialogueCamera?.dispose();dialogueCamera=null;
   previewResizer?.dispose();previewResizer=null;
   sceneAnimationDialog.close(false);cancelSceneAnimations();
@@ -1433,7 +1448,7 @@ function renderEditor() {
     <header class="topbar"><div class="brand">✦ <b>VRM Galgame</b><span>编辑器</span></div>
       <div class="project-title"><input id="text-search" placeholder="查找与替换剧情、角色名称…" aria-label="查找剧情文本，按回车打开替换工具"><button class="search-open-button" data-action="search-open" title="查找与替换">⌕</button><span id="save-state">✓ 已保存</span></div>
       <div class="editor-history-controls" role="group" aria-label="撤销和重做">${button('↶ 撤销', 'editor-undo', 'disabled')}${button('↷ 重做', 'editor-redo', 'disabled')}</div>
-      <div class="editor-tools-row">${modulePanel?'<nav>'+button('保存并应用到工程','save')+button('☾','toggle-editor-theme')+button('重播动作','restart-character-preview','title="重新播放预览人物动作"')+'</nav>':`<nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('剧情助手', 'assistant-open')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}${button('环境编辑器', 'edit-environment')}${Object.entries(moduleLabels).map(([key,label])=>button(label+'编辑器','open-module','data-module="'+key+'"')).join('')}${button('重播动作','restart-character-preview','title="重新播放预览人物动作"')}</nav><div class="story-current" id="story-current" role="status"></div>`}</div>
+      <div class="editor-tools-row">${modulePanel?'<nav>'+button('保存并应用到工程','save')+button('☾','toggle-editor-theme')+button('重播动作','restart-character-preview','title="重新播放预览人物动作"')+'</nav>':`<nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('游戏 UI', 'game-ui')}${button('剧情助手', 'assistant-open')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}${button('环境编辑器', 'edit-environment')}${Object.entries(moduleLabels).map(([key,label])=>button(label+'编辑器','open-module','data-module="'+key+'"')).join('')}${button('重播动作','restart-character-preview','title="重新播放预览人物动作"')}</nav><div class="story-current" id="story-current" role="status"></div>`}</div>
     </header>
     <div class="workspace ${modulePanel?'':'story-workspace'}">
       ${modulePanel?'<aside class="sidebar"><div class="module-sidebar-title">'+moduleLabels[modulePanel]+'编辑器<span id="stage-caption" class="module-context-caption"></span></div><div id="sidebar-body"></div></aside>':'<div class="story-left"><aside class="inspector"><div class="inspector-heading">当前对白编辑</div><div id="inspector-body"></div></aside><aside class="sidebar"><div id="sidebar-body"></div></aside></div>'}
@@ -1503,6 +1518,7 @@ function renderSidebar() {
         ${button('导入 Logo', 'import', 'data-type="image" data-title-import="logoImageId"')}
         ${button('导入标题 VRM 人物', 'import', 'data-type="vrm" data-title-import="modelId"')}
         ${button('导入标题 FBX 人物', 'import', 'data-type="fbxCharacter" data-title-import="modelId"')}
+        ${button('导入标题 MMD 人物', 'import', 'data-type="mmdCharacter" data-title-import="modelId"')}
         ${button('导入标题动作', 'import', 'data-type="motion" data-title-import="motionId"')}
         ${button('编辑环境', 'edit-environment')}
       </div><div class="sidebar-note">在右侧逐个添加标题人物。每个人可以单独选择模型、动作和位置。Logo 可以留空，菜单排在底部。</div>`;
@@ -1525,6 +1541,11 @@ function objectContext(target){
  if(target.closest('#sidebar-body')){const kind={story:'act',render:'act',characters:'character',items:'item',knowledge:'book',title:'titleActor'}[activePanel];return{kind,source:null};}
  if(target.closest('#inspector-body')){if(isEvent(act())&&activePanel==='story')return{kind:'act',source:act()};const kind={story:'step',characters:'character',items:'item',knowledge:'book',title:'titleActor'}[activePanel];return{kind,source:{step:step(),character:project.characters[selectedCharacter],item:project.items[selectedItem],book:project.knowledgeBooks?.[library.editorState().selected]}[kind],ownerId:kind==='step'?act()?.id:undefined};}
  return null;
+}
+function renderGameUiPicker() {
+  document.querySelector('#game-ui-picker')?.remove();
+  document.querySelector('.editor')?.insertAdjacentHTML('beforeend', gameUiPicker(project.ui.gameTheme));
+  document.querySelector('#game-ui-picker input:checked')?.focus();
 }
 function captureObject(context){
  if(!context.source)throw Error('先选择要复制的内容');
@@ -1816,12 +1837,13 @@ function renderAssetDock() {
   const selectedFolder = folders.find(folder => folder.id === folderId);
   const scroll = body.scrollTop;
   const settingsOpen = body.querySelector('.asset-dock-settings')?.open || false;
-  const tabs = [['image', '图像'], ['vrm', 'VRM'], ['fbxCharacter','FBX 人物'], ['sceneModel','物品与模型'], ['motion', '动作'], ['music', '音乐'], ['effect', '音效'], ['voice', '配音'], ['video', '视频']];
+  const tabs = [['image', '图像'], ['vrm', 'VRM'], ['fbxCharacter','FBX 人物'], ['mmdCharacter','MMD 人物'], ['sceneModel','物品与模型'], ['motion', '动作'], ['music', '音乐'], ['effect', '音效'], ['voice', '配音'], ['video', '视频']];
   document.querySelector('#asset-dock-tabs').innerHTML = tabs.map(([key, label]) =>
     `<button type="button" role="tab" aria-selected="${type === key}" class="${type === key ? 'active' : ''}" data-action="asset-tab" data-type="${key}">${label}<small>${byType(key).length}</small></button>`).join('');
   if (type === 'voice') { renderVoiceLibrary(body, folderId, folders, selectedFolder, scroll); return; }
   refreshVrmThumbnails();
   const visible = byType(type).filter(item => folderId ? item.folderId === folderId : !folders.some(folder => folder.id === item.folderId));
+  modelThumbnails.refresh(visible);
   body.innerHTML = `<div class="asset-browser-toolbar">
       <div class="asset-browser-location">${folderId ? button('← 返回', 'asset-folder-back') : '<strong>全部文件夹</strong>'}<span>${escape(selectedFolder?.name || (folderId ? '文件夹' : '未分类素材'))}</span></div>
       <div class="asset-browser-actions">${selectedFolder?.locked||type==='motion'&&!folderId?'':folderId?button('改名','rename-asset-folder',`data-folder-id="${escape(folderId)}"`):button('＋ 文件夹','add-asset-folder',`data-type="${type}"`)}${button('＋ 导入', 'import', `data-type="${type}" data-folder-id="${escape(folderId)}"`)}</div>
@@ -1829,6 +1851,7 @@ function renderAssetDock() {
       <div class="asset-tile-grid">${!folderId ? folders.map(folder => renderAssetFolderTile(folder)).join('') : ''}${visible.map(item => renderAssetTile(item, folders)).join('')}</div>
       <div class="asset-drop-hint">双击空白处上传素材，或将文件、文件夹拖到这里</div>
     </div><details class="asset-dock-settings" ${settingsOpen ? 'open' : ''}><summary>游戏界面与鉴赏设置</summary><div class="asset-dock-settings-body">
+    ${button('选择游戏 UI · '+gameUiPresets.find(preset=>preset.id===normalizeGameUi(project.ui.gameTheme)).name,'game-ui')}
     ${field('对话框图片', select('project.ui.dialogueImageId', byType('image'), project.ui.dialogueImageId, '使用内置样式'))}
     <p class="tip">可换成自己的 PNG 或 WebP 图片。建议使用横向、带透明通道的图片。</p>
     <h3>图片鉴赏</h3><p class="tip">勾选后，玩家在游戏里见过的图片可进入图像鉴赏。</p>
@@ -1849,6 +1872,9 @@ function renderAssetTile(item, folders) {
   const icons = { vrm: '♟', motion: '▶', audio: '♫', video: '▣' };
   const preview = item.type === 'image'
     ? `<img class="asset-tile-preview" loading="lazy" src="${escape(assetUrl(item))}" alt="${escape(item.name)}的缩略图">`
+    : ['mmdCharacter','fbxCharacter'].includes(item.type)&&item.thumbnailPath
+      ? `<img class="asset-tile-preview model-thumbnail" loading="lazy" src="${escape(assetUrl({path:item.thumbnailPath}))}" alt="${escape(item.name)}的人物缩略图">`
+    : modelThumbnails.isBusy(item.id)?'<span class="asset-thumbnail-pending">正在拍摄头像…</span>'
     : item.type === 'vrm' && vrmThumbnails.get(assetUrl(item))?.url
       ? `<img class="asset-tile-preview vrm-embedded-thumbnail" src="${escape(vrmThumbnails.get(assetUrl(item)).url)}" alt="${escape(item.name)}自带的头像">`
     : `<span class="asset-tile-icon asset-tile-icon-${item.type}" aria-hidden="true">${icons[item.type] || '▣'}</span>`;
@@ -1927,7 +1953,7 @@ document.addEventListener('drop', async event => {
   catch (error) { toast(error.message, true); }
 });
 const droppedAssetTypes = {
-  vrm: ['.vrm'], sceneModel:['.glb'], motion: ['.vrma', '.fbx'], image: ['.png', '.jpg', '.jpeg', '.webp'],
+  vrm: ['.vrm'], sceneModel:['.glb'], motion: ['.vrma', '.fbx', '.vmd'], image: ['.png', '.jpg', '.jpeg', '.webp'],
   audio: ['.mp3', '.wav', '.ogg'], video: ['.mp4', '.webm']
 };
 function droppedAssetType(name) {
@@ -1948,7 +1974,7 @@ async function readDroppedEntry(entry, folderName, result) {
   }
 }
 async function importDroppedEntries(transfer) {
-  if(activeAssetType==='fbxCharacter'){toast('FBX 人物请点击“导入”，这样可以一起收集旁边的贴图。');return;}
+  if(['fbxCharacter','mmdCharacter'].includes(activeAssetType)){toast('人物模型请点击“导入”，这样可以一起收集旁边的贴图。');return;}
   if (activeAssetType === 'voice') { redirectVoiceUpload(); return; }
   const entries = [];
   const items = [...transfer.items].filter(item => item.kind === 'file')
@@ -1963,6 +1989,7 @@ async function importDroppedEntries(transfer) {
   let skipped = 0;
   const folderCache = new Map();
   for (const { file, folderName } of entries) {
+    if(/\.(pmx|pmd)$/i.test(file.name)){toast('MMD 模型请点击“导入”，程序会一起收集它的贴图。');skipped++;continue;}
     const type = droppedAssetType(file.name);
     if (!type) { skipped++; continue; }
     const audioKind=type==='audio'&&['music','effect'].includes(activeAssetType)?activeAssetType:null;
@@ -2104,14 +2131,12 @@ function renderInspector() {
       ${field('人物模型', select('character.modelId', actorModels(), item.modelId, '请选择模型'))}
       ${!isFbxModel(item.modelId) ? `<label class="field"><span>自动说话嘴型</span><select data-field="character.autoMouth"><option value="on" ${item.autoMouth !== false ? 'selected' : ''}>开启（默认）</option><option value="off" ${item.autoMouth === false ? 'selected' : ''}>关闭</option></select></label>
       <p class="tip">跟随对白文字显示动嘴，标点处稍作停顿；文字显示完就停止。有 A、I、U、E、O 嘴型的模型可使用。</p>` : '<p class="tip">FBX 人物只播放身体动作。</p>'}
-      ${asset(item.modelId)?.type==='vrm'?'<div class="portrait-editor"><span>说话头像 · 实时 VRM 模型</span><p class="tip">固定使用此角色的可动模型头像，表情和嘴型与场上人物同步。无需上传或拍摄图片。</p></div>':`<div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}<div class="inline-actions">${button('上传 PNG 头像', 'upload-character-portrait')}${isFbxModel(item.modelId)?button('重新生成 FBX 头像','capture-character-portrait'):''}</div><p class="tip">FBX 使用静态图片头像，可自动生成或手动上传。没有模型的角色仍可上传 PNG。</p></div>`}
-      ${field('鉴赏姿势 / 动作', select('character.galleryMotionId', motionsForCharacter(project,item.id), item.galleryMotionId, '保持站立'))}
-      <label class="adjustment"><span>鉴赏转身角度</span><input type="range" data-gallery-adjust="galleryYaw" min="-90" max="90" step="5" value="${item.galleryYaw}"><output data-gallery-output="galleryYaw">${item.galleryYaw}°</output></label>
-      <label class="adjustment gallery-frame-adjustment"><span>动作定格帧</span><input type="range" data-gallery-adjust="galleryPoseFrame" min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled><output data-gallery-output="galleryPoseFrame">${item.galleryMotionId ? '读取中…' : '先选择动作'}</output></label>
-      <label class="gallery-frame-number"><span>输入帧号</span><input type="number" data-gallery-frame-number min="1" max="${Math.max(1, item.galleryPoseFrame)}" step="1" value="${item.galleryPoseFrame}" disabled></label>
+      ${isLiveModel(item.modelId)?'<div class="portrait-editor"><span>说话头像 · 实时模型</span><p class="tip">固定使用此角色的可动模型头像，表情和嘴型与场上人物同步。无需上传或拍摄图片。</p></div>':`<div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}<div class="inline-actions">${button('上传 PNG 头像', 'upload-character-portrait')}${isFbxModel(item.modelId)?button('重新生成 FBX 头像','capture-character-portrait'):''}</div><p class="tip">FBX 使用静态图片头像，可自动生成或手动上传。没有模型的角色仍可上传 PNG。</p></div>`}
+      ${field('角色详情待机动作', select('character.detailsIdleId', motionsForCharacter(project,item.id), item.detailsIdleId||'', '自然待机（自动）'))}
+      <p class="tip">角色详情使用全身、正面的循环待机，不再设置定格帧。无需额外导入动作，也可以选择自己的待机动作。</p>
       ${propEditor(item)}
       ${field('身份 / 称号', input('character.title', item.title, '例如：旅行者、学生'))}
-      ${field('角色简介', textarea('character.description', item.description, '玩家在角色鉴赏里看到的介绍'))}
+      ${field('角色简介', textarea('character.description', item.description, '玩家在角色详情里看到的介绍'))}
       <hr><h2>角色故事（最多三段）</h2>
       <p class="tip">留空的故事不会出现在游戏里。解锁数字填 0 时，玩家一开始就能阅读。</p>
       ${item.stories.map((story, index) => `<div class="character-story-editor">
@@ -2119,7 +2144,7 @@ function renderInspector() {
         ${field('故事内容', `<textarea data-story-index="${index}" data-story-field="text" placeholder="不写就不显示">${escape(story.text)}</textarea>`)}
         ${field('读过这个角色多少句对白后解锁', `<input type="number" min="0" step="1" data-story-index="${index}" data-story-field="unlockLines" value="${Math.max(0, Number(story.unlockLines) || 0)}">`)}
       </div>`).join('')}
-      <div class="inline-actions">${button('导入 VRM', 'import', 'data-type="vrm"')}${button('导入 FBX 人物', 'import', 'data-type="fbxCharacter"')}${button('删除角色', 'delete-character', 'class="danger"')}</div>
+      <div class="inline-actions">${button('导入 VRM', 'import', 'data-type="vrm"')}${button('导入 FBX 人物', 'import', 'data-type="fbxCharacter"')}${button('导入 MMD 人物', 'import', 'data-type="mmdCharacter"')}${button('删除角色', 'delete-character', 'class="danger"')}</div>
       <p class="tip">选中角色后，预览里会显示它。表情名称取决于模型本身。</p></div>` : '<div class="inspector-content empty">先新增角色</div>';
     if (item) updatePreview();
     return;
@@ -2505,7 +2530,7 @@ async function ensureCharacterPortrait(item, force = false, userCapture = false)
   return task;
 }
 function portraitIsAutomatic(item) {
-  return !asset(item?.portraitId) || item.portraitSource === 'auto';
+  return !isLiveModel(item?.modelId) && (!asset(item?.portraitId) || item.portraitSource === 'auto');
 }
 const autoPortraitFolderId = 'auto-character-portraits';
 function assetIsReferenced(id) {
@@ -2561,7 +2586,7 @@ async function updateSpeakerPortrait(characterId, visible) {
   const token=++portraitRequest,node=document.querySelector('#speaker-portrait'),image=node?.querySelector('img');
   if(!node||!image)return;
   const item=characterId?character(characterId):null,model=asset(item?.modelId);
-  if(visible&&model?.type==='vrm'){
+  if(visible&&isLiveModel(item?.modelId)){
     image.removeAttribute('src');node.classList.add('live-portrait');node.classList.remove('hidden');
     try{
       const current=playing?project.acts[playAct]?.steps[playStep]:step();
@@ -2753,8 +2778,9 @@ async function showPlayStep() {
     const caption = document.querySelector('#stage-caption');
     if (caption) caption.textContent = currentAct.name;
     const placeholder = document.querySelector('#stage-placeholder');
-    setStagePlaceholder(placeholder, '此句没有 VRM 角色', Boolean(modelAsset));
-    placeholder.style.display = 'grid';
+    // Act loading has its own overlay. A camera move or empty cast needs no placeholder.
+    setStagePlaceholder(placeholder, '');
+    placeholder.style.display = 'none';
     stageError = '';
     document.querySelector('.stage-frame')?.classList.remove('title-mode');
     document.querySelector('#title-preview')?.classList.add('hidden');
@@ -2799,8 +2825,10 @@ async function showPlayStep() {
     refreshChoiceItems();
     if (stage.visibleRecords.size || !stageError)
       placeholder.style.display = 'none';
-    else if (modelAsset && stageError)
+    else if (modelAsset && stageError) {
       placeholder.textContent = stageError;
+      placeholder.style.display = 'grid';
+    }
     document.querySelector('#player-start')?.classList.add('hidden');
     document.querySelector('#play-controls')?.classList.remove('hidden');
     document.querySelector('#auto-play-button')?.classList.remove('hidden');
@@ -3029,6 +3057,8 @@ function readSaveSlots() {
   return slots;
 }
 function closePlayerModal() {
+  const wasRoleDetails=saveModalMode==='role-details';
+  roleDetails.close(false);
   if (saveModalMode === 'gallery'||galleryStage||galleryCache) {
     stopGalleryMusic();
     galleryCache?.dispose();galleryCache=null;galleryStage?.destroy();
@@ -3043,12 +3073,16 @@ function closePlayerModal() {
     setTimeout(() => modal.remove(), 180);
   }
   if (playing) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
+  if(wasRoleDetails)document.querySelector('.title-bottom-menu [data-action="role-details"]')?.focus({preventScroll:true});
+}
+function openRoleDetails(){
+  closePlayerModal();document.querySelector('#player-modal')?.remove();clearAutoAdvance();saveModalMode='role-details';if(stage)stage.renderSuspended=true;return roleDetails.open();
 }
 function restartPlayerAutoSave() {
   clearInterval(playerAutoSaveTimer);
   if (mode !== 'player') return;
   playerAutoSaveTimer = setInterval(() => {
-    if (playing && !transitioning && project.acts[playAct]?.steps[playStep]) saveAutoSlot();
+    if (playing && !transitioning && project.acts[playAct]?.steps[playStep]) saveAutoSlot().catch(error=>toast('自动存档失败：'+error.message,true));
   }, 5 * 60_000);
 }
 function snapshotSlot(auto = false) {
@@ -3066,23 +3100,31 @@ function snapshotSlot(auto = false) {
     viewedDialogueIds: [...playViewedStepIds], inventory:structuredClone(playerInventory)
   };
 }
-function saveAutoSlot() {
-  const snapshot = snapshotSlot(true);
-  if (!snapshot) return;
-  const slots = readSaveSlots();
-  slots[0] = snapshot;
-  localStorage.setItem(saveKey(), JSON.stringify(slots));
-  if (saveModalMode === 'load') renderSaveModal('load');
+async function storeGameSnapshot(index,snapshot) {
+  if(!snapshot||saveScreenshotBusy)return false;
+  saveScreenshotBusy=true;
+  const key=saveKey();
+  try{
+    try{snapshot.thumbnail=await captureSaveThumbnail(document.querySelector('.player .stage-frame'),payload=>bridge('captureGameThumbnail',payload));}
+    catch(error){console.warn('存档截图暂时不可用',error.message);}
+    const current=project.acts[playAct]?.steps[playStep];
+    if(!playing||key!==saveKey()||current?.id!==snapshot.stepId)return false;
+    const slots=readSaveSlots();slots[index]=snapshot;
+    try{localStorage.setItem(key,JSON.stringify(slots));}
+    catch(error){if(!snapshot.thumbnail)throw error;delete snapshot.thumbnail;localStorage.setItem(key,JSON.stringify(slots));if(!snapshot.auto)toast('进度已保存，但存储空间不足，截图未保存。',true);}
+    return true;
+  }finally{saveScreenshotBusy=false;}
 }
-function saveSlot(index) {
-  if (!playing || !Number.isInteger(index) || index < 1 || index >= 20) return;
+async function saveAutoSlot() {
+  if(await storeGameSnapshot(0,snapshotSlot(true)))if(saveModalMode==='load'||saveModalMode==='save')renderSaveModal(saveModalMode);
+}
+async function saveSlot(index) {
+  if (!playing || saveScreenshotBusy || !Number.isInteger(index) || index < 1 || index >= 20) return;
   const slots = readSaveSlots();
   if (slots[index] && !confirm(`覆盖第 ${index + 1} 个存档吗？`)) return;
-  slots[index] = snapshotSlot();
-  if (!slots[index]) { toast('这句对白无法保存', true); return; }
-  localStorage.setItem(saveKey(), JSON.stringify(slots));
+  const snapshot=snapshotSlot();if(!await storeGameSnapshot(index,snapshot))return;
   renderSaveModal('save');
-  toast(`已保存到第 ${index + 1} 个存档`);
+  toast(snapshot.thumbnail?`已保存到第 ${index + 1} 个存档`:'进度已保存，截图暂时不可用。',!snapshot.thumbnail);
 }
 function loadSlot(index) {
   const slot = index === -1 ? readLegacyFirstSlot() : readSaveSlots()[index];
@@ -3112,7 +3154,7 @@ function renderSaveModal(view) {
       ? ` style="background-image:url('${escape(assetUrl(background))}')"` : '';
     const time = slot?.savedAt ? new Date(slot.savedAt).toLocaleString('zh-CN', { hour12: false }) : '旧版存档';
     return `<button type="button" class="save-slot ${slot ? 'filled' : 'vacant'} ${index === 0 ? 'auto-save-slot' : ''}" data-action="${view}-slot" data-index="${index}" ${(view === 'load' && !slot) || (view === 'save' && index === 0) ? 'disabled' : ''}>
-      <span class="save-thumb"${preview}><b>${String(index + 1).padStart(2, '0')}</b></span>
+      <span class="save-thumb"${preview}>${validSaveThumbnail(slot?.thumbnail)?`<img src="${slot.thumbnail}" alt="存档时的游戏画面">`:''}<b>${String(index + 1).padStart(2, '0')}</b></span>
       <span class="save-details"><strong>${index === 0 ? '自动存档' : `存档 ${String(index + 1).padStart(2, '0')}`} · ${slot ? escape(slot.actName || '剧情') : '空档位'}</strong>
         <small>${index === 0 && view === 'save' ? '每 5 分钟自动保存，不可手动覆盖' : slot ? escape(time) : view === 'save' ? '点击这里保存' : '尚未保存'}</small>
         <span>${slot ? escape(`${slot.speaker || '旁白'}：${slot.text || ''}`) : ''}</span>
@@ -3161,6 +3203,7 @@ function graphicsSettingsMarkup(){
  <label class="volume-line"><span>FSR 锐度</span><input type="range" data-graphics="sharpness" min="0" max="100" value="${settings.sharpness}" ${settings.upscale==='off'?'disabled':''}><output data-graphics-output="sharpness">${settings.sharpness}%</output></label>
  <label class="field"><span>阴影精度</span><select data-graphics="shadows">${[['off','关闭'],['low','低'],['medium','中'],['high','高']].map(([key,label])=>`<option value="${key}" ${settings.shadows===key?'selected':''}>${label}</option>`).join('')}</select></label>
  <p class="graphics-summary" data-graphics-summary>${plan?`场景绘制：${plan.inputWidth} × ${plan.inputHeight} → 显示：${plan.outputWidth} × ${plan.outputHeight}`:''}</p>
+ <label class="field"><span>MMD 头发与衣饰物理</span><select data-graphics="mmdPhysics">${[['balanced','开启 · 性能优先（默认）'],['full','开启 · 完整更新'],['off','关闭 · 降低人物计算负担']].map(([key,label])=>`<option value="${key}" ${settings.mmdPhysics===key?'selected':''}>${label}</option>`).join('')}</select></label>
  <p>超采样倍数指绘制像素总量；倍数越大，显卡负担越高。FSR 1.0 用较低分辨率重建画面，与超采样二选一。文字和菜单保持清晰。</p>
  <div class="inline-actions">${button('应用画面设置','apply-graphics')}${button('恢复默认画质','reset-graphics')}</div><hr>`;
 }
@@ -3193,6 +3236,170 @@ function renderSettingsModal() {
 }
 window.__androidBack=()=>{if(mode==='player'){if(document.querySelector('#player-modal'))closePlayerModal();else renderSettingsModal();}};
 window.__androidPause=()=>{if(mode==='player'){renderSettingsModal();music.pause();voice.pause();galleryMusic.pause();}};
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeUi33=async phase=>{
+ const assert=(value,message)=>{if(!value)throw Error(message);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ const controls=()=>[...document.querySelectorAll('#play-controls button')].map(b=>b.dataset.action).sort().join(',');
+ if(phase==='picker'){
+  await Promise.all([...portraitJobs.values()]);const theme=editorSettings.theme,revision=changeRevision;
+  document.querySelector('[data-action="game-ui"]').click();assert(document.querySelectorAll('#game-ui-picker input[type="radio"]').length===gameUiPresets.length,'Game presets missing');assert(!document.querySelector('#game-ui-picker input[type="color"],#game-ui-picker input[type="range"]'),'Picker must not be an editor');
+  document.querySelector('#game-ui-picker input[value="terminal"]').checked=true;document.querySelector('[data-action="close-game-ui"]').click();assert(changeRevision===revision,'Cancel changed project');
+  renderGameUiPicker();document.querySelector('#game-ui-picker input[value="pop"]').checked=true;document.querySelector('[data-action="apply-game-ui"]').click();assert(project.ui.gameTheme==='pop'&&dirty,'Choice not applied');assert(editorSettings.theme===theme,'Changed editor skin');renderGameUiPicker();return{ok:true,threePresets:true,cancelPreservesProject:true,editorUnaffected:true};
+ }
+ if(phase==='reopen'){
+  assert(project.ui.gameTheme==='terminal','Saved/exported game lost its skin');mode='player';playing=false;renderPlayer();await wait(900);assert(document.querySelector('.player')?.dataset.gameUi==='terminal','Player skin missing');return{ok:true,theme:project.ui.gameTheme,savedAndExported:true};
+ }
+ if(phase==='pop-title'){
+  document.querySelector('#game-ui-picker')?.remove();project.id='ui33-'+uid();lifetimeProgress=null;project.ui.dialogueImageId='';mode='player';playing=false;renderPlayer();audioSettings.master=0;applyAudioSettings();await wait(1500);
+  for(let i=0;i<200&&document.querySelector('#act-loading:not(.hidden)');i++)await wait(50);
+  window.__ui33controls=controls();window.__ui33title=[...document.querySelectorAll('.title-bottom-menu button')].map(b=>b.dataset.action).sort().join(',');assert(document.querySelector('.player')?.dataset.gameUi==='pop','Missing pop skin');return{ok:true,titleButtons:window.__ui33title};
+ }
+ if(phase==='pop-dialogue'){
+  playing=true;titleRequest++;playAct=project.acts.findIndex(a=>!isEvent(a)&&a.steps.length);playStep=0;preparedAct=-1;cameraActId='';await showPlayStep();showDialogue('角色 · 粉白舞台','这是你选择的粉白舞台界面。\n原来的按钮和功能全部保留。',true,project.acts[playAct].steps[0].characterId);finishTyping();playerInventory.pending=[];document.querySelector('#inventory-reward')?.remove();saveModalMode='';await wait(500);assert(!document.querySelector('#inventory-reward'),'Reward obscures UI screenshot');
+  assert(getComputedStyle(document.querySelector('#dialogue')).backgroundColor!=='rgba(0, 0, 0, 0)','Dialogue box is transparent');assert(controls()===window.__ui33controls,'Game buttons changed');return{ok:true,gameButtonsUnchanged:true,dialogueBackground:getComputedStyle(document.querySelector('#dialogue')).backgroundColor};
+ }
+ if(phase.endsWith('-settings')){
+  renderSettingsModal();assert(document.querySelector('[data-camera-speed]')&&document.querySelector('[data-graphics]')&&document.querySelector('[data-volume]'),'Lost existing game settings');await wait(450);return{ok:true,settingsPreserved:true,background:getComputedStyle(document.querySelector('.settings-box')).backgroundColor};
+ }
+ if(phase==='terminal-dialogue'){
+  closePlayerModal();await wait(220);project.ui.gameTheme='terminal';document.querySelector('.player').dataset.gameUi='terminal';showDialogue('记录员 · 青绿终端','记录已更新。\n镜头正在移动时，画面保持干净。',true,project.acts[playAct].steps[0].characterId);finishTyping();assert(controls()===window.__ui33controls,'Game buttons changed');await wait(400);return{ok:true,gameButtonsUnchanged:true,ink:getComputedStyle(document.querySelector('#dialogue-text')).color};
+ }
+ if(phase==='classic'){
+  closePlayerModal();await wait(220);project.ui.gameTheme='classic';document.querySelector('.player').dataset.gameUi='classic';showDialogue('角色 · 经典玻璃','原来的透明玻璃界面也可以继续使用。',true,project.acts[playAct].steps[0].characterId);finishTyping();assert(controls()===window.__ui33controls,'Classic buttons changed');assert(getComputedStyle(document.querySelector('#dialogue')).backgroundColor==='rgba(0, 0, 0, 0)','Classic appearance changed');return{ok:true,classicPreserved:true};
+ }
+ if(phase==='camera-empty'){
+  project.ui.gameTheme='terminal';document.querySelector('.player').dataset.gameUi='terminal';const pose=snapshotCamera(stage.camera),target={...pose,position:[pose.position[0]+12,pose.position[1],pose.position[2]]};
+  const blank={id:uid(),name:'空场景镜头测试',cast:emptyDialogueCast(),castSettings:{},steps:[{id:uid(),text:'没有人物也能正常显示旁白。',speaker:'旁白',characterId:'',cast:emptyDialogueCast(),choices:[],camera:pose},{id:uid(),text:'切镜头时没有转圈。',speaker:'旁白',characterId:'',cast:emptyDialogueCast(),choices:[],camera:target}]};project.acts.push(blank);playAct=project.acts.length-1;playStep=0;preparedAct=-1;
+  const opening=showPlayStep();await wait(10);assert(!document.querySelector('#act-loading').classList.contains('hidden'),'Act loading was removed');await opening;finishTyping();assert(document.querySelector('#stage-placeholder').style.display==='none'&&!document.querySelector('.player').textContent.includes('此句没有 VRM'),'Empty scene prompt still shown');
+  playStep=1;const flight=showPlayStep();for(let i=0;i<100&&!dialogueCamera.moving;i++)await wait(30);assert(dialogueCamera.moving,'Camera did not move');assert(document.querySelector('#act-loading').classList.contains('hidden'),'Camera travel shows act spinner');assert(!document.querySelector('#stage-placeholder .loading-spinner')&&document.querySelector('#stage-placeholder').style.display==='none','Camera placeholder spinner');dialogueCamera.finish();await flight;finishTyping();return{ok:true,cameraMovesWithoutSpinner:true,emptySceneWithoutWarning:true,realActLoadingRetained:true};
+ }
+ if(phase==='save-export'){
+  playing=false;mode='editor';closePlayerModal();project.ui.gameTheme='terminal';project.assets=[];project.characters=[];project.assetFolders=[];project.environments=[];project.items=[];project.books=[];project.acts=[project.acts.at(-1)];project.title={actors:[],logoImageId:'__none__'};selectedAct=0;selectedStep=0;activePanel='story';normalize();renderEditor();markDirty();await save();const exported=await bridge('exportGame',{folderName:'UI33导出验证'});return{ok:true,theme:project.ui.gameTheme,exported};
+ }
+ throw Error('Unknown UI smoke phase');
+};
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokePortrait35=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ if(phase==='setup'){
+  await Promise.all([...portraitJobs.values()]);const pool=project.characters.filter(c=>asset(c.modelId)?.type==='vrm'),role=pool[2]||pool[0];assert(role,'Need VRM');
+  const source=project.acts.find(a=>!isEvent(a)&&a.environmentId),cast=emptyDialogueCast();cast.center={characterId:role.id,motionId:'',motionOptions:{loop:true,placement:'inPlace',feet:'lock'},size:1,offsetX:0,offsetY:0,offsetZ:0,yaw:0,expressionWeights:{},props:[]};
+  const line={id:uid(),speaker:role.name,characterId:role.id,text:'头像保留自然的点头和歪头，整个人转身时仍从正面拍摄。',cast,choices:[],camera:{position:[0,1.35,4.3],target:[0,1.05,0],fov:32}};
+  project.acts=[{...structuredClone(source||{}),id:uid(),name:'头像自然动作测试',cast:emptyDialogueCast(),castSettings:{},steps:[line]}];project.title={actors:[],logoImageId:'__none__'};project.ui.gameTheme='pop';project.ui.dialogueImageId='';project.id='portrait35-'+uid();lifetimeProgress=null;mode='player';playing=false;renderPlayer();audioSettings.master=0;applyAudioSettings();await wait(300);playing=true;titleRequest++;playAct=playStep=0;preparedAct=-1;await showPlayStep();finishTyping();await wait(300);stage.renderSuspended=true;
+  const record=stage.livePortrait.record,head=record?.vrm.humanoid.getNormalizedBoneNode('head'),neck=record?.vrm.humanoid.getNormalizedBoneNode('neck'),hips=record?.vrm.humanoid.getNormalizedBoneNode('hips');assert(record&&head&&hips,'Live portrait missing');
+  window.__portrait35Data={record,head,neck,hips,headRest:head.quaternion.clone(),neckRest:neck?.quaternion.clone(),hipsRest:hips.quaternion.clone()};
+  paintPortrait35();window.__portrait35Data.cameraPosition=stage.livePortrait.camera.position.clone();window.__portrait35Data.cameraRotation=stage.livePortrait.camera.quaternion.clone();window.__portrait35Data.tip=new THREE.Vector3(0,.12,.06).applyMatrix4(head.matrixWorld).project(stage.livePortrait.camera);
+  assert(record===stage.visibleRecords.get(role.id),'Extra actor instance');return{ok:true,role:role.name,sameModel:true,bodyFraming:true};
+ }
+ const data=window.__portrait35Data,{record,head,neck,hips}=data;
+ function stableCamera(){assert(stage.livePortrait.camera.position.distanceTo(data.cameraPosition)<1e-6,'Camera followed head position');assert(stage.livePortrait.camera.quaternion.angleTo(data.cameraRotation)<1e-6,'Camera cancelled head rotation');}
+ if(phase==='nod'){
+  head.quaternion.copy(data.headRest).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),.42));const pose=head.quaternion.toArray();paintPortrait35();stableCamera();const tip=new THREE.Vector3(0,.12,.06).applyMatrix4(head.matrixWorld).project(stage.livePortrait.camera);assert(tip.distanceTo(data.tip)>.02,'Nod not visible');assert(head.quaternion.toArray().every((v,i)=>Math.abs(v-pose[i])<1e-10),'Portrait changed bones');return{ok:true,nodVisible:true,cameraDoesNotCancelNod:true,projectedMotion:tip.distanceTo(data.tip)};
+ }
+ if(phase==='tilt'){
+  head.quaternion.copy(data.headRest).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),-.3));if(neck)neck.quaternion.copy(data.neckRest).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),-.18));paintPortrait35();stableCamera();const tip=new THREE.Vector3(0,.12,.06).applyMatrix4(head.matrixWorld).project(stage.livePortrait.camera);assert(tip.distanceTo(data.tip)>.05,'Tilt not visible');return{ok:true,tiltAndNeckMotionVisible:true,cameraDoesNotPinHead:true,projectedMotion:tip.distanceTo(data.tip)};
+ }
+ if(phase==='body-turn'){
+  head.quaternion.copy(data.headRest);if(neck)neck.quaternion.copy(data.neckRest);
+  for(const angle of [0,Math.PI/2,Math.PI,Math.PI*1.5]){hips.quaternion.copy(data.hipsRest).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),angle));const before=hips.quaternion.toArray();paintPortrait35();const frame=portraitBodyFrame(record),direction=stage.livePortrait.camera.position.clone().sub(frame.target).normalize();assert(direction.dot(new THREE.Vector3(0,0,1).applyQuaternion(frame.orientation))>.85,'Back-facing portrait');assert(hips.quaternion.toArray().every((v,i)=>Math.abs(v-before[i])<1e-10),'Changed body motion');}
+  hips.quaternion.copy(data.hipsRest).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI));paintPortrait35();return{ok:true,fourBodyDirections:true,bodyTurnsRemainFrontFacing:true,scenePoseUnchanged:true};
+ }
+ if(phase==='animation'){
+  hips.quaternion.copy(data.hipsRest);head.quaternion.copy(data.headRest);if(neck)neck.quaternion.copy(data.neckRest);record.vrm.update(0);
+  const rest=data.headRest.toArray(),nod=data.headRest.clone().multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),.42)).toArray(),tracks=record.idleClip.tracks.filter(t=>![head.name+'.quaternion',head.uuid+'.quaternion'].includes(t.name)).map(t=>t.clone());tracks.push(new THREE.QuaternionKeyframeTrack(head.name+'.quaternion',[0,.5,1],[...rest,...nod,...rest]));
+  stage.poseRecord(record,new THREE.AnimationClip('点头动作验证',1,tracks),{id:'test-portrait35',name:'点头'},false,{loop:true,placement:'inPlace',feet:'free'});const samples=[];
+  for(const time of [0,.2,.4,.6,.8]){stage.restoreFootPose(record);record.mixer.setTime(time);stage.applyMotionPlacement(record);paintPortrait35();samples.push({camera:stage.livePortrait.camera.quaternion.clone(),relative:stage.livePortrait.camera.quaternion.clone().invert().multiply(head.getWorldQuaternion(new THREE.Quaternion()))});}
+  const range=Math.max(...samples.map(s=>s.relative.angleTo(samples[0].relative))),cameraRange=Math.max(...samples.map(s=>s.camera.angleTo(samples[0].camera)));assert(range>.2&&cameraRange<1e-5,'Mixer motion cancelled by camera');return{ok:true,realMixerMotionVisible:true,headAngleRange:range,cameraAngleRange:cameraRange};
+ }
+ throw Error('Unknown portrait phase');
+};
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeMmd36=async phase=>{
+ const {runMmdSmoke}=await import('./mmd-smoke.js');return runMmdSmoke(phase,{
+  blank:()=>defaultProject('MMD 模型测试'),cast:emptyDialogueCast,asset,project:()=>project,stage:()=>stage,roleDetails:()=>roleDetails,
+  setProject:p=>{project=p;normalize();lifetimeProgress=null;},
+  start:async()=>{mode='player';playing=false;renderPlayer();await new Promise(r=>setTimeout(r,400));audioSettings.master=0;applyAudioSettings();playing=true;titleRequest++;playAct=playStep=0;preparedAct=-1;await showPlayStep();finishTyping();},
+  details:async()=>{for(const role of project.characters)rememberDiscovery('character',role.id);return openRoleDetails();},
+  editor:async()=>{playing=false;mode='editor';activePanel='characters';selectedCharacter=0;renderEditor();markDirty();},save
+ });
+};
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeThumbnail37=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ if(phase==='tiles'){
+  playing=false;mode='editor';project.assets.push(...window.__thumbnail37Imported);const models=project.assets.filter(a=>a.type==='mmdCharacter');assert(models.length===3,'Need three MMD models');for(const model of models)project.characters.push({id:uid(),name:model.name,modelId:model.id,props:[],stories:[]});normalize();activePanel='characters';selectedCharacter=project.characters.findIndex(c=>c.modelId===models[0].id);activeAssetType='mmdCharacter';renderEditor();
+  modelThumbnails.refresh(project.assets.filter(a=>['mmdCharacter','fbxCharacter'].includes(a.type)));await modelThumbnails.ready;renderAssetDock();await wait(300);const generated=project.assets.filter(a=>['mmdCharacter','fbxCharacter'].includes(a.type));assert(generated.every(a=>a.thumbnailPath),'MMD or FBX thumbnail missing');assert(document.querySelectorAll('.model-thumbnail').length===3,'MMD tile does not use image');for(const image of document.querySelectorAll('.model-thumbnail')){await image.decode();assert(image.naturalWidth===512,'Wrong thumbnail dimensions');}window.__thumbnail37Path=models[0].thumbnailPath;return {ok:true,models:generated.map(a=>({type:a.type,path:a.thumbnailPath})),mmdTileImages:3};
+ }
+ if(phase==='folder'){
+  project.assets.push(...window.__thumbnail37Folder);const model=window.__thumbnail37Folder.find(a=>a.type==='mmdCharacter');assert(model.thumbnailSource==='folder'&&model.thumbnailPath,'Existing avatar ignored');const before=model.thumbnailPath;modelThumbnails.refresh([model]);await modelThumbnails.ready;assert(model.thumbnailPath===before&&model.thumbnailSource==='folder','Existing avatar replaced');renderAssetDock();await wait(200);return {ok:true,existingFolderAvatarCopied:true,notRephotographed:true};
+ }
+ if(phase==='mouth'){
+  const role=project.characters.find(c=>asset(c.modelId)?.type==='mmdCharacter'),record=await stage.loadModel(asset(role.modelId),role.id),manager=record.vrm.expressionManager,mesh=record.vrm.mesh;stage.renderSuspended=true;
+  manager.setValue('aa',.8);manager.setValue('あ',.95);manager.setValue('口横広げ',.8);manager.setValue('happy',.6);record.vrm.update(0);const aa=mesh.morphTargetDictionary['あ'],corner=mesh.morphTargetDictionary['口角上げ'];assert(mesh.morphTargetInfluences[aa]>.9,'Authored mouth absent');
+  stage.visibleRecords.set(role.id,record);stage.startTalking(role.id,true);for(let i=0;i<12;i++){record.talkingMouth.restore();record.talkingMouth.update(.05);record.vrm.update(0);assert(mesh.morphTargetInfluences[aa]<.7,'Authored mouth stacked');if(corner!==undefined)assert(mesh.morphTargetInfluences[corner]===0,'Smile mouth stacked');}
+  stage.stopTalking();assert(mesh.morphTargetInfluences[aa]>.9,'Authored mouth not restored');if(corner!==undefined)assert(Math.abs(mesh.morphTargetInfluences[corner]-.6)<1e-6,'Mouth corner not restored');manager.resetValues();record.vrm.update(0);return {ok:true,rawAndPresetMouthReplacedDuringSpeech:true,immediateRestoration:true};
+ }
+ if(phase==='save'){stage.renderSuspended=false;markDirty();await save();return {ok:true,thumbnailDependencies:project.assets.filter(a=>a.modelThumbnail).length};}
+ if(phase==='reopen'){playing=false;mode='editor';activeAssetType='mmdCharacter';renderEditor();const models=project.assets.filter(a=>['mmdCharacter','fbxCharacter'].includes(a.type));assert(models.length>=5&&models.every(a=>a.thumbnailPath),'Reopened thumbnails missing');assert(project.assets.filter(a=>a.modelThumbnail).length>=5,'Thumbnail files not saved');renderAssetDock();for(const image of document.querySelectorAll('.model-thumbnail'))await image.decode();return {ok:true,persistedThumbnails:true,images:document.querySelectorAll('.model-thumbnail').length};}
+ throw Error('Unknown thumbnail smoke');
+};
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokePhysics38=async phase=>{const {physicsSmoke}=await import('./physics-smoke.js');return physicsSmoke(phase,{project:()=>project,asset,stage:()=>stage,clear:async()=>{stage.clearLivePortrait();stage.clear();},save:()=>bridge('saveProject',{project:structuredClone(project)}),start:async()=>{mode='player';playing=false;renderPlayer();await new Promise(r=>setTimeout(r,400));playing=true;titleRequest++;playAct=playStep=0;preparedAct=-1;await showPlayStep();finishTyping();await new Promise(r=>setTimeout(r,200));}});};
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeJitter39=async phase=>{const {jitterProbe}=await import('./jitter-smoke.js');return jitterProbe(phase,{project:()=>project,stage:()=>stage});};
+function paintPortrait35(){
+ const record=stage.livePortrait.record;record.vrm.update(0);record.anchor.updateWorldMatrix(true,true);record.vrm.springBoneManager?.reset?.();stage.stylePipeline.render(0);stage.livePortrait.render(stage.renderer,stage.scene,stage.element);stage.livePortrait.camera.updateMatrixWorld(true);
+}
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeUi34=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ if(phase==='picker'){
+  await Promise.all([...portraitJobs.values()]);renderGameUiPicker();assert(document.querySelectorAll('#game-ui-picker input').length===4,'Four presets missing');document.querySelector('#game-ui-picker input[value="astral"]').checked=true;document.querySelector('[data-action="apply-game-ui"]').click();assert(project.ui.gameTheme==='astral','Fourth preset not applied');renderGameUiPicker();return{ok:true,fourPresets:true,oneCombinedNewStyle:true};
+ }
+ if(phase==='reopen'){
+  assert(project.ui.gameTheme==='astral','New style lost on save/export');mode='player';playing=false;renderPlayer();await wait(900);assert(document.querySelector('.player').dataset.gameUi==='astral','Player did not apply style');return{ok:true,persistedStyle:'astral'};
+ }
+ if(phase==='title'){
+  document.querySelector('#game-ui-picker')?.remove();project.id='ui34-test-'+uid();lifetimeProgress=null;project.ui.dialogueImageId='';mode='player';playing=false;renderPlayer();audioSettings.master=0;applyAudioSettings();for(let i=0;i<400&&(document.querySelectorAll('.title-bottom-menu button').length!==8||document.querySelector('#act-loading:not(.hidden)'));i++)await wait(50);
+  assert(document.querySelectorAll('.title-bottom-menu button').length===8&&document.querySelector('.title-bottom-menu [data-action="role-details"]'),'Role details title entry missing');await openRoleDetails();assert(roleDetails.roles.length===0&&roleDetails.viewer.modelCache.size===0&&document.querySelector('.role-details-empty').textContent.includes('还没有解锁'),'Title decorations unlocked roles');closePlayerModal();await wait(250);return{ok:true,originalButtonsPreserved:true,roleDetailsTitleEntry:true,lockedPageLoadsNoModels:true};
+ }
+ if(phase==='portrait-turn'){
+  playAct=project.acts.findIndex(a=>!isEvent(a)&&a.steps.length);playStep=0;project.acts[playAct].steps[0].itemGrants=[];playing=true;titleRequest++;preparedAct=-1;await showPlayStep();finishTyping();await wait(400);stage.renderSuspended=true;
+  const record=stage.livePortrait.record,head=record?.vrm.humanoid.getNormalizedBoneNode('head'),hips=record?.vrm.humanoid.getNormalizedBoneNode('hips');assert(head&&hips,'Live VRM missing');const initialHips=hips.quaternion.clone(),initialAnchor=record.anchor.quaternion.clone();
+  for(const angle of [0,Math.PI/2,Math.PI,Math.PI*1.5]){
+   hips.quaternion.copy(initialHips).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),angle));record.vrm.update(0);record.anchor.updateMatrixWorld(true);
+   const before=hips.quaternion.clone(),orientation=head.getWorldQuaternion(new THREE.Quaternion()).multiply(record.portraitRestHeadQuaternion.clone().invert());
+   stage.stylePipeline.render(0);stage.livePortrait.render(stage.renderer,stage.scene,stage.element);
+   const relative=stage.livePortrait.camera.position.clone().sub(head.getWorldPosition(new THREE.Vector3())).normalize();assert(relative.dot(new THREE.Vector3(0,0,1).applyQuaternion(orientation))>.85,'Avatar turned its back');assert(hips.quaternion.toArray().every((n,i)=>Math.abs(n-before.toArray()[i])<1e-10)&&record.anchor.quaternion.toArray().every((n,i)=>Math.abs(n-initialAnchor.toArray()[i])<1e-10),'Portrait moved the scene actor');
+  }
+  hips.quaternion.copy(initialHips).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI));record.vrm.update(0);record.anchor.updateMatrixWorld(true);stage.stylePipeline.render(0);stage.livePortrait.render(stage.renderer,stage.scene,stage.element);
+  assert(stage.livePortrait.record===record&&stage.visibleRecords.has(record.vrm===stage.vrm?stage.portraitActorKey:stage.portraitActorKey),'Did not reuse actor');return{ok:true,animatedTurnsTested:4,portraitFacesPlayer:true,sceneActorUnchanged:true,sameModelAndExpressions:true};
+ }
+ if(phase==='dialogue'){
+  showDialogue('角色 · 星曜剧场','这是一套融合后的游戏界面。\n金色姓名、白色对白，场景保持清晰。',true,project.acts[playAct].steps[playStep].characterId);finishTyping();await wait(500);assert(getComputedStyle(document.querySelector('#dialogue-speaker')).color==='rgb(244, 210, 116)','Name is not gold');assert(document.querySelectorAll('#play-controls button').length===8,'Game controls changed');return{ok:true,goldenName:true,framelessDialogue:true,existingControls:true};
+ }
+ if(phase==='settings'){
+  renderSettingsModal();await wait(350);assert(document.querySelector('[data-graphics]')&&document.querySelector('[data-volume]')&&document.querySelector('[data-camera-speed]'),'Settings missing');return{ok:true,existingSettings:true};
+ }
+ if(phase==='save'){
+  closePlayerModal();await wait(250);stage.renderSuspended=true;const baseline=await captureSaveThumbnail(document.querySelector('.player .stage-frame'),payload=>bridge('captureGameThumbnail',payload));assert(validSaveThumbnail(baseline),'Native screenshot failed');renderSaveModal('save');const probe=document.querySelector('.modal-box');probe.style.background='#00ff5a';probe.style.boxShadow='0 0 0 30px #00ff5a';await saveSlot(1);const slot=readSaveSlots()[1];assert(validSaveThumbnail(slot?.thumbnail),'Manual save image missing');await saveAutoSlot();assert(validSaveThumbnail(readSaveSlots()[0]?.thumbnail),'Auto save image missing');assert(document.querySelectorAll('.save-thumb img').length===2,'Thumbnails not shown');
+  const bitmap=await createImageBitmap(await fetch(slot.thumbnail).then(r=>r.blob()));assert(bitmap.width===320&&bitmap.height===180,'Screenshot is not 16:9');const canvas=document.createElement('canvas');canvas.width=320;canvas.height=180;const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0);const pixels=ctx.getImageData(0,0,320,180).data;assert(Math.max(...pixels.filter((_,i)=>i%4===0))-Math.min(...pixels.filter((_,i)=>i%4===0))>30,'Screenshot is blank');let green=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]<40&&pixels[i+1]>200&&pixels[i+2]>45&&pixels[i+2]<140)green++;assert(green<288,'Save menu color probe leaked into screenshot');bitmap.close();window.__ui34Thumbnail=slot.thumbnail;
+  renderSaveModal('load');assert(document.querySelector('[data-action="load-slot"][data-index="1"] img'),'Read screen lost thumbnail');await wait(350);return{ok:true,manualAndAutoImages:true,gameScreenshotWithoutMenus:true,jpegDimensions:[320,180],storedBytes:slot.thumbnail.length,readScreenThumbnail:true};
+ }
+ if(phase==='gallery'){
+  closePlayerModal();await wait(220);const originals=project.characters.filter(c=>asset(c.modelId)),base=originals.find(c=>asset(c.modelId).type==='vrm');assert(originals.length>=3,'Need three roles');
+  for(const role of originals){role.detailsIdleId='';rememberDiscovery('character',role.id);}
+  while(project.characters.length<14){const copy={...structuredClone(base),id:uid(),name:'队列测试 '+project.characters.length,detailsIdleId:''};project.characters.push(copy);rememberDiscovery('character',copy.id);}
+  const locked={...structuredClone(base),id:uid(),name:'绝不能显示的角色'};project.characters.push(locked);await openRoleDetails();const viewer=roleDetails.viewer,renderer=viewer.renderer;
+  assert(!document.querySelector('#role-details').textContent.includes(locked.name)&&!viewer.modelCache.has('details:'+locked.id),'Locked role was exposed');assert(roleDetails.roles.length===14,'Locked role not filtered');assert(!document.querySelector('#role-details [data-action="gallery-character"]'),'Role-name buttons remain');
+  await roleDetails.select(6);assert(viewer.modelCache.size===11&&viewer.visibleRecords.size<=5,'Neighbour cache is not bounded');assert(roleDetails.viewer.renderer===renderer,'Selection recreated renderer');const centre=viewer.visibleRecords.get('details:'+roleDetails.roles[6].id);assert(centre&&Math.abs(centre.anchor.rotation.y)<.001&&Math.abs(centre.anchor.position.x)<.001,'Current role not front-centred');
+  const time=centre.currentAction.time;await wait(400);assert(Math.abs(centre.currentAction.time-time)>.01&&centre.mixer.timeScale===1,'Role froze on a frame');
+  const canvas=document.querySelector('.role-details-canvas');canvas.dispatchEvent(new WheelEvent('wheel',{deltaY:60,bubbles:true,cancelable:true}));await roleDetails.ready;assert(roleDetails.index===7,'Mouse wheel did not switch');canvas.dispatchEvent(new PointerEvent('pointerdown',{pointerId:1,button:0,clientX:500,clientY:300,bubbles:true}));canvas.dispatchEvent(new PointerEvent('pointerup',{pointerId:1,button:0,clientX:580,clientY:300,bubbles:true}));await roleDetails.ready;assert(roleDetails.index===6,'Swipe did not switch');assert(viewer.modelCache.size<=11&&!viewer.modelCache.has('details:'+locked.id),'Cache window leaked');
+  closePlayerModal();assert(!viewer.running&&!roleDetails.isOpen,'Details close leaked renderer');project.characters=originals;
+  originals[0].description='角色简介显示在左侧。切换角色时，介绍会一起更新。';originals[0].stories=[{text:'这是角色故事的展示位置。作者可以在角色编辑器里填写每个人的经历。',unlockLines:0},{text:'未解锁的故事内容不应显示',unlockLines:1000}];await openRoleDetails();await roleDetails.select(0);assert(document.querySelector('.role-story-locked')&&!document.querySelector('.role-details-stories').textContent.includes('未解锁的故事内容不应显示'),'Story unlock rule lost');const middle=Math.min(2,originals.length-1);originals[middle].description=originals[0].description;originals[middle].stories=structuredClone(originals[0].stories);await roleDetails.select(middle);await wait(500);
+  return{ok:true,lockedRolesCompletelyHidden:true,upToElevenCached:true,onlyOnscreenRolesDrawn:true,singleRendererForSwitches:true,liveIdle:true,frontCentre:true,wheelAndSwipe:true,closeDisposes:true,storyUnlockPreserved:true};
+ }
+ if(phase==='progress'){
+  closePlayerModal();await wait(220);renderProgressModal();await wait(350);assert(document.querySelectorAll('.chapter-card').length,'Chapter cards missing');return{ok:true,chapterCardsPreserved:true};
+ }
+ if(phase==='export'){
+  playing=false;mode='editor';closePlayerModal();project.assets=[];project.characters=[];project.assetFolders=[];project.environments=[];project.items=[];project.books=[];project.acts=[{id:uid(),name:'截图验证',steps:[{id:uid(),speaker:'旁白',text:'星曜剧场导出检查。',cast:emptyDialogueCast(),characterId:'',choices:[]}]}];project.title={actors:[],logoImageId:'__none__'};selectedAct=0;selectedStep=0;activePanel='story';normalize();renderEditor();markDirty();await save();return{ok:true,theme:project.ui.gameTheme,exported:await bridge('exportGame',{folderName:'UI34导出验证'})};
+ }
+ throw Error('Unknown UI34 phase');
+};
 window.__vrmSmokeGallery32=async()=>{
  const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));await Promise.all([...portraitJobs.values()]);
  const originals=project.characters.filter(c=>asset(c.modelId)),vrm=originals.find(c=>asset(c.modelId).type==='vrm'),fbx=originals.find(c=>asset(c.modelId).type==='fbxCharacter'),pool=[vrm,fbx,...originals.filter(c=>c!==vrm&&c!==fbx)].filter(Boolean);assert(pool.length>=4,'Need four gallery actors');
@@ -3213,7 +3420,7 @@ window.__vrmSmokeOrganize31=async()=>{
  const roles=project.characters.slice(0,2),motions=project.assets.filter(a=>a.type==='motion');assert(roles.length===2&&motions.length,'工程缺少角色或动作');syncAssetOrganization(project,uid);
  assert(project.assetFolders.find(f=>f.id===commonMotionFolderId)?.locked,'通用动作文件夹未锁定');for(const role of project.characters)assert(project.assetFolders.find(f=>f.id===motionFolderId(role.id))?.locked,'缺少角色动作文件夹');
  const privateMotion={...structuredClone(motions[0]),id:uid(),name:'专属动作检查',folderId:motionFolderId(roles[0].id)};project.assets.push(privateMotion);markDirty();
- activePanel='characters';selectedCharacter=0;renderInspector();let select=document.querySelector('[data-field="character.galleryMotionId"]');assert([...select.options].some(o=>o.value===privateMotion.id),'自己的动作未显示');selectedCharacter=1;renderInspector();select=document.querySelector('[data-field="character.galleryMotionId"]');assert(![...select.options].some(o=>o.value===privateMotion.id),'其他角色的动作泄露');
+ activePanel='characters';selectedCharacter=0;renderInspector();let select=document.querySelector('[data-field="character.detailsIdleId"]');assert([...select.options].some(o=>o.value===privateMotion.id),'自己的动作未显示');selectedCharacter=1;renderInspector();select=document.querySelector('[data-field="character.detailsIdleId"]');assert(![...select.options].some(o=>o.value===privateMotion.id),'其他角色的动作泄露');
  activeAssetType='motion';currentAssetFolder.motion='';renderAssetDock();assert(!document.querySelector('#asset-dock-body [data-action=add-asset-folder]'),'允许创建普通动作文件夹');currentAssetFolder.motion=commonMotionFolderId;renderAssetDock();assert(!document.querySelector('#asset-dock-body [data-action=rename-asset-folder]'),'通用动作文件夹可以改名');
  activeAssetType='music';currentAssetFolder.music='';renderAssetDock();assert(document.querySelector('[data-type=music][role=tab]')&&document.querySelector('[data-type=effect][role=tab]')&&!document.querySelector('[data-type=audio][role=tab]'),'音乐与音效未分开');
  activePanel='story';const source=project.acts.find(a=>!isEvent(a)&&a.steps.length),copy=await pasteObject({kind:'act',source},true),before=copy.steps.length,line=copy.steps[0],confirmOriginal=window.confirm;window.confirm=()=>true;
@@ -3397,6 +3604,10 @@ function galleryMusicMarkup() {
     </div></div>` : '<p class="gallery-empty">还没有可鉴赏的音乐。作者可以在“素材”中勾选歌曲。</p>';
 }
 function galleryCharacterMarkup(editorPreview = false) {
+  if(editorPreview){
+    const item=project.characters[selectedCharacter];if(!item)return '<p>还没有角色。</p>';
+    return `<div class="editor-role-preview-layout"><aside id="gallery-character-text">${galleryStoryMarkup(item,Infinity,0,true)}</aside><div class="gallery-character-portrait"><div id="gallery-character-canvas"></div></div><aside class="editor-role-stories"><h3>角色故事</h3>${(item.stories||[]).filter(story=>story.text?.trim()).map((story,i)=>`<h4>故事 ${i+1}</h4><p class="gallery-character-text">${escape(story.text)}</p>`).join('')}</aside></div>`;
+  }
   const { item, count, hasSave } = editorPreview
     ? { item: project.characters[selectedCharacter], count: Infinity, hasSave: false }
     : galleryCharacterData();
@@ -3472,12 +3683,11 @@ async function showCharacterEditorPreview() {
   if(bindingMode){overlay.innerHTML=`<div class="binding-preview-tools"><div>${button('看整个人物','binding-view-reset')}${button('放大绑定部位','binding-view-bone')}${button('返回人物鉴赏','binding-view-close')}</div><small>左键拖动旋转 · Shift＋左键拖动平移 · 滚轮缩放 · 右键拖动也能平移</small></div>`;}
   else if(overlay.querySelector('.character-preview-box')){stage.bindingView.disable();refreshCharacterGallery(overlay,true);}
   else {stage.bindingView.disable();overlay.innerHTML = `<div class="gallery-box gallery-box-character character-preview-box">
-    <header><div><small>EXTRAS</small><h2>附加鉴赏</h2></div></header>
-    <div class="gallery-main-tabs"><button type="button" disabled>图像鉴赏</button><button type="button" disabled>乐曲鉴赏</button><button type="button" class="active">人物鉴赏</button></div>
+    <header><div><small>CHARACTER DETAILS</small><h2>角色详情预览</h2></div></header>
     <div class="gallery-content">${galleryCharacterMarkup(true)}</div></div>`;}
   overlay.querySelector('.gallery-character-picker .active')?.scrollIntoView({ block: 'nearest' });
   overlay.classList.remove('hidden');
-  document.querySelector('#stage-caption').textContent = bindingMode?'物品绑定 · 可转动视角':'人物鉴赏预览';
+  document.querySelector('#stage-caption').textContent = bindingMode?'物品绑定 · 可转动视角':'角色详情预览';
   document.querySelector('#stage-placeholder').style.display = 'none';
   document.querySelector('#dialogue')?.classList.remove('visible');
   updateSpeakerPortrait('', false);
@@ -3493,21 +3703,22 @@ async function showCharacterEditorPreview() {
   stage.resize();
   stage.sceneAnimationsPaused=()=>Boolean(saveModalMode||document.hidden);
   if(JSON.stringify(stage.renderSettings)!==JSON.stringify(normalizeRender(project.render)))stage.setRenderSettings(project.render);
-  if(!bindingMode){if(item.props?.length)stage.setCameraAngle(0);else stage.setPortraitCamera();}
-  await stage.show(asset(item.modelId), asset(item.galleryMotionId), {}, 'center',
-    { size: 1.23, yaw: item.galleryYaw || 0 }, `gallery:${item.id}`,{},'',{bindings:item.props||[],visibleIds:(item.props||[]).map(p=>p.id),assets:project.assets});
+  if(!bindingMode)stage.setCameraAngle(0);
+  const idle=motionsForCharacter(project,item.id).find(motion=>motion.id===item.detailsIdleId)||null;
+  await stage.show(asset(item.modelId), idle, {}, 'center',
+    { size: 1, yaw: 0 }, `gallery:${item.id}`,{loop:true,placement:'inPlace',feet:'lock'},'',{bindings:item.props||[],visibleIds:(item.props||[]).map(p=>p.id),assets:project.assets});
   if (activePanel === 'characters' && project.characters[selectedCharacter]?.id === item.id) {
     const record=stage.visibleRecords.get(`gallery:${item.id}`);
     const key=`gallery:${item.id}`,old=editorGalleryKeys.indexOf(key);if(old>=0)editorGalleryKeys.splice(old,1);editorGalleryKeys.push(key);while(editorGalleryKeys.length>3)await stage.releaseModel(editorGalleryKeys.shift());
     if(bindingMode)stage.bindingView.enable(record,`gallery:${item.id}`);
     for(const select of document.querySelectorAll('[data-prop-field=bone]')){const value=select.value;select.innerHTML=availablePropBones(record).map(b=>`<option value="${escape(b.value)}">${escape(b.label)}</option>`).join('');select.value=value;}
-    refreshGalleryFrameControl(item);
-    if (item.galleryMotionId) stage.setMotionPoseFrame(item.galleryPoseFrame);
+    if(!idle&&!record.detailIdleInstalled){record.idleClip=createDetailIdle(record);record.detailIdleInstalled=true;record.currentMotionToken='';stage.poseRecord(record,null,null,false,{loop:true,placement:'inPlace',feet:'lock'});}
   }
 }
 function refreshCharacterGallery(root,editor=false){
  const data=editor?{item:project.characters[selectedCharacter],count:Infinity}:galleryCharacterData(),item=data.item;if(!item)return;
  const index=editor?editorGalleryStoryIndex:galleryStoryIndex,unlocked=editor||hasDiscovered('character',item.id),action=editor?'preview-story':'gallery-story';
+ if(editor&&root.querySelector('.editor-role-preview-layout')){root.querySelector('#gallery-character-text').innerHTML=galleryStoryMarkup(item,Infinity,0,true);root.querySelector('.editor-role-stories').innerHTML='<h3>角色故事</h3>'+(item.stories||[]).filter(story=>story.text?.trim()).map((story,i)=>`<h4>故事 ${i+1}</h4><p class="gallery-character-text">${escape(story.text)}</p>`).join('');return;}
  for(const button of root.querySelectorAll('.gallery-character-picker button'))button.classList.toggle('active',button.dataset.characterId===item.id);
  const text=root.querySelector('#gallery-character-text');if(text)text.innerHTML=galleryStoryMarkup(item,data.count,index,editor);
  const tabs=root.querySelector('.gallery-story-tabs');if(tabs)tabs.innerHTML=button('角色详情',action,`data-index="0" class="${index===0?'active':''}"`)+(item.stories||[]).map((story,i)=>story.text?.trim()?button(`角色故事 · ${i+1}${data.count>=Math.max(0,Number(story.unlockLines)||0)?'':' 🔒'}`,action,`data-index="${i+1}"`):'').join('');
@@ -3528,6 +3739,7 @@ function selectGalleryCharacter(){
  return gallerySelection=galleryCache.select(key,{key,item,model,motion,fingerprint:JSON.stringify([model?.id,motion?.id])});
 }
 function renderGalleryModal() {
+  if(galleryTab==='characters'){openRoleDetails();return;}
   clearAutoAdvance();
   saveModalMode = 'gallery';if(stage)stage.renderSuspended=true;
   galleryCache?.cancel();if(galleryStage){galleryStage.renderSuspended=true;galleryStage.element.remove();}
@@ -3536,7 +3748,7 @@ function renderGalleryModal() {
   document.querySelector('#player-modal')?.remove();
   document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal gallery-modal" role="dialog" aria-modal="true" aria-label="附加鉴赏">
     <div class="modal-box gallery-box ${galleryTab === 'characters' ? 'gallery-box-character' : ''}"><header><div><small>EXTRAS</small><h2>附加鉴赏</h2></div>${button('关闭 ×', 'close-modal')}</header>
-      <div class="gallery-main-tabs">${[['images','图像鉴赏'],['music','乐曲鉴赏'],['characters','人物鉴赏'],['items','物品鉴赏']].map(([key,label]) =>
+      <div class="gallery-main-tabs">${[['images','图像鉴赏'],['music','乐曲鉴赏'],['items','物品鉴赏']].map(([key,label]) =>
         button(label, 'gallery-tab', `data-tab="${key}" class="${galleryTab === key ? 'active' : ''}"`)).join('')}</div>
       <div class="gallery-content">${content}</div>
     </div></section>`);
@@ -3631,7 +3843,7 @@ async function importAssets(type, folderId = '', titleImport = '', galleryImage 
     if (type === 'image') item.galleryImage = galleryImage;
   }
   if (folderId) openAssetFolders.add(folderId);
-  if (titleImport === 'modelId') project.title.actors.push(...imported.map((model,index)=>newTitleActor(uid(),model.id,project.title.actors.length+index)));
+  if (titleImport === 'modelId') project.title.actors.push(...imported.filter(model=>['vrm','fbxCharacter','mmdCharacter'].includes(model.type)).map((model,index)=>newTitleActor(uid(),model.id,project.title.actors.length+index)));
   else if(titleImport==='motionId'){const actor=project.title.actors.at(-1);if(actor)actor.motionId=imported[0].id;}
   else if (titleImport) project.title[titleImport] = imported[0].id;
   project.assets.push(...imported); markDirty(); renderSidebar(); renderInspector(); toast(`已导入 ${imported.length} 个素材`);
@@ -3639,12 +3851,13 @@ async function importAssets(type, folderId = '', titleImport = '', galleryImage 
   return imported;
 }
 function renderPlayer() {
+  roleDetails.close(false);
   dialogueCamera?.dispose();dialogueCamera=null;
   previewResizer?.dispose();previewResizer=null;
   events.cancel();
   stage?.destroy();
   if (!project) { app.innerHTML = '<div class="fatal">游戏工程文件不完整</div>'; return; }
-  app.innerHTML = `<div class="player"><div class="stage-frame">
+  app.innerHTML = `<div class="player" data-game-ui="${normalizeGameUi(project.ui.gameTheme)}"><div class="stage-frame">
     <div id="scene-bg"></div><div id="stage-canvas"></div><div id="stage-placeholder"></div>
     <div id="speaker-portrait" class="speaker-portrait hidden"><img alt="说话角色头像"></div>
     <div id="dialogue" class="dialogue"><div class="speaker" id="dialogue-speaker"></div><div id="dialogue-text"></div></div>
@@ -3698,6 +3911,13 @@ document.addEventListener('click', async event => {
     return;
   }
   const action = node.dataset.action;
+  if(action==='game-ui'&&mode==='editor'){renderGameUiPicker();return;}
+  if(action==='close-game-ui'){document.querySelector('#game-ui-picker')?.remove();document.querySelector('[data-action="game-ui"]')?.focus();return;}
+  if(action==='apply-game-ui'&&mode==='editor'){
+    const value=normalizeGameUi(document.querySelector('#game-ui-picker input:checked')?.value);
+    if(project.ui.gameTheme!==value){project.ui.gameTheme=value;markDirty();renderAssetDock();}
+    document.querySelector('#game-ui-picker')?.remove();document.querySelector('[data-action="game-ui"]')?.focus();toast('游戏 UI 已应用；点击试玩查看完整效果。');return;
+  }
   if(action==='edit-dialogue-camera'){await beginDialogueCameraEdit();return;}
   if(action==='clear-dialogue-camera'){delete step().camera;markDirty();renderInspector();updatePreview();return;}
   if(action==='restart-character-preview'){try{for(const record of stage?.visibleRecords.values()||[])record.currentMotionToken='';await updatePreview();stage?.restartCharacterPreview();}catch(error){toast(error.message,true);}return;}
@@ -3908,7 +4128,7 @@ document.addEventListener('click', async event => {
       else await importAssets(node.dataset.type, node.dataset.folderId || '', node.dataset.titleImport || '');
     } else if (action === 'upload-character-portrait') {
       const item = project.characters[selectedCharacter];
-      if(asset(item?.modelId)?.type==='vrm'){toast('VRM 固定使用可动模型头像，无需上传图片。');return;}
+      if(isLiveModel(item?.modelId)){toast('VRM 和 MMD 固定使用可动模型头像，无需上传图片。');return;}
       const imported = await bridge('importAsset', { type:'image', single:true });
       if (item && imported?.length) {
         imported[0].galleryImage = false;
@@ -3917,7 +4137,7 @@ document.addEventListener('click', async event => {
       }
     } else if (action === 'capture-character-portrait') {
       const item = project.characters[selectedCharacter];
-      if(asset(item?.modelId)?.type==='vrm')return;
+      if(isLiveModel(item?.modelId))return;
       if (item?.modelId) await ensureCharacterPortrait(item, true, true);
     } else if (action === 'cancel-image-import') {
       document.querySelector('#image-import-modal')?.remove();
@@ -4004,11 +4224,12 @@ document.addEventListener('click', async event => {
     }
     else if (action === 'save-game') renderSaveModal('save');
     else if (action === 'load-game') renderSaveModal('load');
-    else if (action === 'save-slot') saveSlot(Number(node.dataset.index));
+    else if (action === 'save-slot') await saveSlot(Number(node.dataset.index));
     else if (action === 'load-slot') loadSlot(Number(node.dataset.index));
     else if (action === 'load-legacy-slot') loadSlot(-1);
     else if (action === 'close-modal') closePlayerModal();
     else if (action === 'settings') renderSettingsModal();
+    else if (action === 'role-details') await openRoleDetails();
     else if (action === 'gallery') {
       galleryTab = 'images'; galleryPage = 0; galleryStoryIndex = 0;
       renderGalleryModal();
@@ -4429,6 +4650,12 @@ document.addEventListener('change', event => {
   if (item?.modelId && portraitIsAutomatic(item)) ensureCharacterPortrait(item, true);
 });
 document.addEventListener('keydown', event => {
+  const uiPicker=document.querySelector('#game-ui-picker');
+  if(uiPicker){
+    if(event.key==='Escape'){event.preventDefault();document.querySelector('[data-action="close-game-ui"]')?.click();}
+    if(event.key==='Tab'){const targets=[...uiPicker.querySelectorAll('button,input:checked')];const first=targets[0],last=targets.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
+    return;
+  }
   if (event.key === 'Escape' && document.querySelector('#gallery-lightbox')) {
     document.querySelector('#gallery-lightbox').remove(); return;
   }

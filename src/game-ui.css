@@ -1,0 +1,204 @@
+/* New skins are strictly scoped to the game. The classic skin stays intact. */
+.player[data-game-ui="pop"] {
+  --ui-ink: #48484d; --ui-muted: #69696f; --ui-accent: #ff4c89;
+  --ui-line: #dedee2; --ui-panel: #fffffff5; --ui-button: linear-gradient(#fff,#f1f1f3);
+  --ui-radius: 16px; --ui-shadow: inset 0 0 0 2px #fff, 0 3px 0 #cfcfd4, 0 6px 12px #22222214;
+  --glass-ink: var(--ui-ink); --glass-muted: var(--ui-muted);
+}
+.player[data-game-ui="terminal"] {
+  --ui-ink: #e4e4d4; --ui-muted: #bac6ad; --ui-accent: #82c9b1;
+  --ui-line: #588b77; --ui-panel: #20251af5; --ui-button: linear-gradient(#303829,#20271d);
+  --ui-radius: 2px; --ui-shadow: inset 0 0 0 2px #131910, 0 2px 0 #10150f;
+  --glass-ink: var(--ui-ink); --glass-muted: var(--ui-muted);
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .stage-frame { container-type: size; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .settings-box { width: min(840px,90%); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) :is(.scene-top-actions,.scene-quick-actions) {
+  border: 0; padding: 0; gap: 8px; border-radius: 0; box-shadow: none; background: none; backdrop-filter: none;
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) :is(.scene-icon-button,.scene-quick-actions button,#choice-list button,.title-bottom-menu button,.player-modal button,.inventory-reward-dialogue button) {
+  color: var(--ui-ink); background: var(--ui-button); border: 1px solid var(--ui-line);
+  border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); text-shadow: none; backdrop-filter: none;
+  -webkit-text-stroke: 0; font-weight: 600;
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) :is(.scene-icon-button,.scene-quick-actions button,#choice-list button,.title-bottom-menu button,.player-modal button,.inventory-reward-dialogue button):hover:not(:disabled) {
+  border-color: var(--ui-accent); color: var(--ui-accent); background: var(--ui-button); backdrop-filter: none;
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) :is(button.active,.modal-tabs button.active,.gallery-story-tabs button.active,.gallery-character-picker button.active,.gallery-main-tabs button.active) {
+  background: var(--ui-accent); color: #fff; border-color: var(--ui-accent); box-shadow: inset 0 0 0 2px #ffffff44;
+}
+.player[data-game-ui="terminal"] :is(button.active,.modal-tabs button.active,.gallery-story-tabs button.active,.gallery-character-picker button.active,.gallery-main-tabs button.active) { color: #16261c; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) #player-start .title-bottom-menu {
+  background: none; border: 0; border-radius: 0; box-shadow: none; padding: 0; gap: 1%;
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) #player-start .title-bottom-menu button {
+  color: var(--ui-ink); background: var(--ui-button); border: 1px solid var(--ui-line); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); text-shadow: none;
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) #player-start .title-bottom-menu button[data-action="play"] {
+  background: var(--ui-accent); color: #fff; border-color: var(--ui-accent); box-shadow: var(--ui-shadow);
+}
+.player[data-game-ui="terminal"] #player-start .title-bottom-menu button[data-action="play"] { color: #17281e; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .dialogue:not(.custom-dialogue) {
+  left: 18%; right: 7%; bottom: 13%; min-height: 19%; max-height: 32%;
+  padding: 2.5% 3%; overflow: visible; border: 1px solid var(--ui-line);
+  border-radius: var(--ui-radius); background: #ffffffe0 !important; box-shadow: 0 4px 0 #d2d2d36b; backdrop-filter: none;
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .dialogue:not(.custom-dialogue) #dialogue-text {
+  font-size: clamp(15px,2cqw,29px); color: var(--ui-ink); text-shadow: none; -webkit-text-stroke: 0; line-height: 1.55;
+  max-height: 22cqh; overflow-y: auto; pointer-events: auto; scrollbar-width: thin;
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .dialogue:not(.custom-dialogue) .speaker {
+  position: absolute; left: -1px; top: 0; transform: translateY(-90%); min-width: 24%; max-width: 85%;
+  margin: 0; padding: .2em 2.7em .2em 1em; font-size: clamp(15px,2.2cqw,30px); line-height: 1.35;
+  border: 2px solid #fff; border-radius: 999px; background: var(--ui-accent); color: #fff;
+  -webkit-text-stroke: 0; text-shadow: none; overflow-wrap: anywhere;
+}
+.player[data-game-ui="pop"] .dialogue:not(.custom-dialogue) .speaker::after {
+  content: '☆'; position: absolute; left: auto; right: .5em; top: 50%; bottom: auto; width: auto; height: auto;
+  transform: translateY(-50%); color: #fff; font-size: 1.15em; background: none; border: 0; box-shadow: none;
+}
+.player[data-game-ui="pop"] .dialogue:not(.custom-dialogue)::after {
+  content: '✦'; position: absolute; right: 1.5%; bottom: 5%; color: var(--ui-accent); font-size: clamp(17px,2.2cqw,30px); text-shadow: 0 2px #fff;
+}
+.player[data-game-ui="terminal"] .dialogue:not(.custom-dialogue) {
+  background: linear-gradient(110deg,#222719f5,#18211af5) !important; border: 1px solid #82b89a; border-radius: 2px;
+  box-shadow: inset 0 0 0 3px #11180f, inset 0 0 0 4px #588b7755, 0 5px 20px #0005;
+}
+.player[data-game-ui="terminal"] .dialogue:not(.custom-dialogue) .speaker {
+  min-width: 22%; border: 1px solid #82b89a; border-radius: 1px; background: #293627; color: #a2dfc5; padding-right: 1em; letter-spacing: .08em;
+}
+.player[data-game-ui="terminal"] .dialogue:not(.custom-dialogue) .speaker::after { content: none; }
+.player[data-game-ui="terminal"] .dialogue:not(.custom-dialogue)::after {
+  content: ''; position: absolute; right: 2%; bottom: 12%; width: 10px; height: 3px; background: #cb8e7c;
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .player-modal { background: #10101870; backdrop-filter: none; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .player-modal > .modal-box {
+  background: var(--ui-panel); border: 1px solid var(--ui-line); border-radius: var(--ui-radius);
+  box-shadow: 0 16px 60px #0005; color: var(--ui-ink); backdrop-filter: none;
+}
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .modal-box > header { border-bottom: 2px solid var(--ui-accent); padding-bottom: 10px; margin-bottom: 12px; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .settings-box h3 { background: #505057; color: #fff; border-radius: 999px; padding: 5px 14px; font-size: 1em; }
+.player[data-game-ui="terminal"] .settings-box h3 { background: #283727; border: 1px solid var(--ui-line); border-radius: 0; color: var(--ui-accent); letter-spacing: .06em; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .player-modal :is(input,select) { color: var(--ui-ink); border-color: var(--ui-line); background: var(--ui-button); border-radius: calc(var(--ui-radius) / 2); accent-color: var(--ui-accent); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .player-modal input[type="range"] { background: transparent; box-shadow: none; }
+.player[data-game-ui="terminal"] .player-modal select option { background: #242c20; color: #e4e4d4; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) :is(.choice-missing,.gallery-loading-state) { color: var(--ui-muted); }
+.player[data-game-ui="terminal"] :is(.choice-missing,.chapter-caption-heading b) { color: #dfa08c; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .player-modal :is(.gallery-image-tile,.chapter-card,.inventory-card) { background: var(--ui-button) !important; border-color: var(--ui-line) !important; border-radius: var(--ui-radius); color: var(--ui-ink); box-shadow: var(--ui-shadow); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .player-modal :is(.chapter-card-caption,.gallery-character-portrait,.gallery-character-portrait.locked,.save-thumb) { background: var(--ui-panel); color: var(--ui-ink); border-radius: var(--ui-radius); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) :is(.chapter-total strong,.chapter-caption-heading b,.chapter-card-caption small,.book-card b,.book-card small,.gallery-record) { color: var(--ui-ink); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .chapter-progress i { background: var(--ui-accent); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .gallery-story-tabs button::before { border-color: var(--ui-accent); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .gallery-story-tabs button.active::before { background: var(--ui-accent); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .inventory-reward-dialogue { background: var(--ui-panel); color: var(--ui-ink); border-color: var(--ui-line); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .act-loading { background: var(--ui-panel); color: var(--ui-ink); backdrop-filter: none; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) .loading-spinner i { background: var(--ui-accent); }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) button:focus-visible { outline: 2px solid var(--ui-accent); }
+.player[data-game-ui="terminal"] .player-modal { scrollbar-color: #82c9b1 #20251a; }
+.player[data-game-ui="terminal"] .volume-line output { color: #dfa08c; }
+.player:is([data-game-ui="pop"],[data-game-ui="terminal"],[data-game-ui="astral"]) #player-start .knowledge-title-button { color: var(--ui-ink); background: var(--ui-button); border-color: var(--ui-line); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); }
+.book-reader[data-game-ui="pop"] { background: #e6dee3; color: #48484d; }
+.book-reader[data-game-ui="pop"] :is(header,footer) { background: #fffffff5; border-color: #ff4c89; border-block: 2px solid #ff4c89; }
+.book-reader[data-game-ui="pop"] button { color: #48484d; background: linear-gradient(#fff,#f1f1f3); border: 1px solid #dedee2; border-radius: 12px; box-shadow: inset 0 0 0 2px #fff,0 2px 0 #cfcfd4; }
+.book-reader[data-game-ui="terminal"] { background: #252d20; color: #e4e4d4; }
+.book-reader[data-game-ui="terminal"] :is(header,footer) { background: #20251af5; border-block: 1px solid #588b77; backdrop-filter: none; }
+.book-reader[data-game-ui="terminal"] button { color: #82c9b1; background: #293627; border: 1px solid #588b77; border-radius: 2px; }
+
+/* One combined cinematic/space-and-pop skin, with the existing game controls. */
+.player[data-game-ui="astral"] {
+  --ui-ink:#e9ebf0; --ui-muted:#bac3d4; --ui-accent:#f0d185;
+  --ui-line:#8f9db15e; --ui-panel:#172236f5; --ui-button:linear-gradient(135deg,#35415b,#202b40);
+  --ui-radius:8px; --ui-shadow:inset 0 1px #ffffff18,0 3px 10px #050b1833;
+  --glass-ink:var(--ui-ink); --glass-muted:var(--ui-muted);
+}
+.player[data-game-ui="astral"] .stage-frame::after,.player[data-game-ui="astral"] .stage-frame.shadows-on::after {
+  background:linear-gradient(transparent 50%,#10182a22 70%,#10182a99 85%,#080c19ee);
+}
+.player[data-game-ui="astral"] .stage-frame.title-mode::after { background:linear-gradient(transparent 60%,#10182a99); }
+.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue) {
+  left:18%;right:8%;bottom:14%;min-height:0;max-height:32%;padding:0 2%;
+  border:0;border-radius:0;box-shadow:none;background:none!important;text-align:center;
+}
+.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue) .speaker {
+  position:relative;left:auto;top:auto;transform:none;width:100%;min-width:0;max-width:none;
+  background:none;color:#f4d274;border:0;border-radius:0;padding:0 0 .8em;
+  font-size:clamp(17px,2cqw,28px);letter-spacing:.06em;text-shadow:0 2px 5px #0a1024;
+}
+.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue) .speaker::after {
+  content:'';position:absolute;left:5%;right:5%;bottom:.3em;top:auto;transform:none;
+  width:90%;height:1px;background:linear-gradient(90deg,transparent,#d2dae266 30%,#d2dae266 70%,transparent);box-shadow:none;
+}
+.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue) .speaker::before {
+  content:'✦';position:absolute;left:50%;bottom:-.06em;transform:translateX(-50%);color:#e8e5db99;font-size:.7em;
+}
+.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue) #dialogue-text {
+  color:#f3f4f6;text-shadow:0 2px 4px #0a1024,0 1px 2px #0a1024;font-size:clamp(16px,1.8cqw,26px);line-height:1.6;font-weight:600;
+}
+.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue)::after { content:none; }
+.player[data-game-ui="astral"] #play-controls :is(.scene-top-actions .scene-icon-button,.scene-quick-actions button) {
+  border:1px solid #ffffff33;border-radius:6px;background:#18203580;color:#f6f6f3;box-shadow:none;font-weight:500;
+}
+.player[data-game-ui="astral"] #play-controls :is(.scene-top-actions .scene-icon-button,.scene-quick-actions button):hover { background:#344257d9;color:#f0d185;border-color:#f0d185; }
+.player[data-game-ui="astral"] #play-controls .scene-quick-actions .auto-play-button.active { border-color:#f0d185;color:#f0d185; }
+.player[data-game-ui="astral"] #player-start .title-bottom-menu button { background:#e9e9e2;color:#283247;border-color:#f9faf2;border-radius:6px;font-weight:700; }
+.player[data-game-ui="astral"] #player-start .title-bottom-menu button[data-action="play"] { background:#f0d185;color:#253045;border-color:#f6e6b5; }
+.player[data-game-ui="astral"] #player-start .title-bottom-menu button:hover { background:#fff7d2;color:#253045; }
+.player[data-game-ui="astral"] .player-modal > .modal-box {
+  background-image:radial-gradient(#94b8f315 1px,transparent 1px),radial-gradient(ellipse at 90% 0,#334f7a99,transparent 65%),linear-gradient(135deg,#24314b,#121a2a);
+  background-size:28px 28px,auto,auto;border:1px solid #91a5c86e;border-radius:8px;box-shadow:0 20px 70px #05091a88;
+}
+.player[data-game-ui="astral"] .modal-box > header { border-bottom:1px solid #e3d6b871; }
+.player[data-game-ui="astral"] .modal-box header small { color:#e2c88e;letter-spacing:.15em; }
+.player[data-game-ui="astral"] #player-modal .modal-box header [data-action="close-modal"] { color:#283247;background:#f0d185;border-color:#f6e6b5;border-radius:6px;font-weight:700; }
+.player[data-game-ui="astral"] .settings-box h3 { color:#f0d185;background:#111b2c55;border:0;border-left:3px solid #f0d185;border-radius:0;padding:6px 12px; }
+.player[data-game-ui="astral"] .player-modal :is(button.active,.modal-tabs button.active,.gallery-story-tabs button.active,.gallery-character-picker button.active,.gallery-main-tabs button.active) { background:#f0d185;color:#273246;border-color:#f6e6b5; }
+.player[data-game-ui="astral"] :is(#choice-list button,.player-modal button):hover:not(:disabled) { color:#f7dc99;border-color:#f0d185; }
+.player[data-game-ui="astral"] .player-modal :is(button.active,.modal-tabs button.active):hover:not(:disabled) { color:#273246; }
+.player[data-game-ui="astral"] .player-modal select option { color:#e9ebf0;background:#202c42; }
+.player[data-game-ui="astral"] .player-modal :is(.chapter-card,.inventory-card) { border:1px solid #b6c1d389!important;border-radius:7px;overflow:hidden; }
+.player[data-game-ui="astral"] #player-modal .chapter-card-caption { background:#e6e8e7;color:#263248;border-radius:0; }
+.player[data-game-ui="astral"] #player-modal .chapter-card-caption :is(h3,b,span,small) { color:#263248; }
+.player[data-game-ui="astral"] #player-modal .chapter-art-placeholder :is(b,small) { color:#506078; }
+.player[data-game-ui="astral"] .chapter-card-caption small { color:#477ba8; }
+.player[data-game-ui="astral"] .chapter-progress i { background:linear-gradient(90deg,#7dae55,#b0d973); }
+.player[data-game-ui="astral"] .player-modal .gallery-character-portrait { background:radial-gradient(ellipse at 50% 10%,#46648f55,#101b2d);border-radius:7px; }
+.player[data-game-ui="astral"] .gallery-character-content h3::after { background:#d6bb8177; }
+.player[data-game-ui="astral"] .gallery-story-tabs button::before { border-color:#f0d185;background:#1a263d; }
+.player[data-game-ui="astral"] .gallery-story-tabs button.active::before { background:#f0d185; }
+.player[data-game-ui="astral"] .gallery-load-notice { background:#1c2c45e8;color:#e9ebf0;border:1px solid #bca56d99; }
+.player[data-game-ui="astral"] .choice-missing { color:#edbfab; }
+.player[data-game-ui="astral"] .settings-body { scrollbar-color:#adbed078 #101b2d; }
+.player[data-game-ui="astral"] .inventory-reward-dialogue { border-color:#d6bb81; }
+.book-reader[data-game-ui="astral"] { background:#1a263d;color:#e9ebf0; }
+.book-reader[data-game-ui="astral"] :is(header,footer) { background:#172236f5;border-block:1px solid #d6bb8177;backdrop-filter:none; }
+.book-reader[data-game-ui="astral"] button { background:#e9e9e2;color:#283247;border:1px solid #f6e6b5;border-radius:6px; }
+
+/* Author's picker only, with illustrative thumbnails and no skin editor. */
+.game-ui-picker-card { width: min(1140px,94vw); max-height: 92vh; overflow-y: auto; }
+.game-ui-picker-card p,.game-ui-picker-card footer span { font-size: 13px; line-height: 1.6; }
+.game-ui-options { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; margin: 20px 0; }
+.game-ui-option { position: relative; display: flex; flex-direction: column; gap: 8px; cursor: pointer; border: 2px solid #b8c4cc; border-radius: 12px; padding: 10px; }
+.game-ui-option:has(input:checked) { border-color: #159780; box-shadow: 0 0 0 2px #15978030; }
+.game-ui-option:has(input:focus-visible) { outline: 2px solid #159780; outline-offset: 3px; }
+.game-ui-option > input { position: absolute; right: 15px; bottom: 39px; width: 16px; height: 16px; accent-color: #159780; }
+.game-ui-option > strong { padding-right: 22px; }.game-ui-option > small { font-size: 12px; line-height: 1.6; }
+.game-ui-picker-card footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.game-ui-sample { aspect-ratio: 16 / 9; position: relative; display: block; overflow: hidden; border-radius: 6px; background: linear-gradient(150deg,#92b6bb,#657b70); font-size: 11px; color: #fff; }
+.sample-menu { position: absolute; right: 5%; top: 7%; border: 1px solid #fff9; border-radius: 999px; padding: 3px 8px; background: #fff3; }
+.sample-dialogue { position: absolute; left: 8%; right: 8%; bottom: 25%; padding: 7px 10px; }
+.sample-dialogue b { display: block; margin-bottom: 5px; }.sample-dialogue > span { display: block; }
+.sample-controls { position: absolute; bottom: 5%; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; }.sample-controls i { font-style: normal; padding: 3px 7px; background: #fff3; border: 1px solid #fff9; border-radius: 999px; }
+[data-sample-ui="classic"] .sample-dialogue { text-shadow: 0 1px 2px #000; }
+[data-sample-ui="pop"] :is(.sample-menu,.sample-controls i) { background: #fafafa; color: #505057; border: 1px solid #ccc; box-shadow: inset 0 0 0 1px #fff,0 2px 0 #bbb; border-radius: 5px; }
+[data-sample-ui="pop"] .sample-dialogue { background: #ffffffdd; border-radius: 10px; color: #505057; padding-top: 13px; }
+[data-sample-ui="pop"] .sample-dialogue b { position: absolute; top: -15px; left: 0; padding: 3px 15px; background: #ff4c89; color: #fff; border: 1px solid #fff; border-radius: 999px; }
+[data-sample-ui="pop"] .sample-dialogue b::after { content: ' ☆'; }
+[data-sample-ui="terminal"] { background: linear-gradient(150deg,#506258,#303c2b); }
+[data-sample-ui="terminal"] :is(.sample-menu,.sample-controls i,.sample-dialogue) { background: #22291df2; color: #dfe5d6; border: 1px solid #82b89a; border-radius: 0; box-shadow: inset 0 0 0 2px #151e12; }
+[data-sample-ui="terminal"] .sample-dialogue b { color: #82c9b1; border-bottom: 1px solid #588b77; padding-bottom: 3px; }
+[data-sample-ui="astral"] { background:linear-gradient(150deg,#51617e,#131d31); }
+[data-sample-ui="astral"] .sample-dialogue { text-align:center;color:#f3f4f6;text-shadow:0 1px 3px #0b162a; }
+[data-sample-ui="astral"] .sample-dialogue b { color:#f0d185;border-bottom:1px solid #cbb58588;padding-bottom:4px; }
+[data-sample-ui="astral"] :is(.sample-menu,.sample-controls i) { background:#192a44b0;border:1px solid #a7b9d177;border-radius:3px; }
+@media(max-width:980px) { .game-ui-options { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:600px) { .game-ui-options { grid-template-columns:1fr; }.game-ui-sample { max-height:180px; }.game-ui-picker-card footer { flex-wrap:wrap; } }

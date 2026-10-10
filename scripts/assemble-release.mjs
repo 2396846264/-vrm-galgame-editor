@@ -9,7 +9,7 @@ if(!process.env.GH_TOKEN || !process.env.GITHUB_REPOSITORY)throw Error('Missing 
 if(!/^[A-Za-z0-9._-]+\.zip$/.test(manifest.name))throw Error('Invalid release filename');
 const file=await open(manifest.name,'w');const hash=createHash('sha256');let total=0;
 try{
-  for(const chunk of manifest.chunks){
+  const download=async chunk=>{
     if(!/^[0-9a-f]{40}$/.test(chunk.sha))throw Error('Invalid blob SHA');
     const response=await fetch(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/git/blobs/${chunk.sha}`,{
       headers:{Authorization:`Bearer ${process.env.GH_TOKEN}`,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
@@ -20,7 +20,11 @@ try{
     const bytes=Buffer.from(blob.content,'base64');if(bytes.length!==chunk.bytes)throw Error('Chunk length mismatch');
     const gitHash=createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
     if(gitHash!==chunk.sha)throw Error('Chunk integrity mismatch');
-    await file.writeFile(bytes);hash.update(bytes);total+=bytes.length;
+    return bytes;
+  };
+  for(let index=0;index<manifest.chunks.length;index+=4){
+    const parts=await Promise.all(manifest.chunks.slice(index,index+4).map(download));
+    for(const bytes of parts){await file.writeFile(bytes);hash.update(bytes);total+=bytes.length;}
     console.log(`Received ${total} / ${manifest.bytes} bytes`);
   }
 }finally{await file.close();}

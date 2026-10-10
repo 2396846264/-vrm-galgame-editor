@@ -19,10 +19,10 @@ export function syncAssetOrganization(project,uid=()=>crypto.randomUUID()){
  const valid=new Set(folders.filter(f=>f.type==='motion'&&(f.id===commonMotionFolderId||f.motionScope==='character'&&f.id===motionFolderId(f.characterId))).map(f=>f.id));
  for(const item of project.assets.filter(a=>a.type==='motion'))if(!valid.has(item.folderId)||!project.motionFolderVersion&&item.id.startsWith('preset-'))item.folderId=commonMotionFolderId;
  const allowed=(roleId,id)=>!id||motionsForCharacter(project,roleId).some(a=>a.id===id);
- for(const role of project.characters)if(!allowed(role.id,role.galleryMotionId))role.galleryMotionId='';
+ for(const role of project.characters){if(!allowed(role.id,role.galleryMotionId))role.galleryMotionId='';if(role.detailsIdleId&&!allowed(role.id,role.detailsIdleId))role.detailsIdleId='';}
  for(const act of project.acts||[])for(const line of act.steps||[])for(const cast of Object.values(line.cast||{}))if(!allowed(cast.characterId,cast.motionId))cast.motionId='';
  for(const actor of project.title?.actors||[])if(!allowed(actor.characterId,actor.motionId))actor.motionId='';
  project.motionFolderVersion=1;
 }
 export function setAudioKind(project,item,kind){if(!['music','effect'].includes(kind))throw Error('声音分类无效');item.audioKind=kind;item.folderId='';for(const r of soundReferences(project))if(r.holder[r.key]===item.id&&r.kind!==kind)r.holder[r.key]='';}
-export function copyCharacterMotions(project,original,copy,uid){const map=new Map();for(const asset of project.assets.filter(a=>a.type==='motion'&&a.folderId===motionFolderId(original.id))){const duplicate={...structuredClone(asset),id:uid(),folderId:motionFolderId(copy.id)};map.set(asset.id,duplicate.id);project.assets.push(duplicate);}if(map.has(copy.galleryMotionId))copy.galleryMotionId=map.get(copy.galleryMotionId);}
+export function copyCharacterMotions(project,original,copy,uid){const map=new Map();for(const asset of project.assets.filter(a=>a.type==='motion'&&a.folderId===motionFolderId(original.id))){const duplicate={...structuredClone(asset),id:uid(),folderId:motionFolderId(copy.id)};map.set(asset.id,duplicate.id);project.assets.push(duplicate);}for(const field of ['galleryMotionId','detailsIdleId'])if(map.has(copy[field]))copy[field]=map.get(copy[field]);}

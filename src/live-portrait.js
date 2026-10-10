@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {setShoulderPortraitCamera} from './portrait-camera.js';
+import {portraitBodyFrame} from './portrait-body-frame.js';
 
 // A second camera views the existing actor. No second VRM, mixer or WebGL context.
 export class LivePortrait {
@@ -8,15 +9,17 @@ export class LivePortrait {
     if(typeof document==='undefined')return;
     if(!this.overlayScene){
       this.overlayScene=new THREE.Scene();this.overlayCamera=new THREE.OrthographicCamera(-1,1,1,-1,.1,2);this.overlayCamera.position.z=1;
-      this.overlayTextures=[false,true].map(soft=>{
+      this.overlayTextures=[{soft:false},{soft:true},{soft:false,dark:true},{soft:true,dark:true}].map(({soft,dark})=>{
         const canvas=document.createElement('canvas');canvas.width=1;canvas.height=128;const context=canvas.getContext('2d'),gradient=context.createLinearGradient(0,0,0,128);
-        for(const [at,color]of [[0,'#00000000'],[.49,'#00000000'],[.63,`rgba(219,232,239,${soft?.05:.07})`],[.8,`rgba(230,239,244,${soft?.18:.34})`],[1,`rgba(249,251,253,${soft?.48:.86})`]])gradient.addColorStop(at,color);
+        const stops=dark?[[0,'#00000000'],[.5,'#00000000'],[.7,'#10182a22'],[.85,'#10182a99'],[1,soft?'#080c19cc':'#080c19ee']]:[[0,'#00000000'],[.49,'#00000000'],[.63,`rgba(219,232,239,${soft?.05:.07})`],[.8,`rgba(230,239,244,${soft?.18:.34})`],[1,`rgba(249,251,253,${soft?.48:.86})`]];
+        for(const [at,color]of stops)gradient.addColorStop(at,color);
         context.fillStyle=gradient;context.fillRect(0,0,1,128);const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;return texture;
       });
       this.overlayMaterial=new THREE.MeshBasicMaterial({map:this.overlayTextures[0],transparent:true,depthTest:false,depthWrite:false,toneMapped:false});
       this.overlayScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),this.overlayMaterial));
     }
-    this.overlayMaterial.map=this.overlayTextures[element.closest('.stage-frame')?.classList.contains('shadows-on')?1:0];
+    const frame=element.closest('.stage-frame'),dark=frame?.closest('.player')?.dataset.gameUi==='astral';
+    this.overlayMaterial.map=this.overlayTextures[(dark?2:0)+(frame?.classList.contains('shadows-on')?1:0)];
     renderer.render(this.overlayScene,this.overlayCamera);
   }
   set(record,node){this.record=record;this.node=node;}
@@ -28,8 +31,8 @@ export class LivePortrait {
     if(!area.width||!area.height||!rect.width||!rect.height)return;
     const head=record.vrm.humanoid.getNormalizedBoneNode('head');if(!head)return;
     record.anchor.updateWorldMatrix(true,true);
-    const scale=record.anchor.getWorldScale(new THREE.Vector3()).y;
-    setShoulderPortraitCamera(camera,head.getWorldPosition(new THREE.Vector3()),scale,record.anchor.getWorldQuaternion(new THREE.Quaternion()),rect.height/rect.width);
+    const {target,orientation,scale}=portraitBodyFrame(record);
+    setShoulderPortraitCamera(camera,target,scale,orientation,rect.height/rect.width);
     camera.layers.set(31);
     const viewport=renderer.getViewport(new THREE.Vector4()),scissor=renderer.getScissor(new THREE.Vector4());
     const state={background:scene.background,autoClear:renderer.autoClear,scissor:renderer.getScissorTest(),shadow:renderer.shadowMap.autoUpdate,visible:record.vrm.scene.visible};

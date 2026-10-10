@@ -4,12 +4,14 @@ const mouthAliases = [['aa', 'a'], ['ih', 'i'], ['ou', 'u'], ['ee', 'e'], ['oh',
 export function createTalkingMouth(manager, random = Math.random) {
   const available = manager?.expressions?.map(e => e.expressionName) || [];
   const names = mouthAliases.map(aliases => aliases.map(alias => available.find(name => name.toLowerCase() === alias)).find(Boolean)).filter(Boolean);
+  const controlled=available.filter(name=>mouthAliases.flat().includes(name.toLowerCase()));
   if (!names.length) return null;
   let running = false, baseline = null, remaining = 0, pause = 0, phase = 0, amplitude = 0;
   let selected = 0, previous = -1, target = names.map(() => 0), values = names.map(() => 0);
   function restore() {
+    manager?.setTalkingMouthWeights?.(null);
     if (!baseline) return;
-    names.forEach((name, i) => manager.setValue(name, baseline[i])); baseline = null;
+    controlled.forEach((name, i) => manager.setValue(name, baseline[i])); baseline = null;
   }
   return {
     start() { restore(); running = true; remaining = 0; pause = 0; phase = 0; previous = -1; values.fill(0); },
@@ -35,8 +37,10 @@ export function createTalkingMouth(manager, random = Math.random) {
       target = names.map((_, i) => pause > 0 || i !== selected ? 0 : amplitude * Math.max(0.2, pulse));
       const blend = 1 - Math.exp(-24 * dt);
       values = values.map((value, i) => value + (target[i] - value) * blend);
-      baseline = names.map(name => manager.getValue(name) || 0);
+      baseline = controlled.map(name => manager.getValue(name) || 0);
+      controlled.forEach(name=>manager.setValue(name,0));
       names.forEach((name, i) => manager.setValue(name, values[i]));
+      manager.setTalkingMouthWeights?.(Object.fromEntries(names.map((name,i)=>[name,values[i]])));
     },
     stop() { restore(); running = false; values.fill(0); pause = 0; },
     diagnostics() { return { running, names: [...names], values: [...values], pause }; }

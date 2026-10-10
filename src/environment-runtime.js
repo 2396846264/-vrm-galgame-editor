@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {validateEnvironment} from './environment-schema.js';
 import {SceneAnimationPlayer} from './scene-animations.js';
+import {loadMmdMesh} from './mmd-loader.js';
 const url=a=>`https://project.galgame/${a.path.split('/').map(encodeURIComponent).join('/')}${a.revision?'?v='+encodeURIComponent(a.revision):''}`;
 export function createImagePlaneMaterial(texture,node={}) {
   return new (node.unlit===false?THREE.MeshStandardMaterial:THREE.MeshBasicMaterial)({
@@ -30,7 +31,7 @@ export class EnvironmentRuntime {
         if(token!==this.request){disposeTree(root);return this.objects;}
         let object=new THREE.Group();root.add(object);
         if(n.kind==='ground'){object.add(new THREE.Mesh(new THREE.PlaneGeometry(n.width,n.height),new THREE.MeshStandardMaterial({color:n.color||'#b7bfae',roughness:1,side:THREE.DoubleSide})));object.children[0].receiveShadow=true;object.children[0].castShadow=true;}else if(n.kind==='model'){
-          const gltf=await this.loader.loadAsync(url(assets.find(a=>a.id===n.assetId)));object.add(gltf.scene);
+          const model=assets.find(a=>a.id===n.assetId),gltf=/\.(pmx|pmd)$/i.test(model.path)?{scene:await loadMmdMesh(model,url)}:await this.loader.loadAsync(url(model));object.add(gltf.scene);
           if(gltf.animations?.length)models.set(n.id,{nodeId:n.id,assetId:n.assetId,name:n.name||'GLB 模型',root:gltf.scene,clips:gltf.animations,mixer:new THREE.AnimationMixer(gltf.scene)});
           gltf.scene.traverse(o=>{if(o.isMesh){o.castShadow=n.castShadow!==false;o.receiveShadow=true;}});
         }else if(n.kind==='light'){

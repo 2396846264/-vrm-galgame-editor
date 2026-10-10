@@ -2,10 +2,12 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {LivePortrait} from '../src/live-portrait.js';
 import {setShoulderPortraitCamera} from '../src/portrait-camera.js';
+import {capturePortraitBodyFrame} from '../src/portrait-body-frame.js';
 const scene=new THREE.Scene(),anchor=new THREE.Group(),root=new THREE.Group(),head=new THREE.Bone(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());
-head.position.y=1.7;root.add(head,mesh);anchor.add(root);scene.add(anchor,new THREE.DirectionalLight());root.visible=false;scene.background=new THREE.Color('red');
+const hips=new THREE.Bone(),chest=new THREE.Bone(),neck=new THREE.Bone();hips.position.y=1;chest.position.y=.35;neck.position.y=.15;head.position.y=.2;hips.add(chest);chest.add(neck);neck.add(head);root.add(hips,mesh);anchor.add(root);scene.add(anchor,new THREE.DirectionalLight());root.visible=false;scene.background=new THREE.Color('red');
 const other=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());scene.add(other);
-const portrait=new LivePortrait();portrait.set({anchor,vrm:{scene:root,humanoid:{getNormalizedBoneNode:()=>head}}},{isConnected:true,classList:{contains:()=>false},getBoundingClientRect:()=>({left:2,bottom:400,width:100,height:150})});
+const vrm={scene:root,humanoid:{getNormalizedBoneNode:name=>({hips,chest,neck,head}[name])}};
+const portrait=new LivePortrait();portrait.set({anchor,vrm,portraitBodyReference:capturePortraitBodyFrame(vrm,anchor)},{isConnected:true,classList:{contains:()=>false},getBoundingClientRect:()=>({left:2,bottom:400,width:100,height:150})});
 let autoClear=true,viewport=new THREE.Vector4(0,0,800,450),scissor=viewport.clone(),scissorTest=false,throws=false,rendered=0;
 const renderer={get autoClear(){return autoClear;},set autoClear(v){autoClear=v;},shadowMap:{autoUpdate:true},getViewport:v=>v.copy(viewport),getScissor:v=>v.copy(scissor),getScissorTest:()=>scissorTest,setViewport:(...args)=>{viewport=args[0].isVector4?args[0].clone():new THREE.Vector4(...args);},setScissor:(...args)=>{scissor=args[0].isVector4?args[0].clone():new THREE.Vector4(...args);},setScissorTest:v=>scissorTest=v,clearDepth(){},render:(s,c)=>{assert.equal(root.visible,true);assert.equal(c.layers.test(mesh.layers),true);assert.equal(c.layers.test(other.layers),false);assert.equal(renderer.shadowMap.autoUpdate,false);if(throws)throw Error('GPU unavailable');rendered++;}};
 const element={getBoundingClientRect:()=>({left:0,bottom:450,width:800,height:450})};
@@ -19,7 +21,18 @@ const scaled=new THREE.OrthographicCamera();setShoulderPortraitCamera(scaled,new
 assert.equal(scaled.left,-.4);assert.ok(scaled.position.distanceTo(new THREE.Vector3(-1.7,3.5,3.4))<1e-9);
 const turned=new THREE.OrthographicCamera();setShoulderPortraitCamera(turned,new THREE.Vector3(0,1.7,0),1,new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2));
 assert.ok(turned.position.distanceTo(new THREE.Vector3(1.7,1.75,.85))<1e-9);assert.deepEqual(mesh.position.toArray(),framed.toArray());
-const first=portrait.camera.position.clone();head.position.x=.3;portrait.render(renderer,scene,element);assert.ok(portrait.camera.position.x-first.x>.29);
+const first=portrait.camera.position.clone(),view=portrait.camera.quaternion.clone();head.position.x=.04;head.rotation.set(.35,-.2,.3);neck.rotation.x=.2;scene.updateMatrixWorld(true);portrait.render(renderer,scene,element);
+assert.ok(portrait.camera.position.distanceTo(first)<1e-9,'Do not pin head movement by tracking its location');assert.ok(portrait.camera.quaternion.angleTo(view)<1e-7,'Do not cancel nods/tilts by rotating the camera with the head');
+assert.ok(head.getWorldQuaternion(new THREE.Quaternion()).angleTo(new THREE.Quaternion())>.3,'Head motion must remain intact');
+head.rotation.set(0,0,0);neck.rotation.set(0,0,0);
+for(const angle of [Math.PI/2,Math.PI,Math.PI*1.5]){
+ hips.rotation.y=angle;scene.updateMatrixWorld(true);const before=hips.quaternion.toArray();portrait.render(renderer,scene,element);
+ const toCamera=portrait.camera.position.clone().sub(head.getWorldPosition(new THREE.Vector3())).normalize(),forward=new THREE.Vector3(0,0,1).applyQuaternion(hips.getWorldQuaternion(new THREE.Quaternion()));
+ assert.ok(toCamera.dot(forward)>.85,'Body turns should still show the front');assert.deepEqual(hips.quaternion.toArray(),before);
+}
+hips.position.x=.3;const moved=portrait.camera.position.clone();portrait.render(renderer,scene,element);assert.ok(portrait.camera.position.x-moved.x>.29,'Follow whole-body travel');
+portrait.record.portraitBodyReference=capturePortraitBodyFrame(vrm,anchor);portrait.render(renderer,scene,element);
+assert.ok(portrait.camera.position.clone().sub(head.getWorldPosition(new THREE.Vector3())).distanceTo(new THREE.Vector3(-.85,.05,1.7))<1e-8,'Calibrate rig/rest-axis offsets');
 throws=true;assert.throws(()=>portrait.render(renderer,scene,element));assert.equal(root.visible,false);assert.equal(mesh.layers.mask,1);assert.equal(renderer.shadowMap.autoUpdate,true);
 portrait.clear();portrait.render(renderer,scene,element);
-console.log(JSON.stringify({ok:true,sameActor:true,isolation:true,tracksAnimatedHead:true,rendererRestored:true,exceptionRestored:true,offstageHidden:true}));
+console.log(JSON.stringify({ok:true,sameActor:true,isolation:true,headMotionNotCancelled:true,bodyTurnsFacePlayer:true,rendererRestored:true,exceptionRestored:true,offstageHidden:true}));

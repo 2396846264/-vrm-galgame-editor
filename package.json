@@ -1,7 +1,7 @@
 {
   "name": "vrm-galgame-editor",
   "private": true,
-  "version": "0.7.32",
+  "version": "0.7.39",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
@@ -9,8 +9,10 @@
     "postbuild": "node scripts/copy-pdf-resources.mjs"
   },
   "dependencies": {
+    "@moeru/three-mmd": "0.0.5",
     "@pixiv/three-vrm": "^3.5.4",
     "@pixiv/three-vrm-animation": "^3.5.4",
+    "mmd-parser": "1.1.4",
     "pdfjs-dist": "^6.3.289",
     "three": "^0.180.0"
   },

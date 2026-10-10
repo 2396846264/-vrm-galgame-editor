@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {disposeTree} from './environment-runtime.js';
+import {loadMmdMesh} from './mmd-loader.js';
 
 export const propBoneLabels={rightHand:'右手掌',leftHand:'左手掌',head:'头部',hips:'腰部',chest:'胸部',upperChest:'上胸',spine:'脊柱',rightLowerArm:'右前臂',leftLowerArm:'左前臂',rightUpperArm:'右上臂',leftUpperArm:'左上臂',rightShoulder:'右肩',leftShoulder:'左肩',rightFoot:'右脚',leftFoot:'左脚'};
 for(const [side,label]of [['right','右手'],['left','左手']]){
@@ -47,7 +48,7 @@ export class CharacterProps {
   load(asset){
     if(!this.cache.has(asset.id)){
       const generation=this.generation;
-      const task=this.loader.loadAsync(this.url(asset)).then(gltf=>{
+      const task=(/\.(pmx|pmd)$/i.test(asset.path)?loadMmdMesh(asset,this.url).then(scene=>({scene})):this.loader.loadAsync(this.url(asset))).then(gltf=>{
         if(generation!==this.generation){disposeTree(gltf.scene);return null;}
         const bounds=new THREE.Box3().setFromObject(gltf.scene),size=bounds.getSize(new THREE.Vector3()),extent=Math.max(size.x,size.y,size.z);
         if(!Number.isFinite(extent)||extent<=0){disposeTree(gltf.scene);throw Error('物品模型没有可见的形状');}

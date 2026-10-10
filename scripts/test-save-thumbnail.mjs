@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {captureSaveThumbnail,validSaveThumbnail} from '../src/save-thumbnail.js';
+globalThis.innerWidth=1280;globalThis.innerHeight=800;globalThis.requestAnimationFrame=callback=>queueMicrotask(callback);
+const flags=new Set(),root={classList:{add:v=>flags.add(v),remove:v=>flags.delete(v)}};
+const frame={isConnected:true,ownerDocument:{documentElement:root},getBoundingClientRect:()=>({x:0,y:40,width:1280,height:720})};
+let calls=0;
+const image=await captureSaveThumbnail(frame,async area=>{calls++;assert(flags.has('save-capturing'));assert.deepEqual(area,{x:0,y:40,width:1280,height:720,viewportWidth:1280,viewportHeight:800});return{dataUrl:'data:image/jpeg;base64,YWJj'};});
+assert.equal(image,'data:image/jpeg;base64,YWJj');assert.equal(flags.size,0);assert.equal(calls,1);
+await assert.rejects(captureSaveThumbnail(frame,async()=>{throw Error('capture failed');}),/capture failed/);assert.equal(flags.size,0,'Capture failure must restore menus');
+assert.equal(await captureSaveThumbnail({...frame,isConnected:false},()=>{throw Error('must not capture detached frame');}), '');
+assert(!validSaveThumbnail('https://untrusted/image.jpg'));assert(!validSaveThumbnail('data:image/svg+xml,<svg/>'));assert(!validSaveThumbnail('data:image/jpeg;base64,'+'A'.repeat(120001)));
+console.log('PASS: exact game-area crop, transient-menu exclusion, restoration after native failure, detached-frame protection and bounded offline JPEG thumbnails.');

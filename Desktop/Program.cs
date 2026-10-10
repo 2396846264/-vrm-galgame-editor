@@ -251,6 +251,13 @@ internal sealed partial class EditorWindow : Form
             if(Environment.GetCommandLineArgs().Contains("--smoke-apk-ui")){await RunAndroidUISmoke();Close();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-portrait28")){await RunVrmPortrait28Smoke();Close();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-cutscene")){await RunCutsceneSmoke();Close();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-portrait35")){await RunPortrait35Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-mmd36")){await RunMmd36Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-thumbnails37")){await RunThumbnail37Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-physics38")){await RunPhysics38Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-jitter39")){await RunJitter39Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-ui34")){await RunUi34Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-ui33")){await RunUi33Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-gallery32")){await RunGallery32Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-load31")){await RunLoad31Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-copy30")){await RunCopy30Smoke();Close();return;}
@@ -1286,6 +1293,7 @@ internal sealed partial class EditorWindow : Form
                 "importAssetChunk" when !playerMode => ImportAssetChunk(payload),
                 "saveInventoryImage" when !playerMode => SaveInventoryImage(payload?["dataUrl"]?.GetValue<string>()??"",payload?["itemId"]?.GetValue<string>()??"",payload?["name"]?.GetValue<string>()??"物品"),
                 "saveGeneratedPortrait" when !playerMode => SaveGeneratedPortrait(payload?["dataUrl"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "角色", payload?["previousRevision"]?.GetValue<string>() ?? ""),
+                "saveModelThumbnail" when !playerMode => SaveModelThumbnail(payload?["dataUrl"]?.GetValue<string>()??"",payload?["modelId"]?.GetValue<string>()??""),
                 "organizeGeneratedPortrait" when !playerMode => OrganizeGeneratedPortrait(payload?["path"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "角色"),
                 "restoreHistoryAssets" when !playerMode => RestoreHistoryAssets(payload?["project"]),
                 "deleteAsset" when !playerMode => DeleteAsset(payload?["path"]?.GetValue<string>() ?? ""),
@@ -1294,6 +1302,7 @@ internal sealed partial class EditorWindow : Form
                 "setWindowResolution" when playerMode => SetWindowResolution(payload?["value"]?.GetValue<string>() ?? ""),
                 "setFullscreen" when playerMode => SetFullscreen(payload?["value"]?.GetValue<bool>() ?? false),
                 "exitGame" when playerMode => ExitGame(),
+                "captureGameThumbnail" => await CaptureGameThumbnail(payload),
                 _ => throw new Exception("当前操作不可用")
             };
     }
@@ -1743,8 +1752,8 @@ internal sealed partial class EditorWindow : Form
         if (type == "voice") throw new Exception("配音不能从素材库导入，请到对应对白上传。");
         var extensions = new Dictionary<string, string[]>(StringComparer.Ordinal)
         {
-            ["vrm"] = [".vrm"], ["fbxCharacter"] = [".fbx"], ["sceneModel"] = [".glb"],
-            ["motion"] = [".vrma", ".fbx"],
+            ["vrm"] = [".vrm"], ["fbxCharacter"] = [".fbx"], ["mmdCharacter"]=[".pmx",".pmd"], ["sceneModel"] = [".glb",".pmx",".pmd"],
+            ["motion"] = [".vrma", ".fbx", ".vmd"],
             ["image"] = [".png", ".jpg", ".jpeg", ".webp"],
             ["audio"] = [".mp3", ".wav", ".ogg"],
             ["video"] = mp4Only?[".mp4"]:[".mp4", ".webm"],
@@ -1774,15 +1783,17 @@ internal sealed partial class EditorWindow : Form
         {
             string extension = Path.GetExtension(source).ToLowerInvariant();
             if (!allowed.Contains(extension)) throw new Exception($"不支持 {extension} 文件。");
+            if(type=="mmdCharacter"||(type=="sceneModel"&&(extension is ".pmx" or ".pmd"))){results.AddRange(ImportMmdModelFiles([source],type));continue;}
             if(type=="sceneModel")ValidateStandaloneGlb(source);
             string id = Guid.NewGuid().ToString("N");
             string filename = id + extension;
             if(type=="fbxCharacter") {
                 string folder=Path.Combine(targetDirectory,id);Directory.CreateDirectory(folder);
                 File.Copy(source,Path.Combine(folder,Path.GetFileName(source)));
-                results.Add(new {id,type,name=Path.GetFileName(source),path=$"assets/{type}/{id}/{Path.GetFileName(source)}"});
                 string sourceFolder=Path.GetDirectoryName(source)!;
                 string fbxReferences=Encoding.UTF8.GetString(File.ReadAllBytes(source));
+                var thumbnail=CopyModelFolderThumbnail(source,id,Directory.EnumerateFiles(sourceFolder).Where(f=>fbxReferences.Contains(Path.GetFileName(f),StringComparison.OrdinalIgnoreCase)).Select(Path.GetFileName).OfType<string>());
+                results.Add(new {id,type,name=Path.GetFileName(source),path=$"assets/{type}/{id}/{Path.GetFileName(source)}",thumbnailPath=thumbnail.Path,thumbnailSource=thumbnail.Asset!=null?"folder":""});if(thumbnail.Asset!=null)results.Add(thumbnail.Asset);
                 var textureExtensions=new HashSet<string>(StringComparer.OrdinalIgnoreCase){".png",".jpg",".jpeg",".webp",".bmp",".tga"};
                 var candidates=Directory.EnumerateFiles(sourceFolder).Concat(new[]{"textures",Path.GetFileName(source)+".fbm",Path.GetFileNameWithoutExtension(source)+".fbm"}.SelectMany(sub=>Directory.Exists(Path.Combine(sourceFolder,sub))?Directory.EnumerateFiles(Path.Combine(sourceFolder,sub),"*",SearchOption.AllDirectories):Enumerable.Empty<string>()));
                 foreach(string texture in candidates.Distinct(StringComparer.OrdinalIgnoreCase).Where(f=>textureExtensions.Contains(Path.GetExtension(f))&&fbxReferences.Contains(Path.GetFileName(f),StringComparison.OrdinalIgnoreCase))) {
@@ -1820,7 +1831,7 @@ internal sealed partial class EditorWindow : Form
         {
             var extensions = new Dictionary<string, string[]>(StringComparer.Ordinal)
             {
-                ["vrm"] = [".vrm"], ["fbxCharacter"] = [".fbx"], ["sceneModel"] = [".glb"], ["motion"] = [".vrma", ".fbx"],
+                ["vrm"] = [".vrm"], ["fbxCharacter"] = [".fbx"], ["sceneModel"] = [".glb"], ["motion"] = [".vrma", ".fbx", ".vmd"],
                 ["image"] = [".png", ".jpg", ".jpeg", ".webp"],
                 ["audio"] = [".mp3", ".wav", ".ogg"], ["video"] = [".mp4", ".webm"]
             };

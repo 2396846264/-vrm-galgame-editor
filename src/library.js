@@ -98,7 +98,8 @@ export function createLibrary(ctx) {
     if (!asset(book.pdfId)) { toast('找不到这本书的 PDF', true); return; }
     await closeReader();
     const token = ++request;
-    document.body.insertAdjacentHTML('beforeend', `<div id="book-reader" class="book-reader" role="dialog" aria-modal="true" aria-label="${esc(book.name)}"><header><button data-action="book-reader-close">‹ ${preview ? '返回编辑器' : '返回书库'}</button><b>${esc(book.name)}</b><div><button data-action="book-zoom-out" aria-label="缩小">−</button><button data-action="book-zoom-in" aria-label="放大">＋</button></div></header><div class="book-scroll"><div class="book-spread"><div class="book-paper book-left"></div><div class="book-paper book-right"></div><div class="book-spine"></div></div></div><footer><button data-action="book-prev">‹ 上一页</button><span id="book-page-state">正在打开…</span><button data-action="book-next">下一页 ›</button></footer></div>`);
+    const gameUi = preview ? 'classic' : document.querySelector('.player')?.dataset.gameUi || 'classic';
+    document.body.insertAdjacentHTML('beforeend', `<div id="book-reader" class="book-reader" data-game-ui="${gameUi}" role="dialog" aria-modal="true" aria-label="${esc(book.name)}"><header><button data-action="book-reader-close">‹ ${preview ? '返回编辑器' : '返回书库'}</button><b>${esc(book.name)}</b><div><button data-action="book-zoom-out" aria-label="缩小">−</button><button data-action="book-zoom-in" aria-label="放大">＋</button></div></header><div class="book-scroll"><div class="book-spread"><div class="book-paper book-left"></div><div class="book-paper book-right"></div><div class="book-spine"></div></div></div><footer><button data-action="book-prev">‹ 上一页</button><span id="book-page-state">正在打开…</span><button data-action="book-next">下一页 ›</button></footer></div>`);
     const loading = pdfjs.getDocument(pdfOptions(asset(book.pdfId)));
     reader = { loading, pdf: null, page: 1, busy: true, zoom: 1, index };
     try {

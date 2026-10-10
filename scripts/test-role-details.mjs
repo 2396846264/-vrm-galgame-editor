@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {roleWindow,roleLoadOrder,rolePlacement,unlockedRoles} from '../src/role-queue.js';
+import {createDetailIdle} from '../src/detail-idle.js';
+const roles=Array.from({length:18},(_,i)=>({id:String(i)}));
+const allowed=unlockedRoles(roles,id=>Number(id)%2===0);assert.equal(allowed.length,9);assert(allowed.every(role=>Number(role.id)%2===0));
+assert.deepEqual(roleWindow(18,8),[3,4,5,6,7,8,9,10,11,12,13]);assert.deepEqual(roleLoadOrder(18,8),[8,7,9,6,10,5,11,4,12,3,13]);assert.deepEqual(roleWindow(18,0),[0,1,2,3,4,5]);assert.deepEqual(roleWindow(18,17),[12,13,14,15,16,17]);assert.deepEqual(roleWindow(0,0),[]);assert.equal(roleWindow(18,8,2).length,5);
+assert.equal(rolePlacement(0).yaw,0);assert.equal(rolePlacement(0).offsetX,0);assert.equal(rolePlacement(-1).offsetX,-rolePlacement(1).offsetX);assert.equal(rolePlacement(-1).offsetZ,-rolePlacement(1).offsetZ);
+const head=new THREE.Bone(),hips=new THREE.Bone(),chest=new THREE.Bone();head.name='head';hips.name='hips';chest.name='chest';
+const source=new THREE.AnimationClip('standing',1,[new THREE.VectorKeyframeTrack('hips.position',[0,1],[0,1,0,0,1,0]),new THREE.QuaternionKeyframeTrack('head.quaternion',[0,1],[0,0,0,1,0,0,0,1]),new THREE.QuaternionKeyframeTrack('chest.quaternion',[0,1],[0,0,0,1,0,0,0,1])]);
+const before=JSON.stringify(source.toJSON());const idle=createDetailIdle({idleClip:source,vrm:{humanoid:{getNormalizedBoneNode:name=>({head,hips,chest}[name])}}});assert.equal(idle.duration,3.2);assert.equal(JSON.stringify(source.toJSON()),before);assert(idle.tracks.some(track=>track.values.some((n,i)=>Math.abs(n-track.values[i%track.getValueSize()])>.001)),'Idle must move, rather than repeat a frozen pose');
+console.log('PASS: locked roles fully filtered, current +/- five load order, bounded moving window, diagonal lineup, forward centre and real breathing idle without mutating story clips.');

@@ -1,10 +1,11 @@
-export const graphicsDefaults={aa:'fxaa',upscale:'off',renderScale:100,sharpness:40,shadows:'high'};
+export const graphicsDefaults={aa:'fxaa',upscale:'off',renderScale:100,sharpness:40,shadows:'high',mmdPhysics:'balanced'};
 export const aaOptions=[['off','关闭'],['fxaa','FXAA · 性能优先'],['msaa2','MSAA ×2 + FXAA'],['msaa4','MSAA ×4 + FXAA'],['msaa8','MSAA ×8 + FXAA'],['ssaa2','超采样 SSAA ×2'],['ssaa4','超采样 SSAA ×4'],['ssaa8','超采样 SSAA ×8'],['ssaa16','超采样 SSAA ×16']];
 export const fsrModes={off:1,ultra:1/1.3,quality:1/1.5,balanced:1/1.7,performance:.5};
 export const fsrOptions=[['off','关闭'],['ultra','FSR 1.0 · 超高质量'],['quality','FSR 1.0 · 质量'],['balanced','FSR 1.0 · 均衡'],['performance','FSR 1.0 · 性能']];
 export function normalizeGraphics(value={}){
  const result={aa:aaOptions.some(([key])=>key===value.aa)?value.aa:'fxaa',upscale:Object.hasOwn(fsrModes,value.upscale)?value.upscale:'off',renderScale:Math.max(50,Math.min(100,Number(value.renderScale)||100)),sharpness:Math.max(0,Math.min(100,Number.isFinite(Number(value.sharpness))?Number(value.sharpness):40)),shadows:['off','low','medium','high'].includes(value.shadows)?value.shadows:'high'};
  if(result.aa.startsWith('ssaa')){result.upscale='off';result.renderScale=100;}else if(result.upscale!=='off'&&result.aa==='off')result.aa='fxaa';
+ result.mmdPhysics=['off','full'].includes(value.mmdPhysics)?value.mmdPhysics:'balanced';
  return result;
 }
 export function graphicsLimits(renderer){

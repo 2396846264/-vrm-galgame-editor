@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {mapMmdBones} from '../src/mmd-actor.js';
+import {createMmdExpressions} from '../src/mmd-expressions.js';
+import {createTalkingMouth} from '../src/talking-mouth.js';
+const names=['腰','上半身','上半身2','首','頭','左腕','右腕','左足','左足D','左ひざD','左足首D','右足D','右ひざD','右足首D','左人指１','左人指２','左人指３'];
+const bones=names.map(name=>Object.assign(new THREE.Bone(),{name})),map=mapMmdBones(bones);
+assert.equal(map.leftUpperLeg.node.name,'左足D');assert.equal(map.leftIndexProximal.node.name,'左人指１');assert.equal(map.head.node.name,'頭');assert.equal(map.spine.node.name,'上半身');assert.equal(map.chest.node.name,'上半身2');
+const mesh={morphTargetDictionary:{'あ':0,'い':1,'う':2,'え':3,'お':4,'口角上げ':5,'笑い':6,'にこり':7,'まばたき':8,'怒り':9},morphTargetInfluences:Array(10).fill(0)},e=createMmdExpressions(mesh);
+e.setValue('happy',.8);e.setValue('aa',.6);e.update();assert.equal(mesh.morphTargetInfluences[0],.6);assert.equal(mesh.morphTargetInfluences[5],.8);
+const mouth=createTalkingMouth(e,()=>.5);mouth.start();mouth.update(.05);e.update();assert.ok(mesh.morphTargetInfluences[2]>0);assert.equal(mesh.morphTargetInfluences[5],0);assert.equal(mesh.morphTargetInfluences[6],.48);mouth.stop();e.update();assert.equal(e.getValue('aa'),.6);assert.equal(mesh.morphTargetInfluences[5],.8);
+e.resetValues();mesh.morphTargetInfluences.fill(0);mesh.morphTargetInfluences[0]=.33;e.setValue('happy',.5);e.update(true);assert.equal(mesh.morphTargetInfluences[0],.33);assert.equal(mesh.morphTargetInfluences[5],.5);e.restore();assert.equal(mesh.morphTargetInfluences[5],0);
+console.log('PASS: MMD deformation leg bones, Japanese full-width fingers, expression presets, raw morph controls, talking mouth and preservation of native VMD expression layer.');

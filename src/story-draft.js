@@ -37,11 +37,11 @@ export function compileDraft(value, project, id = () => crypto.randomUUID().repl
   const resolveAsset = (value, type, label) => {
     const key = text(value, label, 150);
     if (!key) return '';
-    if (!project.assets?.some(a => a.id === key && (a.type === type || type==='vrm'&&a.type==='fbxCharacter'))) throw new Error(`${label}引用了不存在或类型不符的素材：${key}`);
+    if (!project.assets?.some(a => a.id === key && (a.type === type || type==='vrm'&&['fbxCharacter','mmdCharacter'].includes(a.type)))) throw new Error(`${label}引用了不存在或类型不符的素材：${key}`);
     return key;
   };
   const modelFor = name => {
-    const matched = project.assets?.filter(a => ['vrm','fbxCharacter'].includes(a.type) && [a.name, ...(Array.isArray(a.tags) ? a.tags : [])].some(v => String(v).includes(name))) || [];
+    const matched = project.assets?.filter(a => ['vrm','fbxCharacter','mmdCharacter'].includes(a.type) && [a.name, ...(Array.isArray(a.tags) ? a.tags : [])].some(v => String(v).includes(name))) || [];
     return matched.length === 1 ? matched[0].id : '';
   };
   const ensure = name => {

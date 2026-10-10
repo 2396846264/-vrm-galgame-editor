@@ -1,0 +1,7 @@
+import assert from 'node:assert/strict';import {createModelThumbnailQueue} from '../src/model-thumbnails.js';
+global.requestAnimationFrame=callback=>setTimeout(callback,0);
+let project={assets:[{id:'a',type:'mmdCharacter'},{id:'b',type:'fbxCharacter'},{id:'c',type:'mmdCharacter',thumbnailPath:'avatar.png'}]},active=0,maxActive=0,shots=0,changes=0;
+let queue;queue=createModelThumbnailQueue({project:()=>project,allowed:()=>true,capture:async model=>{shots++;active++;maxActive=Math.max(maxActive,active);await new Promise(r=>setTimeout(r,5));active--;return{dataUrl:model.id};},save:async(model)=>({id:'thumb-'+model.id,path:model.id+'.png',type:'modelDependency'}),changed:()=>changes++,error:(m,e)=>{throw e;},repaint:()=>queue.refresh(project.assets)});
+queue.refresh(project.assets);await queue.ready;assert.equal(shots,2);assert.equal(maxActive,1);assert.equal(changes,2);assert.equal(project.assets[0].thumbnailPath,'a.png');assert.equal(project.assets[2].thumbnailPath,'avatar.png');queue.refresh(project.assets);await queue.ready;assert.equal(shots,2);
+const stale=project={assets:[{id:'old',type:'mmdCharacter'}]};queue.refresh(stale.assets);await new Promise(r=>setTimeout(r,20));project={assets:[]};await queue.ready;assert.equal(stale.assets.length,1);assert.equal(stale.assets[0].thumbnailPath,undefined);
+console.log('PASS: existing folder thumbnail preserved, MMD/FBX photographed once, serial capture even across repaint, persistent dependency paths and project-switch cancellation.');

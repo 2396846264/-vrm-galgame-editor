@@ -70,6 +70,7 @@ body[data-editor-theme] .editor .center .stage-frame button.preview-resize-handl
 .asset-file-tile { display: flex; flex-direction: column; gap: 5px; }
 .asset-tile-picture { flex: 1; min-height: 70px; display: grid; place-items: center; overflow: hidden; }
 .asset-tile-preview { max-width: 100%; width: 100%; height: 78px; object-fit: contain; }
+.asset-thumbnail-pending { font-size: 12px; text-align: center; opacity: .75; }
 .asset-tile-icon { font-size: 49px; line-height: 1; color: #0b9b83; }
 .asset-tile-tools { display: flex; gap: 3px; }
 .asset-tile-tools select { flex: 1; min-width: 0; width: auto; padding: 3px 1px; font-size: 10px; }

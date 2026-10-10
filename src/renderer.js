@@ -8,6 +8,8 @@ import {fitEnvironmentShadow,environmentShadowBounds} from './environment-shadow
 import {EnvironmentRuntime} from './environment-runtime.js';
 import {CharacterSceneLighting,environmentAmbient} from './character-scene-lighting.js';
 import {LivePortrait} from './live-portrait.js';
+import {capturePortraitBodyFrame} from './portrait-body-frame.js';
+import {loadMmdActor,loadVmdMotion,createVmdMotion} from './mmd-loader.js';
 import {setShoulderPortraitCamera} from './portrait-camera.js';
 import {createFbxActor, retargetFbxClip} from './fbx-character.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -110,8 +112,8 @@ for (const side of ['Left','Right']) {
 export const assetUrl = asset => asset ? `https://project.galgame/${asset.path.split('/').map(encodeURIComponent).join('/')}${asset.revision ? `?v=${encodeURIComponent(asset.revision)}` : ''}` : '';
 
 // Render a separate, transparent bust portrait without moving the stage actor.
-export async function captureCharacterPortrait(modelAsset, motionAsset = null, poseFrame = 1, legacySeconds = null) {
-  if(!['vrm','fbxCharacter'].includes(modelAsset?.type))throw Error('自动头像需要 VRM 或 FBX 人物模型');
+export async function captureCharacterPortrait(modelAsset, motionAsset = null, poseFrame = 1, legacySeconds = null, fileThumbnail = false) {
+  if(!['vrm','fbxCharacter','mmdCharacter'].includes(modelAsset?.type))throw Error('自动头像需要人物模型');
   const loader = new GLTFLoader();
   loader.register(parser => new VRMLoaderPlugin(parser));
   loader.register(parser => new VRMAnimationLoaderPlugin(parser));
@@ -126,7 +128,8 @@ export async function captureCharacterPortrait(modelAsset, motionAsset = null, p
   try {
     if(modelAsset.type==='fbxCharacter'){
       const root=await new FBXLoader(fbxManager).loadAsync(assetUrl(modelAsset));gltf={scene:root};await texturesReady;vrm=createFbxActor(root);
-    }else{gltf=await loader.loadAsync(assetUrl(modelAsset));vrm=gltf.userData.vrm;}
+    }else if(modelAsset.type==='mmdCharacter'){vrm=await loadMmdActor(modelAsset,assetUrl,{physics:false});gltf={scene:vrm.scene};}
+    else{gltf=await loader.loadAsync(assetUrl(modelAsset));vrm=gltf.userData.vrm;}
     if(!vrm)throw Error('文件里没有找到人物模型');
     const scene = new THREE.Scene();
     scene.add(vrm.scene);
@@ -169,6 +172,7 @@ export async function captureCharacterPortrait(modelAsset, motionAsset = null, p
     const target = head?.getWorldPosition(new THREE.Vector3()) || new THREE.Vector3(0, 1.55, 0);
     const camera = new THREE.OrthographicCamera(-0.20, 0.20, 0.20, -0.20, 0.01, 20);
     setShoulderPortraitCamera(camera,target);
+    if(fileThumbnail){const top=new THREE.Box3().setFromObject(vrm.scene,true).max.y;camera.top=Math.min(.55,Math.max(.25,top-target.y+.07));camera.bottom=-.24;const width=(camera.top-camera.bottom)/2;camera.left=-width;camera.right=width;camera.updateProjectionMatrix();}
     scene.add(new THREE.HemisphereLight(0xffffff, 0x8497b0, 2));
     const key = new THREE.DirectionalLight(0xffffff, 2.1);
     key.position.set(-2, 4, 5);
@@ -183,7 +187,7 @@ export async function captureCharacterPortrait(modelAsset, motionAsset = null, p
     renderer?.dispose();
     renderer?.forceContextLoss();mixer?.stopAllAction();if(vrm)mixer?.uncacheRoot(vrm.scene);
     if (motionScene) VRMUtils.deepDispose(motionScene);
-    if(gltf)VRMUtils.deepDispose(gltf.scene);
+    vrm?.dispose?.();if(gltf)VRMUtils.deepDispose(gltf.scene);
     for(const url of fbxBlobs)URL.revokeObjectURL(url);
   }
 }
@@ -308,6 +312,7 @@ export class VRMStage {
     const clip = record.currentAction.getClip();
     const { fps, frames } = motionFrameInfo(clip);
     const selected = Math.max(1, Math.min(frames, Math.floor(Number(frame) || 1)));
+    record.vrm.beforeAnimation?.();record.vrm.resetPhysics?.();
     record.mixer.setTime(Math.max(0, Math.min(clip.duration - 0.00001, (selected - 1) / fps)));
     record.mixer.timeScale = 0;
     this.applyMotionPlacement(record);
@@ -322,11 +327,14 @@ export class VRMStage {
     const delta = Math.min(elapsed, 0.1);
     this.averageFrameMs = this.averageFrameMs ? this.averageFrameMs * 0.94 + delta * 1000 * 0.06 : delta * 1000;
     const updated = new Set();
+    this.camera.updateMatrixWorld();const physicsFrustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse));
     for (const record of [...this.visibleRecords.values(),this.livePortrait.record]) {
       if(!record)continue;
       if (updated.has(record)) continue;
       updated.add(record);
+      if(record.vrm.isMmd){const center=record.vrm.humanoid.getNormalizedBoneNode('hips')?.getWorldPosition(new THREE.Vector3())||record.anchor.getWorldPosition(new THREE.Vector3());record.vrm.setPhysicsActive(record===this.livePortrait.record||physicsFrustum.intersectsSphere(new THREE.Sphere(center,1.4*Math.abs(record.anchor.scale.y))));}
       record.talkingMouth?.restore();
+      record.vrm.beforeAnimation?.();
       this.restoreFootPose(record);
       record.mixer.update(delta);
       this.updateTransitions(record, delta);
@@ -366,18 +374,19 @@ export class VRMStage {
       if (!record) return;
       record.propToken=(record.propToken||0)+1;
       for(const p of record.attachedProps?.values()||[])p.root.removeFromParent();
-      record.mixer.stopAllAction();record.anchor.removeFromParent();VRMUtils.deepDispose(record.vrm.scene);
+      record.mixer.stopAllAction();record.anchor.removeFromParent();record.vrm.dispose?.();VRMUtils.deepDispose(record.vrm.scene);
       if(this.visibleRecords.get(actorKey)===record)this.visibleRecords.delete(actorKey);
     }).catch(()=>{});
     const generation = this.cacheGeneration;
-    const task = (modelAsset.type === 'fbxCharacter' ? this.fbxLoader.loadAsync(assetUrl(modelAsset)).then(fbx => ({scene:fbx,userData:{vrm:createFbxActor(fbx)}})) : this.loader.loadAsync(assetUrl(modelAsset))).then(gltf => {
+    const task = (modelAsset.type==='mmdCharacter'?loadMmdActor(modelAsset,assetUrl).then(vrm=>({scene:vrm.scene,userData:{vrm}})):modelAsset.type === 'fbxCharacter' ? this.fbxLoader.loadAsync(assetUrl(modelAsset)).then(fbx => ({scene:fbx,userData:{vrm:createFbxActor(fbx)}})) : this.loader.loadAsync(assetUrl(modelAsset))).then(async gltf => {
       if (generation !== this.cacheGeneration) {
+        gltf.userData.vrm?.dispose?.();
         VRMUtils.deepDispose(gltf.scene);
         return null;
       }
       const vrm = gltf.userData.vrm;
       if (!vrm) { VRMUtils.deepDispose(gltf.scene); throw new Error('文件里没有找到 VRM 角色'); }
-      if (!vrm.isFbx) { VRMUtils.removeUnnecessaryVertices(vrm.scene); VRMUtils.removeUnnecessaryJoints(vrm.scene); }
+      if (!vrm.isFbx&&!vrm.isMmd) { VRMUtils.removeUnnecessaryVertices(vrm.scene); VRMUtils.removeUnnecessaryJoints(vrm.scene); }
       // FBX bind pose and its first animation frame can have different root heights.
       // Fit the visible initial pose, while keeping the original rig rest data for retargeting.
       if (vrm.isFbx) {
@@ -428,8 +437,13 @@ export class VRMStage {
       this.applyOutline(vrm.scene);
       this.applyShadowCasting(vrm.scene);
       const idleClip = vrm.isFbx ? vrm.idleClip : this.createIdleClip(vrm);
+      vrm.setPhysicsEnabled?.(this.graphicsSettings.mmdPhysics!=='off');
+      vrm.setPhysicsQuality?.(this.graphicsSettings.mmdPhysics);
+      if(vrm.isMmd){vrm.update(0);await vrm.preparePhysics(()=>generation===this.cacheGeneration);if(generation!==this.cacheGeneration){anchor.removeFromParent();vrm.dispose();VRMUtils.deepDispose(vrm.scene);return null;}}
       const record = {
         vrm, anchor, motionRoot, referenceHips, mixer: new THREE.AnimationMixer(vrm.scene),
+        portraitRestHeadQuaternion: vrm.humanoid.getNormalizedBoneNode('head')?.getWorldQuaternion(new THREE.Quaternion()),
+        portraitBodyReference: capturePortraitBodyFrame(vrm,anchor),
         fitScale: vrm.scene.scale.clone(), fitPosition: vrm.scene.position.clone(), materials,
         currentMotionId: undefined, idleClip, currentAction: null, fadeOutActions: [], footLock: null,
         segmentClips: new Map(), currentMotionToken: '', currentMotionOptions: null
@@ -452,7 +466,7 @@ export class VRMStage {
     const existing = this.motionCache.get(motionAsset.id);
     if (existing) return existing;
     const generation = this.cacheGeneration;
-    const task = (motionAsset.path.toLowerCase().endsWith('.vrma')
+    const task = (motionAsset.path.toLowerCase().endsWith('.vmd')?loadVmdMotion(motionAsset,assetUrl).then(vmd=>({vmd,kind:'vmd'})):motionAsset.path.toLowerCase().endsWith('.vrma')
       ? this.loader.loadAsync(assetUrl(motionAsset)).then(gltf => {
           const animation = gltf.userData.vrmAnimations?.[0];
           if (!animation) throw new Error('VRMA 文件里没有动作');
@@ -461,7 +475,7 @@ export class VRMStage {
       : this.fbxLoader.loadAsync(assetUrl(motionAsset)).then(fbx => ({ kind: 'fbx', fbx }))
     ).then(source => {
       if (generation !== this.cacheGeneration) {
-        VRMUtils.deepDispose(source.scene || source.fbx);
+        if(source.scene||source.fbx)VRMUtils.deepDispose(source.scene || source.fbx);
         return null;
       }
       return source;
@@ -480,10 +494,11 @@ export class VRMStage {
     const generation = this.cacheGeneration;
     const task = Promise.all([this.loadModel(modelAsset, actorKey), this.loadMotionSource(motionAsset)]).then(([record, source]) => {
       if (generation !== this.cacheGeneration || !record || !source) return null;
+      if(source.kind==='vmd'){if(!record.vrm.isMmd)throw Error('VMD 动作请用于 MMD 人物。');return createVmdMotion(source.vmd,record.vrm);}
       if(record.vrm.isFbx) { if(source.kind !== 'fbx') throw new Error('FBX 人物请使用 Mixamo FBX 动作'); return retargetFbxClip(source.fbx,record.vrm); }
       return source.kind === 'vrma'
-        ? createVRMAnimationClip(source.animation, record.vrm)
-        : VRMStage.loadMixamo(source.fbx, record.vrm);
+        ? createVRMAnimationClip(source.animation, record.vrm.normalizedRig||record.vrm)
+        : VRMStage.loadMixamo(source.fbx, record.vrm.normalizedRig||record.vrm);
     }).catch(error => {
       if (this.clipCache.get(key) === task) this.clipCache.delete(key);
       throw error;
@@ -641,6 +656,9 @@ export class VRMStage {
     return new THREE.AnimationClip('Standing idle', 1, tracks);
   }
   poseRecord(record, clip, motionAsset, smooth = false, options = {}, playbackKey = '') {
+    const rigKind=motionAsset?.path?.toLowerCase().endsWith('.vmd')?'vmd':'humanoid';
+    if(record.vrm.isMmd&&record.mmdMotionKind!==rigKind){this.restoreFootPose(record);record.mixer.stopAllAction();record.currentAction=null;record.footLock=null;record.currentMotionToken='';record.fadeOutActions.length=0;record.mmdMotionKind=rigKind;}
+    record.vrm.setMotionKind?.(rigKind);
     const motionId = motionAsset?.id ?? null;
     const settings = playbackSettings(options);
     const source = clip || record.idleClip;
@@ -650,6 +668,7 @@ export class VRMStage {
     const token = JSON.stringify([motionId, settings.loop, segment.start, segment.end, settings.after, settings.placement, settings.feet,
       settings.loop ? '' : playbackKey]);
     if (record.currentMotionToken === token && record.vrm.scene.visible) return;
+    record.vrm.resetPhysics?.();
     record.mixer.timeScale = 1;
     const previousLock = record.footLock;
     this.restoreFootPose(record);
@@ -695,9 +714,9 @@ export class VRMStage {
   async releaseModel(actorKey){
     if(this.visibleRecords.has(actorKey))return false;const task=this.modelCache.get(actorKey);if(!task)return false;this.modelCache.delete(actorKey);
     for(const key of this.clipCache.keys())if(key.startsWith(actorKey+':'))this.clipCache.delete(key);
-    const record=await task;if(record){record.propToken=(record.propToken||0)+1;for(const prop of record.attachedProps?.values()||[])prop.root.removeFromParent();record.attachedProps?.clear();record.mixer.stopAllAction();record.mixer.uncacheRoot(record.vrm.scene);record.anchor.removeFromParent();VRMUtils.deepDispose(record.vrm.scene);}return true;
+    const record=await task;if(record){record.propToken=(record.propToken||0)+1;for(const prop of record.attachedProps?.values()||[])prop.root.removeFromParent();record.attachedProps?.clear();record.mixer.stopAllAction();record.mixer.uncacheRoot(record.vrm.scene);record.anchor.removeFromParent();record.vrm.dispose?.();VRMUtils.deepDispose(record.vrm.scene);}return true;
   }
-  async releaseMotion(motionId){if([...this.clipCache.keys()].some(k=>k.endsWith(':'+motionId)))return;const task=this.motionCache.get(motionId);if(!task)return;this.motionCache.delete(motionId);const source=await task;if(source)VRMUtils.deepDispose(source.scene||source.fbx);}
+  async releaseMotion(motionId){if([...this.clipCache.keys()].some(k=>k.endsWith(':'+motionId)))return;const task=this.motionCache.get(motionId);if(!task)return;this.motionCache.delete(motionId);const source=await task;if(source&&(source.scene||source.fbx))VRMUtils.deepDispose(source.scene||source.fbx);}
   restartCharacterPreview(){
     for(const record of this.visibleRecords.values()){this.restoreFootPose(record);for(const chain of [record.footLock?.left,record.footLock?.right])if(chain)chain.anchor=null;record.motionLoops=0;record.motionCarry=new THREE.Vector3();record.finishWorldTarget=null;record.currentAction?.reset().play();record.mixer.update(0);this.applyMotionPlacement(record);this.applyFootLock(record);record.vrm.update(0);this.applyRawFootLock(record);}
   }
@@ -892,7 +911,7 @@ export class VRMStage {
   talkingLetter(char) { this.talkingRecord?.talkingMouth?.letter(char); }
   clearLivePortrait(){this.portraitRequest=(this.portraitRequest||0)+1;this.portraitActorKey='';this.livePortrait.clear();}
   async setLivePortrait(modelAsset,actorKey,node,weights={}){
-    if(modelAsset?.type!=='vrm'){this.clearLivePortrait();return null;}
+    if(!['vrm','mmdCharacter'].includes(modelAsset?.type)){this.clearLivePortrait();return null;}
     const token=this.portraitRequest=(this.portraitRequest||0)+1;
     if(this.portraitActorKey!==actorKey||this.portraitModelId!==modelAsset.id||this.livePortrait.node!==node)this.livePortrait.clear();
     const record=await this.loadModel(modelAsset,actorKey);
@@ -905,7 +924,7 @@ export class VRMStage {
   }
   stopTalking() {
     if (this.talkingRecord) {
-      this.talkingRecord.talkingMouth?.stop(); this.talkingRecord.vrm.update(0);
+      this.talkingRecord.talkingMouth?.stop();this.talkingRecord.vrm.beforeAnimation?.(); this.talkingRecord.vrm.update(0);
       this.talkingRecord = null;
     }
   }
@@ -930,7 +949,7 @@ export class VRMStage {
   }
   setPaintBackground(){}
   graphicsPlan(settings=this.graphicsSettings){const {width,height}=this.element.getBoundingClientRect(),limits=graphicsLimits(this.renderer),ratio=Math.min(window.devicePixelRatio||1,2,limits.maxDimension/Math.max(width,1),limits.maxDimension/Math.max(height,1),Math.sqrt(limits.maxPixels/Math.max(width*height,1)));return graphicsPlan(settings,width*ratio,height*ratio,limits);}
-  setGraphicsSettings(settings){const quality=normalizeGraphics(settings),plan=this.graphicsPlan(quality);if(!plan.supported)throw Error(plan.reason);this.graphicsSettings=quality;this.environmentShadowKey='';this.applyShadowSettings();this.resize();return this.stylePipeline.plan;}
+  setGraphicsSettings(settings){const quality=normalizeGraphics(settings),plan=this.graphicsPlan(quality);if(!plan.supported)throw Error(plan.reason);this.graphicsSettings=quality;for(const task of this.modelCache.values())task.then(record=>{record?.vrm.setPhysicsEnabled?.(quality.mmdPhysics!=='off');record?.vrm.setPhysicsQuality?.(quality.mmdPhysics);});this.environmentShadowKey='';this.applyShadowSettings();this.resize();return this.stylePipeline.plan;}
   applyGraphicsShadowQuality(){
     const size=shadowMapSize(this.graphicsSettings.shadows);
     for(const light of [this.keyLight,this.shadowLight]){if(size&&light.shadow.mapSize.x!==size){light.shadow.map?.dispose();light.shadow.map=null;light.shadow.mapSize.set(size,size);}if(!size)light.castShadow=false;}
@@ -1008,11 +1027,11 @@ export class VRMStage {
     for (const task of this.modelCache.values()) task.then(record => {
       if (record) {
         this.scene.remove(record.anchor);
-        VRMUtils.deepDispose(record.vrm.scene);
+        record.vrm.dispose?.();VRMUtils.deepDispose(record.vrm.scene);
       }
     }).catch(() => {});
     for (const task of this.motionCache.values()) task.then(source => {
-      if (source) VRMUtils.deepDispose(source.scene || source.fbx);
+      if (source) if(source.scene||source.fbx)VRMUtils.deepDispose(source.scene || source.fbx);
     }).catch(() => {});
     this.characterProps.clear();
     this.modelCache.clear();
