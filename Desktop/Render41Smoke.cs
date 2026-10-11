@@ -1,0 +1,22 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using Microsoft.Web.WebView2.Core;
+namespace VRMGalgame;
+internal sealed partial class EditorWindow{
+ private async Task RunRender41Smoke(){
+  await Task.Delay(1500);string[] args=Environment.GetCommandLineArgs();bool user=args.Contains("--smoke-render-user"),reopen=args.Contains("--smoke-render-reopen");
+  if(args.Contains("--smoke-render-module")){
+   await web.CoreWebView2.ExecuteScriptAsync("window.__vrmSmokeRender41('module-main')");await Task.Delay(800);await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=open-module][data-module=render]').click()");for(int i=0;i<200&&!moduleWindows.ContainsKey("render");i++)await Task.Delay(50);var child=moduleWindows["render"];
+   string first=await child.Smoke("document.querySelector('[data-action=add-render-preset]').click();await new Promise(r=>setTimeout(r,400));const name=document.querySelector('[data-render-preset-name]');name.value='独立窗口预设';name.dispatchEvent(new Event('input',{bubbles:true}));const slider=document.querySelector('[data-preset-filter=rim]');slider.value=.55;slider.dispatchEvent(new Event('input',{bubbles:true}));await window.editorSaveBeforeClose();return {ok:true,saved:true};",smokeBase+".render41-module-edit.png");if(!first.Contains("\"ok\":true"))throw new Exception(first);
+   await web.CoreWebView2.ExecuteScriptAsync("const select=document.querySelector('[data-render-selection]');select.value=[...select.options].find(o=>o.textContent==='独立窗口预设').value;select.dispatchEvent(new Event('input',{bubbles:true}));");
+   string second=await child.Smoke("const slider=document.querySelector('[data-preset-filter=rim]');slider.value=.8;slider.dispatchEvent(new Event('input',{bubbles:true}));await window.editorSaveBeforeClose();return {ok:true,savedAgain:true};",smokeBase+".render41-module-apply.png");if(!second.Contains("\"ok\":true"))throw new Exception(second);await Task.Delay(800);
+   await web.CoreWebView2.ExecuteScriptAsync("window.__render41=null;window.__vrmSmokeRender41('module-verify').then(r=>window.__render41=r).catch(e=>window.__render41={error:e.message})");string result="null";for(int i=0;i<2400;i++){result=await web.CoreWebView2.ExecuteScriptAsync("window.__render41");if(result!="null")break;await Task.Delay(50);}File.WriteAllText(smokeBase+".render41-module.json",result);if(!result.Contains("\"ok\":true"))throw new Exception(result);child.CloseWithoutPrompt();editorCloseApproved=true;Close();return;
+  }
+  if(!user&&!reopen){int at=Array.IndexOf(args,"--smoke-mmd-inputs");var input=JsonNode.Parse(File.ReadAllText(args[at+1]))!;var rows=new List<object>();foreach(var file in input["models"]!.AsArray())rows.AddRange(ImportMmdModelFiles([file!.GetValue<string>()],"mmdCharacter"));foreach(var entry in input["motions"]!.AsArray()){string source=entry!.GetValue<string>(),id=Guid.NewGuid().ToString("N"),path="assets/motion/"+id+Path.GetExtension(source),target=Path.Combine(projectDirectory!,path);Directory.CreateDirectory(Path.GetDirectoryName(target)!);File.Copy(source,target);rows.Add(new{id,type="motion",name=Path.GetFileName(source),path});}await web.CoreWebView2.ExecuteScriptAsync("window.__mmdImported="+JsonSerializer.Serialize(rows));}
+  foreach(string phase in reopen?new[]{"reopen"}:user?new[]{"user","gpu","alignment","save"}:new[]{"setup","presets","help","gpu","depth","alignment","save"}){
+   string function=phase=="setup"?"__vrmSmokeMmd36":"__vrmSmokeRender41";await web.CoreWebView2.ExecuteScriptAsync("window.__render41=null;window."+function+"("+JsonSerializer.Serialize(phase)+").then(r=>window.__render41=r).catch(e=>window.__render41={error:e.message,stack:e.stack})");
+   string result="null";for(int i=0;i<2400;i++){result=await web.CoreWebView2.ExecuteScriptAsync("window.__render41");if(result!="null")break;await Task.Delay(50);}File.WriteAllText(smokeBase+".render41-"+phase+".json",result);using(var stream=File.Create(smokeBase+".render41-"+phase+".png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,stream);if(!result.Contains("\"ok\":true"))throw new Exception(result);
+  }
+  if(!reopen){WriteArchive(projectDirectory!,smokeBase+".vrmg");if(smokeFileOpsParent!=null)File.WriteAllText(smokeBase+".export.json",JsonSerializer.Serialize(ExportGame("渲染预设_0.0.41_验证游戏_"+Path.GetFileName(smokeBase))));}editorCloseApproved=true;Close();
+ }
+}

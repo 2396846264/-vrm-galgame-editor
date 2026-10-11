@@ -43,6 +43,9 @@ internal sealed class EditorModuleWindow : Form
     }
     internal void CloseWithoutPrompt(){closing=true;Close();}
     internal void RefreshProject(JsonNode? project){view.CoreWebView2?.PostWebMessageAsJson(JsonSerializer.Serialize(new{editorModuleRefresh=project}));}
+    internal async Task<object> CaptureAgent44(){
+        for(int i=0;i<400;i++){if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.editorCloseState?.().hasProject)")=="true")break;await Task.Delay(50);}using var stream=new MemoryStream();await view.CoreWebView2!.CapturePreviewAsync(Microsoft.Web.WebView2.Core.CoreWebView2CapturePreviewImageFormat.Png,stream);if(stream.Length>16*1024*1024)throw new Exception("截图过大。");return new{panel=Module,width=view.ClientSize.Width,height=view.ClientSize.Height,image=new{mimeType="image/png",data=Convert.ToBase64String(stream.ToArray())}};
+    }
     internal async Task<string> Smoke(string script,string imagePath){
         for(int i=0;i<400;i++){if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.editorCloseState?.().hasProject)")=="true")break;await Task.Delay(50);}
         await view.CoreWebView2!.ExecuteScriptAsync("window.__moduleCheck=null;(async()=>{"+script+"})().then(result=>window.__moduleCheck=result).catch(error=>window.__moduleCheck={error:error.message})");

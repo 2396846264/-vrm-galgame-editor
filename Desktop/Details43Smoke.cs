@@ -1,0 +1,15 @@
+using System.Text.Json;
+using Microsoft.Web.WebView2.Core;
+namespace VRMGalgame;
+internal sealed partial class EditorWindow{
+ private async Task RunDetails43Smoke(){
+  await Task.Delay(1200);bool reopen=Environment.GetCommandLineArgs().Contains("--smoke-details-reopen");
+  async Task<string> Phase(string phase){await web.CoreWebView2.ExecuteScriptAsync("window.__details43=null;window.__vrmSmokeDetails43("+JsonSerializer.Serialize(phase)+").then(r=>window.__details43=r).catch(e=>window.__details43={error:e.message,stack:e.stack})");string result="null";for(int i=0;i<2400;i++){result=await web.CoreWebView2.ExecuteScriptAsync("window.__details43");if(result!="null")break;await Task.Delay(50);}File.WriteAllText(smokeBase+".details43-"+phase+".json",result);using(var stream=File.Create(smokeBase+".details43-"+phase+".png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,stream);if(!result.Contains("\"ok\":true"))throw new Exception(result);return result;}
+  if(!reopen){
+   await Phase("setup");await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=open-module][data-module=title]').click()");for(int i=0;i<200&&!moduleWindows.ContainsKey("title");i++)await Task.Delay(50);var child=moduleWindows["title"];
+   string result=await child.Smoke("const before=JSON.stringify(window.editorProjectSnapshot().title.render);const section=document.querySelector('.role-details-render-editor');if(!section)throw Error('角色详情选择框缺失');section.open=true;section.scrollIntoView({block:'center'});const input=(key,value)=>{const n=document.querySelector(key);if(!n)throw Error(key);n.value=value;n.dispatchEvent(new Event('input',{bubbles:true}));};input('[data-render-selection][data-render-scope=details]','details43');for(const [key,value]of [['brightness',90],['contrast',110],['saturation',80]])input('[data-render-calibration='+key+'][data-render-scope=details]',value);if(document.querySelectorAll('[data-render-calibration][data-render-scope=details]').length!==6)throw Error('不是三项微调');if(JSON.stringify(window.editorProjectSnapshot().title.render)!==before)throw Error('改变了标题渲染');await window.editorSaveBeforeClose();return {ok:true,realTitleModule:true,threeCalibrations:true,titleUnchanged:true};",smokeBase+".details43-editor.png");File.WriteAllText(smokeBase+".details43-module.json",result);if(!result.Contains("\"ok\":true"))throw new Exception(result);
+   await child.Smoke("const section=document.querySelector('.role-details-render-editor');section.open=true;section.scrollIntoView({block:'center'});await new Promise(r=>setTimeout(r,200));return {ok:true};",smokeBase+".details43-expanded.png");child.CloseWithoutPrompt();
+  }
+  await Phase("details");if(!reopen){await Phase("save");WriteArchive(projectDirectory!,smokeBase+".vrmg");if(smokeFileOpsParent!=null)File.WriteAllText(smokeBase+".export.json",JsonSerializer.Serialize(ExportGame("角色详情预设_0.0.43_"+Path.GetFileName(smokeBase))));}editorCloseApproved=true;Close();
+ }
+}

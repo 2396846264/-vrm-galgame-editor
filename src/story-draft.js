@@ -83,7 +83,6 @@ export function compileDraft(value, project, id = () => crypto.randomUUID().repl
     if (weather.type && !weathers.includes(weather.type)) throw new Error(`“${name}”的天气无效。`);
     const backgroundId = resolveAsset(raw.backgroundId,'image','背景'), bgmId = resolveAsset(raw.bgmId,'audio','背景音乐');
     const result = { id:actId, name, backgroundId, bgmId, coverImageId:resolveAsset(raw.coverImageId,'image','章节封面'),
-      render:{...normalizeRender(project.render),brightness:100,contrast:100,saturation:100},
       weather:{type:weather.type || 'none',intensity:number(weather.intensity,.55,0,1)}, cast:{left:'',center:'',right:''},castSettings:{},steps:[] };
     if (!backgroundId) missing.add(`“${name}”还需要背景图。`);
     if (!bgmId) missing.add(`“${name}”未安排背景音乐。`);

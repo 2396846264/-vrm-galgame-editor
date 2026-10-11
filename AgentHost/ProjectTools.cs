@@ -1,0 +1,23 @@
+using System.Text.Json.Nodes;
+namespace VRMGalgame.Agent;
+internal static partial class Program{
+ private static JsonArray ProjectTools(){
+  JsonObject Kind()=>new(){["type"]="string",["enum"]=new JsonArray("environment","project","ui","title","act","dialogue","character","titleActor","prop","choice","item","book","renderPreset","asset","folder")};
+  return new JsonArray(
+   Tool("get_capabilities","Read all supported project object fields, batch actions, coordinates, actor slots, render targets, and limitations. Use before edit_project.",new(),readOnly:true),
+   Tool("get_editor_state","Read UI/title/render preset settings, counts, editor selection and undo state. Does not expose source document text or archive secrets.",new(),readOnly:true),
+   Tool("get_objects","Read a paginated collection. Nested dialogue ownerId=act ID, choice ownerId=dialogue ID, prop ownerId=character ID. Dialogue without ownerId lists all dialogues with ownerId.",new(){["kind"]=Kind(),["ownerId"]=S("Parent object ID"),["offset"]=new JsonObject{["type"]="integer",["minimum"]=0},["limit"]=new JsonObject{["type"]="integer",["minimum"]=1,["maximum"]=200}},["kind"],true),
+   Tool("get_object","Read the complete editable object. id optional for project/ui/title. For nested objects ownerId is recommended.",new(){["kind"]=Kind(),["id"]=S("Object ID"),["ownerId"]=S("Parent ID")},["kind"],true),
+   Tool("get_render_options","List every real filter, range, help text and enabling dependencies. Create/edit renderPreset.settings.filters through edit_project.",new(),readOnly:true),
+   Tool("edit_project","Atomic, undoable batch of up to 200 typed operations. Read get_capabilities for allowed fields. Each op: {action:create|update|duplicate|delete|move,kind,id?,ownerId?,data?,afterId?,index?,ref?}. create/duplicate ref:name permits subsequent *Id:$name. set_actor uses id:dialogueId,slot:left|center|right|row2-left..row10-right,data:{characterId,motionId,motionOptions,expressionWeights,size,offsetX/Y/Z,yaw,pitch,props}. set_motion_scope uses id:motionAssetId,ownerId:characterId or empty for common. replace_text uses query/replacement and only changes visible writing. No arbitrary paths/scripts/IDs. Invalid batches change nothing. Music/effects and locked folders are enforced.",new(){["operations"]=new JsonObject{["type"]="array",["minItems"]=1,["maxItems"]=200,["items"]=new JsonObject{["type"]="object"}},["expectedRevision"]=Revision},["operations","expectedRevision"]),
+   Tool("inspect_character","Read the actual VRM/MMD/FBX model's raw and humanoid bones, valid prop bone names, expressions/morphs and allowed character/common motions. No pose is authored.",new(){["characterId"]=S("Existing character ID")},["characterId"],true),
+   Tool("open_editor_panel","Open an authoring panel: story/characters/items/title/render/knowledge. Does not discard unsaved edits.",new(){["panel"]=new JsonObject{["type"]="string",["enum"]=new JsonArray("story","characters","items","title","render","knowledge")}},["panel"]),
+   Tool("select_editor_object","Select an existing act/dialogue/character/item for inspection in the main editor. Does not change project content.",new(){["kind"]=Kind(),["id"]=S("Existing object ID")},["kind","id"]),
+   Tool("capture_editor","Capture the current editor window as a PNG image, including preview and controls.",new(){["panel"]=new JsonObject{["type"]="string",["enum"]=new JsonArray("main","characters","items","title","render","knowledge")}},readOnly:true),
+   Tool("find_text","Find visible dialogue, speaker names, events, character biographies/stories, item/book descriptions. Never scans or replaces paths or binary data.",new(){["query"]=S("Literal text")},["query"],true),
+   Tool("generate_portrait","Generate/replace a character PNG portrait using its actual model. Authoring operation, original model preserved, supports undo.",new(){["characterId"]=S("Character ID"),["expectedRevision"]=Revision},["characterId","expectedRevision"]),
+   Tool("sync_editor_windows","Apply pending changes from open role/item/title/render/knowledge windows through the existing conflict-safe merge. Each window retains its own undo step; conflicts are rejected. Environment window uses sync_environment_editor separately.",new(){["expectedRevision"]=Revision},["expectedRevision"]),
+   Tool("import_dialogue_voice","Copy a local MP3/WAV/OGG to the selected dialogue's character voice folder. Requires nonempty text and character. Replaces the dialogue assignment; source file is preserved.",new(){["actId"]=S("Act ID"),["dialogueId"]=S("Dialogue ID"),["path"]=S("Absolute source audio path"),["expectedRevision"]=Revision},["actId","dialogueId","path","expectedRevision"])
+  );
+ }
+}

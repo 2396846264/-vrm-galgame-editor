@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$DotNet = 'dotnet',
     [string]$IdentityDirectory = (Join-Path $env:LOCALAPPDATA 'VRMGalgame\DeveloperIdentity'),
     [switch]$SkipWebBuild
@@ -19,7 +19,7 @@ try {
     Invoke-Checked $DotNet @('run','--project','BuildIdentity/BuildIdentity.csproj','--','generate',$IdentityDirectory,$constants,'565407768')
     Invoke-Checked $DotNet @('publish','Desktop/Desktop.csproj','-c','Release','-r','win-x64','--self-contained','true','-p:PublishSingleFile=true','-o','publish/editor')
     Invoke-Checked $DotNet @('publish','AgentHost/AgentHost.csproj','-c','Release','-r','win-x64','--self-contained','true','-p:PublishSingleFile=true','-o','publish/agent')
-    $package = Join-Path $repository 'release\VRMGalgame-0.0.39-developer-win-x64'
+    $package = Join-Path $repository 'release\VRMGalgame-0.0.44-developer-win-x64'
     if (Test-Path -LiteralPath $package) { throw 'Build output already exists. Choose a clean checkout for another build.' }
     New-Item -ItemType Directory -Path $package -Force | Out-Null
     $loader = 'publish/editor/WebView2Loader.dll'
@@ -30,7 +30,8 @@ try {
     Copy-Item -LiteralPath 'docs','preset-motions','licenses' -Destination $package -Recurse
     Invoke-Checked $DotNet @('run','--project','BuildIdentity/BuildIdentity.csproj','--','sign',$IdentityDirectory,"$package/web","$package/web.integrity.json")
     Set-Content -LiteralPath "$package/DEVELOPER-BUILD.txt" -Encoding UTF8 -Value 'This developer build uses its own encryption identity. It cannot open official encrypted projects. Keep your DeveloperIdentity directory safe. Use GitHub Releases for official compatible builds.'
-    Invoke-Checked "$package/VRMGalgame.exe" @('--check-package-integrity',$package,"$package/integrity-check.json")
+    $checkProcess = Start-Process -FilePath "$package/VRMGalgame.exe" -ArgumentList @('--check-package-integrity',('"'+$package+'"'),('"'+$package+'/integrity-check.json"')) -WindowStyle Hidden -Wait -PassThru
+    if ($checkProcess.ExitCode -ne 0) { throw 'Package integrity check process failed.' }
     $check = Get-Content -LiteralPath "$package/integrity-check.json" -Raw | ConvertFrom-Json
     if (!$check.ok) { throw 'Package integrity check failed.' }
     Compress-Archive -LiteralPath $package -DestinationPath "$package.zip" -CompressionLevel Optimal

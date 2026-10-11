@@ -1,0 +1,396 @@
+{
+  "version": "0.0.44",
+  "fields": {
+    "environment": [
+      "name",
+      "background",
+      "camera",
+      "lighting"
+    ],
+    "project": [
+      "name",
+      "authoring"
+    ],
+    "ui": [
+      "gameTheme",
+      "dialogueImageId",
+      "clickSoundId",
+      "spatialCamera",
+      "roleDetailsRender"
+    ],
+    "title": [
+      "logoImageId",
+      "environmentId",
+      "backgroundId",
+      "bgmId",
+      "authorNote",
+      "render",
+      "spatialCamera"
+    ],
+    "act": [
+      "name",
+      "backgroundId",
+      "bgmId",
+      "environmentId",
+      "coverImageId",
+      "weather",
+      "event"
+    ],
+    "dialogue": [
+      "text",
+      "speaker",
+      "characterId",
+      "voiceId",
+      "seId",
+      "render",
+      "camera",
+      "cast",
+      "sceneAnimations",
+      "itemGrants"
+    ],
+    "character": [
+      "name",
+      "title",
+      "description",
+      "modelId",
+      "portraitId",
+      "portraitSource",
+      "autoMouth",
+      "detailsIdleId",
+      "galleryMotionId",
+      "stories"
+    ],
+    "titleActor": [
+      "characterId",
+      "modelId",
+      "motionId",
+      "motionOptions",
+      "expressionWeights",
+      "size",
+      "offsetX",
+      "offsetY",
+      "offsetZ",
+      "yaw",
+      "pitch",
+      "props"
+    ],
+    "prop": [
+      "name",
+      "assetId",
+      "bone",
+      "position",
+      "rotation",
+      "scale"
+    ],
+    "choice": [
+      "text",
+      "actId",
+      "requirements",
+      "consumeRequired"
+    ],
+    "item": [
+      "name",
+      "imageId",
+      "description"
+    ],
+    "book": [
+      "name",
+      "pdfId",
+      "coverId",
+      "description",
+      "unlockActId"
+    ],
+    "renderPreset": [
+      "name",
+      "settings"
+    ],
+    "asset": [
+      "name",
+      "description",
+      "tags",
+      "folderId",
+      "audioKind",
+      "galleryImage",
+      "galleryMusic"
+    ],
+    "folder": [
+      "name",
+      "type",
+      "audioKind"
+    ]
+  },
+  "collections": [
+    "environment",
+    "project",
+    "ui",
+    "title",
+    "act",
+    "dialogue",
+    "character",
+    "titleActor",
+    "prop",
+    "choice",
+    "item",
+    "book",
+    "renderPreset",
+    "asset",
+    "folder"
+  ],
+  "actions": [
+    "create",
+    "update",
+    "duplicate",
+    "delete",
+    "move",
+    "set_actor",
+    "set_motion_scope",
+    "replace_text"
+  ],
+  "batch": {
+    "maxOperations": 200,
+    "atomic": true,
+    "oneUndoStep": true,
+    "temporaryIds": "create/duplicate ref:shortName; subsequent *Id fields use $shortName"
+  },
+  "actors": {
+    "slots": [
+      {
+        "id": "left",
+        "label": "左侧"
+      },
+      {
+        "id": "center",
+        "label": "中间"
+      },
+      {
+        "id": "right",
+        "label": "右侧"
+      },
+      {
+        "id": "row2-left",
+        "label": "第 2 排 · 左侧"
+      },
+      {
+        "id": "row2-center",
+        "label": "第 2 排 · 中间"
+      },
+      {
+        "id": "row2-right",
+        "label": "第 2 排 · 右侧"
+      },
+      {
+        "id": "row3-left",
+        "label": "第 3 排 · 左侧"
+      },
+      {
+        "id": "row3-center",
+        "label": "第 3 排 · 中间"
+      },
+      {
+        "id": "row3-right",
+        "label": "第 3 排 · 右侧"
+      },
+      {
+        "id": "row4-left",
+        "label": "第 4 排 · 左侧"
+      },
+      {
+        "id": "row4-center",
+        "label": "第 4 排 · 中间"
+      },
+      {
+        "id": "row4-right",
+        "label": "第 4 排 · 右侧"
+      },
+      {
+        "id": "row5-left",
+        "label": "第 5 排 · 左侧"
+      },
+      {
+        "id": "row5-center",
+        "label": "第 5 排 · 中间"
+      },
+      {
+        "id": "row5-right",
+        "label": "第 5 排 · 右侧"
+      },
+      {
+        "id": "row6-left",
+        "label": "第 6 排 · 左侧"
+      },
+      {
+        "id": "row6-center",
+        "label": "第 6 排 · 中间"
+      },
+      {
+        "id": "row6-right",
+        "label": "第 6 排 · 右侧"
+      },
+      {
+        "id": "row7-left",
+        "label": "第 7 排 · 左侧"
+      },
+      {
+        "id": "row7-center",
+        "label": "第 7 排 · 中间"
+      },
+      {
+        "id": "row7-right",
+        "label": "第 7 排 · 右侧"
+      },
+      {
+        "id": "row8-left",
+        "label": "第 8 排 · 左侧"
+      },
+      {
+        "id": "row8-center",
+        "label": "第 8 排 · 中间"
+      },
+      {
+        "id": "row8-right",
+        "label": "第 8 排 · 右侧"
+      },
+      {
+        "id": "row9-left",
+        "label": "第 9 排 · 左侧"
+      },
+      {
+        "id": "row9-center",
+        "label": "第 9 排 · 中间"
+      },
+      {
+        "id": "row9-right",
+        "label": "第 9 排 · 右侧"
+      },
+      {
+        "id": "row10-left",
+        "label": "第 10 排 · 左侧"
+      },
+      {
+        "id": "row10-center",
+        "label": "第 10 排 · 中间"
+      },
+      {
+        "id": "row10-right",
+        "label": "第 10 排 · 右侧"
+      }
+    ],
+    "units": "offsets in meters, yaw/pitch in degrees, size uniform multiplier",
+    "maxOffsetMeters": 100,
+    "expressions": "0..1, inspect_character lists real morph names",
+    "motionOptions": {
+      "loop": "boolean",
+      "startFrame": "integer >=1",
+      "endFrame": "integer >= startFrame or null",
+      "after": [
+        "idle",
+        "hold"
+      ],
+      "placement": [
+        "inPlace",
+        "free"
+      ],
+      "feet": [
+        "auto",
+        "free",
+        "lock"
+      ]
+    },
+    "propBones": {
+      "rightHand": "右手掌",
+      "leftHand": "左手掌",
+      "head": "头部",
+      "hips": "腰部",
+      "chest": "胸部",
+      "upperChest": "上胸",
+      "spine": "脊柱",
+      "rightLowerArm": "右前臂",
+      "leftLowerArm": "左前臂",
+      "rightUpperArm": "右上臂",
+      "leftUpperArm": "左上臂",
+      "rightShoulder": "右肩",
+      "leftShoulder": "左肩",
+      "rightFoot": "右脚",
+      "leftFoot": "左脚",
+      "rightThumbMetacarpal": "右手拇指第一节",
+      "rightThumbProximal": "右手拇指第二节",
+      "rightThumbDistal": "右手拇指第三节",
+      "rightIndexProximal": "右手食指第一节",
+      "rightIndexIntermediate": "右手食指第二节",
+      "rightIndexDistal": "右手食指第三节",
+      "rightMiddleProximal": "右手中指第一节",
+      "rightMiddleIntermediate": "右手中指第二节",
+      "rightMiddleDistal": "右手中指第三节",
+      "rightRingProximal": "右手无名指第一节",
+      "rightRingIntermediate": "右手无名指第二节",
+      "rightRingDistal": "右手无名指第三节",
+      "rightLittleProximal": "右手小指第一节",
+      "rightLittleIntermediate": "右手小指第二节",
+      "rightLittleDistal": "右手小指第三节",
+      "leftThumbMetacarpal": "左手拇指第一节",
+      "leftThumbProximal": "左手拇指第二节",
+      "leftThumbDistal": "左手拇指第三节",
+      "leftIndexProximal": "左手食指第一节",
+      "leftIndexIntermediate": "左手食指第二节",
+      "leftIndexDistal": "左手食指第三节",
+      "leftMiddleProximal": "左手中指第一节",
+      "leftMiddleIntermediate": "左手中指第二节",
+      "leftMiddleDistal": "左手中指第三节",
+      "leftRingProximal": "左手无名指第一节",
+      "leftRingIntermediate": "左手无名指第二节",
+      "leftRingDistal": "左手无名指第三节",
+      "leftLittleProximal": "左手小指第一节",
+      "leftLittleIntermediate": "左手小指第二节",
+      "leftLittleDistal": "左手小指第三节"
+    }
+  },
+  "render": {
+    "selection": {
+      "presetId": "existing ID or empty string",
+      "brightness": "0..200",
+      "contrast": "0..200",
+      "saturation": "0..200"
+    },
+    "targets": {
+      "dialogue": "render",
+      "title": "render",
+      "ui": "roleDetailsRender"
+    },
+    "filters": 72,
+    "settings": "update renderPreset.settings {brightness,contrast,saturation,filters:{...}}"
+  },
+  "events": [
+    "news",
+    "war",
+    "major",
+    "cutscene"
+  ],
+  "assetImports": [
+    "auto",
+    "image",
+    "vrm",
+    "fbxCharacter",
+    "mmdCharacter",
+    "sceneModel",
+    "motion",
+    "music",
+    "effect",
+    "pdf",
+    "video"
+  ],
+  "notExposed": [
+    "arbitrary code or JSON paths",
+    "protected internal settings",
+    "Android export (removed)",
+    "player save data/unlock progress",
+    "deleting original external files"
+  ],
+  "notes": [
+    "Read current revision before writes.",
+    "Assets reference real IDs; no arbitrary paths in edit_project.",
+    "Scenes use existing edit_environment with grouping/parenting/grid/light/camera support.",
+    "Folder IDs for character motions and voice are protected.",
+    "create act data.kind=event for cutscenes/news; edit data.event.",
+    "Nested dialogue/choice/prop collections need ownerId."
+  ]
+}

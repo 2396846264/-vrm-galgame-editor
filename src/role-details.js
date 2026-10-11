@@ -1,3 +1,5 @@
+import {resolveRoleDetailsRender} from './render-presets.js';
+import {colorFilter} from './chapters.js';
 import {roleWindow,roleLoadOrder,rolePlacement,unlockedRoles} from './role-queue.js';
 import {createDetailIdle} from './detail-idle.js';
 
@@ -7,6 +9,7 @@ export function createRoleDetails(ctx){
  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const tick=()=>new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));
  const key=role=>'details:'+role.id;
+ function applyRender(){if(!viewer||!root)return;const settings=resolveRoleDetailsRender(ctx.project());viewer.setRenderSettings(settings);const filter=colorFilter(settings).filter;root.querySelector('.role-details-canvas').style.filter=filter;root.querySelector('.role-details-photo').style.filter=filter;}
  function text(){
   const role=roles[index];if(!root)return;
   root.querySelector('.role-details-counter').textContent=roles.length?`${index+1} / ${roles.length}`:'0 / 0';
@@ -86,7 +89,7 @@ export function createRoleDetails(ctx){
    <img class="role-details-photo" hidden alt="角色立绘"><p class="role-details-empty" hidden></p>
    <footer><button type="button" data-role-prev aria-label="上一位角色">‹</button><span>拖动画面或滚动鼠标，切换角色</span><button type="button" data-role-next aria-label="下一位角色">›</button></footer><div class="role-details-status" role="status"></div></section>`);
   root=frame.querySelector('#role-details');viewer=ctx.createStage(root.querySelector('.role-details-canvas'),message=>status(message));
-  viewer.setRenderSettings(ctx.project().render);viewer.camera.fov=32;viewer.camera.position.set(0,1.04,4.4);viewer.camera.lookAt(0,.98,0);viewer.camera.updateProjectionMatrix();
+  applyRender();viewer.camera.fov=32;viewer.camera.position.set(0,1.04,4.4);viewer.camera.lookAt(0,.98,0);viewer.camera.updateProjectionMatrix();
   root.addEventListener('click',event=>{event.stopPropagation();if(event.target.closest('[data-role-close]'))close();else if(event.target.closest('[data-role-prev]'))select(wanted-1);else if(event.target.closest('[data-role-next]'))select(wanted+1);});
   root.addEventListener('keydown',event=>{
    if(event.key==='Tab'){const targets=[...root.querySelectorAll('button:not(:disabled),[tabindex="0"]')],first=targets[0],last=targets.at(-1),active=document.activeElement;if(active===root||event.shiftKey&&active===first||!event.shiftKey&&active===last){event.preventDefault();event.stopPropagation();(event.shiftKey?last:first)?.focus();}return;}
@@ -99,5 +102,5 @@ export function createRoleDetails(ctx){
   canvas.addEventListener('wheel',event=>{event.preventDefault();if(performance.now()-lastWheel<220)return;scroll+=Math.abs(event.deltaX)>Math.abs(event.deltaY)?event.deltaX:event.deltaY;if(Math.abs(scroll)>=40){select(wanted+(scroll>0?1:-1));scroll=0;lastWheel=performance.now();}},{passive:false});
   root.focus({preventScroll:true});text();if(roles.length)return select(index);ready=display(serial).then(()=>true);return ready;
  }
- return {open,close,select,get ready(){return ready;},get isOpen(){return !closed;},get viewer(){return viewer;},get roles(){return roles;},get index(){return index;}};
+ return {open,close,select,applyRender,get ready(){return ready;},get isOpen(){return !closed;},get viewer(){return viewer;},get roles(){return roles;},get index(){return index;}};
 }

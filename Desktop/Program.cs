@@ -256,6 +256,10 @@ internal sealed partial class EditorWindow : Form
             if(Environment.GetCommandLineArgs().Contains("--smoke-thumbnails37")){await RunThumbnail37Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-physics38")){await RunPhysics38Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-jitter39")){await RunJitter39Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-details43")){await RunDetails43Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-render42")){await RunRender42Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-render41")){await RunRender41Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-spatial40")){await RunSpatial40Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-ui34")){await RunUi34Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-ui33")){await RunUi33Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-gallery32")){await RunGallery32Smoke();return;}
@@ -1278,7 +1282,11 @@ internal sealed partial class EditorWindow : Form
                 "pickDraftPlan" when !playerMode => PickDraftPlan(),
                 "pickDraftAssets" when !playerMode => PickDraftAssets(),
                 "agentReadDocument" when !playerMode => ReadStoryDocument(payload?["path"]?.GetValue<string>() ?? ""),
-                "agentImportAssets" when !playerMode => ImportDraftAssets(payload?["paths"]?.AsArray().Select(p=>p?.GetValue<string>() ?? "").ToArray() ?? []),
+                "agentEditorWindows" when !playerMode => await AgentEditorWindows44(),
+                "agentSyncEditorWindows" when !playerMode => await SyncAgentEditorWindows44(),
+                "agentCaptureEditor" when !playerMode => await CaptureAgentEditor44(payload?["panel"]?.GetValue<string>()),
+                "agentImportDialogueVoice" when !playerMode => ImportDialogueVoice(payload?["project"],payload?["actId"]?.GetValue<string>()??"",payload?["dialogueId"]?.GetValue<string>()??"",payload?["path"]?.GetValue<string>()),
+                "agentImportAssets" when !playerMode => ImportAgentAssets44(payload),
                 "agentExportGame" when !playerMode => ExportAgentGame(payload),
                 "newProject" when !playerMode => NewProject(payload?["name"]?.GetValue<string>() ?? "新游戏"),
                 "openProject" when !playerMode => OpenProject(),
@@ -1685,7 +1693,7 @@ internal sealed partial class EditorWindow : Form
 
     private static string VoiceCharacterKey(string characterId) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(characterId))).ToLowerInvariant()[..32];
 
-    private object? ImportDialogueVoice(JsonNode? project, string actId, string dialogueId)
+    private object? ImportDialogueVoice(JsonNode? project, string actId, string dialogueId,string? providedPath=null)
     {
         if (projectDirectory == null || project is not JsonObject) throw new Exception("请先打开工程。");
         var act = project["acts"]?.AsArray().FirstOrDefault(item => item?["id"]?.GetValue<string>() == actId && item?["kind"]?.GetValue<string>() != "event");
@@ -1698,7 +1706,8 @@ internal sealed partial class EditorWindow : Form
         if (string.IsNullOrWhiteSpace(text)) throw new Exception("请先填写对白内容，再上传配音。");
         string source;
         string[] args = Environment.GetCommandLineArgs(); int testIndex = Array.IndexOf(args, "--smoke-voice-file");
-        if (smokeBase != null && testIndex >= 0 && testIndex + 1 < args.Length) source = Path.GetFullPath(args[testIndex + 1]);
+        if(providedPath!=null){source=Path.GetFullPath(providedPath);if(!File.Exists(source)||new FileInfo(source).Length>256*1024*1024)throw new Exception("配音不存在或超过 256 MB。");}
+        else if (smokeBase != null && testIndex >= 0 && testIndex + 1 < args.Length) source = Path.GetFullPath(args[testIndex + 1]);
         else
         {
             using var dialog = new OpenFileDialog { Title = "为这句对白上传配音", Filter = "配音文件|*.mp3;*.wav;*.ogg", Multiselect = false };
@@ -1746,7 +1755,7 @@ internal sealed partial class EditorWindow : Form
         return new { assets = updates, warnings };
     }
 
-    private object? ImportAssets(string type, bool single = false,bool mp4Only=false)
+    private object? ImportAssets(string type, bool single = false,bool mp4Only=false,string[]? providedPaths=null)
     {
         if (projectDirectory == null) throw new Exception("请先新建或打开工程。");
         if (type == "voice") throw new Exception("配音不能从素材库导入，请到对应对白上传。");
@@ -1762,7 +1771,8 @@ internal sealed partial class EditorWindow : Form
         if (!extensions.TryGetValue(type, out var allowed)) throw new Exception("不支持的素材类型。");
         string[] sources;
         int smokePdfIndex = Array.IndexOf(Environment.GetCommandLineArgs(), "--smoke-pdf");
-        if (type == "pdf" && smokePdfIndex >= 0 && smokePdfIndex + 1 < Environment.GetCommandLineArgs().Length)
+        if(providedPaths!=null){sources=providedPaths.Select(Path.GetFullPath).ToArray();foreach(var path in sources)if(!File.Exists(path)||!allowed.Contains(Path.GetExtension(path).ToLowerInvariant()))throw new Exception("素材类型与文件扩展名不匹配。");}
+        else if (type == "pdf" && smokePdfIndex >= 0 && smokePdfIndex + 1 < Environment.GetCommandLineArgs().Length)
             sources = [Path.GetFullPath(Environment.GetCommandLineArgs()[smokePdfIndex + 1])];
         else if (type == "image" && single && smokeAvatarFile != null) sources = [smokeAvatarFile];
         else

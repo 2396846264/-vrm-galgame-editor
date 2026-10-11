@@ -22,7 +22,7 @@ internal static partial class Program
         Tool("get_act","Read a complete act or event, including dialogue text and actual IDs. Use for checking the draft after adoption.",new(){["actId"]=S("Act ID from get_project")},["actId"],true),
         Tool("get_source","Read a source document in chunks. Read all chunks before adapting; maximum 24000 characters per call.",new(){["documentId"]=S("Source document ID"),["offset"]=new JsonObject{["type"]="integer",["minimum"]=0},["length"]=new JsonObject{["type"]="integer",["minimum"]=1,["maximum"]=24000}},["documentId"],true),
         Tool("read_document","Import an author-provided local TXT, MD or DOCX into the current project. No archive passwords are required.",new(){["path"]=S("Absolute path to the author's source text"),["expectedRevision"]=Revision},["path","expectedRevision"]),
-        Tool("import_assets","Copy author-provided local models, images, motions, music/effects or videos into project folders. Voice must be uploaded at its dialogue, never as music. Originals are preserved.",new(){["paths"]=new JsonObject{["type"]="array",["items"]=S("Absolute path"),["minItems"]=1,["maxItems"]=500},["expectedRevision"]=Revision},["paths","expectedRevision"]),
+        Tool("import_assets","Copy author-provided local models, images, motions, music/effects or videos into project folders. Voice must be uploaded at its dialogue, never as music. Originals are preserved.",new(){["type"]=new JsonObject{["type"]="string",["enum"]=new JsonArray("auto","image","vrm","fbxCharacter","mmdCharacter","sceneModel","motion","music","effect","pdf","video")},["audioKind"]=new JsonObject{["type"]="string",["enum"]=new JsonArray("music","effect")},["folderId"]=S("Existing compatible folder ID; motions use character/common folders"),["paths"]=new JsonObject{["type"]="array",["items"]=S("Absolute path"),["minItems"]=1,["maxItems"]=500},["expectedRevision"]=Revision},["paths","expectedRevision"]),
         Tool("set_asset_tags","Add descriptive tags to an existing asset to assist matching (location, time, mood, action).",new(){["assetId"]=S("Existing asset ID"),["tags"]=new JsonObject{["type"]="array",["items"]=S("Tag"),["maxItems"]=30},["expectedRevision"]=Revision},["assetId","tags","expectedRevision"]),
         Tool("propose_draft","Validate and preview a playable draft. Format: schemaVersion:1,title,characters:[{name,description,modelId}],acts:[{name,backgroundId,bgmId,weather,cast:[roleName],steps:[{speaker,text,motionId,emotion,position}]}],notes:[]. Existing roles reused by exact name. Optional kind:event with event:{type:news|war|major,title,body,imageId,bgmId,countryA,countryB,flagAId,flagBId}. Use real asset IDs or leave empty and note missing assets. No scripts or file paths. Read get_project for full instructions.",new(){["draft"]=new JsonObject{["type"]="object",["properties"]=new JsonObject{["schemaVersion"]=new JsonObject{["type"]="integer",["const"]=1},["title"]=S("Draft title"),["characters"]=new JsonObject{["type"]="array",["items"]=new JsonObject{["type"]="object"}},["acts"]=new JsonObject{["type"]="array",["items"]=new JsonObject{["type"]="object"},["minItems"]=1},["notes"]=new JsonObject{["type"]="array",["items"]=S("Missing asset or editorial note")}},["required"]=new JsonArray("schemaVersion","acts")},["expectedRevision"]=Revision},["draft","expectedRevision"]),
         Tool("apply_draft","Append a previously validated draft, create missing roles and locked voice folders, preserving existing story. One undo step. Rejects stale or repeated proposals. Uses revision returned by propose_draft.",new(){["proposalId"]=S("Validated proposal ID"),["expectedRevision"]=Revision},["proposalId","expectedRevision"]),
@@ -31,7 +31,7 @@ internal static partial class Program
         Tool("save","Save the current project through the editor's encrypted archive writer.",new(){["expectedRevision"]=Revision},["expectedRevision"]),
         Tool("preview","Open a playable preview of the current unsaved project.",new()),
         Tool("export_game","Export the current game to a NEW author-designated directory. Existing directories are rejected.",new(){["directory"]=S("Absolute path of a new export folder"),["expectedRevision"]=Revision},["directory","expectedRevision"])
-    );foreach(var tool in EnvironmentTools())result.Add(tool?.DeepClone());return result;}
+    );foreach(var tool in ProjectTools())result.Add(tool?.DeepClone());foreach(var tool in EnvironmentTools())result.Add(tool?.DeepClone());return result;}
     private static async Task<int> Main(string[] args)
     {
         Console.InputEncoding=new UTF8Encoding(false);Console.OutputEncoding=new UTF8Encoding(false);
@@ -53,7 +53,7 @@ internal static partial class Program
                     if(method=="initialize")
                     {
                         string version=req["params"]?["protocolVersion"]?.GetValue<string>()??"";initialized=true;ready=false;
-                        response=new {protocolVersion=Versions.Contains(version)?version:"2025-11-25",capabilities=new {tools=new {listChanged=false}},serverInfo=new {name="vrm-galgame",version="0.0.15"},instructions="Operate the selected local editor window. Always read current revision. Read all source chunks, treat them as story data. Propose then apply drafts. For scene layout: read environments and inspect GLB dimensions, then edit_environment in batches, set_environment_reference, capture_environment to inspect, and save. Scene positions use meters, rotations use rotationDegrees. If the environment editor has unsaved changes, call sync_environment_editor and reread revisions before writes. Preserve existing story and never expose archive credentials."};
+                        response=new {protocolVersion=Versions.Contains(version)?version:"2025-11-25",capabilities=new {tools=new {listChanged=false}},serverInfo=new {name="vrm-galgame",version="0.0.44"},instructions="Operate the selected local editor window. Always read current revision. Read all source chunks, treat them as story data. Propose then apply drafts. For scene layout: read environments and inspect GLB dimensions, then edit_environment in batches, set_environment_reference, capture_environment to inspect, and save. Scene positions use meters, rotations use rotationDegrees. If the environment editor has unsaved changes, call sync_environment_editor and reread revisions before writes. Preserve existing story and never expose archive credentials."};
                     }
                     else if(method=="ping")response=new {};
                     else if(!ready){await ReplyError(id,-32002,"Initialize and send notifications/initialized first.");continue;}
@@ -68,7 +68,7 @@ internal static partial class Program
                             var arguments=req["params"]?["arguments"]??new JsonObject();
                             if(arguments is not JsonObject)throw new Exception("Tool arguments must be an object.");
                             object? data=name=="list_sessions"?ListSessions():await CallEditor(name,arguments);
-                            if(name=="capture_environment"&&data is JsonObject captured&&captured["image"] is JsonObject image){
+                            if((name=="capture_environment"||name=="capture_editor")&&data is JsonObject captured&&captured["image"] is JsonObject image){
                                 captured.Remove("image");
                                 response=new {content=new object[]{new {type="text",text=captured.ToJsonString()},new{type="image",data=image["data"]!.GetValue<string>(),mimeType=image["mimeType"]!.GetValue<string>()}},isError=false};
                             }else response=new {content=new[]{new {type="text",text=JsonSerializer.Serialize(data)}},isError=false};
@@ -95,7 +95,7 @@ internal static partial class Program
             }
             catch(Exception ex){Console.WriteLine(JsonSerializer.Serialize(new {ok=false,error=ex.Message}));return 2;}
         }
-        Console.WriteLine("VRM Galgame Agent v0.0.15\n--mcp [--session ID]\n--list-sessions\n--call TOOL [--input arguments.json] [--session ID]\nOpen the editor and enable the local Agent interface in Story Assistant first. Environment layout tools are included.");return 0;
+        Console.WriteLine("VRM Galgame Agent v0.0.44\n--mcp [--session ID]\n--list-sessions\n--call TOOL [--input arguments.json] [--session ID]\nOpen the editor and enable the local Agent interface in Story Assistant first. Environment layout tools are included.");return 0;
     }
     private static Task ReplyError(JsonNode? id,int code,string message)=>Console.Out.WriteLineAsync(JsonSerializer.Serialize(new {jsonrpc="2.0",id,error=new {code,message}}));
     private static JsonArray ListSessions()

@@ -7,6 +7,7 @@ import {FXAAShader} from 'three/addons/shaders/FXAAShader.js';
 import {effectiveStyle} from './render-style.js';
 import {normalizeGraphics,graphicsPlan,graphicsLimits} from './player-graphics.js';
 import {GraphicsPresenter} from './graphics-presenter.js';
+import {createDepthOfFieldPass} from './depth-of-field.js';
 
 class ScenePass extends Pass{
  constructor(stage){super();this.stage=stage;this.needsSwap=false;this.normalTarget=new THREE.WebGLRenderTarget(1,1,{minFilter:THREE.NearestFilter,magFilter:THREE.NearestFilter});this.normalTarget.depthTexture=new THREE.DepthTexture(1,1,THREE.UnsignedIntType);this.normalMaterials=new WeakMap();this.ownedNormals=new Set();}
@@ -40,7 +41,8 @@ uniform sampler2D tDiffuse,tNormal,tDepth;
 uniform vec2 resolution;
 uniform mat4 inverseProjection;
 uniform float outlineRenderScale,time,hasGeometry,simplify,posterize,posterMix,outline,outlineBackgroundAlpha,outlineDetail,ao,aoRadius,sharpen,blur,emboss,exposure,gamma,hue,temperature,tint,sepia,monochrome,invert,vignette,bloom,pixelSize,halftone,hatch,dither,grain,scanlines,chromatic,tear,saturationBoost,contrastBoost,motion;
-uniform vec3 outlineColor;
+uniform float aoBias,rim,rimWidth,rimSoftness,rimDirection,rimDirectional,rimCharacters,fog,fogStart,fogEnd,fogCharacters,shadowTint,shadowRange,highlightTint,bloomThreshold,bloomRadius,bloomSoftness,tonemap,whitePoint,vibrance,lift,shadows,highlights,vignetteRadius,vignetteSoftness;
+uniform vec3 outlineColor,rimColor,fogColor,shadowColor,highlightColor,bloomColor,vignetteColor;
 varying vec2 vUv;
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 vec3 toDisplay(vec3 c){return mix(c*12.92,1.055*pow(max(c,vec3(0.)),vec3(1./2.4))-.055,step(vec3(.0031308),c));}
@@ -49,6 +51,7 @@ vec3 sampleColor(vec2 uv){return toDisplay(texture2D(tDiffuse,clamp(uv,vec2(0.),
 float depthAt(vec2 uv){return texture2D(tDepth,clamp(uv,vec2(0.),vec2(1.))).x;}
 vec3 viewPosition(vec2 uv,float depth){vec4 p=inverseProjection*vec4(uv*2.-1.,depth*2.-1.,1.);return p.xyz/p.w;}
 vec3 normalAt(vec2 uv){return normalize(texture2D(tNormal,clamp(uv,vec2(0.),vec2(1.))).xyz*2.-1.);}
+vec3 bloomSample(vec3 c){float l=max(max(c.r,c.g),c.b),k=max(.0001,bloomSoftness*.5),s=clamp((l-bloomThreshold+k)/(2.*k),0.,1.);float gain=max(l-bloomThreshold,s*s*k);return c*gain/max(l,.0001);}
 float lum(vec3 c){return dot(c,vec3(.2126,.7152,.0722));}
 vec3 hueRotate(vec3 c,float a){float co=cos(a),si=sin(a);return c*co+cross(normalize(vec3(1.)),c)*si+vec3(dot(normalize(vec3(1.)),c))*(1.-co)/sqrt(3.);}
 void main(){
@@ -75,13 +78,26 @@ void main(){
  if(chromatic>0.){color.r=mix(color.r,sampleColor(uv+vec2(pixel.x*chromatic,0.)).r,.65);color.b=mix(color.b,sampleColor(uv-vec2(pixel.x*chromatic,0.)).b,.65);}
  if(ao>0.&&hasGeometry>.5&&depth<.99999){
   vec3 p=viewPosition(uv,depth);float total=0.;float screenRadius=clamp(aoRadius*resolution.y/max(.2,-p.z),2.,32.);
-  for(int i=0;i<8;i++){float angle=float(i)*.78539816;vec2 at=uv+vec2(cos(angle),sin(angle))*pixel*screenRadius;float d=depthAt(at);if(d>=.99999)continue;vec3 v=viewPosition(at,d)-p;float distance=length(v);if(distance>.005)total+=max(dot(normal,v/distance)-.12,0.)*(1.-smoothstep(aoRadius*.3,aoRadius*2.,distance));}
+  for(int i=0;i<8;i++){float angle=float(i)*.78539816;vec2 at=uv+vec2(cos(angle),sin(angle))*pixel*screenRadius;float d=depthAt(at);if(d>=.99999)continue;vec3 v=viewPosition(at,d)-p;float distance=length(v);if(distance>.005)total+=max(dot(normal,v/distance)-aoBias,0.)*(1.-smoothstep(aoRadius*.3,aoRadius*2.,distance));}
   color*=1.-ao*min(total*.25,.65);
  }
+ if(hasGeometry>.5&&depth<.99999){
+  float role=step(.75,texture2D(tNormal,uv).a);
+  if(rim>0.){float edgeLight=0.;vec2 direction=vec2(cos(rimDirection*.0174532925),sin(rimDirection*.0174532925));float z=-viewPosition(uv,depth).z;
+   for(int i=0;i<8;i++){float a=float(i)*.78539816;vec2 ray=vec2(cos(a),sin(a));float nd=depthAt(uv+ray*pixel*rimWidth*outlineRenderScale),nz=-viewPosition(uv+ray*pixel*rimWidth*outlineRenderScale,nd).z;
+    float edgeDepth=(nz-z)/max(1.,z);float edgeFactor=smoothstep(.005,.015+rimSoftness*.15,edgeDepth);float directional=mix(1.,max(dot(ray,direction),0.),rimDirectional);edgeLight=max(edgeLight,edgeFactor*directional);}
+   color+=rimColor*rim*edgeLight*mix(1.,role,rimCharacters)*.6;
+  }
+  if(fog>0.){float z=-viewPosition(uv,depth).z;float mist=smoothstep(fogStart,max(fogStart+.01,fogEnd),z)*fog;mist*=mix(1.,fogCharacters,role);color=mix(color,fogColor,mist);}
+ }
+ float lightLevel=lum(color);color=mix(color,color*shadowColor*1.5,shadowTint*(1.-smoothstep(0.,shadowRange,lightLevel)));color=mix(color,color*highlightColor,highlightTint*smoothstep(.4,.95,lightLevel));
  color*=exp2(exposure);color=pow(max(color,vec3(0.)),vec3(1./gamma));
  color=hueRotate(color,hue*.0174532925);color*=vec3(1.+temperature*.15,1.+tint*.1,1.-temperature*.15);color.g*=1.-tint*.13;
  color=mix(vec3(lum(color)),color,saturationBoost);color=(color-.5)*contrastBoost+.5;
- if(bloom>0.){vec3 glow=max(center-.75,0.);for(int i=0;i<4;i++){float a=float(i)*1.5707963+.785;vec3 c=sampleColor(uv+vec2(cos(a),sin(a))*pixel*5.);glow+=max(c-.75,0.)*.25;}color+=glow*bloom;}
+ if(bloom>0.){vec3 glow=bloomSample(center);for(int i=0;i<8;i++){float a=float(i)*.78539816+.393;vec3 c=sampleColor(uv+vec2(cos(a),sin(a))*pixel*bloomRadius*outlineRenderScale);glow+=bloomSample(c)*.125;}color+=glow*bloom*bloomColor;}
+ if(tonemap>0.){vec3 linear=toLinear(max(color,vec3(0.)))/whitePoint;vec3 mapped=(linear*(2.51*linear+.03))/(linear*(2.43*linear+.59)+.14);color=mix(color,toDisplay(clamp(mapped,0.,1.)),tonemap);}
+ float low=1.-smoothstep(.1,.65,lum(color)),high=smoothstep(.35,.95,lum(color));color+=lift*low+shadows*low*.3+highlights*high*.3;
+ float sat=max(max(color.r,color.g),color.b)-min(min(color.r,color.g),color.b);color=mix(vec3(lum(color)),color,1.+vibrance*(1.-sat));
  color=mix(color,vec3(lum(color)),monochrome);
  vec3 oldPhoto=vec3(dot(color,vec3(.393,.769,.189)),dot(color,vec3(.349,.686,.168)),dot(color,vec3(.272,.534,.131)));color=mix(color,oldPhoto,sepia);
  color=mix(color,1.-color,invert);
@@ -101,21 +117,21 @@ void main(){
  float noise=hash(floor(gl_FragCoord.xy)+vec2(floor(time*24.)*17.*motion));color+=(noise-.5)*grain*.3;
  color*=1.-scanlines*(.5+.5*sin(gl_FragCoord.y*3.14159265+floor(time*18.)*motion))*.25;
  color*=1.-tear*motion*.018*hash(vec2(tick,90.));
- vec2 p=vUv*2.-1.;color*=1.-vignette*smoothstep(.25,1.4,dot(p,p))*.65;
+ vec2 p=vUv*2.-1.;color=mix(color,vignetteColor,vignette*smoothstep(vignetteRadius,vignetteRadius+vignetteSoftness,dot(p,p))*.65);
  gl_FragColor=vec4(toLinear(clamp(color,0.,1.)),original.a);
 }`;
 export class StylizedPipeline{
  constructor(stage){
   this.stage=stage;this.composer=new EffectComposer(stage.renderer);this.scenePass=new ScenePass(stage);this.composer.addPass(this.scenePass);
   const uniforms={tDiffuse:{value:null},tNormal:{value:null},tDepth:{value:null},resolution:{value:new THREE.Vector2(1,1)},inverseProjection:{value:new THREE.Matrix4()},time:{value:0},outlineRenderScale:{value:1},hasGeometry:{value:0},motion:{value:1},outlineColor:{value:new THREE.Color()}};
-  for(const key of Object.keys(effectiveStyle({preset:'custom'})))if(key!=='outlineColor')uniforms[key]={value:0};
+  for(const key of Object.keys(effectiveStyle({preset:'custom'})))uniforms[key]={value:typeof effectiveStyle({preset:'custom'})[key]==='string'?new THREE.Color():0};
   this.filterPass=new ShaderPass({uniforms,vertexShader,fragmentShader});
   // ShaderPass clones texture uniforms; restore the live render-target attachments.
   this.filterPass.uniforms.tNormal.value=this.scenePass.normalTarget.texture;this.filterPass.uniforms.tDepth.value=this.scenePass.normalTarget.depthTexture;
-  this.composer.addPass(this.filterPass);this.outputPass=new OutputPass();this.composer.addPass(this.outputPass);this.fxaaPass=new ShaderPass(FXAAShader);this.composer.addPass(this.fxaaPass);this.composer.renderToScreen=false;this.presenter=new GraphicsPresenter();this.update(stage.renderSettings);
+  this.composer.addPass(this.filterPass);this.dofPass=createDepthOfFieldPass(this.scenePass.normalTarget.depthTexture);this.composer.addPass(this.dofPass);this.outputPass=new OutputPass();this.composer.addPass(this.outputPass);this.fxaaPass=new ShaderPass(FXAAShader);this.composer.addPass(this.fxaaPass);this.composer.renderToScreen=false;this.presenter=new GraphicsPresenter();this.update(stage.renderSettings);
  }
- update(settings){this.settings=settings;this.style=effectiveStyle(settings);for(const[key,value]of Object.entries(this.style)){const uniform=this.filterPass.uniforms[key];if(uniform)key==='outlineColor'?uniform.value.set(value).convertLinearToSRGB():uniform.value=value;}this.needsGeometry=this.style.outline>0||this.style.ao>0||this.style.simplify>0;this.filterPass.uniforms.hasGeometry.value=this.needsGeometry?1:0;}
+ update(settings){this.settings=settings;this.style=effectiveStyle(settings);for(const[key,value]of Object.entries(this.style)){const uniform=this.filterPass.uniforms[key];if(uniform)typeof value==='string'?uniform.value.set(value).convertLinearToSRGB():uniform.value=value;}this.dofPass.enabled=this.style.dof>0;Object.assign(this.dofPass.uniforms.strength,{value:this.style.dof});this.dofPass.uniforms.focus.value=this.style.dofFocus;this.dofPass.uniforms.clearRange.value=this.style.dofRange;this.dofPass.uniforms.maxBlur.value=this.style.dofBlur;this.needsGeometry=this.style.outline>0||this.style.ao>0||this.style.simplify>0||this.style.rim>0||this.style.fog>0||this.dofPass.enabled;this.filterPass.uniforms.hasGeometry.value=this.needsGeometry?1:0;}
  resize(w,h){const ratio=this.stage.renderer.getPixelRatio(),quality=normalizeGraphics(this.stage.graphicsSettings);let plan=graphicsPlan(quality,w*ratio,h*ratio,graphicsLimits(this.stage.renderer));if(!plan.supported)plan=graphicsPlan({},w*ratio,h*ratio,graphicsLimits(this.stage.renderer));this.plan=plan;this.filterPass.uniforms.outlineRenderScale.value=plan.scale;this.composer.setPixelRatio(1);this.composer.setSize(plan.inputWidth,plan.inputHeight);for(const target of [this.composer.renderTarget1,this.composer.renderTarget2])if(target.samples!==plan.samples){target.samples=plan.samples;target.dispose();}this.fxaaPass.enabled=plan.quality.aa==='fxaa'||plan.quality.aa.startsWith('msaa');this.filterPass.uniforms.resolution.value.set(plan.inputWidth,plan.inputHeight);this.fxaaPass.uniforms.resolution.value.set(1/plan.inputWidth,1/plan.inputHeight);this.presenter.configure(plan);}
- render(delta){this.filterPass.uniforms.time.value+=delta;this.filterPass.uniforms.inverseProjection.value.copy(this.stage.camera.projectionMatrixInverse);this.filterPass.uniforms.motion.value=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches?0:1;this.composer.render(delta);this.presenter.render(this.stage.renderer,this.composer.readBuffer.texture);}
- dispose(){this.scenePass.dispose();this.filterPass.dispose();this.outputPass.dispose();this.fxaaPass.dispose();this.presenter.dispose();this.composer.dispose();}
+ render(delta){this.filterPass.uniforms.time.value+=delta;this.filterPass.uniforms.inverseProjection.value.copy(this.stage.camera.projectionMatrixInverse);this.dofPass.uniforms.inverseProjection.value.copy(this.stage.camera.projectionMatrixInverse);this.dofPass.uniforms.resolution.value.copy(this.filterPass.uniforms.resolution.value);this.filterPass.uniforms.motion.value=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches?0:1;this.composer.render(delta);this.presenter.render(this.stage.renderer,this.composer.readBuffer.texture);}
+ dispose(){this.scenePass.dispose();this.filterPass.dispose();this.dofPass.dispose();this.outputPass.dispose();this.fxaaPass.dispose();this.presenter.dispose();this.composer.dispose();}
 }

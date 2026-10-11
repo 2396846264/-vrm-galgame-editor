@@ -1,0 +1,8 @@
+import assert from 'node:assert/strict';
+import {migrateRenderPresets,resolveRoleDetailsRender,newRenderPreset,renderSelection,deleteRenderPreset} from '../src/render-presets.js';
+const p={render:{preset:'tno',brightness:83},title:{render:{preset:'custom'}},acts:[{id:'a',steps:[{id:'s',render:{preset:'zzz'}}]}]};migrateRenderPresets(p);
+assert.deepEqual(p.ui.roleDetailsRender,p.render);assert.notEqual(p.ui.roleDetailsRender,p.render,'Details must own its selection');const inherited=resolveRoleDetailsRender(p);assert.equal(inherited.filters.tear,.55);
+const title=JSON.stringify(p.title),line=JSON.stringify(p.acts);p.renderPresets.push(newRenderPreset('details','details',{brightness:120,contrast:105,saturation:110,filters:{rim:.4}}));p.ui.roleDetailsRender=renderSelection({presetId:'details',brightness:90,contrast:110,saturation:80});
+const r=resolveRoleDetailsRender(p);assert.equal(r.brightness,108);assert.equal(r.contrast,115.5);assert.equal(r.saturation,88);assert.equal(r.filters.rim,.4);assert.equal(JSON.stringify(p.title),title);assert.equal(JSON.stringify(p.acts),line);
+const reopened=JSON.parse(JSON.stringify(p));migrateRenderPresets(reopened);assert.deepEqual(resolveRoleDetailsRender(reopened),r);deleteRenderPreset(reopened,'details');assert.equal(reopened.ui.roleDetailsRender.presetId,'');assert.equal(resolveRoleDetailsRender(reopened).filters.rim,0);assert.equal(reopened.ui.roleDetailsRender.brightness,90);
+console.log('PASS: details independent selection, legacy default preserved, preset + calibration composition, title/dialogue isolation, persistence and preset deletion.');

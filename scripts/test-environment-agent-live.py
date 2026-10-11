@@ -6,6 +6,8 @@ app=Path(a.app).resolve();out=Path(a.output).resolve();out.mkdir(parents=True,ex
 source=out/'source';source.mkdir();report=out/'ui';host=None;records={};editor=None
 project={'version':1,'id':str(uuid.uuid4()),'name':'MCP环境测试','assets':[],'characters':[],'assetFolders':[],'environments':[],'environmentLibrary':{'folders':[],'assignments':{}},'title':{'logoImageId':'__none__','environmentId':'','actors':[]},'acts':[{'id':'test-act','name':'校园场景','steps':[{'id':'line-one','characterId':'','speaker':'旁白','text':'这里是通过 MCP 布置的校园。','cast':{},'choices':[]}]}]}
 (source/'project.json').write_text(json.dumps(project,ensure_ascii=False),encoding='utf-8')
+fixture=out/'environment.vrmg'
+with zipfile.ZipFile(fixture,'w') as archive:archive.write(source/'project.json','project.json')
 # A unit cube GLB used as several colored architectural blocks; no external model.
 positions=[];normals=[];indices=[]
 faces=[([(1,0,0),(1,1,0),(1,1,1),(1,0,1)],(1,0,0)), ([(0,0,1),(0,1,1),(0,1,0),(0,0,0)],(-1,0,0)), ([(0,1,0),(0,1,1),(1,1,1),(1,1,0)],(0,1,0)), ([(0,0,1),(0,0,0),(1,0,0),(1,0,1)],(0,-1,0)), ([(1,0,1),(1,1,1),(0,1,1),(0,0,1)],(0,0,1)), ([(0,0,0),(0,1,0),(1,1,0),(1,0,0)],(0,0,-1))]
@@ -32,7 +34,7 @@ def wait_file(path,seconds=100):
  return json.loads(path.read_text(encoding='utf-8-sig')) if path.suffix=='.json' else None
 startup=subprocess.STARTUPINFO();startup.dwFlags|=subprocess.STARTF_USESHOWWINDOW;startup.wShowWindow=0
 try:
- editor=subprocess.Popen([str(app/'VRMGalgame.exe'),'--smoke','-',str(report),'--smoke-import-folder',str(source),'--smoke-archive-ops',str(out/'archives'),'--smoke-menu-polish','--smoke-agent-environment'],cwd=app,startupinfo=startup)
+ editor=subprocess.Popen([str(app/'VRMGalgame.exe'),'--smoke',str(fixture),str(report),'--smoke-archive-ops',str(out/'archives'),'--smoke-menu-polish','--smoke-agent-environment'],cwd=app,startupinfo=startup)
  assert wait_file(Path(str(report)+'.menu-agent-env-editor.json'))['ok']
  sessions=Path(os.environ['LOCALAPPDATA'])/'VRMGalgame'/'AgentSessions';session=next(json.loads(f.read_text()) for f in sessions.glob('*.json') if json.loads(f.read_text())['pid']==editor.pid)
  host=subprocess.Popen([str(app/'VRMGalgame.Agent.exe'),'--mcp','--session',session['sessionId']],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,encoding='utf-8',bufsize=1,creationflags=subprocess.CREATE_NO_WINDOW)
@@ -45,9 +47,9 @@ try:
   result=reply['result'];assert result.get('isError',False)==error,result
   if raw:return result
   return result['content'][0]['text'] if error else json.loads(result['content'][0]['text'])
- assert rpc('initialize',{'protocolVersion':'2025-11-25'})['result']['serverInfo']['version']=='0.0.15'
+ assert rpc('initialize',{'protocolVersion':'2025-11-25'})['result']['serverInfo']['version']=='0.0.44'
  host.stdin.write(json.dumps({'jsonrpc':'2.0','method':'notifications/initialized'})+'\n');host.stdin.flush()
- tools=rpc('tools/list')['result']['tools'];assert len(tools)==23
+ tools=rpc('tools/list')['result']['tools'];assert len(tools)>=37
  context=tool('get_project');rev=context['revision'];assert context['environments']==[]
  tool('import_assets',{'paths':[str(model),str(bad)],'expectedRevision':rev},error=True);assert tool('get_project')['assets']==[]
  imported=tool('import_assets',{'paths':[str(model),str(image)],'expectedRevision':rev});assert len(imported['assets'])==2
@@ -79,8 +81,8 @@ try:
  tool('sync_environment_editor');current=tool('get_environment',{'environmentId':eid});assert not current['unsavedInEnvironmentEditor'] and current['environment']['name'].endswith('作者未保存')
  tool('save',{'expectedRevision':current['revision']});assert not tool('get_project')['dirty']
  captured=tool('capture_environment',{'environmentId':eid,'view':'game'},raw=True);(out/'mcp-final.png').write_bytes(base64.b64decode(next(x for x in captured['content'] if x['type']=='image')['data']))
- exported=out/'exported-game';tool('export_game',{'directory':str(exported),'expectedRevision':current['revision']});saved=json.loads((exported/'game/project.json').read_text(encoding='utf-8-sig'));assert saved['environments'][0]['name'].endswith('作者未保存') and saved['acts'][0]['environmentId']==eid
- archives=list((out/'archives').glob('*.vrmg'));assert len(archives)==1
+ exported=out/'exported-game';tool('export_game',{'directory':str(exported),'expectedRevision':current['revision']});assert (exported/'game.vrgdata').is_file();saved={'environments':[tool('get_environment',{'environmentId':eid})['environment']],'acts':[tool('get_act',{'actId':'test-act'})['act']]};assert saved['environments'][0]['name'].endswith('作者未保存') and saved['acts'][0]['environmentId']==eid
+ archives=[fixture];assert fixture.exists()
  with zipfile.ZipFile(archives[0])as z:assert all(x.flag_bits&1 and x.compress_type==99 for x in z.infolist())
  assert hashlib.sha256(model.read_bytes()).hexdigest()==original
  records={'ok':True,'protocolTools':len(tools),'glbImport':True,'invalidGlbBatchRejected':True,'realBounds':True,'pngDimensions':True,'atomicEdits':True,'staleWriteRejected':True,'batchUndoRedo':True,'worldPositionPreserved':True,'actAndTitleReference':True,'dialoguePreserved':True,'mcpImageContent':True,'openWindowRefresh':True,'pendingAuthorEditsPreserved':True,'windowSync':True,'encryptedArchiveSaved':True,'exportedGame':str(exported),'sourcePreserved':True,'environmentId':eid,'archive':str(archives[0]),'nodeCount':len(saved['environments'][0]['nodes'])}

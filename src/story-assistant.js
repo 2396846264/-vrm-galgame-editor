@@ -1,3 +1,4 @@
+import {createProjectAgent,projectAgentTools,projectAgentWrites} from './project-agent.js';
 import {compileDraft,applyCompiledDraft,draftContext,draftInstructions,splitTextDraft,parseDraft} from './story-draft.js';
 import {createEnvironmentAgent,environmentAgentTools,environmentAgentWrites,editorSummary} from './environment-agent.js';
 import './story-assistant.css';
@@ -11,7 +12,8 @@ export function createStoryAssistant(ctx) {
   const begin=()=>ctx.begin();
   const changed=async label=>{ctx.changed(label);await ctx.refresh();};
   const environmentAgent=createEnvironmentAgent({...ctx,changed,control:(command,payload={})=>ctx.bridge('agentEnvironmentControl',{command,...payload}),open:ctx.openEnvironment});
-  const synchronizedWrites=new Set([...environmentAgentWrites,'import_assets','read_document','set_asset_tags','propose_draft','apply_draft','undo','redo','save','preview','export_game','open_environment','capture_environment']);
+  const projectAgent=createProjectAgent({...ctx,changed});
+  const synchronizedWrites=new Set([...projectAgentWrites,...environmentAgentWrites,'import_assets','read_document','set_asset_tags','propose_draft','apply_draft','undo','redo','save','preview','export_game','open_environment','capture_environment']);
   let agentOperationBusy=false;
   const config=()=>connection?{mcpServers:{vrm_galgame:{command:connection.command,args:['--mcp','--session',connection.sessionId]}}}:{};
   const setStatus=(message,error=false)=>{status=message;const n=document.querySelector('#assistant-status');if(n){n.textContent=message;n.classList.toggle('error',error);}};
@@ -28,7 +30,7 @@ export function createStoryAssistant(ctx) {
       <label class="field"><span>作者要求</span><textarea id="assistant-instructions" placeholder="例如：每幕不要太长，人物名称不变，保持悬疑气氛">${esc(a.instructions)}</textarea></label><button data-action="assistant-options">保存编排要求</button>
       <h3 style="margin-top:20px">② 提供模型、背景、动作和音乐</h3><p class="assistant-help">素材会自动归类。配音仍必须在对应对白上传。给素材填写标签，Agent 更容易选对。</p><div class="assistant-actions"><button data-action="assistant-assets">批量导入素材</button></div>
       <div class="assistant-tags">${p.assets.filter(x=>x.type!=='voice').map(x=>`<label><span title="${esc(x.name)}">${esc(x.name)}</span><input data-assistant-tags="${esc(x.id)}" value="${esc((x.tags||[]).join('，'))}" placeholder="标签，如：港口，白天，紧张"></label>`).join('')}</div><button data-action="assistant-tags-save">保存素材标签</button></section>
-      <section><h3>③ 连接 Agent</h3><p class="assistant-help">让你正在使用的 Agent 读故事、编排粗稿，也能布置三维环境：摆放模型、图片远景、灯光和游戏镜头。开启后，本地 Agent 可修改当前工程；每批布置都能撤销。这里不会自带 AI，也不需要提供工程密码。</p>
+      <section><h3>③ 连接 Agent</h3><p class="assistant-help">让你正在使用的 Agent 读故事、编排粗稿，也能布置三维环境：摆放模型、图片远景、灯光和游戏镜头。开启后，本地 Agent 可修改对白、人物、表情、物品、事件、标题、游戏 UI、渲染预设和环境；每批修改都能撤销。这里不会自带 AI，也不需要提供工程密码。</p>
       <div class="assistant-actions"><button data-action="assistant-toggle">${enabled?'断开 Agent':'开启本地 Agent 接口'}</button><button data-action="assistant-copy-task">复制编排任务</button><button data-action="assistant-copy-scene-task">复制场景布置任务</button></div>
       ${enabled?`<p class="assistant-help">将下面的配置添加到支持 MCP 的 Agent 中（每个编辑器窗口有独立连接）。</p><pre class="assistant-config">${esc(JSON.stringify(config(),null,2))}</pre><button data-action="assistant-copy-config">复制 MCP 配置</button>`:''}
       <h3 style="margin-top:20px">④ 检查并采用粗稿</h3><p class="assistant-help">Agent 提交的粗稿会显示在这里。也可导入它生成的 JSON 文件。采用时追加到剧情末尾，已有剧情和角色介绍保留。</p>
@@ -77,9 +79,9 @@ export function createStoryAssistant(ctx) {
     check();reset();if(agentOperationBusy)throw Error('MCP 正在处理上一项操作，请稍候');agentOperationBusy=true;
     let locked=false,result;
     try{
-      if(synchronizedWrites.has(name)){await ctx.bridge('agentEnvironmentControl',{command:'lock'});locked=true;}
-      if(environmentAgentWrites.has(name))guard(args);
-      result=environmentAgentTools.has(name)?await environmentAgent.call(name,args):await dispatch(name,args);
+      if(synchronizedWrites.has(name)&&name!=='sync_editor_windows'){await ctx.bridge('agentEnvironmentControl',{command:'lock'});locked=true;}
+      if(environmentAgentWrites.has(name)||projectAgentWrites.has(name))guard(args);
+      result=projectAgentTools.has(name)?await projectAgent.call(name,args):environmentAgentTools.has(name)?await environmentAgent.call(name,args):await dispatch(name,args);
       return result;
     }finally{
       try{if(locked)await ctx.refreshEnvironmentWindow();}catch(error){await ctx.bridge('agentEnvironmentControl',{command:'release'}).catch(()=>{});if(result)result.windowWarning=error.message;}
@@ -87,7 +89,7 @@ export function createStoryAssistant(ctx) {
     }
   }
   async function dispatch(name,args={}) {
-    if(name==='get_project'){const state=await ctx.bridge('agentEnvironmentControl',{command:'read'});return {...draftContext(project()),acts:project().acts.map(a=>({id:a.id,name:a.name,kind:a.kind||'act',lineCount:a.steps.length,environmentId:a.environmentId||''})),environments:environmentAgent.summary(project()),environmentCoordinates:environmentAgent.coordinates,environmentEditor:editorSummary(state),revision:revision(),dirty:ctx.dirty()};}
+    if(name==='get_project'){const state=await ctx.bridge('agentEnvironmentControl',{command:'read'});return {...draftContext(project()),editorCapabilities:'Call get_capabilities to discover direct editing, render/UI/title/details, cast/props, events/items/books/folders and typed imports.',acts:project().acts.map(a=>({id:a.id,name:a.name,kind:a.kind||'act',lineCount:a.steps.length,environmentId:a.environmentId||''})),environments:environmentAgent.summary(project()),environmentCoordinates:environmentAgent.coordinates,environmentEditor:editorSummary(state),revision:revision(),dirty:ctx.dirty()};}
     if(name==='get_act'){check();const a=project().acts.find(a=>a.id===args.actId);if(!a)throw new Error('找不到这一幕。');return {act:structuredClone(a),revision:revision()};}
     if(name==='get_source') {
       check();const d=project().authoring?.documents?.find(d=>d.id===args.documentId);if(!d)throw new Error('找不到这份故事素材。');
@@ -97,9 +99,9 @@ export function createStoryAssistant(ctx) {
     if(name==='propose_draft'){guard(args);return propose(args.draft);}
     if(name==='apply_draft')return apply(args);
     if(name==='import_assets') {
-      guard(args);const p=project(),rev=revision();const result=await ctx.bridge('agentImportAssets',{paths:args.paths});
+      guard(args);const p=project(),rev=revision();if(args.folderId&&!p.assetFolders.some(f=>f.id===args.folderId&&!f.characterDeleted))throw Error('文件夹不存在');const result=await ctx.bridge('agentImportAssets',{paths:args.paths,type:args.type,audioKind:args.audioKind});
       if(project()!==p||revision()!==rev)throw new Error('导入时工程已变化，请重新读取后重试。');
-      begin();p.assets.push(...result);for(const item of result)ensureFolder(item);await changed('Agent 导入素材');proposal=null;updatePreview();
+      begin();p.assets.push(...result);for(const item of result){ensureFolder(item);if(args.folderId&&item.type!=='modelDependency'&&!item.modelThumbnail)item.folderId=args.folderId;}await changed('Agent 导入素材');proposal=null;updatePreview();
       return {assets:result,revision:revision()};
     }
     if(name==='read_document') {
@@ -120,8 +122,8 @@ export function createStoryAssistant(ctx) {
     throw new Error('未知的 Agent 操作。');
   }
   function ensureFolder(item) {
-    const folderId=`draft-${item.type}`;
-    if(!project().assetFolders.some(f=>f.id===folderId))project().assetFolders.push({id:folderId,type:item.type,name:'剧情助手导入'});
+    if(item.type==='modelDependency'||item.modelThumbnail)return;if(item.type==='motion'){item.folderId='common-motion';return;}const folderId=`draft-${item.type==='audio'?item.audioKind:item.type}`;
+    if(!project().assetFolders.some(f=>f.id===folderId))project().assetFolders.push({id:folderId,type:item.type,audioKind:item.audioKind,name:'剧情助手导入'});
     item.folderId=folderId;
   }
   async function click(action,node) {

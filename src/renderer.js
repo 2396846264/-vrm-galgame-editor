@@ -20,6 +20,7 @@ import { VRMAnimationLoaderPlugin, createVRMAnimationClip } from '@pixiv/three-v
 import {StylizedPipeline} from './stylized-render.js';
 import {normalizeGraphics,graphicsPlan,graphicsLimits,shadowMapSize} from './player-graphics.js';
 import {normalizeRender,effectiveStyle} from './render-style.js';
+import {SpatialCamera} from './spatial-camera.js';
 import {applyStylizedMaterials} from './stylized-materials.js';
 
 import { WeatherStage, normalizeWeather, weatherMood } from './weather.js';
@@ -240,6 +241,7 @@ export class VRMStage {
     this.setRenderSettings(this.renderSettings);
     this.element.appendChild(this.renderer.domElement);
     this.bindingView=new BindingView(this.camera,this.renderer.domElement);
+    this.spatialCamera=new SpatialCamera(this.camera,this.element.closest('.stage-frame')||this.element);
     this.loader = new GLTFLoader();
     this.loader.register(parser => new VRMLoaderPlugin(parser));
     this.loader.register(parser => new VRMAnimationLoaderPlugin(parser));
@@ -349,11 +351,13 @@ export class VRMStage {
     }
     this.environmentRuntime.update(this.camera,delta,Boolean(this.sceneAnimationsPaused?.()));this.updateShadowGround();
     this.weather?.update(delta);
-    if(this.stylePipeline)this.stylePipeline.render(delta);else this.renderer.render(this.scene,this.camera);
+    this.spatialCamera.update(delta);this.renderScene(delta);
     this.livePortrait.render(this.renderer,this.scene,this.element);
   }
+  renderScene(delta=0){return this.spatialCamera.render(()=>{if(this.stylePipeline)this.stylePipeline.render(delta);else this.renderer.render(this.scene,this.camera);});}
   destroy() {
     this.bindingView.dispose();
+    this.spatialCamera.dispose();
     this.running = false;
     this.weather?.dispose();
     cancelAnimationFrame(this.frame);

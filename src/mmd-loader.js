@@ -16,7 +16,7 @@ export async function loadMmdMesh(modelAsset,urlOf){
  try{const results=await Promise.all([loading,complete]);return results[0];}
  catch(error){if(mesh)disposeMmdMesh(mesh);else loading.then(value=>disposeMmdMesh(value)).catch(()=>{});throw error;}
 }
-function disposeMmdMesh(mesh){const textures=new Set();for(const m of [].concat(mesh.material||[])){for(const value of [...Object.values(m),...Object.values(m.uniforms||{}).map(u=>u.value)])if(value?.isTexture)textures.add(value);m.dispose();}textures.forEach(t=>t.dispose());mesh.geometry.dispose();mesh.skeleton?.dispose();}
+export function disposeMmdMesh(mesh){const textures=new Set();for(const m of [].concat(mesh.material||[])){for(const value of [...Object.values(m),...Object.values(m.uniforms||{}).map(u=>u.value)])if(value?.isTexture)textures.add(value);m.dispose();}textures.forEach(t=>t.dispose());mesh.geometry.dispose();mesh.skeleton?.dispose();}
 export async function loadMmdActor(asset,urlOf,options={}){const mesh=await loadMmdMesh(asset,urlOf);try{return await createMmdActor(mesh,options);}catch(error){disposeMmdMesh(mesh);throw error;}}
 export async function loadVmdMotion(asset,urlOf){const {VMDLoader}=await import('@moeru/three-mmd');return new VMDLoader().loadAsync(urlOf(asset));}
 export async function createVmdMotion(vmd,actor){
