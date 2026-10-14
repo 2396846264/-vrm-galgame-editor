@@ -1,0 +1,85 @@
+/* Apple-inspired desktop materials; no proprietary fonts or icons bundled. */
+body[data-editor-theme]{--ui-bg:#f5f5f7;--ui-surface:#fff;--ui-surface-soft:#f2f2f7;--ui-text:#202124;--ui-muted:#62656d;--ui-border:#d9dbe1;--ui-accent:#007aff;--apple-tint:#e9f2ff;--apple-glass:#f8f8fadf;--apple-shadow:0 16px 48px #19243724}
+body[data-editor-theme=dark]{--ui-bg:#1c1c1e;--ui-surface:#252527;--ui-surface-soft:#2c2c2e;--ui-text:#f2f2f7;--ui-muted:#afb0b8;--ui-border:#444449;--ui-accent:#409cff;--apple-tint:#183557;--apple-glass:#242426e8;--apple-shadow:0 16px 48px #0006}
+body[data-editor-theme] .editor,body.apple-module{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','HarmonyOS Sans SC','Microsoft YaHei UI',sans-serif;background:var(--ui-bg);color:var(--ui-text)}
+body[data-editor-theme] .editor :is(button,input,select,textarea),body.apple-module :is(button,input,select,textarea){font:inherit;color:var(--ui-text);background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:8px;box-shadow:none;transition:background .15s,border-color .15s}
+body[data-editor-theme] .editor button,body.apple-module button{padding:7px 12px;min-height:32px}
+body[data-editor-theme] .editor button:hover,body.apple-module button:hover{background:var(--ui-surface-soft);border-color:var(--ui-accent)}
+body[data-editor-theme] .editor :is(button.primary,button.selected,button.active),body.apple-module button.selected{background:var(--apple-tint);color:var(--ui-accent);border-color:transparent}
+body[data-editor-theme] .editor button.primary{background:var(--ui-accent);color:#fff}
+body[data-editor-theme] .editor :is(input,select,textarea):focus,body.apple-module :is(input,select,textarea):focus{border-color:var(--ui-accent);outline:2px solid color-mix(in srgb,var(--ui-accent) 28%,transparent);outline-offset:1px;box-shadow:none}
+body[data-editor-theme] .editor button:focus-visible,body.apple-module button:focus-visible{outline:2px solid var(--ui-accent);outline-offset:3px}
+body[data-editor-theme] .editor :is(.topbar,.sidebar,.inspector,.inspector-heading,.tabs,.editor-tools-row,.module-sidebar-title,.status),body.apple-module :is(header,.scene-panel,.document-panel,.asset-library,.library){background:var(--apple-glass);color:var(--ui-text);border-color:var(--ui-border)}
+body[data-editor-theme] .editor .topbar{gap:16px;box-shadow:0 1px 0 var(--ui-border);padding:12px 20px;backdrop-filter:blur(20px)}
+body[data-editor-theme] .editor .brand{font-size:17px;color:var(--ui-text);letter-spacing:-.3px}
+body[data-editor-theme] .editor :is(.brand span,.tip,.field>span,.stage-hint,.story-current,.status,.list-row small,.sidebar-note,.module-context-caption){color:var(--ui-muted)}
+body[data-editor-theme] .editor :is(.section-heading,.inspector-heading,.inspector-content h2,.number){color:var(--ui-text)}
+body[data-editor-theme] .editor .center{background:var(--ui-bg);padding:16px}
+body[data-editor-theme] .editor .list-row{background:transparent;border-color:transparent}
+body[data-editor-theme] .editor .list-row.selected{background:var(--apple-tint);border-color:transparent;color:var(--ui-accent)}
+body[data-editor-theme] .editor .list-row b{color:inherit}
+body[data-editor-theme] .editor :is(.choice-editor,.asset-row){background:var(--ui-surface-soft);color:var(--ui-text)}
+body[data-editor-theme] .editor :is(.editor-settings-card,.module-picker){background:var(--ui-surface);color:var(--ui-text);border:1px solid var(--ui-border);border-radius:20px;box-shadow:var(--apple-shadow)}
+body[data-editor-theme] .editor .editor-tools-row nav{gap:6px}
+body[data-editor-theme] .editor .editor-tools-row nav button{white-space:nowrap}
+body[data-editor-theme]{--ui-accent-soft:var(--apple-tint);--ui-raised:var(--ui-surface-soft)}
+body[data-editor-theme] .editor button:not(.list-row):not([data-panel]):not([data-action=choose]){background:var(--ui-surface);color:var(--ui-text);border-color:var(--ui-border);border-radius:8px}
+body[data-editor-theme] .editor button:not(.list-row):not([data-panel]):not([data-action=choose]):hover{background:var(--apple-tint);border-color:var(--ui-accent)}
+body[data-editor-theme] .editor button.primary:not(.list-row){background:var(--ui-accent);color:#fff;border-color:transparent}
+body[data-editor-theme] .editor button.primary:not(.list-row):hover{background:color-mix(in srgb,var(--ui-accent) 85%,#fff);color:#fff}
+body[data-editor-theme] .welcome{background:var(--ui-bg);color:var(--ui-text)}
+body[data-editor-theme] .welcome-card{background:var(--ui-surface);border-color:var(--ui-border);border-radius:20px;box-shadow:var(--apple-shadow)}
+body[data-editor-theme] .welcome :is(h1,.eyebrow){color:var(--ui-text)}
+body[data-editor-theme] .welcome button.primary{background:var(--ui-accent);color:#fff;border-color:transparent}
+.module-picker-backdrop{position:fixed;inset:0;z-index:190;background:#12182850;backdrop-filter:blur(10px);display:grid;place-items:center;padding:24px}
+.module-picker{width:min(780px,100%);max-height:calc(100vh - 48px);overflow:auto;padding:28px}
+.module-picker header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:24px}
+.module-picker header h2{font-size:26px;font-weight:600;letter-spacing:-.6px;margin:0 0 8px}
+.module-picker header p{color:var(--ui-muted);margin:0;line-height:1.6}
+.module-picker-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+body[data-editor-theme] .editor .module-picker .module-picker-grid button.module-card{position:relative;display:flex;flex-direction:column;text-align:left;align-items:flex-start;gap:12px;padding:20px;min-height:158px;border-radius:16px;background:var(--ui-surface-soft);border:1px solid transparent}
+body[data-editor-theme] .editor .module-picker .module-picker-grid button.module-card:hover{background:var(--apple-tint);border-color:var(--ui-accent)}
+.module-card .module-icon{width:40px;height:40px;padding:9px;border-radius:12px;background:var(--ui-surface);color:var(--ui-accent)}
+.module-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.module-card b{font-size:15px;font-weight:600}
+.module-card small{color:var(--ui-muted);font-size:12px;line-height:1.5}
+.module-card .disclosure{position:absolute;right:18px;top:30px;color:var(--ui-muted)}
+body.apple-module{font-size:13px}
+body.apple-module :is(.scene-panel,.document-panel){border-color:var(--ui-border);padding:12px}
+body.apple-module :is(.tool-rail,.library-tools,.library-toolbar,.environment-bar,.document-title,#statistics){border-color:var(--ui-border);background:var(--ui-surface-soft);color:var(--ui-text)}
+body.apple-module :is(.tip,small,footer,#saved,#saved-state,.library-tools span){color:var(--ui-muted)}
+body.apple-module h3{color:var(--ui-text);font-weight:600}
+body.apple-module :is(.shade,.dialog-backdrop){background:#12182855;backdrop-filter:blur(10px)}
+body.apple-module :is(.picker,.dialog){background:var(--ui-surface);color:var(--ui-text);border-color:var(--ui-border);border-radius:16px;box-shadow:var(--apple-shadow)}
+body.apple-module :is(.picker p,.picker small){color:var(--ui-muted)}
+body.apple-module .tool-rail{gap:8px;padding:8px}
+body.apple-module :is(.node-row.selected,.asset-card.selected){background:var(--apple-tint);color:var(--ui-accent)}
+body.apple-module :is(.environment-autosave,.section-title){background:transparent;color:var(--ui-muted);border-color:var(--ui-border)}
+body.apple-module .work-area header{gap:8px;padding:12px}
+body.apple-module #palette button{border-radius:10px}
+/* Cards use content height; grid tracks must not squeeze the second line. */
+body.apple-module .vehicle-page .work-area{grid-template-rows:auto minmax(0,1fr) clamp(210px,24vh,300px) auto}
+body.apple-module #palette{min-height:0;grid-auto-rows:minmax(76px,max-content);align-items:start;align-content:start;overflow:auto}
+body.apple-module #palette button{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;min-width:0;min-height:76px;height:auto;padding:10px 12px 10px 28px;white-space:normal;overflow:visible;line-height:1.45}
+body.apple-module #palette button b,body.apple-module #palette button small{display:block;width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.45}
+body.apple-module #palette button small{margin-top:5px}
+body.apple-module #palette button::before{left:10px;top:12px;bottom:12px;height:auto;width:7px}
+body.apple-module .document-panel #outliner button{white-space:normal;overflow-wrap:anywhere;height:auto;min-height:48px}
+body[data-editor-theme] .editor .story-left .sidebar .section-heading{display:block;min-width:0}
+body[data-editor-theme] .editor .story-left .sidebar .heading-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:6px;margin-top:8px;min-width:0}
+body[data-editor-theme] .editor .story-left .sidebar .heading-actions button{min-width:0;min-height:32px;white-space:nowrap;line-height:1.25;padding:7px 6px;font-size:12px}
+body.apple-module :is(.outliner,#properties,.snap-switch){background:var(--ui-surface);color:var(--ui-text);border-color:var(--ui-border)}
+body.apple-module .toolbar button,body.apple-module .environment-bar button,body.apple-module .tool-rail button{background:var(--ui-surface);color:var(--ui-text);border-color:var(--ui-border);font-weight:500}
+body.apple-module :is(.environment-bar,.document-panel nav) button:last-child{background:var(--ui-accent);color:white;border-color:transparent}
+body.apple-module .dialog-shade{background:#12182855;backdrop-filter:blur(10px)}
+body[data-editor-theme] .editor{min-height:0;overflow:hidden}
+body.apple-module .tool-rail button{flex-shrink:0;min-height:46px;line-height:1.4;padding:6px 4px;font-size:11px;word-break:keep-all}
+body.apple-module .scene-body{grid-template-columns:minmax(0,1fr) 78px}
+body.apple-module #properties>label{display:grid;grid-template-columns:1fr;align-items:start;gap:4px}
+body.apple-module #properties>label input[type=text]{width:100%}
+body.apple-module #properties .vector-label{display:block}
+body.apple-module .node-row .fold{min-height:24px;padding:4px 0;width:22px;flex-shrink:0}
+body.apple-module .node-row .visibility{min-height:24px;padding:4px 0;width:18px;flex-shrink:0}
+body.apple-module .node-row .node-name{min-height:30px;padding:6px 2px}
+@media(max-width:800px){.module-picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.module-picker{padding:20px}body.apple-module .document-panel{padding:8px}.vehicle-page{grid-template-columns:minmax(0,1fr) 280px}}
+@media(prefers-reduced-motion:reduce){body[data-editor-theme] .editor *,body.apple-module *{transition:none!important;animation:none!important}}

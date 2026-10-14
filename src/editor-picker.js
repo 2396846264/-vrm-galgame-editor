@@ -1,0 +1,11 @@
+const descriptions={environment:'搭建场景、灯光与水面',characters:'管理人物、表情与动作',items:'制作物品与背包内容',title:'编排游戏标题和角色展示',render:'调整画面风格与滤镜',knowledge:'整理故事资料与知识',aircraft:'拼装载具、配置武器与试飞'};
+const paths={environment:'M3 18V5h18v13H3Zm0-4 5-5 4 4 3-3 6 6',characters:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-8 8v-2c0-3 4-4 8-4s8 1 8 4v2',items:'m3 7 9-4 9 4-9 4-9-4Zm0 0v10l9 4 9-4V7M12 11v10',title:'M4 5h16M12 5v15M8 20h8',render:'M4 7h16M4 17h16M8 4v6M16 14v6',knowledge:'M3 4h7l2 2 2-2h7v16h-7l-2 1-2-1H3V4Zm9 2v15',aircraft:'m12 3 2 7 7 4v2l-7-2-1 5 3 2H8l3-2-1-5-7 2v-2l7-4 2-7Z'};
+export function showEditorPicker(labels,open){
+ document.querySelector('.module-picker-backdrop')?.remove();
+ const backdrop=document.createElement('div');backdrop.className='module-picker-backdrop';backdrop.innerHTML=`<section class="module-picker" role="dialog" aria-modal="true" aria-label="选择编辑器"><header><div><h2>选择编辑器</h2><p>为下一段故事，打开合适的创作工具。</p></div><button data-picker-close aria-label="关闭选择编辑器">关闭</button></header><div class="module-picker-grid">${Object.entries({environment:'场景',...labels}).map(([key,name])=>`<button class="module-card" data-picker-module="${key}"><span class="module-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${paths[key]}"/></svg></span><span class="disclosure" aria-hidden="true">›</span><b>${name}编辑器</b><small>${descriptions[key]}</small></button>`).join('')}</div></section>`;
+ document.querySelector('.editor').append(backdrop);const previous=document.activeElement,abort=new AbortController();
+ const close=()=>{abort.abort();backdrop.remove();previous?.focus();};
+ backdrop.addEventListener('click',e=>{if(e.target===backdrop||e.target.closest('[data-picker-close]'))close();const key=e.target.closest('[data-picker-module]')?.dataset.pickerModule;if(key){close();open(key);}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();close();}if(e.key==='Tab'){const list=[...backdrop.querySelectorAll('button')],index=list.indexOf(document.activeElement);if(e.shiftKey&&index<=0){e.preventDefault();list.at(-1).focus();}else if(!e.shiftKey&&index===list.length-1){e.preventDefault();list[0].focus();}}},{capture:true,signal:abort.signal});
+ backdrop.querySelector('button').focus();
+}

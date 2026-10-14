@@ -3,6 +3,9 @@ name: Build and test public source
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '.github/releases/**'
+      - '.github/workflows/release-v052.yml'
   pull_request:
   workflow_dispatch:
 

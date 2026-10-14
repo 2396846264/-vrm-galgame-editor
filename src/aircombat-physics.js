@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {compileAircraft,setGearProjection} from './aircombat-models.js';
 import {partFamily} from './aircombat-schema.js';
 const clamp=THREE.MathUtils.clamp;
-export function createFlight(blueprint,position=[0,600,0],heading=0){const spec=compileAircraft(blueprint),rotation=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,heading,0));return {spec,position:new THREE.Vector3().fromArray(position),rotation,velocity:new THREE.Vector3(0,0,-75).applyQuaternion(rotation),angular:new THREE.Vector3(),throttle:.85,alive:true,lift:0,drag:0,horsepower:spec.powerHp,airSpeed:75,stall:false,control:{pitch:0,yaw:0,roll:0},kills:0,gearCommand:'auto',grounded:false,groundLevel:0,ammo:spec.parts.reduce((n,p)=>{p.ammo=['gun','turret'].includes(partFamily(p.type))?(p.def.ammo||600):0;return n+p.ammo;},0),bombs:spec.parts.filter(p=>partFamily(p.type)==='bomb').length};}
+export function createFlight(blueprint,position=[0,600,0],heading=0){const spec=compileAircraft(blueprint),rotation=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,heading,0));return {spec,position:new THREE.Vector3().fromArray(position),rotation,velocity:new THREE.Vector3(0,0,-75).applyQuaternion(rotation),angular:new THREE.Vector3(),throttle:.85,alive:true,lift:0,drag:0,horsepower:spec.powerHp,airSpeed:75,stall:false,control:{pitch:0,yaw:0,roll:0},kills:0,gearCommand:'auto',grounded:false,groundLevel:0,surface:'land',brake:0,ammo:spec.parts.reduce((n,p)=>{p.ammo=['gun','turret'].includes(partFamily(p.type))?(p.def.ammo||600):0;return n+p.ammo;},0),bombs:spec.parts.filter(p=>partFamily(p.type)==='bomb').length};}
 export function steerFlight(flight,direction,manual={}){
  const aim=direction.clone().normalize(),forward=new THREE.Vector3(0,0,-1).applyQuaternion(flight.rotation),currentYaw=Math.atan2(-forward.x,-forward.z),targetYaw=Math.atan2(-aim.x,-aim.z),yawError=Math.atan2(Math.sin(targetYaw-currentYaw),Math.cos(targetYaw-currentYaw));
  const rho=1.225*Math.exp(-Math.max(0,flight.position.y)/8500),q=.5*rho*Math.max(35,flight.airSpeed)**2;
@@ -20,7 +20,8 @@ export function steerFlight(flight,direction,manual={}){
 }
 export function stepFlight(f,dt,wind=0){
   if(!f.alive)return;
-  const gears=f.spec.parts.filter(p=>partFamily(p.type)==='gear'),wanted=f.gearCommand==='down'?1:f.gearCommand==='up'?0:f.position.y>(f.groundLevel||0)+20&&f.airSpeed>35?0:1;for(const p of gears){const previous=p.gearDeployment??1;p.gearDeployment=previous+clamp(wanted-previous,-dt*.5,dt*.5);}if(gears.length)setGearProjection(f.spec,gears.reduce((n,p)=>n+p.gearDeployment,0)/gears.length);f.gearSimulated=true;
+  if(f.gearCommand==='auto'){if(f.grounded||f.position.y<(f.groundLevel||0)+5)f.autoGearRetracted=false;else if(f.position.y>(f.groundLevel||0)+20&&f.airSpeed>f.spec.stallSpeed*.95)f.autoGearRetracted=true;}
+  const gears=f.spec.parts.filter(p=>partFamily(p.type)==='gear'),wanted=f.gearCommand==='down'?1:f.gearCommand==='up'?0:f.autoGearRetracted?0:1;for(const p of gears){const previous=p.gearDeployment??1;p.gearDeployment=previous+clamp(wanted-previous,-dt*.5,dt*.5);}if(gears.length)setGearProjection(f.spec,gears.reduce((n,p)=>n+p.gearDeployment,0)/gears.length);f.gearSimulated=true;
   const inv=f.rotation.clone().invert(),relative=f.velocity.clone().sub(new THREE.Vector3(wind,0,0)),speed=relative.length(),rho=1.225*Math.exp(-Math.max(0,f.position.y)/8500),q=.5*rho*speed*speed;
   const force=new THREE.Vector3(0,-f.spec.mass*9.81,0),torque=new THREE.Vector3(),forward=new THREE.Vector3(0,0,-1).applyQuaternion(f.rotation);f.lift=0;f.drag=0;f.horsepower=0;
   const side=new THREE.Vector3(1,0,0).applyQuaternion(f.rotation),slip=relative.dot(side);
@@ -32,6 +33,8 @@ export function stepFlight(f,dt,wind=0){
     if(partFamily(p.type)==='engine'){const hp=p.powerHp*health;f.horsepower+=hp;const thrust=Math.min(hp*735.5*.78/Math.max(speed,28),hp*5.5)*f.throttle;add(new THREE.Vector3(0,0,-1).applyQuaternion(p.rotation).applyQuaternion(f.rotation).multiplyScalar(thrust),point);}
     const dragForce=q*drag*(partFamily(p.type).startsWith('wing')?.35+.65*health:1);add(relative.clone().normalize().multiplyScalar(-dragForce),point);f.drag+=dragForce;
   }
+  // S deploys an air brake in flight and a wheel brake on the platform.
+  if(f.brake){const braking=q*Math.max(.8,f.spec.frontalArea)*.65*f.brake;force.addScaledVector(relative.clone().normalize(),-braking);f.drag+=braking;}
   // Simplified flight-assistance torque. Surface forces above remain responsible for lift/drag.
   const tails=f.spec.parts.filter(p=>partFamily(p.type)==='tail'),authority=(tails.length?tails.reduce((n,p)=>n+p.health/p.maxHealth,0)/tails.length:0)*clamp(speed/45,.1,1),c=f.control;
   const target=new THREE.Vector3(c.pitch*authority,c.yaw*authority,c.roll*authority);
@@ -39,7 +42,7 @@ export function stepFlight(f,dt,wind=0){
   const omega=f.angular.length();if(omega>1e-6)f.rotation.multiply(new THREE.Quaternion().setFromAxisAngle(f.angular.clone().normalize(),omega*dt)).normalize();
   f.velocity.addScaledVector(force,dt/f.spec.mass);if(f.velocity.length()>210)f.velocity.setLength(210);f.position.addScaledVector(f.velocity,dt);f.airSpeed=speed;f.stall=speed<f.spec.stallSpeed||Math.abs(Math.atan2(-relative.clone().applyQuaternion(inv).y,Math.max(1,-relative.clone().applyQuaternion(inv).z)))>.32;
   const clearance=f.spec.contactHeight+(f.groundLevel||0),upright=new THREE.Vector3(0,1,0).applyQuaternion(f.rotation).y,gearDown=gears.some(p=>p.health>0&&p.gearDeployment>.9);f.grounded=false;
-  if(f.position.y<=clearance&&gearDown&&upright>.85&&f.velocity.y>-6){f.position.y=clearance;f.velocity.y=Math.max(0,f.velocity.y);f.velocity.x*=Math.max(0,1-dt*.012);f.velocity.z*=Math.max(0,1-dt*.012);f.grounded=true;}
+  if(f.surface!=='water'&&f.position.y<=clearance&&gearDown&&upright>.85&&f.velocity.y>-6){f.position.y=clearance;f.velocity.y=Math.max(0,f.velocity.y);f.velocity.x*=Math.max(0,1-dt*.012);f.velocity.z*=Math.max(0,1-dt*.012);f.grounded=true;if(f.brake){const horizontal=Math.hypot(f.velocity.x,f.velocity.z),ratio=horizontal?Math.max(0,horizontal-dt*5*f.brake)/horizontal:0;f.velocity.x*=ratio;f.velocity.z*=ratio;}}
   if(f.position.y<(f.groundLevel||0)+.1||f.position.y<clearance*.8&&!f.grounded||!Number.isFinite(f.position.lengthSq()))f.alive=false;
 }
 export function damagePart(f,partId,damage){const p=f.spec.parts.find(p=>p.id===partId);if(!p||!f.alive)return;p.health=Math.max(0,p.health-damage);if(partFamily(p.type)==='fuselage'&&p.health<=0)f.alive=false;}

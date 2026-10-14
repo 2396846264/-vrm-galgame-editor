@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {geometrySummary} from './environment-geometry.js';
 import {createEnvironment, newId, validateEnvironment} from './environment-schema.js';
 import {subtreeIds, worldMatrices, reparentNode, groupSelection, ungroupSelection, copySelection, pasteSelection} from './environment-operations.js';
 
@@ -8,10 +9,10 @@ const object=v=>v&&typeof v==='object'&&!Array.isArray(v);
 function keys(value,allowed,label){if(!object(value)||Object.keys(value).some(k=>!allowed.includes(k)))throw Error(`${label}包含不支持的参数`);}
 function vector(v,label){if(!Array.isArray(v)||v.length!==3||v.some(x=>typeof x!=='number'||!Number.isFinite(x)||Math.abs(x)>=1e6))throw Error(`${label}需要三个有效数字`);return [...v];}
 function text(v,label){if(typeof v!=='string'||!v.trim()||v.length>200)throw Error(`${label}请输入 1 至 200 个字`);return v.trim();}
-const nodeFields=['name','assetId','position','rotationDegrees','scale','visible','width','height','color','intensity','distance','castShadow','unlit','alphaCutoff'];
+const nodeFields=['name','assetId','position','rotationDegrees','scale','visible','width','height','color','intensity','distance','castShadow','unlit','alphaCutoff','waveHeight','waveScale','flowSpeed','flowAngle','opacity'];
 function patchNode(node,patch){
   keys(patch,nodeFields,'物体设置');
-  const extra={model:['assetId','castShadow'],imagePlane:['assetId','width','height','unlit','alphaCutoff'],group:[],ground:['width','height','color'],light:['color','intensity','distance','castShadow'],sky:['assetId','color']}[node.kind];
+  const extra={geometryBatch:[],model:['assetId','castShadow'],imagePlane:['assetId','width','height','unlit','alphaCutoff'],water:['width','height','color','waveHeight','waveScale','flowSpeed','flowAngle','opacity'],group:[],ground:['width','height','color'],light:['color','intensity','distance','castShadow'],sky:['assetId','color']}[node.kind];
   for(const [key,value]of Object.entries(patch)){
     if(!['name','position','rotationDegrees','scale','visible',...extra].includes(key))throw Error(`${node.kind}不支持 ${key}`);
     if(key==='name')node.name=text(value,'物体名称');
@@ -26,7 +27,7 @@ function patchNode(node,patch){
 export function environmentSummary(project){return (project.environments||[]).map(e=>({id:e.id,name:e.name,revision:e.revision||0,nodeCount:e.nodes.length,references:{title:project.title?.environmentId===e.id,acts:(project.acts||[]).filter(a=>a.environmentId===e.id).map(a=>({id:a.id,name:a.name}))}}));}
 export function describeEnvironment(env){
   const matrices=worldMatrices(env);
-  return {...structuredClone(env),coordinates:environmentCoordinates,nodes:env.nodes.map(n=>({...structuredClone(n),rotationDegrees:n.rotation.map(THREE.MathUtils.radToDeg),worldPosition:new THREE.Vector3().setFromMatrixPosition(matrices.get(n.id)).toArray()}))};
+  return {...structuredClone(env),coordinates:environmentCoordinates,nodes:env.nodes.map(n=>({...structuredClone(n.kind==='geometryBatch'?{...n,primitives:undefined,...geometrySummary(n)}:n),rotationDegrees:n.rotation.map(THREE.MathUtils.radToDeg),worldPosition:new THREE.Vector3().setFromMatrixPosition(matrices.get(n.id)).toArray()}))};
 }
 export function newAgentEnvironment(name,assets){const env=createEnvironment(text(name,'环境名称'));validateEnvironment(env,assets);return env;}
 
@@ -43,8 +44,8 @@ export function editAgentEnvironment(current,operations,assets){
       let output={op:op.op};
       if(op.op==='add'){
         keys(op,['op','kind','ref','parentId',...nodeFields],'添加物体');
-        if(!['model','imagePlane','group','ground','light','sky'].includes(op.kind))throw Error('物体类型无效');
-        const defaults={imagePlane:{width:8,height:4.5,unlit:true,alphaCutoff:0},ground:{width:20,height:20,color:'#b7bfae',rotation:[-Math.PI/2,0,0]},light:{color:'#ffffff',intensity:5,distance:20,castShadow:false},sky:{color:'#a8c9e6'}};
+        if(!['model','imagePlane','group','ground','light','sky','water'].includes(op.kind))throw Error('物体类型无效');
+        const defaults={water:{width:20,height:20,color:'#397b94',waveHeight:.05,waveScale:3,flowSpeed:0,flowAngle:0,opacity:.88},imagePlane:{width:8,height:4.5,unlit:true,alphaCutoff:0},ground:{width:20,height:20,color:'#b7bfae',rotation:[-Math.PI/2,0,0]},light:{color:'#ffffff',intensity:5,distance:20,castShadow:false},sky:{color:'#a8c9e6'}};
         const n={id:newId(),kind:op.kind,name:op.kind,parentId:op.parentId?resolve(op.parentId):null,position:[0,0,0],rotation:[0,0,0],scale:[1,1,1],visible:true,...defaults[op.kind]};
         patchNode(n,Object.fromEntries(nodeFields.filter(k=>own(op,k)).map(k=>[k,op[k]])));
         if(n.parentId&&node(n.parentId).kind!=='group')throw Error('上级必须是分组');

@@ -16,7 +16,7 @@ internal sealed class EnvironmentWindow : Form {
         this.webDirectory=webDirectory;this.projectDirectory=projectDirectory;this.initial=initial;this.handle=handle;
         FormClosed+=(_,_)=>{foreach(var task in agentControlReplies.Values)task.TrySetException(new Exception("环境窗口已关闭。"));agentControlReplies.Clear();};
         Text="3D 环境编辑器";Width=1280;Height=850;MinimumSize=new Size(1000,650);Controls.Add(view);
-        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-environment" or "--smoke-render-regression" or "--smoke-agent-environment" or "--smoke-close-guard")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
+        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-geometry52" or "--smoke-ocean51" or "--smoke-environment" or "--smoke-render-regression" or "--smoke-agent-environment" or "--smoke-close-guard")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
         FormClosing+=async(_,e)=>{
             if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(closePending)return;closePending=true;
             try{
@@ -88,6 +88,17 @@ internal sealed class EnvironmentWindow : Form {
         using(var pickerImage=File.Create(Path.ChangeExtension(imagePath,"picker.png")))await view.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,pickerImage);
         await view.CoreWebView2.ExecuteScriptAsync("window.environmentClosePicker?.()");
         return result;
+    }
+    internal async Task<string> Geometry52Smoke(string imagePath){
+        await view.CoreWebView2!.ExecuteScriptAsync("window.__geometryCheck=null;window.environmentGeometry52Smoke().then(r=>window.__geometryCheck=r).catch(e=>window.__geometryCheck={error:e.message})");
+        string result="null";for(int i=0;i<1200;i++){result=await view.CoreWebView2.ExecuteScriptAsync("window.__geometryCheck");if(result!="null")break;await Task.Delay(50);}
+        var parsed=JsonNode.Parse(result)!.AsObject();if(parsed["sceneImage"] is JsonNode sceneImage){File.WriteAllBytes(Path.ChangeExtension(imagePath,"scene.png"),Convert.FromBase64String(sceneImage.GetValue<string>().Split(',')[1]));parsed.Remove("sceneImage");}using(var image=File.Create(imagePath))await view.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,image);return parsed.ToJsonString();
+    }
+    internal async Task<string> Water51Smoke(string phase,string imagePath){
+        for(int i=0;i<300;i++){if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentReady?.())")=="true")break;await Task.Delay(100);}
+        await view.CoreWebView2!.ExecuteScriptAsync("window.__waterCheck=null;window.environmentWater51Smoke("+JsonSerializer.Serialize(phase)+").then(r=>window.__waterCheck=r).catch(e=>window.__waterCheck={error:e.message})");
+        string result="null";for(int i=0;i<1600;i++){result=await view.CoreWebView2.ExecuteScriptAsync("window.__waterCheck");if(result!="null")break;await Task.Delay(50);}
+        using(var shot=File.Create(imagePath))await view.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);return result;
     }
     internal async Task<string> AutosaveSmoke(string phase,string imagePath){
         for(int i=0;i<200;i++){if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.environmentReady?.())")=="true")break;await Task.Delay(100);}

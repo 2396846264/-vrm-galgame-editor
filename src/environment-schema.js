@@ -1,4 +1,5 @@
 
+import {validateGeometryBatch,geometryLimits} from './environment-geometry.js';
 export const newId = () => crypto.randomUUID();
 export function createEnvironment(name = '新场景') {
   return {id:newId(),name,revision:0,nodes:[{id:newId(),name:'地面',kind:'ground',parentId:null,position:[0,-.03,0],rotation:[-Math.PI/2,0,0],scale:[1,1,1],width:20,height:20,color:'#b7bfae'}],camera:{position:[0,1.3,4.3],target:[0,1.05,0],fov:32},lighting:{color:'#ffffff',intensity:2.2},background:'#a8c9e6'};
@@ -10,15 +11,18 @@ export function validateEnvironment(env, assets) {
   if(!env.camera || !vector(env.camera.position,3)||!vector(env.camera.target,3)||!Number.isFinite(env.camera.fov)||env.camera.fov<10||env.camera.fov>120) throw Error('摄像机参数无效');
   if(!/^#[0-9a-f]{6}$/i.test(env.background)||!/^#[0-9a-f]{6}$/i.test(env.lighting?.color)||!Number.isFinite(env.lighting.intensity)||env.lighting.intensity<0||env.lighting.intensity>10) throw Error('灯光参数无效');
   if(env.lighting.ambientIntensity!==undefined&&(!Number.isFinite(env.lighting.ambientIntensity)||env.lighting.ambientIntensity<0||env.lighting.ambientIntensity>5))throw Error('环境补光亮度无效');
+  let geometryCount=0,geometryTriangles=0;
   for(const n of env.nodes) {
-    if(!n.id||ids.has(n.id)||!['model','imagePlane','group','ground','light','sky'].includes(n.kind)) throw Error('场景物体无效'); ids.add(n.id);
-    if(!['group','ground','light','sky'].includes(n.kind)&&!assetIds.has(n.assetId)) throw Error('场景素材已丢失');
+    if(!n.id||ids.has(n.id)||!['model','imagePlane','group','ground','light','sky','water','geometryBatch'].includes(n.kind)) throw Error('场景物体无效'); ids.add(n.id);
+    if(!['group','ground','light','sky','water','geometryBatch'].includes(n.kind)&&!assetIds.has(n.assetId)) throw Error('场景素材已丢失');
     const asset=assets.find(a=>a.id===n.assetId);
     if(n.kind==='model'&&asset?.type!=='sceneModel'||n.kind==='imagePlane'&&asset?.type!=='image') throw Error('场景素材类型不匹配');
+    if(n.kind==='geometryBatch'){const budget=validateGeometryBatch(n);geometryCount+=budget.instances;geometryTriangles+=budget.triangles;if(geometryCount>geometryLimits.instances||geometryTriangles>geometryLimits.triangles)throw Error('场景超过30000个几何体或200万三角面预算');}
+    if(n.kind==='water'){if(!/^#[0-9a-f]{6}$/i.test(n.color))throw Error('水面颜色无效');for(const [key,min,max]of [['waveHeight',0,5],['waveScale',.05,1000],['flowSpeed',0,20],['flowAngle',-360,360],['opacity',.1,1]])if(!Number.isFinite(n[key])||n[key]<min||n[key]>max)throw Error('水面参数无效：'+key);if(n.width>100000||n.height>100000)throw Error('水面尺寸过大');}
     if(n.kind==='light'&&(!/^#[0-9a-f]{6}$/i.test(n.color)||!Number.isFinite(n.intensity)||n.intensity<0||n.intensity>1000||!Number.isFinite(n.distance)||n.distance<0||n.distance>10000))throw Error('灯光参数无效');
     if(n.kind==='sky'&&(!/^#[0-9a-f]{6}$/i.test(n.color)||n.assetId&&!assets.some(a=>a.id===n.assetId&&a.type==='image')))throw Error('天空球图片或颜色无效');
     if(!vector(n.position,3)||!vector(n.rotation,3)||!vector(n.scale,3)||n.scale.some(x=>x<=0)) throw Error('物体位置或大小无效');
-    if(['imagePlane','ground'].includes(n.kind)&&(!Number.isFinite(n.width)||!Number.isFinite(n.height)||n.width<=0||n.height<=0)) throw Error('图片尺寸无效');
+    if(['imagePlane','ground','water'].includes(n.kind)&&(!Number.isFinite(n.width)||!Number.isFinite(n.height)||n.width<=0||n.height<=0)) throw Error('图片尺寸无效');
   }
   if(env.nodes.filter(n=>n.kind==='sky').length>1)throw Error('每个环境只需要一个天空球');
   if(env.nodes.filter(n=>n.kind==='light'&&n.castShadow).length>2)throw Error('最多两盏附加灯开启阴影');

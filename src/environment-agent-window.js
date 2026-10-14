@@ -4,7 +4,7 @@ export function createEnvironmentAgentWindow(ctx){
   function unlock(){locked=false;ctx.lock(false);}
   async function control(command,payload){
     const state=ctx.read();
-    if(command==='read')return state;
+    if(command==='read')return {...state,agentControlled:locked};
     if(command==='release'){unlock();return {opened:true};}
     if(state.busy)throw Error('环境窗口正在操作或保存，请等当前操作结束后重试');
     if(command==='sync'){if(locked)throw Error('MCP 正在布置场景');if(state.dirty)await ctx.save();return {opened:true,synchronized:true};}

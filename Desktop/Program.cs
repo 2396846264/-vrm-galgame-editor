@@ -250,6 +250,8 @@ internal sealed partial class EditorWindow : Form
         {
             if(Environment.GetCommandLineArgs().Contains("--smoke-blink49")){await RunBlink49Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-gaze50")){await RunGaze50Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-geometry52")){await RunGeometry52Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-ocean51")){await RunOcean51Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-aircombat")){await RunAirCombatSmoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-apk-ui")){await RunAndroidUISmoke();Close();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-portrait28")){await RunVrmPortrait28Smoke();Close();return;}

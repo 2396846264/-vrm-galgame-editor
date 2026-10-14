@@ -1,8 +1,10 @@
 import {environmentCoordinates,environmentSummary,describeEnvironment,newAgentEnvironment,editAgentEnvironment,environmentOwner} from './environment-agent-operations.js';
+import {buildGeometryBatch,geometrySummary,geometryLimits,geometryShapes} from './environment-geometry.js';
+import {validateEnvironment} from './environment-schema.js';
 import {inspectSceneAsset} from './environment-agent-inspect.js';
 
-export const environmentAgentTools=new Set(['get_environments','get_environment','inspect_scene_asset','create_environment','edit_environment','set_environment_reference','open_environment','capture_environment','sync_environment_editor']);
-export const environmentAgentWrites=new Set(['create_environment','edit_environment','set_environment_reference']);
+export const environmentAgentTools=new Set(['get_environments','get_environment','inspect_scene_asset','create_environment','edit_environment','set_environment_reference','open_environment','capture_environment','sync_environment_editor','build_environment_geometry','get_environment_geometry']);
+export const environmentAgentWrites=new Set(['create_environment','edit_environment','set_environment_reference','build_environment_geometry']);
 export function createEnvironmentAgent(ctx){
   const project=()=>ctx.project();
   const find=id=>{const env=project().environments?.find(e=>e.id===id);if(!env)throw Error('环境不存在，请先读取环境列表');return env;};
@@ -22,7 +24,21 @@ export function createEnvironmentAgent(ctx){
     if(name==='create_environment'){
       const env=newAgentEnvironment(args.name,project().assets);ctx.begin();project().environments.push(env);await ctx.changed('MCP 创建环境');return {environment:describeEnvironment(env),revision:revision()};
     }
+    if(name==='get_environment_geometry'){
+      const state=await ctx.control('read'),env=state.dirty&&state.environment?.id===args.environmentId?state.environment:find(args.environmentId),node=env.nodes.find(n=>n.id===args.nodeId&&n.kind==='geometryBatch');if(!node)throw Error('Agent几何体组不存在');
+      const offset=args.offset??0,limit=args.limit??100;if(!Number.isInteger(offset)||offset<0||!Number.isInteger(limit)||limit<1||limit>geometryLimits.page)throw Error('分页需要有效offset，limit为1至500');
+      return {nodeId:node.id,name:node.name,...geometrySummary(node),offset,primitives:node.primitives.slice(offset,offset+limit).map(p=>({...structuredClone(p),rotationDegrees:p.rotation.map(v=>v*180/Math.PI)})),hasMore:offset+limit<node.primitives.length,environmentRevision:env.revision||0,revision:revision()};
+    }
+    if(name==='build_environment_geometry'){
+      const env=find(args.environmentId),state=await ctx.control('read');
+      if(!state.opened||!state.agentControlled||state.environment?.id!==env.id)throw Error('几何体搭建仅在Agent接管指定场景编辑器时开放。先open_environment，再调用本工具；未保存编辑请先sync_environment_editor。');
+      if(!Number.isInteger(args.expectedEnvironmentRevision)||args.expectedEnvironmentRevision!==(env.revision||0))throw Error('环境版本已变化，请重新读取get_environment');
+      const result=buildGeometryBatch(env,args);validateEnvironment(result.environment,project().assets);
+      if(result.changed){ctx.begin();project().environments[project().environments.indexOf(env)]=result.environment;await ctx.changed('MCP 几何体搭建场景');}
+      const {environment,...summary}=result;return {...summary,revision:revision(),environmentRevision:environment.revision,undoSteps:result.changed?1:0};
+    }
     if(name==='edit_environment'){
+
       const env=find(args.environmentId);if(!Number.isInteger(args.expectedEnvironmentRevision)||args.expectedEnvironmentRevision!==(env.revision||0))throw Error('环境版本已变化，请重新读取 get_environment');
       const result=editAgentEnvironment(env,args.operations,project().assets);
       if(result.changed){ctx.begin();project().environments[project().environments.indexOf(env)]=result.environment;await ctx.changed('MCP 布置环境');}
@@ -43,4 +59,4 @@ export function createEnvironmentAgent(ctx){
   }
   return {call,summary:environmentSummary,coordinates:environmentCoordinates};
 }
-export function editorSummary(state){return {opened:Boolean(state.opened),environmentId:state.environment?.id||'',dirty:Boolean(state.dirty),busy:Boolean(state.busy),pendingAssets:state.assets?.length||0};}
+export function editorSummary(state){return {opened:Boolean(state.opened),environmentId:state.environment?.id||'',dirty:Boolean(state.dirty),busy:Boolean(state.busy),pendingAssets:state.assets?.length||0,agentControlled:Boolean(state.agentControlled)};}

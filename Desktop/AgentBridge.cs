@@ -13,7 +13,7 @@ internal sealed partial class EditorWindow
     private NamedPipeServerStream? agentPipe;
     private string? agentSessionFile;
     private readonly Dictionary<string, TaskCompletionSource<JsonNode?>> agentReplies = new();
-    private static readonly HashSet<string> AgentOperations = ["generate_portrait","sync_editor_windows","get_capabilities","get_editor_state","get_objects","get_object","get_render_options","edit_project","inspect_character","open_editor_panel","select_editor_object","capture_editor","find_text","import_dialogue_voice","get_project","get_act","get_source","read_document","import_assets","set_asset_tags","propose_draft","apply_draft","undo","redo","save","preview","export_game","get_environments","get_environment","inspect_scene_asset","create_environment","edit_environment","set_environment_reference","open_environment","capture_environment","sync_environment_editor"];
+    private static readonly HashSet<string> AgentOperations = ["generate_portrait","sync_editor_windows","get_capabilities","get_editor_state","get_objects","get_object","get_render_options","edit_project","inspect_character","open_editor_panel","select_editor_object","capture_editor","find_text","import_dialogue_voice","get_project","get_act","get_source","read_document","import_assets","set_asset_tags","propose_draft","apply_draft","undo","redo","save","preview","export_game","get_environments","get_environment","inspect_scene_asset","create_environment","edit_environment","set_environment_reference","open_environment","capture_environment","sync_environment_editor","build_environment_geometry","get_environment_geometry"];
 
     private JsonNode? GetAgentConnection()
     {

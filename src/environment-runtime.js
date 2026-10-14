@@ -1,5 +1,7 @@
 
 import * as THREE from 'three';
+import {createGeometryBatch} from './environment-geometry.js';
+import {createWaterSurface,advanceWater} from './water-surface.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {validateEnvironment} from './environment-schema.js';
 import {SceneAnimationPlayer} from './scene-animations.js';
@@ -13,7 +15,7 @@ export function createImagePlaneMaterial(texture,node={}) {
 }
 export function disposeTree(root) {
   const geometries=new Set(),materials=new Set(),textures=new Set();
-  root.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m){materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v);}});
+  root.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry)geometries.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m){materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v);}});
   geometries.forEach(v=>v.dispose());materials.forEach(v=>v.dispose());textures.forEach(v=>{v.dispose();v.source?.data?.close?.();});
 }
 export class EnvironmentRuntime {
@@ -30,7 +32,7 @@ export class EnvironmentRuntime {
         if(beforeNode)await beforeNode();
         if(token!==this.request){disposeTree(root);return this.objects;}
         let object=new THREE.Group();root.add(object);
-        if(n.kind==='ground'){object.add(new THREE.Mesh(new THREE.PlaneGeometry(n.width,n.height),new THREE.MeshStandardMaterial({color:n.color||'#b7bfae',roughness:1,side:THREE.DoubleSide})));object.children[0].receiveShadow=true;object.children[0].castShadow=true;}else if(n.kind==='model'){
+        if(n.kind==='geometryBatch'){object.add(createGeometryBatch(n));}else if(n.kind==='water'){object.add(createWaterSurface(n));}else if(n.kind==='ground'){object.add(new THREE.Mesh(new THREE.PlaneGeometry(n.width,n.height),new THREE.MeshStandardMaterial({color:n.color||'#b7bfae',roughness:1,side:THREE.DoubleSide})));object.children[0].receiveShadow=true;object.children[0].castShadow=true;}else if(n.kind==='model'){
           const model=assets.find(a=>a.id===n.assetId),gltf=/\.(pmx|pmd)$/i.test(model.path)?{scene:await loadMmdMesh(model,url)}:await this.loader.loadAsync(url(model));object.add(gltf.scene);
           if(gltf.animations?.length)models.set(n.id,{nodeId:n.id,assetId:n.assetId,name:n.name||'GLB 模型',root:gltf.scene,clips:gltf.animations,mixer:new THREE.AnimationMixer(gltf.scene)});
           gltf.scene.traverse(o=>{if(o.isMesh){o.castShadow=n.castShadow!==false;o.receiveShadow=true;}});
@@ -52,6 +54,6 @@ export class EnvironmentRuntime {
       this.clear(false);this.root=root;this.objects=objects;this.key=key;this.environmentId=env.id;this.animations=new SceneAnimationPlayer(models);this.scene.add(root);return objects;
     }catch(error){disposeTree(root);throw error;}
   }
-  update(camera,delta=0,paused=false){if(!this.root)return;this.animations.update(delta,paused);this.root.updateWorldMatrix(true,true);const position=camera.getWorldPosition(new THREE.Vector3());this.root.traverse(o=>{if(o.userData.environmentSky)o.position.copy(o.parent.worldToLocal(position.clone()));});}
+  update(camera,delta=0,paused=false){if(!this.root)return;this.animations.update(delta,paused);this.root.updateWorldMatrix(true,true);const position=camera.getWorldPosition(new THREE.Vector3());this.root.traverse(o=>{if(o.userData.water&&!paused)advanceWater(o,delta);if(o.userData.environmentSky)o.position.copy(o.parent.worldToLocal(position.clone()));});}
   clear(cancel=true){if(cancel)this.request++;this.animations.dispose();if(this.root){this.scene.remove(this.root);disposeTree(this.root);}this.root=null;this.objects=new Map();this.key='';this.environmentId='';this.animations=new SceneAnimationPlayer();}
 }

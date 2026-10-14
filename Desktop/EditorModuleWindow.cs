@@ -16,7 +16,7 @@ internal sealed class EditorModuleWindow : Form
         Deactivate+=(_,_)=>view.CoreWebView2?.PostWebMessageAsJson("{\"modulePreviewActive\":false}");
         Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.Settings.IsStatusBarEnabled=false;view.CoreWebView2.WebMessageReceived+=Message;
             view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};
-            view.Source=new Uri("https://app.galgame/"+(module=="aircraft"?"aircraft.html":"index.html")+"?module="+Uri.EscapeDataString(module)+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-editor-modules" or "--smoke-aircombat")?"&smoke=1":""));
+            view.Source=new Uri("https://app.galgame/"+(module=="aircraft"?"aircraft.html":"index.html")+"?module="+Uri.EscapeDataString(module)+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-geometry52" or "--smoke-editor-modules" or "--smoke-aircombat" or "--smoke-ocean51")?"&smoke=1":""));
         }catch(Exception error){MessageBox.Show(this,error.Message,"窗口无法打开");closing=true;Close();}};
         FormClosing+=async(_,e)=>{if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(checking)return;checking=true;
             try{await SetClosePendingAsync(true);if(await IsBusyAsync()){MessageBox.Show(this,"当前操作或保存还没完成，请稍后关闭。");return;}
@@ -47,6 +47,7 @@ internal sealed class EditorModuleWindow : Form
     internal async Task<object> CaptureAgent44(){
         for(int i=0;i<400;i++){if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.editorCloseState?.().hasProject)")=="true")break;await Task.Delay(50);}using var stream=new MemoryStream();await view.CoreWebView2!.CapturePreviewAsync(Microsoft.Web.WebView2.Core.CoreWebView2CapturePreviewImageFormat.Png,stream);if(stream.Length>16*1024*1024)throw new Exception("截图过大。");return new{panel=Module,width=view.ClientSize.Width,height=view.ClientSize.Height,image=new{mimeType="image/png",data=Convert.ToBase64String(stream.ToArray())}};
     }
+    internal async Task SmokeViewport52(int width,int height){for(int i=0;i<600&&view.CoreWebView2==null;i++)await Task.Delay(100);await view.CoreWebView2!.CallDevToolsProtocolMethodAsync("Emulation.setDeviceMetricsOverride",JsonSerializer.Serialize(new{width,height,deviceScaleFactor=1,mobile=false}));}
     internal async Task<string> Smoke(string script,string imagePath){
         for(int i=0;i<400;i++){if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.editorCloseState?.().hasProject)")=="true")break;await Task.Delay(50);}
         await view.CoreWebView2!.ExecuteScriptAsync("window.__moduleCheck=null;(async()=>{"+script+"})().then(result=>window.__moduleCheck=result).catch(error=>window.__moduleCheck={error:error.message})");

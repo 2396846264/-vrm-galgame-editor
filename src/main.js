@@ -75,6 +75,9 @@ import './dialogue-voices.css';
 import './feedback.css';
 import { createStoryAssistant } from './story-assistant.js';
 
+import './apple-editor.css';
+import {resolvedEditorTheme} from './apple-editor-theme.js';
+import {showEditorPicker} from './editor-picker.js';
 const app = document.querySelector('#app');
 // Flight smoke checks run only in the existing dedicated native smoke mode.
 const pending = new Map();
@@ -114,7 +117,7 @@ let changeRevision = 0;
 let saveInFlight = null;
 let saveScreenshotBusy=false;
 const editorSaveNotice=createEditorSaveNotice({status:()=>dirty?(modulePanel?'● 未应用':'● 未保存'):(modulePanel?'✓ 已应用到工程':'✓ 已保存')});
-let editorSettings = { autoSaveMinutes: 5, theme: 'light' };
+let editorSettings = { autoSaveMinutes: 5, theme: 'system', appearanceVersion:51 };
 let feedbackGroup = '';
 let editorAutoSaveTimer = null;
 let music = new Audio();
@@ -1398,21 +1401,22 @@ function loadEditorSettings() {
     const saved = JSON.parse(localStorage.getItem('vrm-editor-settings') || 'null');
     if ([5, 10, 30, 60].includes(Number(saved?.autoSaveMinutes)))
       editorSettings.autoSaveMinutes = Number(saved.autoSaveMinutes);
-    editorSettings.theme = saved?.theme === 'dark' ? 'dark' : 'light';
+    editorSettings.theme = saved?.appearanceVersion===51&&['dark','light','system'].includes(saved.theme)?saved.theme:'system';
   } catch { /* Keep the default interval. */ }
   applyEditorTheme();
   restartEditorAutoSave();
 }
 function applyEditorTheme() {
-  document.body.dataset.editorTheme = editorSettings.theme;
+  const resolved=resolvedEditorTheme(editorSettings.theme);document.body.dataset.editorTheme = resolved;
   const toggle = document.querySelector('[data-action="toggle-editor-theme"]');
   if (toggle) {
-    toggle.textContent = editorSettings.theme === 'dark' ? '☀' : '☾';
-    toggle.title = editorSettings.theme === 'dark' ? '切换到日间模式' : '切换到夜间模式';
+    toggle.textContent = resolved === 'dark' ? '☀' : '☾';
+    toggle.title = resolved === 'dark' ? '切换到日间模式' : '切换到夜间模式';
     toggle.setAttribute('aria-label', toggle.title);
-    toggle.setAttribute('aria-pressed', String(editorSettings.theme === 'dark'));
+    toggle.setAttribute('aria-pressed', String(resolved === 'dark'));
   }
 }
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(editorSettings.theme==='system')applyEditorTheme();});
 function saveEditorSettings() {
   localStorage.setItem('vrm-editor-settings', JSON.stringify(editorSettings));
 }
@@ -1431,7 +1435,7 @@ function renderEditorSettings() {
         ${[[5, '每 5 分钟'], [10, '每 10 分钟'], [30, '每 30 分钟'], [60, '每 1 小时']].map(([value, label]) =>
           `<option value="${value}" ${editorSettings.autoSaveMinutes === value ? 'selected' : ''}>${label}</option>`).join('')}
       </select></label><label class="field"><span>界面外观</span><select id="editor-theme">
-        <option value="light" ${editorSettings.theme === 'light' ? 'selected' : ''}>日间 · 白色</option>
+        <option value="system" ${editorSettings.theme === 'system' ? 'selected' : ''}>跟随系统 · 自动切换</option><option value="light" ${editorSettings.theme === 'light' ? 'selected' : ''}>日间 · 白色</option>
         <option value="dark" ${editorSettings.theme === 'dark' ? 'selected' : ''}>夜间 · 深灰色</option>
       </select></label><p>外观设置只影响编辑器；游戏外观在“游戏 UI”中选择。</p>
       <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
@@ -1470,7 +1474,7 @@ function renderEditor() {
     <header class="topbar"><div class="brand">✦ <b>VRM Galgame</b><span>编辑器</span></div>
       <div class="project-title"><input id="text-search" placeholder="查找与替换剧情、角色名称…" aria-label="查找剧情文本，按回车打开替换工具"><button class="search-open-button" data-action="search-open" title="查找与替换">⌕</button><span id="save-state">✓ 已保存</span></div>
       <div class="editor-history-controls" role="group" aria-label="撤销和重做">${button('↶ 撤销', 'editor-undo', 'disabled')}${button('↷ 重做', 'editor-redo', 'disabled')}</div>
-      <div class="editor-tools-row">${modulePanel?'<nav>'+button('保存并应用到工程','save')+button('☾','toggle-editor-theme')+button('重播动作','restart-character-preview','title="重新播放预览人物动作"')+'</nav>':`<nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('游戏 UI', 'game-ui')}${button('剧情助手', 'assistant-open')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}${button('环境编辑器', 'edit-environment')}${Object.entries(moduleLabels).map(([key,label])=>button(label+'编辑器','open-module','data-module="'+key+'"')).join('')}${button('重播动作','restart-character-preview','title="重新播放预览人物动作"')}</nav><div class="story-current" id="story-current" role="status"></div>`}</div>
+      <div class="editor-tools-row">${modulePanel?'<nav>'+button('保存并应用到工程','save')+button('☾','toggle-editor-theme')+button('重播动作','restart-character-preview','title="重新播放预览人物动作"')+'</nav>':`<nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('游戏 UI', 'game-ui')}${button('剧情助手', 'assistant-open')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}${button('编辑器 ▦', 'choose-editor','aria-label="选择编辑器"')}${button('重播动作','restart-character-preview','title="重新播放预览人物动作"')}</nav><div class="story-current" id="story-current" role="status"></div>`}</div>
     </header>
     <div class="workspace ${modulePanel?'':'story-workspace'}">
       ${modulePanel?'<aside class="sidebar"><div class="module-sidebar-title">'+moduleLabels[modulePanel]+'编辑器<span id="stage-caption" class="module-context-caption"></span></div><div id="sidebar-body"></div></aside>':'<div class="story-left"><aside class="inspector"><div class="inspector-heading">当前对白编辑</div><div id="inspector-body"></div></aside><aside class="sidebar"><div id="sidebar-body"></div></aside></div>'}
@@ -3976,6 +3980,7 @@ document.addEventListener('click', async event => {
   if(action==='edit-dialogue-camera'){await beginDialogueCameraEdit();return;}
   if(action==='clear-dialogue-camera'){delete step().camera;markDirty();renderInspector();updatePreview();return;}
   if(action==='restart-character-preview'){try{for(const record of stage?.visibleRecords.values()||[])record.currentMotionToken='';await updatePreview();stage?.restartCharacterPreview();}catch(error){toast(error.message,true);}return;}
+  if(action==='choose-editor'){showEditorPicker(moduleLabels,key=>{if(key==='environment'){const trigger=document.createElement('button');trigger.dataset.action='edit-environment';document.querySelector('.editor').append(trigger);trigger.click();trigger.remove();}else openEditorModule(key).catch(error=>toast(error.message,true));});return;}
   if(action==='open-module'){try{await openEditorModule(node.dataset.module);}catch(error){toast(error.message,true);}return;}
   if (new URLSearchParams(location.search).has('smoke')) window.__lastClickAction = action;
   try {
@@ -4074,7 +4079,7 @@ document.addEventListener('click', async event => {
     else if (action === 'edit-environment') await editEnvironment(activePanel==='title'?project.title:act());
     else if (action === 'editor-settings') renderEditorSettings();
     else if (action === 'toggle-editor-theme') {
-      editorSettings.theme = editorSettings.theme === 'dark' ? 'light' : 'dark';
+      editorSettings.theme = resolvedEditorTheme(editorSettings.theme) === 'dark' ? 'light' : 'dark';
       saveEditorSettings(); applyEditorTheme();
       const select = document.querySelector('#editor-theme');
       if (select) select.value = editorSettings.theme;
@@ -4452,7 +4457,7 @@ document.addEventListener('input', event => {
     return;
   }
   if (node.id === 'editor-theme') {
-    editorSettings.theme = node.value === 'dark' ? 'dark' : 'light';
+    editorSettings.theme = ['dark','light','system'].includes(node.value)?node.value:'system';
     saveEditorSettings(); applyEditorTheme();
     return;
   }
@@ -5676,4 +5681,25 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeAirCombat=
   load:async snapshot=>{playing=false;const slots=Array(20).fill(null);slots[19]=snapshot;localStorage.setItem(saveKey(),JSON.stringify(slots));loadSlot(19);},
   saveExport:async()=>{stopPlay();const a=project.acts.find(a=>a.event?.type==='aircombat');a.event.combat.aircraft.name='双发自卫轰炸机';project.acts[0].steps[0].choices=[{id:uid(),text:'驾驶双发轰炸机出击',actId:a.id,requirements:[],consumeRequired:false}];for(const id of ['air-win','air-lose']){const result=project.acts.find(n=>n.id===id);result.steps[0].choices=[{id:uid(),text:'返回出击前',actId:'air-intro',requirements:[],consumeRequired:false}];}selectedAct=project.acts.indexOf(a);selectedStep=0;await updatePreview();const {voxelPreset,createVehicle}=await import('./vehicle-documents.js');project.vehicles=[];const prototypes=Object.fromEntries(['stuka','b25','bf109','shinden'].map(k=>{const bp=voxelPreset(k);return[k,createVehicle(project,bp.name,bp)];}));const historicalPreset=k=>structuredClone(prototypes[k].blueprint);const intro=project.acts[0],win=project.acts.find(n=>n.id==='air-win'),lose=project.acts.find(n=>n.id==='air-lose');const samples=['stuka','b25','bf109','shinden'].map(k=>{const n=newEvent(uid(),uid());n.name=historicalPreset(k).name;n.event=normalizeEvent({type:'aircombat',combat:{aircraft:historicalPreset(k),enemyAircraft:historicalPreset('bf109'),allyAircraft:historicalPreset('b25'),enemies:1,allies:1,mission:'survive',duration:60,difficulty:.4,winActId:'air-win',loseActId:'air-lose'}});return n;});project.acts=[intro,...samples,win,lose];intro.steps[0].text='选择一架飞机试飞。鼠标指向控制航向，A/D 辅助转弯，松手自动回正。通过载具编辑器打开单独文件，逐块建造机体并安装活动附件。';intro.steps[0].choices=samples.map(n=>({id:uid(),text:n.name,actId:n.id,requirements:[],consumeRequired:false}));project.name='方块载具样机_0.0.48';ensureVehicleLibrary(project);selectedAct=1;renderSidebar();renderInspector();await updatePreview();await bridge('saveProject',{project:structuredClone(project)});await bridge('exportGame',{folderName:'方块载具试玩_0.0.48_'+uid().slice(0,6)});}
  });
+};
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmoke51=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ if(phase==='setup'){await window.__vrmSmokeAirCombat('setup');selectedAct=0;selectedStep=0;renderSidebar();renderInspector();await updatePreview();return{ok:true,openedOldProject:true};}
+ if(phase.startsWith('picker-')){editorSettings.theme=phase.slice(7);applyEditorTheme();document.querySelector('[data-action=choose-editor]').click();await wait(200);const cards=[...document.querySelectorAll('.module-card')];assert(cards.length===7,'编辑器卡片不齐');assert(cards.every(c=>c.getBoundingClientRect().width>100),'卡片挤压');assert(document.documentElement.scrollWidth<=innerWidth+1,'横向溢出');const accent=getComputedStyle(document.body).getPropertyValue('--ui-accent').trim();assert(accent==='#007aff'||accent==='#409cff','主题不是蓝色');return{ok:true,cards:cards.length,theme:document.body.dataset.editorTheme,accent};}
+ if(phase==='environment-open'){document.querySelector('[data-picker-close]')?.click();editorSettings.theme='system';applyEditorTheme();document.querySelector('[data-action=choose-editor]').click();document.querySelector('[data-picker-module=environment]').click();await wait(500);return{ok:true,actualPickerOpenedEnvironment:true};}
+ if(phase==='environment-verify'){const e=project.environments.find(e=>e.id===project.acts[0].environmentId);assert(e?.nodes.filter(n=>n.kind==='water').length===3,'保存水面丢失');assert(e.nodes.some(n=>n.kind==='water'&&n.flowSpeed===2),'水面参数未保存');return{ok:true,savedWater:3,revision:e.revision};}
+ if(phase==='vehicle-open'){document.querySelector('[data-action=choose-editor]').click();document.querySelector('[data-picker-module=aircraft]').click();await wait(500);return{ok:true,actualPickerOpenedVehicle:true};}
+ if(phase==='export'){await save();const result=await bridge('exportGame',{folderName:'海上空战验证_0.0.51'});return{ok:true,saved:true,exported:result};}throw Error(phase);
+};
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeGeometry52=async phase=>{
+ const {geometry52Plan,geometry52GardenPlan,verifyStoryButtons}=await import('./geometry52-smoke.js');
+ if(phase==='ui'){selectedAct=0;selectedStep=0;activePanel='story';renderSidebar();renderInspector();return verifyStoryButtons();}
+ if(phase==='plan')return{ok:true,...geometry52Plan()};if(phase==='plan-garden')return{ok:true,...geometry52GardenPlan()};
+ if(phase==='vehicle'){await openEditorModule('aircraft');return{ok:true};}
+ if(phase==='stage'||phase==='reopen'){
+  const assert=(v,m)=>{if(!v)throw Error(m);};selectedAct=0;selectedStep=0;activePanel='story';renderSidebar();renderInspector();await updatePreview();await new Promise(r=>setTimeout(r,600));const e=project.environments.find(e=>e.id===project.acts[0].environmentId),batch=e?.nodes.find(n=>n.kind==='geometryBatch');assert(batch&&batch.primitives.length>15000,'几何体工程丢失');const garden=project.environments.find(e=>e.name==='Agent花园住宅');assert(garden?.nodes.some(n=>n.kind==='geometryBatch'&&n.primitives.length>6000),'庭院工程丢失');const meshes=[];stage.environmentRuntime.root.traverse(o=>{if(o.isInstancedMesh)meshes.push(o);});assert(meshes.length===9&&meshes.reduce((n,m)=>n+m.count,0)===batch.primitives.length,'批量渲染几何体丢失');assert(!stage.renderer.info.programs.some(p=>p.diagnostics&&!p.diagnostics.runnable),'场景shader错误');return{ok:true,geometryCount:batch.primitives.length,instancedGroups:meshes.length,assetsNeeded:false,archiveReopened:phase==='reopen'};
+ }
+ throw Error(phase);
 };

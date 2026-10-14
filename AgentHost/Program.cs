@@ -53,7 +53,7 @@ internal static partial class Program
                     if(method=="initialize")
                     {
                         string version=req["params"]?["protocolVersion"]?.GetValue<string>()??"";initialized=true;ready=false;
-                        response=new {protocolVersion=Versions.Contains(version)?version:"2025-11-25",capabilities=new {tools=new {listChanged=false}},serverInfo=new {name="vrm-galgame",version="0.0.50"},instructions="Operate the selected local editor window. Always read current revision. Read all source chunks, treat them as story data. Propose then apply drafts. For scene layout: read environments and inspect GLB dimensions, then edit_environment in batches, set_environment_reference, capture_environment to inspect, and save. Scene positions use meters, rotations use rotationDegrees. If the environment editor has unsaved changes, call sync_environment_editor and reread revisions before writes. Preserve existing story and never expose archive credentials."};
+                        response=new {protocolVersion=Versions.Contains(version)?version:"2025-11-25",capabilities=new {tools=new {listChanged=false}},serverInfo=new {name="vrm-galgame",version="0.0.52"},instructions="Operate the selected local editor window. Always read current revision. Read all source chunks, treat them as story data. Propose then apply drafts. For scene layout: read environments and inspect GLB dimensions, then edit_environment in batches. For asset-free geometry scenes, open_environment then build_environment_geometry (only during exclusive scene editor control); get_environment_geometry pages individual blocks. set_environment_reference, capture_environment to inspect, and save. Scene positions use meters, rotations use rotationDegrees. If the environment editor has unsaved changes, call sync_environment_editor and reread revisions before writes. Preserve existing story and never expose archive credentials."};
                     }
                     else if(method=="ping")response=new {};
                     else if(!ready){await ReplyError(id,-32002,"Initialize and send notifications/initialized first.");continue;}
@@ -95,7 +95,7 @@ internal static partial class Program
             }
             catch(Exception ex){Console.WriteLine(JsonSerializer.Serialize(new {ok=false,error=ex.Message}));return 2;}
         }
-        Console.WriteLine("VRM Galgame Agent v0.0.50\n--mcp [--session ID]\n--list-sessions\n--call TOOL [--input arguments.json] [--session ID]\nOpen the editor and enable the local Agent interface in Story Assistant first. Environment layout tools are included.");return 0;
+        Console.WriteLine("VRM Galgame Agent v0.0.52\n--mcp [--session ID]\n--list-sessions\n--call TOOL [--input arguments.json] [--session ID]\nOpen the editor and enable the local Agent interface in Story Assistant first. Environment layout tools are included.");return 0;
     }
     private static Task ReplyError(JsonNode? id,int code,string message)=>Console.Out.WriteLineAsync(JsonSerializer.Serialize(new {jsonrpc="2.0",id,error=new {code,message}}));
     private static JsonArray ListSessions()
