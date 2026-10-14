@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {aircraftPreset,partKit,partFamily,normalizeAircraft,validateAircraft} from '../src/aircombat-schema.js';
+import {compileAircraft,aircraftModel,aircraftTriangles,disposeAircraft} from '../src/aircombat-models.js';
+import {createFlight,steerFlight,stepFlight} from '../src/aircombat-physics.js';
+const up=f=>new THREE.Vector3(0,1,0).applyQuaternion(f.rotation).y;
+const report=[];
+for(const kit of ['stuka','b25','bf109','shinden']){
+ const blueprint=aircraftPreset(kit);assert.deepEqual(validateAircraft(blueprint),[]);assert.deepEqual(validateAircraft(normalizeAircraft(JSON.parse(JSON.stringify(blueprint)))),[]);
+ const spec=compileAircraft(blueprint),model=aircraftModel(spec),triangles=aircraftTriangles(model);assert(triangles>5000&&triangles<=10000,kit+' polygon budget');model.traverse(o=>{if(o.material&&!o.userData.runtimeEffect){assert.equal(o.material.transparent,false);assert.equal(o.material.opacity,1);}});for(const p of spec.parts.filter(p=>partFamily(p.type).startsWith('wing'))){const mesh=model.userData.models.get(p.id).children[0];assert(mesh.geometry.attributes.normal.array[3*(2*11+5)+1]>.5,kit+' upper wing normals must face outward');}disposeAircraft(model);
+ const flight=createFlight(blueprint,[0,1500,0]);for(let i=0;i<18000;i++){const t=i/60,angle=Math.sin(t*.035)*.7,direction=new THREE.Vector3(Math.sin(angle),Math.sin(t*.03)*.06,-Math.cos(angle));steerFlight(flight,direction);stepFlight(flight,1/60);assert(up(flight)>.35,kit+' unexpected inverted attitude');assert(flight.position.toArray().every(Number.isFinite));}assert(flight.alive,kit+' sustained flight');
+ const recovery=createFlight(blueprint,[0,1500,0]);recovery.rotation.setFromAxisAngle(new THREE.Vector3(0,0,1),Math.PI);for(let i=0;i<600;i++){steerFlight(recovery,new THREE.Vector3(0,0,-1));stepFlight(recovery,1/60);}assert(up(recovery)>.9,kit+' inverted recovery');assert(recovery.alive);
+ const mouse=createFlight(blueprint,[0,1500,0]);for(let i=0;i<10800;i++){const heading=new THREE.Vector3(0,0,-1).applyQuaternion(mouse.rotation);heading.y=0;heading.normalize();const right=new THREE.Vector3().crossVectors(heading,new THREE.Vector3(0,1,0)).normalize();steerFlight(mouse,heading.addScaledVector(right,.52).normalize());stepFlight(mouse,1/60);assert(up(mouse)>.5,kit+' held mouse must not invert');}assert(mouse.alive,kit+' three-minute held mouse turn');
+ const banking=createFlight(blueprint,[0,1500,0]);for(let i=0;i<3600;i++){steerFlight(banking,new THREE.Vector3(0,0,-1),{roll:-1});stepFlight(banking,1/60);assert(up(banking)>.15,kit+' manual bank limit');}for(let i=0;i<600;i++){const neutral=new THREE.Vector3(0,0,-1).applyQuaternion(banking.rotation);neutral.y=0;steerFlight(banking,neutral.normalize());stepFlight(banking,1/60);}assert(up(banking)>.9,kit+' release auto-level');
+ if(kit==='stuka')assert.equal(blueprint.parts.filter(p=>p.type==='bk37').length,2);if(kit==='b25')assert.equal(spec.powerHp,3400);if(kit==='bf109')assert(blueprint.parts.some(p=>p.type==='mg151'));if(kit==='shinden'){assert(blueprint.parts.some(p=>p.type==='shinden_tail'));assert.equal(blueprint.parts.filter(p=>p.type==='type5').length,4);}
+ report.push({kit,triangles,mass:spec.mass,powerHp:spec.powerHp,altitude:Math.round(flight.position.y),speed:Math.round(flight.airSpeed*3.6),uprightAfterRecovery:up(recovery)});
+}
+assert.ok(Object.keys(partKit).length>=57);console.log(JSON.stringify({ok:true,components:57,checks:'budget, opaque models, roundtrip, five-minute flight, no inversion, inverted recovery, bank limit, auto-level, model-specific weapons',aircraft:report}));

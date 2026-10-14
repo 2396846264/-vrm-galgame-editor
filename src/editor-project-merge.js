@@ -1,5 +1,10 @@
 const absent=Symbol('absent');
-const same=(a,b)=>a===absent||b===absent?a===b:JSON.stringify(a)===JSON.stringify(b);
+const same=(a,b)=>{
+ if(a===b)return true;if(a===absent||b===absent||a==null||b==null||typeof a!==typeof b)return false;
+ if(typeof a!=='object')return false;
+ if(Array.isArray(a)||Array.isArray(b))return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((v,i)=>same(v,b[i]));
+ const keys=Object.keys(a);return keys.length===Object.keys(b).length&&keys.every(k=>Object.hasOwn(b,k)&&same(a[k],b[k]));
+};
 const copy=value=>value===absent?absent:structuredClone(value);
 const plain=value=>value!==absent&&value!==null&&typeof value==='object'&&!Array.isArray(value);
 export function mergeEditorProject(base,current,draft,{history=false}={}){

@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {shapeGeometry,intersectShape} from '../src/vehicle-shapes.js';
+import {normalizeStructure,expandedBlocks,setBlock} from '../src/vehicle-structure.js';
+import {voxelPreset,vehicleFromAircraft} from '../src/vehicle-documents.js';
+import {frontalProjection} from '../src/vehicle-projection.js';
+import {compileAircraft,partModel,aircraftModel,disposeAircraft} from '../src/aircombat-models.js';
+import {animateLandingGear,poseLandingGear,animateWeapon} from '../src/vehicle-hardware.js';
+import {partFamily,partKit,createPart} from '../src/aircombat-schema.js';
+import {createFlight,stepFlight,steerFlight} from '../src/aircombat-physics.js';
+const v=normalizeStructure({gridSize:.125,blocks:[{cell:[3,0,1],kind:'hull',shape:'wedge',shapeRotation:[0,90,0]}]});assert.equal(v.gridSize,.125);assert.equal(expandedBlocks(v)[1].shapeRotation[1],-90);assert.equal(expandedBlocks(v)[1].shape,'wedge');
+for(const shape of ['wedge','pyramid','cone']){const g=shapeGeometry(shape,[.125,.125,.125]);assert.ok(g.index.count/3<=16);g.dispose();assert.equal(intersectShape(shape,[.125,.125,.125],new THREE.Vector3(.06,.06,-.2),new THREE.Vector3(.06,.06,0)),null);}
+assert.notEqual(intersectShape('wedge',[.125,.125,.125],new THREE.Vector3(0,0,-.2),new THREE.Vector3(0,0,.2)),null);
+const root=new THREE.Group(),parts=[{id:'a'},{id:'b'}],models=new Map();root.userData.models=models;for(let i=0;i<2;i++){const m=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial());m.position.z=i*2;root.add(m);models.set(parts[i].id,m);}const projection=frontalProjection(root,parts);assert.ok(Math.abs(projection.area-1)<.03);assert.ok(projection.partAreas[1]<.01);disposeAircraft(root);
+const old={schemaVersion:2,gridSize:.25,name:'旧细度',blocks:[],parts:[]};setBlock(old,[1,0,0],'hull');assert.equal(vehicleFromAircraft(old).blocks.length,8);
+const blueprint=voxelPreset('b25'),spec=compileAircraft(blueprint);assert.ok(spec.gearProjections[0].area<spec.gearProjections[4].area,'收起后正面投影应更小');const gear=spec.parts.find(p=>partFamily(p.type)==='gear'),model=partModel(gear),original=model.userData.wheels[0].rotation.x;
+animateLandingGear(model,gear,{gearCommand:'down',position:new THREE.Vector3(0,2,0),airSpeed:30,grounded:true,velocity:new THREE.Vector3(0,0,30)},.1);assert.notEqual(model.userData.wheels[0].rotation.x,original);
+for(const direction of ['forward','backward','inward','outward']){gear.gearFoldDirection=direction;poseLandingGear(model,gear,0);const leg=model.userData.gearLegs[0];assert.ok(Math.abs(leg.hinge.rotation.x)+Math.abs(leg.hinge.rotation.z)>1.5);}disposeAircraft(model);
+const gun={...createPart('bk37'),def:partKit.bk37,lastShotTime:0},gunModel=partModel(gun);animateWeapon(gunModel,gun,0);assert.ok(gunModel.userData.muzzles.some(m=>m.visible));assert.ok(gunModel.userData.recoilParts[0].barrel.position.z>gunModel.userData.recoilParts[0].base.z);animateWeapon(gunModel,gun,1);assert.ok(gunModel.userData.muzzles.every(m=>!m.visible));disposeAircraft(gunModel);
+const f=createFlight(voxelPreset('bf109'),[0,1,0]);f.velocity.set(0,0,0);f.airSpeed=0;f.throttle=1;let groundFrames=0;for(let i=0;i<60*60;i++){steerFlight(f,new THREE.Vector3(0,f.airSpeed>f.spec.stallSpeed*1.2?.15:0,-1),f.airSpeed>f.spec.stallSpeed*1.2&&f.position.y<30?{pitch:.3}:{});stepFlight(f,1/60);if(f.grounded)groundFrames++;if(!f.alive)break;}assert.ok(f.alive,'滑跑/起飞失败');assert.ok(groundFrames>60,'没有地面滑跑阶段');assert.ok(f.position.y>20,'未离地');assert.ok(f.spec.parts.filter(p=>partFamily(p.type)==='gear').every(p=>p.gearDeployment<.05),'离地后没有自动收轮');
+console.log(JSON.stringify({ok:true,fineGrid:.125,shapesAndMirrors:true,shapeCollision:true,silhouetteOcclusion:true,gearDirections:true,wheelRotation:true,recoilAndMuzzle:true,takeoff:{height:Math.round(f.position.y),groundFrames},gearProjection:{down:spec.gearProjections[4].area,up:spec.gearProjections[0].area}}));

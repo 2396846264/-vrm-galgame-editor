@@ -1,3 +1,4 @@
+import {ensureVehicleLibrary} from './vehicle-documents.js';
 import {assetsOfType,syncAssetOrganization,motionsForCharacter,motionFolderId,commonMotionFolderId,setAudioKind,copyCharacterMotions} from './asset-organization.js';
 import {DialogueCameraController,snapshotCamera,applyDialogueCamera,resolveDialogueCamera} from './dialogue-camera.js';
 import './dialogue-camera.css';
@@ -49,6 +50,7 @@ import './role-details.css';
 import {portraitBodyFrame} from './portrait-body-frame.js';
 import './weather.css';
 import './events.css';
+import './aircombat.css';
 import { createEvents, eventNames, eventSeconds, isEvent, normalizeEvent, newEvent } from './events.js';
 import { normalizeWeather, weatherDefaults, weatherNames, weatherMood } from './weather.js';
 import { colorDefaults, chapterRender as legacyChapterRender, colorFilter, chapterUnlocked, dialogueRender as legacyDialogueRender } from './chapters.js';
@@ -74,6 +76,7 @@ import './feedback.css';
 import { createStoryAssistant } from './story-assistant.js';
 
 const app = document.querySelector('#app');
+// Flight smoke checks run only in the existing dedicated native smoke mode.
 const pending = new Map();
 let counter = 0;
 let project = null;
@@ -105,7 +108,7 @@ let playRequest = 0;
 let previewRequest = 0;
 let titleRequest = 0;
 let modulePanel=null,moduleBaseline=null,moduleBaselineRevision=0,moduleRefreshPending=null,moduleNotifyTimer=null;
-const moduleLabels={characters:"角色",items:"物品",title:"标题",render:"渲染",knowledge:"知识库"};
+const moduleLabels={characters:"角色",items:"物品",title:"标题",render:"渲染",knowledge:"知识库",aircraft:"载具"};
 let dirty = false;
 let changeRevision = 0;
 let saveInFlight = null;
@@ -226,12 +229,14 @@ const events = createEvents({ project: () => project, escape, asset, assetUrl,
     eventEffects.clear(); applyAudioSettings();
   },
   cue: () => { if (mode === 'player') playEventSignal(); },
-  finish: id => {
+  finish: (id,outcome,targetId) => {
     if (!playing || project.acts[playAct]?.id !== id) return;
     if (mode === 'player') { const progress = loadLifetimeProgress(); if (!progress.completedEventIds.includes(id)) progress.completedEventIds.push(id); localStorage.setItem(lifetimeKey(), JSON.stringify(progress)); }
-    playAct++; playStep = 0; preparedAct = -1; showPlayStep();
+    const target=targetId?project.acts.findIndex(a=>a.id===targetId):-1;
+    playAct=target>=0?target:playAct+1; playStep = 0; preparedAct = -1; showPlayStep();
   } });
 const act = () => project.acts[selectedAct];
+document.addEventListener('air-part-picked',event=>{if(!playing&&act()?.id===event.detail.nodeId){events.selectAirPart(act(),event.detail.partId);renderInspector();}});
 const storyAssistant = createStoryAssistant({project:()=>project,mode:()=>mode,escape,bridge,toast,assetUrl,
   revision:()=>changeRevision,dirty:()=>dirty,busy:()=>historyBusy||transitioning||playing,
   begin:()=>{editorHistory.seal();editorHistory.begin();},
@@ -1163,6 +1168,7 @@ function normalize() {
     }
     for (const entry of item.steps) entry.choices ||= [];
   }
+  ensureVehicleLibrary(project);
   migrateDialogueCast(project);syncAssetOrganization(project,uid);
 }
 async function init() {
@@ -1242,7 +1248,7 @@ function historyInputContextSupported(node) {
   const bindings = Object.entries(node.dataset || {}).filter(([key]) => !key.endsWith('Output'));
   const supported = bindings.some(([key]) => ['field','bookField','eventField','motionOptions','galleryMusic','galleryImage','nprFilter','itemField','inventoryRow',
     'audioTitle','storyIndex','assetFolder','titleField','uiField','titleAdjust','titleExpression','titleActorField','titleActorAdjust','titleActorExpression','titleActorProp','stepCast','castSlot','castMotion','castAdjust','castExpression','castProp','propField','propTransform',
-    'renderSelection','renderCalibration','renderPresetName','presetFilter','presetColor','spatialCamera','render','weather','galleryAdjust','adjust','expression','choiceField'].includes(key)) || node.id === 'project-name' || node.hasAttribute('data-gallery-frame-number');
+    'airField','airPart','airVector','renderSelection','renderCalibration','renderPresetName','presetFilter','presetColor','spatialCamera','render','weather','galleryAdjust','adjust','expression','choiceField'].includes(key)) || node.id === 'project-name' || node.hasAttribute('data-gallery-frame-number');
   return supported;
 }
 function historyInputContext(node) {
@@ -1513,11 +1519,11 @@ function renderSidebar() {
   const body = document.querySelector('#sidebar-body');
   if (activePanel === 'knowledge') { library.editor(); renderAssetDock(); return; }
   if(activePanel==='items'){body.innerHTML=`<div class="section-heading">玩家物品 ${button('＋ 新增','add-inventory-item')}</div><div class="list inventory-editor-list">${project.items.map((item,index)=>`<button class="list-row ${index===selectedItem?'selected':''}" data-action="select-inventory-item" data-index="${index}">${escape(item.name||'未命名物品')}</button>`).join('')}</div><p class="sidebar-note">这是玩家背包里的物品。先补全名字、立绘和介绍，再到对白里设置获得与分支条件。</p>`;}else if (activePanel === 'story') {
-    body.innerHTML = `<div class="section-heading">剧情 <span class="heading-actions">${button('＋ 幕', 'add-act')}${button('＋ 事件', 'event-add')}${button('＋ 过场','event-add-cutscene')}</span></div>
+    body.innerHTML = `<div class="section-heading">剧情 <span class="heading-actions">${button('＋ 幕', 'add-act')}${button('＋ 事件', 'event-add')}${button('＋ 过场','event-add-cutscene')}${button('＋ 空战','event-add-aircombat')}</span></div>
       <div class="list act-accordion" data-order-list="act">${project.acts.map((item, index) =>
         `<section class="act-group ${isEvent(item) ? 'event-group' : ''} ${index === selectedAct ? 'expanded' : ''}"><button class="list-row sortable-row ${index === selectedAct ? 'selected' : ''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" aria-expanded="${index === selectedAct}">
           <span class="number">${index === selectedAct ? '▾' : '▸'} ${String(index + 1).padStart(2, '0')}</span><span>${isEvent(item) ? '▤ ' : ''}${escape(item.name)}</span><small>${isEvent(item) ? eventNames[item.event.type] : `${item.steps.length} 句`}</small><span class="drag-grip" aria-hidden="true">⋮⋮</span></button>
-          ${index === selectedAct ? isEvent(item) ? `<div class="act-dialogues event-sidebar-info"><p>${escape(item.event.title || '在右侧填写事件内容')}</p><small>${eventSeconds[item.event.type] ? `观看 ${eventSeconds[item.event.type]} 秒后继续` : '可以立即关闭'}</small><div class="inline-actions">${button('预览', 'event-preview')}</div></div>` : `<div class="act-dialogues"><div class="section-heading">本幕对白 <span class="heading-actions">${button('＋ 新增', 'add-step')}</span></div>
+          ${index === selectedAct ? isEvent(item) ? `<div class="act-dialogues event-sidebar-info"><p>${escape(item.event.title || '在右侧填写事件内容')}</p><small>${item.event.type==='aircombat'?'拼装飞机并配置战斗任务':eventSeconds[item.event.type] ? `观看 ${eventSeconds[item.event.type]} 秒后继续` : '可以立即关闭'}</small><div class="inline-actions">${button('预览', 'event-preview')}</div></div>` : `<div class="act-dialogues"><div class="section-heading">本幕对白 <span class="heading-actions">${button('＋ 新增', 'add-step')}</span></div>
           <div class="list step-list" data-order-list="step">${item.steps.map((line, stepIndex) => `<button class="list-row sortable-row ${stepIndex === selectedStep ? 'selected' : ''}" draggable="true" data-order-kind="step" data-order-index="${stepIndex}" data-action="select-step" data-index="${stepIndex}"><span class="number">${stepIndex + 1}</span><span><b>${escape(line.speaker || character(line.characterId)?.name || '旁白')}</b><small>${escape(line.text || '空对白')}</small></span><span class="drag-grip" aria-hidden="true">⋮⋮</span></button>`).join('') || '<p class="tip">点击“新增”写第一句对白。</p>'}</div></div>` : ''}</section>`).join('')}</div>
       <div class="sidebar-note">拖动幕或事件可以调整播放顺序。点击“＋ 事件”，会插入到当前选中项后面。</div>`;
   } else if (activePanel === 'characters') {
@@ -1621,15 +1627,15 @@ let storyListAct='',storyListStep='';
 function renderStoryLists(){
  const body=document.querySelector('#sidebar-body'),right=document.querySelector('#dialogue-list-body');if(!body||!right||!project)return;
  const current=act(),changed=storyListAct!==current?.id;storyListAct=current?.id||'';
- body.innerHTML=`<div class="section-heading">幕列表 <span class="heading-actions">${button('＋ 幕','add-act')}${button('＋ 事件','event-add')}${button('＋ 过场','event-add-cutscene')}</span></div><div class="list act-list" data-order-list="act">${project.acts.map((item,index)=>`<button class="list-row sortable-row ${index===selectedAct?'selected':''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" ${index===selectedAct?'aria-current="true"':''}><span class="number">${String(index+1).padStart(2,'0')}</span><span>${isEvent(item)?'▤ ':''}${escape(item.name)}</span><small>${isEvent(item)?(item.event?.type==='cutscene'?'过场':'事件'):item.steps.length+'句'}</small><span class="drag-grip">⋮⋮</span></button>`).join('')}</div>`;
- right.innerHTML=`<div class="section-heading"><strong id="stage-caption">${escape(current?.name||'本幕对白')}</strong><small> · 只显示当前幕</small><span class="heading-actions">${button('＋ 新增对白','add-step',current&&!isEvent(current)?'':'disabled')}</span></div>${current&&!isEvent(current)?`<div class="list step-list" data-order-list="step">${current.steps.map((line,index)=>`<button class="list-row sortable-row ${index===selectedStep?'selected':''}" draggable="true" data-order-kind="step" data-order-index="${index}" data-action="select-step" data-index="${index}" ${index===selectedStep?'aria-current="true"':''}><span class="number">${index+1}</span><span><b>${escape(line.speaker||character(line.characterId)?.name||'旁白')}</b><small>${escape(line.text||'空对白')}</small></span><span class="drag-grip">⋮⋮</span></button>`).join('')||'<p class="tip">点击“新增对白”写第一句。</p>'}</div>`:'<p class="sidebar-note">当前是事件或过场，内容在左上方编辑。</p>'}`;
+ body.innerHTML=`<div class="section-heading">幕列表 <span class="heading-actions">${button('＋ 幕','add-act')}${button('＋ 事件','event-add')}${button('＋ 过场','event-add-cutscene')}${button('＋ 空战','event-add-aircombat')}</span></div><div class="list act-list" data-order-list="act">${project.acts.map((item,index)=>`<button class="list-row sortable-row ${index===selectedAct?'selected':''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" ${index===selectedAct?'aria-current="true"':''}><span class="number">${String(index+1).padStart(2,'0')}</span><span>${isEvent(item)?'▤ ':''}${escape(item.name)}</span><small>${isEvent(item)?(item.event?.type==='aircombat'?'空战':item.event?.type==='cutscene'?'过场':'事件'):item.steps.length+'句'}</small><span class="drag-grip">⋮⋮</span></button>`).join('')}</div>`;
+ right.innerHTML=`<div class="section-heading"><strong id="stage-caption">${escape(current?.name||'本幕对白')}</strong><small> · 只显示当前幕</small><span class="heading-actions">${button('＋ 新增对白','add-step',current&&!isEvent(current)?'':'disabled')}</span></div>${current&&!isEvent(current)?`<div class="list step-list" data-order-list="step">${current.steps.map((line,index)=>`<button class="list-row sortable-row ${index===selectedStep?'selected':''}" draggable="true" data-order-kind="step" data-order-index="${index}" data-action="select-step" data-index="${index}" ${index===selectedStep?'aria-current="true"':''}><span class="number">${index+1}</span><span><b>${escape(line.speaker||character(line.characterId)?.name||'旁白')}</b><small>${escape(line.text||'空对白')}</small></span><span class="drag-grip">⋮⋮</span></button>`).join('')||'<p class="tip">点击“新增对白”写第一句。</p>'}</div>`:'<p class="sidebar-note">当前是事件、过场或空战幕，设置在左上方；载具建造在独立窗口。</p>'}`;
  if(changed)right.parentElement.scrollTop=0;
  if(storyListStep!==step()?.id){storyListStep=step()?.id||'';right.querySelector('.selected')?.scrollIntoView({block:'nearest'});}
  updateStoryCurrent();
 }
 function updateStoryCurrent(){
  const node=document.querySelector('#story-current');if(!node)return;
- node.textContent=isEvent(act())?`正在编辑：第 ${selectedAct+1} 个事件 · ${act()?.name||''}`:`正在编辑：第 ${selectedAct+1} 幕「${act()?.name||''}」 · ${step()?'第 '+(selectedStep+1)+' 句对白':'还没有对白'}`;
+ node.textContent=act()?.event?.type==='aircombat'?`正在编辑：空战幕「${act().name}」`:isEvent(act())?`正在编辑：第 ${selectedAct+1} 个事件 · ${act()?.name||''}`:`正在编辑：第 ${selectedAct+1} 幕「${act()?.name||''}」 · ${step()?'第 '+(selectedStep+1)+' 句对白':'还没有对白'}`;
  node.title=node.textContent;
 }
 let cameraEditOwner=null;
@@ -1671,6 +1677,7 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeV024=async
  }
 };
 function setupDialogueCamera(){
+ stage.presentationPaused=()=>events.airActive();
  stage.spatialCamera.paused=()=>Boolean(dialogueCamera?.editing||dialogueCamera?.moving||stage.bindingView.enabled||saveModalMode||document.hidden||transitioning||events.active()||document.querySelector('#player-modal')||document.querySelector('#inventory-reward')||document.querySelector('#editor-settings-modal')||mode==='editor'&&modulePanel&&!['title','render'].includes(activePanel));
  dialogueCamera?.dispose();dialogueCamera=new DialogueCameraController(stage.camera,document.querySelector('.stage-frame'),{
   paused:()=>Boolean(saveModalMode||document.hidden),
@@ -2407,14 +2414,20 @@ function playEventSignal() {
 async function handleEventAction(action, node) {
   if (action === 'event-confirm') { events.confirm(); return; }
   if (playing) return;
-  if(action==='event-add-cutscene'){
+  if(action==='event-air-open'){await bridge('openEditorModule',{module:'aircraft',project:structuredClone(project),revision:changeRevision,view:{selectedAct,selectedStep,aircraftRole:node.dataset.role||'aircraft'}});return;}
+  if(action==='event-air-test'){events.testAir(act());return;}
+  if(events.airAction(act(),action,node)){markDirty();renderSidebar();renderInspector();await updatePreview();return;}
+  if(action==='event-add-aircombat'){
+    const item=newEvent(uid(),uid());item.name='新空战幕';item.event=normalizeEvent({...item.event,type:'aircombat'});project.acts.splice(selectedAct+1,0,item);selectedAct++;selectedStep=0;activePanel='story';
+  }
+  else if(action==='event-add-cutscene'){
     const item=newEvent(uid(),uid());item.name='新过场动画';item.event.type='cutscene';project.acts.splice(selectedAct+1,0,item);selectedAct++;selectedStep=0;activePanel='story';
   }
   else if (action === 'event-add') {
     const item = newEvent(uid(), uid()); project.acts.splice(selectedAct + 1, 0, item); selectedAct++; selectedStep = 0; activePanel = 'story';
   } else if (!isEvent(act())) return;
   else if (action === 'event-preview') { await events.show(act(), true); return; }
-  else if (action === 'event-duplicate') { const item = structuredClone(act()); item.id = uid(); item.steps[0].id = uid(); item.name += '（副本）'; project.acts.splice(++selectedAct, 0, item); }
+  else if (action === 'event-duplicate') { insertEditorCopy(project,'act',act(),{afterId:act().id},uid);selectedAct++; }
   else if (action === 'event-delete') {
     if (project.acts.length <= 1) { toast('至少保留一个剧情节点', true); return; }
     if (!confirm('删除这个事件？')) return;
@@ -2782,7 +2795,7 @@ async function showPlayStep() {
   if (!current) { stopPlay(); toast('故事播放完毕'); return; }
   if (isEvent(currentAct)) {
     preparedAct=-1;transitioning=true;const loading=document.querySelector('#act-loading');loading?.classList.remove('hidden');
-    try{await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,30)));await prepareCurrentActMedia(currentAct,()=>request===playRequest&&playing);if(request!==playRequest||!playing)return;const remaining=restoredEventRemaining;restoredEventRemaining=undefined;await events.show(currentAct,false,remaining);}
+    try{await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,30)));await prepareCurrentActMedia(currentAct,()=>request===playRequest&&playing);if(request!==playRequest||!playing)return;const remaining=restoredEventRemaining;restoredEventRemaining=undefined;const runtime=await events.show(currentAct,false,remaining);if(new URLSearchParams(location.search).has('smoke')&&currentAct.event.type==='aircombat')window.__airSmokeRuntime=runtime;}
     finally{if(request===playRequest){transitioning=false;loading?.classList.add('hidden');}}return;
   }
   const leavingEvent = events.active() || eventMusicActive;
@@ -3118,7 +3131,7 @@ function snapshotSlot(auto = false) {
   if (!currentStep) return null;
   return {
     auto, act: playAct, step: playStep, actId: currentAct.id, stepId: currentStep.id,
-    actName: currentAct.name, text: isEvent(currentAct) ? currentAct.event.title : currentStep.text,
+    actName: currentAct.name, text: currentAct.event?.type==='aircombat'?'空战检查点（读取后重新开始本次任务）':isEvent(currentAct) ? currentAct.event.title : currentStep.text,
     eventRemaining: isEvent(currentAct) ? events.remaining() : undefined,
     speaker: currentStep.speaker || character(currentStep.characterId)?.name || '旁白',
     backgroundId: isEvent(currentAct) ? eventBackdrop(currentAct).backgroundId : currentAct.backgroundId, savedAt: new Date().toISOString(),
@@ -3337,6 +3350,21 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokePortrait35
   const range=Math.max(...samples.map(s=>s.relative.angleTo(samples[0].relative))),cameraRange=Math.max(...samples.map(s=>s.camera.angleTo(samples[0].camera)));assert(range>.2&&cameraRange<1e-5,'Mixer motion cancelled by camera');return{ok:true,realMixerMotionVisible:true,headAngleRange:range,cameraAngleRange:cameraRange};
  }
  throw Error('Unknown portrait phase');
+};
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeBlink49=async phase=>{
+ const {runBlinkSmoke}=await import('./blink-smoke.js');return runBlinkSmoke(phase,{
+  blank:()=>defaultProject('自动眨眼验证'),cast:emptyDialogueCast,asset,project:()=>project,stage:()=>stage,
+  setProject:p=>{project=p;normalize();lifetimeProgress=null;},
+  start:async()=>{mode='player';playing=false;renderPlayer();await new Promise(r=>setTimeout(r,400));audioSettings.master=0;applyAudioSettings();playing=true;titleRequest++;playAct=playStep=0;preparedAct=-1;await showPlayStep();finishTyping();},
+  save:()=>bridge('saveProject',{project:structuredClone(project)})
+ });
+};
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeGaze50=async phase=>{
+ const {runGazeSmoke}=await import('./gaze-smoke.js');return runGazeSmoke(phase,{
+  cast:emptyDialogueCast,asset,project:()=>project,stage:()=>stage,
+  start:async()=>{mode='player';playing=false;renderPlayer();await new Promise(r=>setTimeout(r,400));audioSettings.master=0;applyAudioSettings();playing=true;titleRequest++;playAct=playStep=0;preparedAct=-1;await showPlayStep();finishTyping();},
+  save:()=>bridge('saveProject',{project:structuredClone(project)})
+ });
 };
 if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeMmd36=async phase=>{
  const {runMmdSmoke}=await import('./mmd-smoke.js');return runMmdSmoke(phase,{
@@ -4366,6 +4394,7 @@ document.addEventListener('input', event => {
   if(routePreciseInput(event.target))return;
   if (library.input(event.target)) return;
   const node = event.target;
+  if(project){const changed=events.airInput(act(),node);if(changed){if(changed==='mount-select')return;if(changed!=='select')markDirty();if(changed==='select')renderInspector();renderSidebar();if(!node.dataset.airField||changed==='select')updatePreview();return;}}
   if (node.dataset.eventField && isEvent(act())) {
     const key = node.dataset.eventField;
     const holder = key === 'name' ? act() : node.hasAttribute('data-event-row') ? act().event.declarations[Number(node.dataset.eventRow)] : act().event;
@@ -5635,3 +5664,16 @@ async function agentEditorControl(command,args){
  if(command==='inspect'){const role=project.characters.find(r=>r.id===args.characterId),model=asset(role?.modelId);if(!model)throw Error('角色还没有模型');const record=await stage.loadModel(model,role.id);const bones=[];record.vrm.scene.traverse(o=>{if(o.isBone)bones.push(o.name);});return{characterId:role.id,modelId:model.id,type:model.type,expressions:(record.vrm.expressionManager?.expressions||[]).map(e=>e.expressionName),bones:[...new Set(bones)],propBones:availablePropBones(record),motions:motionsForCharacter(project,role.id).map(a=>({id:a.id,name:a.name,folderId:a.folderId}))};}
  throw Error('未知编辑器控制');
 }
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeAirCombat=async phase=>{
+ const {airCombatSmoke}=await import('./aircombat-smoke.js');
+ return airCombatSmoke(phase,{
+  project:()=>project,diagnostics:()=>events.diagnostics(),currentId:()=>project.acts[playAct]?.id,
+  setup:async()=>{playing=false;mode='editor';modulePanel=null;activePanel='story';project.id='aircombat-smoke-'+uid();project.name='螺旋桨空战示例';project.vehicles=[];project.assets=[];project.characters=[];project.items=[];project.knowledgeBooks=[];project.environments=[];project.title={actors:[],logoImageId:'__none__'};const line=(id,text)=>({id,text,speaker:'旁白',characterId:'',choices:[],cast:emptyDialogueCast()});project.acts=[{id:'air-intro',name:'出击前',steps:[line('intro-line','一套低面数组件，可以组装单发战斗机或双发轰炸机。请选择空战幕进入拼装和试飞。')]},{id:'air-win',name:'任务成功',steps:[line('win-line','任务完成。友军安全返航。')]},{id:'air-lose',name:'任务失败',steps:[line('lose-line','任务失败。你可以回到空战幕重新挑战。')]}];normalize();selectedAct=0;selectedStep=0;editorHistory.reset();renderEditor();await updatePreview();},
+  add:async()=>{await handleEventAction('event-add-aircombat',{dataset:{}});await bridge('saveProject',{project:structuredClone(project)});},action:handleEventAction,undo:restoreEditorHistory,
+  test:node=>events.testAir(node),snapshot:()=>snapshotSlot(),openSave:()=>renderSaveModal('save'),store:snapshot=>storeGameSnapshot(19,snapshot),saved:()=>readSaveSlots()[19],
+  play:async id=>{events.cancel();closePlayerModal();saveModalMode='';playing=true;playAct=project.acts.findIndex(a=>a.id===id);playStep=0;preparedAct=-1;await showPlayStep();},
+  load:async snapshot=>{playing=false;const slots=Array(20).fill(null);slots[19]=snapshot;localStorage.setItem(saveKey(),JSON.stringify(slots));loadSlot(19);},
+  saveExport:async()=>{stopPlay();const a=project.acts.find(a=>a.event?.type==='aircombat');a.event.combat.aircraft.name='双发自卫轰炸机';project.acts[0].steps[0].choices=[{id:uid(),text:'驾驶双发轰炸机出击',actId:a.id,requirements:[],consumeRequired:false}];for(const id of ['air-win','air-lose']){const result=project.acts.find(n=>n.id===id);result.steps[0].choices=[{id:uid(),text:'返回出击前',actId:'air-intro',requirements:[],consumeRequired:false}];}selectedAct=project.acts.indexOf(a);selectedStep=0;await updatePreview();const {voxelPreset,createVehicle}=await import('./vehicle-documents.js');project.vehicles=[];const prototypes=Object.fromEntries(['stuka','b25','bf109','shinden'].map(k=>{const bp=voxelPreset(k);return[k,createVehicle(project,bp.name,bp)];}));const historicalPreset=k=>structuredClone(prototypes[k].blueprint);const intro=project.acts[0],win=project.acts.find(n=>n.id==='air-win'),lose=project.acts.find(n=>n.id==='air-lose');const samples=['stuka','b25','bf109','shinden'].map(k=>{const n=newEvent(uid(),uid());n.name=historicalPreset(k).name;n.event=normalizeEvent({type:'aircombat',combat:{aircraft:historicalPreset(k),enemyAircraft:historicalPreset('bf109'),allyAircraft:historicalPreset('b25'),enemies:1,allies:1,mission:'survive',duration:60,difficulty:.4,winActId:'air-win',loseActId:'air-lose'}});return n;});project.acts=[intro,...samples,win,lose];intro.steps[0].text='选择一架飞机试飞。鼠标指向控制航向，A/D 辅助转弯，松手自动回正。通过载具编辑器打开单独文件，逐块建造机体并安装活动附件。';intro.steps[0].choices=samples.map(n=>({id:uid(),text:n.name,actId:n.id,requirements:[],consumeRequired:false}));project.name='方块载具样机_0.0.48';ensureVehicleLibrary(project);selectedAct=1;renderSidebar();renderInspector();await updatePreview();await bridge('saveProject',{project:structuredClone(project)});await bridge('exportGame',{folderName:'方块载具试玩_0.0.48_'+uid().slice(0,6)});}
+ });
+};

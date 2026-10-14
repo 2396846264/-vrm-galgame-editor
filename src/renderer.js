@@ -25,6 +25,9 @@ import {applyStylizedMaterials} from './stylized-materials.js';
 
 import { WeatherStage, normalizeWeather, weatherMood } from './weather.js';
 import { createTalkingMouth } from './talking-mouth.js';
+import { createAutoBlink } from './auto-blink.js';
+import { createAutoGaze } from './auto-gaze.js';
+import { createNaturalActivity } from './natural-activity.js';
 
 const boneNames = {
   Hips:'hips',Spine:'spine',Spine1:'chest',Spine2:'upperChest',Neck:'neck',Head:'head',
@@ -257,6 +260,7 @@ export class VRMStage {
     this.mixer = null;
     this.activeRecord = null;
     this.visibleRecords = new Map();
+    this.naturalActivity = createNaturalActivity();
     this.characterProps = new CharacterProps(assetUrl);
     this.backgroundProfiles = new Map();
     this.currentModelId = null;
@@ -311,6 +315,7 @@ export class VRMStage {
   setMotionPoseFrame(frame = 1) {
     const record = this.activeRecord;
     if (!record?.currentAction) return;
+    record.autoGaze?.restore();
     const clip = record.currentAction.getClip();
     const { fps, frames } = motionFrameInfo(clip);
     const selected = Math.max(1, Math.min(frames, Math.floor(Number(frame) || 1)));
@@ -323,10 +328,11 @@ export class VRMStage {
   animate() {
     if (!this.running) return;
     this.frame = requestAnimationFrame(() => this.animate());
-    if(this.renderSuspended||window.__editorModulePreviewActive===false){this.clock.getDelta();return;}
+    if(this.renderSuspended||this.presentationPaused?.()||window.__editorModulePreviewActive===false){this.clock.getDelta();return;}
     const elapsed=this.clock.getDelta();
     this.frameRateMeter.sample(elapsed,document.hidden);
     const delta = Math.min(elapsed, 0.1);
+    this.naturalActivity.tick(delta);
     this.averageFrameMs = this.averageFrameMs ? this.averageFrameMs * 0.94 + delta * 1000 * 0.06 : delta * 1000;
     const updated = new Set();
     this.camera.updateMatrixWorld();const physicsFrustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse));
@@ -336,15 +342,19 @@ export class VRMStage {
       updated.add(record);
       if(record.vrm.isMmd){const center=record.vrm.humanoid.getNormalizedBoneNode('hips')?.getWorldPosition(new THREE.Vector3())||record.anchor.getWorldPosition(new THREE.Vector3());record.vrm.setPhysicsActive(record===this.livePortrait.record||physicsFrustum.intersectsSphere(new THREE.Sphere(center,1.4*Math.abs(record.anchor.scale.y))));}
       record.talkingMouth?.restore();
+      record.autoBlink?.restore();
+      record.autoGaze?.restore();
       record.vrm.beforeAnimation?.();
       this.restoreFootPose(record);
       record.mixer.update(delta);
       this.updateTransitions(record, delta);
       record.talkingMouth?.update(delta);
+      record.autoBlink?.update(delta,()=>this.naturalActivity.request('blink',record));
       this.applyMotionPlacement(record);
       this.applyFootLock(record);
       this.weather?.applyWind(record);
       record.vrm.update(delta);
+      record.autoGaze?.update(delta,{record,others:this.visibleRecords.has(record.actorKey)?[...this.visibleRecords.values()]:[],activity:this.naturalActivity});
       this.applyRawFootLock(record);
       if(this.environmentSettings)this.characterSceneLighting.apply(record.vrm.scene,true);
       this.characterProps.update(record);
@@ -445,6 +455,8 @@ export class VRMStage {
       vrm.setPhysicsQuality?.(this.graphicsSettings.mmdPhysics);
       if(vrm.isMmd){vrm.update(0);await vrm.preparePhysics(()=>generation===this.cacheGeneration);if(generation!==this.cacheGeneration){anchor.removeFromParent();vrm.dispose();VRMUtils.deepDispose(vrm.scene);return null;}}
       const record = {
+        actorKey, autoGaze: createAutoGaze(vrm),
+        autoBlink: createAutoBlink(vrm.expressionManager),
         vrm, anchor, motionRoot, referenceHips, mixer: new THREE.AnimationMixer(vrm.scene),
         portraitRestHeadQuaternion: vrm.humanoid.getNormalizedBoneNode('head')?.getWorldQuaternion(new THREE.Quaternion()),
         portraitBodyReference: capturePortraitBodyFrame(vrm,anchor),
@@ -564,6 +576,7 @@ export class VRMStage {
       const modelId = modelAsset?.id ?? null;
       const motionId = motionAsset?.id ?? null;
       if (record) {
+        if(!record.vrm.scene.visible){record.autoBlink?.reset();record.autoGaze?.reset(this.naturalActivity);}
         record.returnMotionAsset = null;
         record.returnMotionClip = null;
         this.poseRecord(record, clip, motionAsset, false, motionOptions, playbackKey);
@@ -613,6 +626,7 @@ export class VRMStage {
       for (const entry of loaded) {
         const record = entry.record;
         if (!record) continue;
+        if(!record.vrm.scene.visible){record.autoBlink?.reset();record.autoGaze?.reset(this.naturalActivity);}
         const speaking = entry.actorKey === speaker?.actorKey;
         record.returnMotionAsset = entry.returnToIdle ? null : entry.motionAsset || null;
         record.returnMotionClip = entry.returnToIdle ? null : entry.baseClip || null;
@@ -660,6 +674,7 @@ export class VRMStage {
     return new THREE.AnimationClip('Standing idle', 1, tracks);
   }
   poseRecord(record, clip, motionAsset, smooth = false, options = {}, playbackKey = '') {
+    record.autoGaze?.restore();
     const rigKind=motionAsset?.path?.toLowerCase().endsWith('.vmd')?'vmd':'humanoid';
     if(record.vrm.isMmd&&record.mmdMotionKind!==rigKind){this.restoreFootPose(record);record.mixer.stopAllAction();record.currentAction=null;record.footLock=null;record.currentMotionToken='';record.fadeOutActions.length=0;record.mmdMotionKind=rigKind;}
     record.vrm.setMotionKind?.(rigKind);
@@ -849,6 +864,8 @@ export class VRMStage {
       for (const chain of [record.footLock.left, record.footLock.right]) if (chain) chain.anchor = null;
   }
   expressRecord(record, weights = {}, smooth = false) {
+    record?.autoGaze?.restore();
+    record?.autoBlink?.restore();
     const manager = record?.vrm.expressionManager;
     if (!manager) return;
     const target = Object.fromEntries(manager.expressions.map(expression => {
@@ -921,6 +938,7 @@ export class VRMStage {
     const record=await this.loadModel(modelAsset,actorKey);
     if(token!==this.portraitRequest||!record||record.vrm.isFbx)return null;
     if(!this.visibleRecords.has(actorKey)){
+      if(this.livePortrait.record!==record){record.autoBlink?.reset();record.autoGaze?.reset(this.naturalActivity);}
       if(record.currentMotionId===undefined)this.poseRecord(record,null,null,false,{},`portrait:${actorKey}`);
       this.expressRecord(record,weights);record.vrm.update(0);
     }

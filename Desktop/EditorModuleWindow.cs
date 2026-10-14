@@ -16,7 +16,7 @@ internal sealed class EditorModuleWindow : Form
         Deactivate+=(_,_)=>view.CoreWebView2?.PostWebMessageAsJson("{\"modulePreviewActive\":false}");
         Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.Settings.IsStatusBarEnabled=false;view.CoreWebView2.WebMessageReceived+=Message;
             view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};
-            view.Source=new Uri("https://app.galgame/index.html?module="+Uri.EscapeDataString(module)+(Environment.GetCommandLineArgs().Contains("--smoke-editor-modules")?"&smoke=1":""));
+            view.Source=new Uri("https://app.galgame/"+(module=="aircraft"?"aircraft.html":"index.html")+"?module="+Uri.EscapeDataString(module)+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-editor-modules" or "--smoke-aircombat")?"&smoke=1":""));
         }catch(Exception error){MessageBox.Show(this,error.Message,"窗口无法打开");closing=true;Close();}};
         FormClosing+=async(_,e)=>{if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(checking)return;checking=true;
             try{await SetClosePendingAsync(true);if(await IsBusyAsync()){MessageBox.Show(this,"当前操作或保存还没完成，请稍后关闭。");return;}
@@ -43,6 +43,7 @@ internal sealed class EditorModuleWindow : Form
     }
     internal void CloseWithoutPrompt(){closing=true;Close();}
     internal void RefreshProject(JsonNode? project){view.CoreWebView2?.PostWebMessageAsJson(JsonSerializer.Serialize(new{editorModuleRefresh=project}));}
+    internal void SelectAircraft(JsonNode? selection){view.CoreWebView2?.PostWebMessageAsJson(JsonSerializer.Serialize(new{aircraftSelection=selection}));}
     internal async Task<object> CaptureAgent44(){
         for(int i=0;i<400;i++){if(view.CoreWebView2!=null&&await view.CoreWebView2.ExecuteScriptAsync("Boolean(window.editorCloseState?.().hasProject)")=="true")break;await Task.Delay(50);}using var stream=new MemoryStream();await view.CoreWebView2!.CapturePreviewAsync(Microsoft.Web.WebView2.Core.CoreWebView2CapturePreviewImageFormat.Png,stream);if(stream.Length>16*1024*1024)throw new Exception("截图过大。");return new{panel=Module,width=view.ClientSize.Width,height=view.ClientSize.Height,image=new{mimeType="image/png",data=Convert.ToBase64String(stream.ToArray())}};
     }
@@ -71,9 +72,9 @@ internal sealed partial class EditorWindow
     private object NotifyEditorModules(JsonNode? payload){foreach(var window in moduleWindows.Values.ToArray())if(!window.IsDisposed)window.RefreshProject(payload);return new{notified=moduleWindows.Count};}
     private object OpenEditorModule(JsonNode? payload){
         string module=payload?["module"]?.GetValue<string>()??"";
-        var labels=new Dictionary<string,string>{{"characters","角色"},{"items","物品"},{"title","标题"},{"render","渲染"},{"knowledge","知识库"}};
+        var labels=new Dictionary<string,string>{{"characters","角色"},{"items","物品"},{"title","标题"},{"render","渲染"},{"knowledge","知识库"},{"aircraft","载具"}};
         if(!labels.TryGetValue(module,out var label)||projectDirectory==null)throw new Exception("请先打开工程。");
-        if(moduleWindows.TryGetValue(module,out var active)&&!active.IsDisposed){active.Activate();return new{opened=true,reused=true};}
+        if(moduleWindows.TryGetValue(module,out var active)&&!active.IsDisposed){active.Activate();if(module=="aircraft")active.SelectAircraft(payload?["view"]);return new{opened=true,reused=true};}
         string directory=projectDirectory;var initial=JsonSerializer.SerializeToNode(GetProjectInfo())!.AsObject();
         initial["project"]=payload!["project"]!.DeepClone();initial["editorModule"]=module;initial["agent"]=null;
         initial["moduleRevision"]=payload["revision"]?.DeepClone();

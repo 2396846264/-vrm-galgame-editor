@@ -1,0 +1,7 @@
+import fs from 'node:fs';import path from 'node:path';
+import {GLTFExporter} from 'three/addons/exporters/GLTFExporter.js';
+import {aircraftPreset} from '../src/aircombat-schema.js';import {compileAircraft,aircraftModel,aircraftTriangles,disposeAircraft} from '../src/aircombat-models.js';
+globalThis.FileReader=class{readAsArrayBuffer(blob){blob.arrayBuffer().then(v=>{this.result=v;this.onloadend?.();});}readAsDataURL(blob){blob.arrayBuffer().then(v=>{this.result='data:'+blob.type+';base64,'+Buffer.from(v).toString('base64');this.onloadend?.();});}};
+const output=path.resolve(process.argv[2]);fs.mkdirSync(output,{recursive:true});const report=[];
+for(const kit of ['stuka','b25','bf109','shinden']){const blueprint=aircraftPreset(kit),spec=compileAircraft(blueprint),model=aircraftModel(spec);model.name=blueprint.name;const count=aircraftTriangles(model);if(count>10000)throw Error('Polygon budget exceeded: '+kit);const glb=await new GLTFExporter().parseAsync(model,{binary:true});fs.writeFileSync(path.join(output,kit+'.glb'),Buffer.from(glb));fs.writeFileSync(path.join(output,kit+'.json'),JSON.stringify(blueprint,null,2));report.push({kit,name:blueprint.name,triangles:count,mass:spec.mass,powerHp:spec.powerHp,parts:blueprint.parts.length});disposeAircraft(model);}
+fs.writeFileSync(path.join(output,'样机清单.json'),JSON.stringify({version:'0.0.46',flightValues:'Game calibration, not a claim of historical measured performance',aircraft:report},null,2));console.log(JSON.stringify({ok:true,output,aircraft:report}));

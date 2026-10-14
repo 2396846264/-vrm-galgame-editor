@@ -248,6 +248,9 @@ internal sealed partial class EditorWindow : Form
     {
         try
         {
+            if(Environment.GetCommandLineArgs().Contains("--smoke-blink49")){await RunBlink49Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-gaze50")){await RunGaze50Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-aircombat")){await RunAirCombatSmoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-apk-ui")){await RunAndroidUISmoke();Close();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-portrait28")){await RunVrmPortrait28Smoke();Close();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-cutscene")){await RunCutsceneSmoke();Close();return;}
@@ -2079,7 +2082,7 @@ internal sealed partial class EditorWindow : Form
         var playerProject=gameProject.DeepClone();
         if(playerProject is JsonObject playerObject)playerObject.Remove("authoring");
         var sources = new List<GameResourcePackage.Source> {
-            new("project.json", null, Encoding.UTF8.GetBytes(playerProject.ToJsonString(JsonOptions)))
+            new("project.json", null, Encoding.UTF8.GetBytes(playerProject.ToJsonString(new JsonSerializerOptions(JsonOptions) { WriteIndented = false })))
         };
         // Export only the snapshot's asset allowlist, never editor history,
         // backups, author notes, or unrelated files in the working directory.

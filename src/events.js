@@ -1,12 +1,16 @@
 import {assetsOfType} from './asset-organization.js';
-export const eventNames = { news: '一般新闻', war: '宣战消息', major: '重大事件',cutscene:'过场动画' };
-export const eventSeconds = { news: 3, war: 0, major: 10,cutscene:0 };
+import {createAirCombat} from './aircombat-runtime.js';
+import {airEditor,airInput,airAction,selectAirPart} from './aircombat-editor.js';
+import {normalizeCombat} from './aircombat-schema.js';
+export const eventNames = { news: '一般新闻', war: '宣战消息', major: '重大事件',cutscene:'过场动画',aircombat:'空战幕' };
+export const eventSeconds = { news: 3, war: 0, major: 10,cutscene:0,aircombat:0 };
 export const isEvent = node => node?.kind === 'event';
 export function normalizeEvent(value = {}) {
   const type = Object.hasOwn(eventNames, value.type) ? value.type : 'news';
   return { type, title: '', body: '', imageId: '', videoId: '', backgroundId: '', bgmId: '', seId: '', voiceId: '',
     paperName: '世界新闻', date: '', quote: '', buttonText: '继续', countryA: '', countryB: '', flagAId: '', flagBId: '',
     burst: false, declarations: [], burstInterval: .22, ...value, type,
+    ...(type==='aircombat'?{combat:normalizeCombat(value.combat)}:{}),
     burstInterval: Math.max(.12, Math.min(3, Number(value.burstInterval) || .22)),
     declarations: Array.isArray(value.declarations) ? value.declarations.slice(0, 59).map(row => ({ countryA: '', countryB: '', flagAId: '', flagBId: '', body: '', ...row })) : [] };
 }
@@ -16,6 +20,7 @@ export function newEvent(id, stepId) {
 }
 export function createEvents(ctx) {
   const { escape: esc, assetUrl } = ctx;
+  const air=createAirCombat(ctx);
   const eye = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
   let state = null, frame = 0, generation = 0;
   const image = (id, alt, className = '') => {
@@ -31,6 +36,7 @@ export function createEvents(ctx) {
   const upload = (key, type) => `<button data-action="event-upload" data-event-key="${key}" data-type="${type}">上传素材</button>`;
   function editor(node) {
     const e = node.event = normalizeEvent(node.event);
+    if(e.type==='aircombat')return airEditor(node,ctx);
     if(e.type==='cutscene')return `<div class="inspector-content event-editor"><h2>过场动画</h2>${field('幕列表中的名字',control('name',node.name))}${field('MP4 视频',`<select data-event-field="videoId"><option value="">请选择 MP4 视频</option>${ctx.project().assets.filter(a=>a.type==='video'&&/\.mp4$/i.test(a.path||'')).map(a=>`<option value="${esc(a.id)}" ${e.videoId===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select>`)}<button data-action="event-upload-cutscene">上传 / 替换 MP4 视频</button><p class="tip">每个过场只播放一个视频。播放完自动进入下一项剧情，玩家双击画面可以跳过。</p><div class="inline-actions"><button data-action="event-preview">重新预览</button><button data-action="event-duplicate">复制过场</button><button data-action="event-delete">删除过场</button></div></div>`;
     const countries = (row, index = null) => `<div class="event-country-editor">${field('宣战国名称', control('countryA', row.countryA, false, index))}${field('宣战国国旗', choice('flagAId', row.flagAId, 'image', '选择国旗图片', index))}${field('被宣战国名称', control('countryB', row.countryB, false, index))}${field('被宣战国国旗', choice('flagBId', row.flagBId, 'image', '选择国旗图片', index))}${field('补充说明', control('body', row.body, true, index))}</div>`;
     return `<div class="inspector-content event-editor"><h2>事件设置</h2>
@@ -99,6 +105,7 @@ export function createEvents(ctx) {
   async function show(node, preview = false, remaining) {
     cancel();
     const token = generation;
+    if(node.event?.type==='aircombat'){await ctx.prepare(node,preview);if(token!==generation)return;return air.show(node,preview);}
     const e = normalizeEvent(node.event), total = eventSeconds[e.type];
     const backdrop = ctx.prepare(node, preview);
     const host = document.querySelector('.stage-frame');
@@ -149,6 +156,7 @@ export function createEvents(ctx) {
     root.querySelector('[data-action="event-confirm"]').disabled = total > 0 && state.remaining > 0;
   }
   function confirm(reason='button') {
+    if(air.active())return false;
     if (!state || ctx.paused() || document.hidden) return false;
     if(state.event.type==='cutscene'){if(state.preview||!['double','ended'].includes(reason))return false;}
     else if(!state.ready||state.remaining>0)return false;
@@ -157,6 +165,7 @@ export function createEvents(ctx) {
     cancel(); ctx.finish(id); return true;
   }
   function cancel() {
+    air.cancel();
     generation++; cancelAnimationFrame(frame);
     if (state && !state.preview) ctx.cleanAudio?.();
     state?.mediaAbort.abort();
@@ -166,7 +175,8 @@ export function createEvents(ctx) {
     document.querySelector('.stage-frame')?.classList.remove('event-mode');
     state = null;
   }
-  return { editor, show, confirm, cancel, remaining: () => state?.remaining, active: () => Boolean(state),
-    diagnostics: () => state ? { id: state.nodeId, type: state.event.type, remaining: state.remaining, ready: state.ready,
-      preview: state.preview, received: state.shown + 1, windows: state.root.querySelectorAll('.event-crt').length } : null };
+  return { editor, show, confirm, cancel,airInput,airAction,selectAirPart,airActive:()=>air.active(),
+    testAir:node=>air.show(node,true,true),remaining: () => air.active()?0:state?.remaining, active: () => air.active()||Boolean(state),
+    diagnostics: () => air.diagnostics() || (state ? { id: state.nodeId, type: state.event.type, remaining: state.remaining, ready: state.ready,
+      preview: state.preview, received: state.shown + 1, windows: state.root.querySelectorAll('.event-crt').length } : null) };
 }
