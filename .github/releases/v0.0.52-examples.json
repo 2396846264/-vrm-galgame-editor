@@ -1,0 +1,51 @@
+{
+  "name": "VRMGalgame-0.0.52-Examples.zip",
+  "bytes": 7627736,
+  "sha256": "796c8868c2b323cdf43493480e5b5ecbf3cb743a67e816ad22ec6c4a1fc266d5",
+  "chunks": [
+    {
+      "sha": "50a997f6dcfb27876fb157ec40ee82d714601871",
+      "bytes": 737280
+    },
+    {
+      "sha": "2671e6f7c7c85b46f8e83ad56c3aca91517264c8",
+      "bytes": 737280
+    },
+    {
+      "sha": "ae94024c39246ea5b464355384f55979fdd80a60",
+      "bytes": 737280
+    },
+    {
+      "sha": "2d99fd0f28ab754a601e0532f812c6f517b6eefb",
+      "bytes": 737280
+    },
+    {
+      "sha": "40549cda68acfef6935e916b5a1da4bd59ea15d4",
+      "bytes": 737280
+    },
+    {
+      "sha": "8c091a09239a5ebe61842e1a033cf7a28a0ae788",
+      "bytes": 737280
+    },
+    {
+      "sha": "32592203179e19ca6427e1a006f68d3885b0e381",
+      "bytes": 737280
+    },
+    {
+      "sha": "86e44824c79cbd8ee5337cddd91dca40eee53b31",
+      "bytes": 737280
+    },
+    {
+      "sha": "2971de1567d3e239efb09d80e75a4477b4555900",
+      "bytes": 737280
+    },
+    {
+      "sha": "d3a7c5eafdfd742c709bfc9546f201f4abde97a7",
+      "bytes": 737280
+    },
+    {
+      "sha": "c3b3ddaad355ca28da0f5d2c54a5556787bd6185",
+      "bytes": 254936
+    }
+  ]
+}

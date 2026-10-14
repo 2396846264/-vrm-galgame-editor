@@ -53,7 +53,8 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference='Stop'
-          $assets=@('installer-output/VRMGalgame-Setup-0.0.52.exe','VRMGalgame-0.0.52-win-x64.zip','VRMGalgame-0.0.52-Examples.zip','docs/features.md')
+          Copy-Item -LiteralPath RELEASE_NOTES.md -Destination FEATURE_GUIDE.md
+          $assets=@('installer-output/VRMGalgame-Setup-0.0.52.exe','VRMGalgame-0.0.52-win-x64.zip','VRMGalgame-0.0.52-Examples.zip','FEATURE_GUIDE.md')
           $lines=foreach($asset in $assets){if(!(Test-Path -LiteralPath $asset)){throw "Missing $asset"};(Get-FileHash -LiteralPath $asset -Algorithm SHA256).Hash.ToLower()+'  '+[IO.Path]::GetFileName($asset)}
           $lines | Set-Content -LiteralPath SHA256SUMS.txt -Encoding ascii
           $existing=gh release list --repo $env:GITHUB_REPOSITORY --limit 100 --json tagName --jq '.[].tagName'
