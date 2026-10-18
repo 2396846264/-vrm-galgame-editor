@@ -1,0 +1,12 @@
+{
+  "name": "VRMGalgame-0.0.70-Examples.zip",
+  "bytes": 42668,
+  "sha256": "71c04f28c9c13e01b1d150c9db68e4b58eb9f2ddb73dbf6f4f61e51d414b97ce",
+  "chunks": [
+    {
+      "sha": "dede389532b74dcec62ce0ef86804709fd5d9442",
+      "bytes": 42668
+    }
+  ],
+  "verifiedSourceCommit": "55ddef9be6fff0f3f91c537e2084cad9a990b083"
+}
