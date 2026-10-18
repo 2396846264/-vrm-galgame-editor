@@ -9,15 +9,16 @@ internal sealed partial class EditorWindow
         async Task<string> Main(string phase){await web.CoreWebView2.ExecuteScriptAsync("window.__workspaceCheck=null;window.__vrmSmokeWorkspace("+JsonSerializer.Serialize(phase)+").then(result=>window.__workspaceCheck=result).catch(error=>window.__workspaceCheck={error:error.message})");string value="null";for(int i=0;i<2400;i++){value=await web.CoreWebView2.ExecuteScriptAsync("window.__workspaceCheck");if(value!="null")break;await Task.Delay(50);}if(!value.Contains("\"ok\":true"))throw new Exception(value);return value;}
         File.WriteAllText(smokeBase+".layout.json",await Main("layout"));
         await Task.Delay(400);using(var shot=File.Create(smokeBase+".layout.png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);
-        foreach(string module in new[]{"characters","items","title","render","knowledge"}){
-            await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=open-module][data-module="+module+"]').click()");
+        var failures=new List<string>();foreach(string module in new[]{"characters","items","title","render","knowledge"}){
+            await web.CoreWebView2.ExecuteScriptAsync("window.__vrmSmokeOpenModule("+JsonSerializer.Serialize(module)+")");
             for(int i=0;i<200&&!moduleWindows.ContainsKey(module);i++)await Task.Delay(50);
-            var child=moduleWindows[module];await web.CoreWebView2.ExecuteScriptAsync("document.querySelector('[data-action=open-module][data-module="+module+"]').click()");await Task.Delay(100);
+            var child=moduleWindows[module];await web.CoreWebView2.ExecuteScriptAsync("window.__vrmSmokeOpenModule("+JsonSerializer.Serialize(module)+")");await Task.Delay(100);
             if(moduleWindows[module]!=child)throw new Exception("重复点击建立了重复窗口。");
             if(module=="characters")await Main("concurrent");
             string result=await child.Smoke("const changed=await window.__vrmSmokeModuleChange();await window.editorSaveBeforeClose();if(changed.module==='characters'){await window.__vrmSmokeModuleChange(true);await window.__vrmSmokeModuleUndoRedo();await window.editorSaveBeforeClose();}return {...changed,ok:true,saved:true};",smokeBase+"."+module+".png");
-            if(!result.Contains("\"ok\":true"))throw new Exception(result);File.WriteAllText(smokeBase+"."+module+".json",result);child.CloseWithoutPrompt();
+            File.WriteAllText(smokeBase+"."+module+".json",result);child.CloseWithoutPrompt();if(!result.Contains("\"ok\":true"))failures.Add(module+": "+result);
         }
+        if(failures.Count>0){File.WriteAllText(smokeBase+".module-failures.json",JsonSerializer.Serialize(failures));throw new Exception(string.Join("\n",failures));}
         File.WriteAllText(smokeBase+".modules.json",await Main("verify"));
         if(ReadProject()?["characters"]?[0]?["name"]?.GetValue<string>()!="独立角色窗口连续保存")throw new Exception("窗口修改没有写进工程。");
         await web.CoreWebView2.ExecuteScriptAsync("window.__vrmSmokeOpenModule('characters')");for(int i=0;i<200&&!moduleWindows.ContainsKey("characters");i++)await Task.Delay(50);

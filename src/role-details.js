@@ -1,3 +1,4 @@
+import {characterNameColor} from './character-name-color.js';
 import {resolveRoleDetailsRender} from './render-presets.js';
 import {colorFilter} from './chapters.js';
 import {roleWindow,roleLoadOrder,rolePlacement,unlockedRoles} from './role-queue.js';
@@ -16,7 +17,7 @@ export function createRoleDetails(ctx){
   root.querySelector('[data-role-prev]').disabled=index<=0;root.querySelector('[data-role-next]').disabled=index>=roles.length-1;
   const about=root.querySelector('.role-details-about'),stories=root.querySelector('.role-details-stories');
   if(!role){about.innerHTML='';stories.innerHTML='';return;}
-  about.innerHTML=`<small>角色简介</small><h2>${esc(role.name)}</h2>${role.title?`<strong>${esc(role.title)}</strong>`:''}<p>${esc(role.description||'')}</p>`;
+  about.innerHTML=`<small>角色简介</small><h2 style="color:${characterNameColor(role)}">${esc(role.name)}</h2>${role.title?`<strong>${esc(role.title)}</strong>`:''}<p>${esc(role.description||'')}</p>`;
   const count=ctx.lineCount(role.id),entries=(role.stories||[]).map((story,i)=>({story,i})).filter(({story})=>story.text?.trim());
   stories.innerHTML=`<h3>角色故事</h3>${entries.length?entries.map(({story,i})=>count>=Math.max(0,Number(story.unlockLines)||0)?`<article><h4>故事 ${i+1}</h4><p>${esc(story.text)}</p></article>`:`<article class="role-story-locked"><h4>故事 ${i+1} · 未解锁</h4><p>阅读这个角色的 ${Math.max(0,Number(story.unlockLines)||0)} 句对白后解锁</p><small>已阅读 ${count} 句</small></article>`).join(''):'<p class="role-no-story">暂时没有角色故事。</p>'}`;
   about.scrollTop=stories.scrollTop=0;

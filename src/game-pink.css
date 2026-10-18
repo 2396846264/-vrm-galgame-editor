@@ -1,0 +1,40 @@
+/* Surface-only skin: all placement, sizes and behavior come from game-glass.css. */
+.player[data-game-ui=pink-pop]{--pink:#ff4b85;--pink-soft:#fff0f5;--pink-ink:#505055;--glass-fill:linear-gradient(#fff,#f1f1f1);--glass-shadow:inset 0 0 0 2px #fff,0 2px 0 #bdbdbd;color:var(--pink-ink)}
+.player[data-game-ui=pink-pop] :is(#player-start,#title-preview) .title-bottom-menu{background:#fffffff0;border-color:#fff;box-shadow:0 0 0 1px #d3d3d3,0 4px 12px #0002;backdrop-filter:none}
+.player[data-game-ui=pink-pop] :is(#player-start,#title-preview) .title-bottom-menu::after{background:none;filter:none}
+.player[data-game-ui=pink-pop] :is(#player-start,#title-preview) .title-bottom-menu button,.player[data-game-ui=pink-pop] :is(#player-start,#title-preview) .title-bottom-menu button[data-action=play],.player[data-game-ui=pink-pop] .scene-top-actions .scene-icon-button,.player[data-game-ui=pink-pop] .scene-quick-actions button,.player[data-game-ui=pink-pop] .player-modal :is(button,.save-slot,.save-slot.auto-save-slot),.player[data-game-ui=pink-pop] #choice-list button,.player[data-game-ui=pink-pop] .inventory-reward-dialogue button,.player[data-game-ui=pink-pop] .role-details :is(header button,footer button){color:#555;border-color:#ccc;border-radius:.65cqw;background:linear-gradient(#fff,#f0f0f0);box-shadow:inset 0 0 0 2px white,0 2px 0 #bababa;text-shadow:none;backdrop-filter:none}
+.player[data-game-ui=pink-pop] :is(#player-start,#title-preview) .title-bottom-menu button:hover,.player[data-game-ui=pink-pop] .scene-top-actions button:hover,.player[data-game-ui=pink-pop] .scene-quick-actions button:hover,.player[data-game-ui=pink-pop] .player-modal button:hover,.player[data-game-ui=pink-pop] #choice-list button:hover{background:#fff0f5;color:#e72e6e;border-color:#ff7da8;box-shadow:inset 0 0 0 2px #fff,0 2px 0 #ec86a7}
+.player[data-game-ui=pink-pop] :is(.scene-quick-actions button.active,.player-modal button.active,.player-modal .modal-tabs button.active,.player-modal .gallery-main-tabs button.active){background:#ff4b85;border-color:#ff4b85;color:#fff;box-shadow:inset 0 0 0 2px #fff,0 2px 0 #c82b61}
+.player[data-game-ui=pink-pop] :is(#player-start,#title-preview) .title-bottom-menu button:disabled{color:#888;opacity:.6}
+.player[data-game-ui=pink-pop] .game-icon{filter:none}
+.player[data-game-ui=pink-pop] .dialogue:not(.custom-dialogue){background:#ffffffe8!important;border-color:#e4e4e4;box-shadow:inset 0 1px 0 #fff;backdrop-filter:none}
+.player[data-game-ui=pink-pop] .dialogue:not(.custom-dialogue) #dialogue-text{color:#505055;text-shadow:none;font-family:'HarmonyOS Sans SC','Microsoft YaHei UI',sans-serif}
+.player[data-game-ui=pink-pop] .dialogue:not(.custom-dialogue) .speaker{text-shadow:none;filter:brightness(.7) saturate(1.1)}
+.player[data-game-ui=pink-pop] .dialogue:not(.custom-dialogue) .speaker::after{background:linear-gradient(90deg,#ff4b85,#ffb4cf55,transparent)}
+.player[data-game-ui=pink-pop] .dialogue-wave i{background:#ff4b85;box-shadow:none}
+.player[data-game-ui=pink-pop] .dialogue-next{background:#ff4b85;border-color:#fff;box-shadow:1px 1px 0 #ff7aa8}
+.player[data-game-ui=pink-pop] .dialogue-copy{scrollbar-color:#ff4b85 #e9e9e9}
+.player[data-game-ui=pink-pop] .player-modal{color:#505055;background:#0006;backdrop-filter:none}
+.player[data-game-ui=pink-pop] .player-modal>.modal-box,.player[data-game-ui=pink-pop] .inventory-reward-dialogue{color:#505055;background:#fff;border-color:#e2e2e2;box-shadow:0 5px 20px #0002;backdrop-filter:none}
+.player[data-game-ui=pink-pop] .modal-box>header{border-color:#ff4b85}
+.player[data-game-ui=pink-pop] .player-modal :is(h2,h3,strong,.gallery-detail-name,.gallery-character-name,.gallery-character-content h3){color:#505055}
+.player[data-game-ui=pink-pop] .player-modal :is(header small,.settings-box p,.volume-line,.volume-line output,.modal-box footer,.save-details span,.save-details small,.gallery-empty,.gallery-character-title,.gallery-character-text,.gallery-progress-note,.gallery-story-locked,.gallery-story-locked small,.gallery-track-list button small,.gallery-music-player>small,.author-note-text,.progress-character-row b,.progress-character-row small,.field>span){color:#606066}
+.player[data-game-ui=pink-pop] .player-modal :is(input,select){color:#505055;background:#f1f1f1;border-color:#d0d0d0;accent-color:#ff4b85}
+.player[data-game-ui=pink-pop] .player-modal select option{color:#505055;background:#fff}
+.player[data-game-ui=pink-pop] input[type=range]{accent-color:#ff4b85}
+.player[data-game-ui=pink-pop] :is(.settings-body,.book-shelf,.gallery-story-list){scrollbar-color:#ff4b85 #e9e9e9}
+.player[data-game-ui=pink-pop] .player-modal :is(.gallery-image-tile,.chapter-card,.inventory-card){background:#fff4f8!important;border-color:#efc4d3!important;color:#505055;box-shadow:0 2px 4px #0001}
+.player[data-game-ui=pink-pop] .player-modal .save-thumb{background:#f1f1f1;color:#606066}
+.player[data-game-ui=pink-pop] :is(.chapter-card-caption,.chapter-card-caption h3,.chapter-card-caption span,.chapter-card-caption small,.chapter-total strong,.chapter-caption-heading b){color:#505055;background-color:transparent}
+.player[data-game-ui=pink-pop] .chapter-progress>div{background:#ddd}.player[data-game-ui=pink-pop] .chapter-progress i{background:#ff4b85;box-shadow:none}
+.player[data-game-ui=pink-pop] .player-modal .book-library .book-shelf .book-card{background:#f8f8f8;border-color:#d2d2d2;box-shadow:inset 0 0 0 2px #fff,0 2px 0 #bbb;backdrop-filter:none}
+.player[data-game-ui=pink-pop] .book-library .book-card :is(b,small){color:#555}
+.player[data-game-ui=pink-pop] .ui-example-cover{background:#fff0f5;color:#ff4b85;border-color:#ffbbd2}
+.player[data-game-ui=pink-pop] .ui-example-settings p{color:#606066!important}
+.player[data-game-ui=pink-pop] .act-loading{background:#ffffffe8;color:#555;backdrop-filter:none}.player[data-game-ui=pink-pop] .loading-spinner i{background:#ff4b85;box-shadow:none}
+.player[data-game-ui=pink-pop] button:focus-visible{outline-color:#ff4b85}
+.player[data-game-ui=pink-pop] .role-details{--rd-ink:#505055;--rd-muted:#68686e;--rd-accent:#ff4b85;--rd-line:#e0c4ce;background:radial-gradient(ellipse at center,#fff,#fff0f5)}
+.player[data-game-ui=pink-pop] .role-details :is(.role-details-about,.role-details-stories){color:#505055;border-color:#e5cbd4;background:#fff;backdrop-filter:none;text-shadow:none}
+.book-reader[data-game-ui=pink-pop]{background:#f4edf1;color:#555;backdrop-filter:none}.book-reader[data-game-ui=pink-pop] :is(header,footer){background:#fff;color:#555;border-color:#ff4b85;backdrop-filter:none}.book-reader[data-game-ui=pink-pop] button{background:linear-gradient(#fff,#f1f1f1);color:#555;border-color:#ccc;border-radius:10px;box-shadow:inset 0 0 0 2px #fff,0 2px 0 #bbb;backdrop-filter:none}.book-reader[data-game-ui=pink-pop] button:hover{color:#ff4b85;background:#fff0f5}
+
+.editor:not(.is-playing) .editor-preview-player #play-controls{display:none}

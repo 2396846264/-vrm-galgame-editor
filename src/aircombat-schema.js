@@ -1,3 +1,7 @@
+import {normalizeFleets} from './naval-formations.js';
+import {navalParts,aircraftOrdnance} from './naval-kit.js';
+import {normalizeWeaponSettings} from './vehicle-weapon-settings.js';
+import {normalizeShipDeployments} from './warship-schema.js';
 import {normalizeStructure,structureErrors,blockKit} from './vehicle-structure.js';
 import {historicalParts,historicalMounts,historicalSpecs} from './aircombat-historical-kit.js';
 // Built-in propeller aircraft kit. SI units; forward -Z, up +Y.
@@ -14,7 +18,7 @@ export const partKit = {
   gear:{name:'固定起落架',mass:65,hp:60,drag:.8,area:.26,color:'#34393b',size:[2.6,.9,.4]}
 };
 const s=(id,name,position,accept)=>({id,name,position,accept:Object.keys(partKit).filter(type=>accept.includes(partFamily(type)))});
-Object.assign(partKit,historicalParts);
+Object.assign(partKit,historicalParts,navalParts,aircraftOrdnance);
 partKit.flap={family:'tail',name:'活动襟翼 / 副翼',mass:18,hp:55,drag:.024,area:.6,aero:true,color:'#869778',size:[1.5,.12,.4]};
 for(const [kind,d] of Object.entries(blockKit))partKit['voxel_'+kind]={...d,family:kind==='hull'?'structure':kind==='wing'?'wingRight':kind==='tail'?'tail':kind==='cockpit'?'cockpit':'structure',mass:d.density*.001953125,area:.015625,size:[.125,.125,.125]};
 partKit.voxel_core={...partKit.voxel_hull,family:'fuselage'};
@@ -45,13 +49,14 @@ export function historicalPreset(kit){
  return {name:historicalSpecs[kit].name,parts};
 }
 const bounded=(v,min,max,fallback)=>Number.isFinite(Number(v))?Math.max(min,Math.min(max,Number(v))):fallback;
+export const normalizeFireSounds=value=>Object.fromEntries(Object.entries(value||{}).filter(([type,id])=>['gun','turret'].includes(partFamily(type))&&typeof id==='string'));
 export function normalizeAircraft(value){
   if(value?.schemaVersion===2&&Array.isArray(value.blocks)){
-    const v=normalizeStructure(value),ids=new Set();v.parts=(value.parts||[]).slice(0,64).filter(p=>p&&partKit[p.type]&&!p.type.startsWith('voxel_')).map(p=>{let id=String(p.id||uid());if(ids.has(id))id=uid();ids.add(id);return {id,type:p.type,parentId:'',socketId:'',color:/^#[\da-f]{6}$/i.test(p.color)?p.color:partKit[p.type].color,scale:bounded(p.scale,.25,2,1),powerHp:partFamily(p.type)==='engine'?bounded(p.powerHp,50,3000,partKit[p.type].powerHp):0,offset:[0,1,2].map(i=>Math.round(bounded(p.offset?.[i],-32,32,0)/v.gridSize)*v.gridSize),rotation:[0,1,2].map(i=>bounded(p.rotation?.[i],-180,180,0)),mirrorOf:String(p.mirrorOf||''),gearFoldDirection:['forward','backward','inward','outward'].includes(p.gearFoldDirection)?p.gearFoldDirection:'backward'};});v.vehicleId=String(value.vehicleId||'');return v;
+    const v=normalizeStructure(value),ids=new Set();v.parts=(value.parts||[]).slice(0,64).filter(p=>p&&partKit[p.type]&&!p.type.startsWith('voxel_')).map(p=>{let id=String(p.id||uid());if(ids.has(id))id=uid();ids.add(id);return {id,type:p.type,...(['gun','turret'].includes(partFamily(p.type))?normalizeWeaponSettings(p,partKit[p.type]):{}),parentId:'',socketId:'',color:/^#[\da-f]{6}$/i.test(p.color)?p.color:partKit[p.type].color,scale:bounded(p.scale,.25,2,1),powerHp:partFamily(p.type)==='engine'?bounded(p.powerHp,50,3000,partKit[p.type].powerHp):0,offset:[0,1,2].map(i=>Math.round(bounded(p.offset?.[i],-32,32,0)/v.gridSize)*v.gridSize),rotation:[0,1,2].map(i=>bounded(p.rotation?.[i],-180,180,0)),mirrorOf:String(p.mirrorOf||''),gearFoldDirection:['forward','backward','inward','outward'].includes(p.gearFoldDirection)?p.gearFoldDirection:'backward'};});v.vehicleId=String(value.vehicleId||'');if(value.fireSounds!==undefined)v.fireSounds=normalizeFireSounds(value.fireSounds);return v;
   }
   if(!value||!Array.isArray(value.parts))return historicalPreset('bf109');
-  const ids=new Set();const parts=value.parts.slice(0,48).filter(p=>p&&partKit[p.type]).map(p=>{let id=String(p.id||uid());if(ids.has(id))id=uid();ids.add(id);return {id,type:p.type,parentId:String(p.parentId||''),socketId:String(p.socketId||''),color:/^#[\da-f]{6}$/i.test(p.color)?p.color:partKit[p.type].color,scale:bounded(p.scale,.6,1.5,1),powerHp:partFamily(p.type)==='engine'?bounded(p.powerHp,50,3000,partKit[p.type].powerHp):0,offset:[0,1,2].map(i=>bounded(p.offset?.[i],-.3,.3,0)),rotation:[0,1,2].map(i=>bounded(p.rotation?.[i],-15,15,0))};});
-  return {name:String(value.name||'自定义飞机').slice(0,80),parts,...(value.vehicleId?{vehicleId:String(value.vehicleId)}:{})};
+  const ids=new Set();const parts=value.parts.slice(0,48).filter(p=>p&&partKit[p.type]).map(p=>{let id=String(p.id||uid());if(ids.has(id))id=uid();ids.add(id);return {id,type:p.type,...(['gun','turret'].includes(partFamily(p.type))?normalizeWeaponSettings(p,partKit[p.type]):{}),parentId:String(p.parentId||''),socketId:String(p.socketId||''),color:/^#[\da-f]{6}$/i.test(p.color)?p.color:partKit[p.type].color,scale:bounded(p.scale,.6,1.5,1),powerHp:partFamily(p.type)==='engine'?bounded(p.powerHp,50,3000,partKit[p.type].powerHp):0,offset:[0,1,2].map(i=>bounded(p.offset?.[i],-.3,.3,0)),rotation:[0,1,2].map(i=>bounded(p.rotation?.[i],-15,15,0))};});
+  return {name:String(value.name||'自定义飞机').slice(0,80),parts,...(value.fireSounds!==undefined?{fireSounds:normalizeFireSounds(value.fireSounds)}:{}),...(value.vehicleId?{vehicleId:String(value.vehicleId)}:{})};
 }
 export function validateAircraft(aircraft){
   if(aircraft.schemaVersion===2){const errors=structureErrors(aircraft);if(!aircraft.parts.some(p=>partFamily(p.type)==='engine'))errors.push('缺少发动机螺旋桨装置');return errors;}
@@ -61,4 +66,4 @@ export function validateAircraft(aircraft){
   for(const type of ['cockpit','wingLeft','wingRight','tail','engine'])if(!parts.some(p=>partFamily(p.type)===type))errors.push('缺少'+partKit[type].name);
   return [...new Set(errors)];
 }
-export function normalizeCombat(value={}){return {schemaVersion:1,aircraft:normalizeAircraft(value.aircraft),enemyAircraft:normalizeAircraft(value.enemyAircraft||historicalPreset('bf109')),allyAircraft:normalizeAircraft(value.allyAircraft||historicalPreset('b25')),enemies:Math.round(bounded(value.enemies,1,8,3)),allies:Math.round(bounded(value.allies,0,4,1)),altitude:bounded(value.altitude,150,1800,600),duration:bounded(value.duration,30,900,180),difficulty:bounded(value.difficulty,.4,1.5,.7),mission:['eliminate','survive'].includes(value.mission)?value.mission:'eliminate',wind:bounded(value.wind,-15,15,0),winActId:String(value.winActId||''),loseActId:String(value.loseActId||''),allowSkip:value.allowSkip===true,startOnGround:value.startOnGround===true};}
+export function normalizeCombat(value={}){return {schemaVersion:1,fleets:normalizeFleets(value.fleets),ships:normalizeShipDeployments(value.ships),fireSounds:Object.fromEntries(Object.entries(value.fireSounds||{}).filter(([type,id])=>['gun','turret'].includes(partFamily(type))&&typeof id==='string')),dialogues:(Array.isArray(value.dialogues)?value.dialogues:[]).slice(0,200).map((line,i)=>({id:String(line.id||'air-dialogue-'+i),characterId:String(line.characterId||''),speaker:String(line.speaker||''),text:String(line.text||''),voiceId:String(line.voiceId||''),offstage:{motionId:String(line.offstage?.motionId||''),motionOptions:{loop:true,placement:'inPlace',...line.offstage?.motionOptions},expressionWeights:{...line.offstage?.expressionWeights}}})),aircraft:normalizeAircraft(value.aircraft),enemyAircraft:normalizeAircraft(value.enemyAircraft||historicalPreset('bf109')),allyAircraft:normalizeAircraft(value.allyAircraft||historicalPreset('b25')),enemies:Math.round(bounded(value.enemies,0,8,3)),allies:Math.round(bounded(value.allies,0,4,1)),altitude:bounded(value.altitude,150,1800,600),duration:bounded(value.duration,30,900,180),difficulty:bounded(value.difficulty,.4,1.5,.7),mission:['eliminate','survive','sinkShips','protectShips'].includes(value.mission)?value.mission:'eliminate',wind:bounded(value.wind,-15,15,0),winActId:String(value.winActId||''),loseActId:String(value.loseActId||''),allowSkip:value.allowSkip===true,startOnGround:value.startOnGround===true};}

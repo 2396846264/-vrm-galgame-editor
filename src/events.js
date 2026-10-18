@@ -1,3 +1,4 @@
+import {editorLabel,editorText,setEditorText} from './editor-language.js';
 import {assetsOfType} from './asset-organization.js';
 import {createAirCombat} from './aircombat-runtime.js';
 import {airEditor,airInput,airAction,selectAirPart} from './aircombat-editor.js';
@@ -32,7 +33,7 @@ export function createEvents(ctx) {
     return multiline ? `<textarea ${attr}>${esc(value)}</textarea>` : `<input ${attr} value="${esc(value)}">`;
   };
   const choice = (key, value, type, empty, row = null) => `<select data-event-field="${key}"${row === null ? '' : ` data-event-row="${row}"`}><option value="">${empty}</option>${assetsOfType(ctx.project(),type).map(a => `<option value="${esc(a.id)}" ${a.id === value ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</select>`;
-  const field = (label, html) => `<label class="field"><span>${label}</span>${html}</label>`;
+  const field = (label, html) => `<label class="field"><span>${editorLabel(label)}</span>${html}</label>`;
   const upload = (key, type) => `<button data-action="event-upload" data-event-key="${key}" data-type="${type}">上传素材</button>`;
   function editor(node) {
     const e = node.event = normalizeEvent(node.event);
@@ -156,7 +157,7 @@ export function createEvents(ctx) {
     root.querySelector('[data-action="event-confirm"]').disabled = total > 0 && state.remaining > 0;
   }
   function confirm(reason='button') {
-    if(air.active())return false;
+    if(air.active())return air.advanceDialogue();
     if (!state || ctx.paused() || document.hidden) return false;
     if(state.event.type==='cutscene'){if(state.preview||!['double','ended'].includes(reason))return false;}
     else if(!state.ready||state.remaining>0)return false;
@@ -176,7 +177,8 @@ export function createEvents(ctx) {
     state = null;
   }
   return { editor, show, confirm, cancel,airInput,airAction,selectAirPart,airActive:()=>air.active(),
-    testAir:node=>air.show(node,true,true),remaining: () => air.active()?0:state?.remaining, active: () => air.active()||Boolean(state),
+    previewAirDialogue:async(node,line)=>{cancel();const token=generation;await ctx.prepare(node,true);if(token!==generation)return;const preview={...node,event:{...node.event,combat:{...node.event.combat,dialogues:[line]}}};return air.show(preview,true,true,true);},
+    testAir:async node=>{cancel();const token=generation;await ctx.prepare(node,true);if(token!==generation)return;return air.show(node,true,true);},remaining: () => air.active()?0:state?.remaining, active: () => air.active()||Boolean(state),
     diagnostics: () => air.diagnostics() || (state ? { id: state.nodeId, type: state.event.type, remaining: state.remaining, ready: state.ready,
       preview: state.preview, received: state.shown + 1, windows: state.root.querySelectorAll('.event-crt').length } : null) };
 }

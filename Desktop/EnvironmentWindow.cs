@@ -12,23 +12,23 @@ internal sealed class EnvironmentWindow : Form {
     private bool closing;
     private bool closePending;
     private readonly Dictionary<string,TaskCompletionSource<JsonNode?>> agentControlReplies=new();
-    public EnvironmentWindow(string webDirectory, string projectDirectory, JsonObject initial, Func<string, JsonNode?, Task<object?>> handle) {
+    public EnvironmentWindow(string webDirectory, string projectDirectory, CoreWebView2Environment sharedEnvironment, JsonObject initial, Func<string, JsonNode?, Task<object?>> handle) {
         this.webDirectory=webDirectory;this.projectDirectory=projectDirectory;this.initial=initial;this.handle=handle;
         FormClosed+=(_,_)=>{foreach(var task in agentControlReplies.Values)task.TrySetException(new Exception("环境窗口已关闭。"));agentControlReplies.Clear();};
         Text="3D 环境编辑器";Width=1280;Height=850;MinimumSize=new Size(1000,650);Controls.Add(view);
-        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async();view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-geometry52" or "--smoke-ocean51" or "--smoke-environment" or "--smoke-render-regression" or "--smoke-agent-environment" or "--smoke-close-guard")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
+        Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async(sharedEnvironment);view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};view.CoreWebView2.WebMessageReceived+=OnMessage;view.Source=new Uri("https://app.galgame/environment.html"+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-geometry52" or "--smoke-ocean51" or "--smoke-environment" or "--smoke-render-regression" or "--smoke-agent-environment" or "--smoke-close-guard")?"?smoke=1":""));}catch(Exception ex){MessageBox.Show(this,ex.Message);Close();}};
         FormClosing+=async(_,e)=>{
             if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(closePending)return;closePending=true;
             try{
                 await SetClosePendingAsync(true);
-                if(await IsBusyForCloseAsync()){MessageBox.Show(this,"当前场景操作或保存还没完成，请稍后关闭。","正在操作");return;}
+                if(await IsBusyForCloseAsync()){MessageBox.Show(this,EditorLanguage.T("当前场景操作或保存还没完成，请稍后关闭。"),"正在操作");return;}
                 if(await HasChangesForCloseAsync()){
                     using var dialog=new UnsavedCloseDialog("环境还有未保存的修改。\n要保存后关闭，还是直接关闭？");dialog.ShowDialog(this);
                     if(dialog.Choice==UnsavedCloseChoice.Cancel)return;
                     if(dialog.Choice==UnsavedCloseChoice.Save)await SaveForCloseAsync();
                 }
                 CloseWithoutPrompt();
-            }catch(Exception error){MessageBox.Show(this,"没有关闭环境编辑器："+error.Message+"\n修改仍保留在窗口里。","保存未完成");}
+            }catch(Exception error){MessageBox.Show(this,EditorLanguage.T("没有关闭环境编辑器：")+error.Message+"\n修改仍保留在窗口里。","保存未完成");}
             finally{closePending=false;if(!IsDisposed&&!closing)await SetClosePendingAsync(false);}
         };
     }
@@ -108,7 +108,7 @@ internal sealed class EnvironmentWindow : Form {
     }
     private async void OnMessage(object? sender,CoreWebView2WebMessageReceivedEventArgs e){
         if(!e.Source.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))return;
-        string id="";try{var m=JsonNode.Parse(e.WebMessageAsJson)!;id=m["id"]?.GetValue<string>()??"";string action=m["action"]?.GetValue<string>()??"";object? result=action=="init"?initial:action=="environmentAgentReply"?AgentControlReply(m["payload"]):await handle(action,m["payload"]);view.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new{id,ok=true,data=result}));}catch(Exception ex){view.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new{id,ok=false,error=ex.Message}));}
+        string id="";try{var m=JsonNode.Parse(e.WebMessageAsJson)!;id=m["id"]?.GetValue<string>()??"";string action=m["action"]?.GetValue<string>()??"";object? result=action=="init"?initial:action=="editorLanguage"?EditorLanguage.Select(this,m["payload"],"3D 环境编辑器"):action=="environmentAgentReply"?AgentControlReply(m["payload"]):await handle(action,m["payload"]);view.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new{id,ok=true,data=result}));}catch(Exception ex){view.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new{id,ok=false,error=ex.Message}));}
     }
 }
 internal sealed partial class EditorWindow {
@@ -132,7 +132,7 @@ internal sealed partial class EditorWindow {
         openEnvironmentId=initial["environment"]?["id"]?.GetValue<string>()??"";
         string session=Guid.NewGuid().ToString("N");environmentSession=session;string directory=projectDirectory;
         var appDirectory=AppContext.BaseDirectory;var webDirectory=Path.Combine(appDirectory,"web");
-        environmentWindow=new EnvironmentWindow(webDirectory,directory,initial,async(action,data)=>{
+        environmentWindow=new EnvironmentWindow(webDirectory,directory,web.CoreWebView2.Environment,initial,async(action,data)=>{
             if(environmentSession!=session||projectDirectory!=directory)throw new Exception("工程已切换，请关闭窗口后重新打开");
             if(action=="import"){if(archiveSaveRunning)throw new Exception("工程正在保存，请稍候。");string type=data?["type"]?.GetValue<string>()??"";if(type is not ("image" or "sceneModel"))throw new Exception("不支持此素材");return ImportAssets(type);}
             if(action=="commit"){

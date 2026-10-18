@@ -107,7 +107,7 @@ internal sealed partial class EditorWindow
     }
     private object? PickStoryDocuments()
     {
-        using var dialog=new OpenFileDialog{Title="导入小说、剧本或大纲",Filter="故事文本|*.txt;*.md;*.docx",Multiselect=true};
+        using var dialog=new OpenFileDialog{Title=EditorLanguage.T("导入小说、剧本或大纲"),Filter="故事文本|*.txt;*.md;*.docx",Multiselect=true};
         if(dialog.ShowDialog(this)!=DialogResult.OK)return null;
         return dialog.FileNames.Select(ReadStoryDocument).ToArray();
     }
@@ -144,14 +144,14 @@ internal sealed partial class EditorWindow
     }
     private object? PickDraftPlan()
     {
-        using var dialog=new OpenFileDialog{Title="导入 Agent 编排的粗稿",Filter="粗稿 JSON|*.json"};
+        using var dialog=new OpenFileDialog{Title=EditorLanguage.T("导入 Agent 编排的粗稿"),Filter="粗稿 JSON|*.json"};
         if(dialog.ShowDialog(this)!=DialogResult.OK)return null;
         if(new FileInfo(dialog.FileName).Length>16*1024*1024)throw new Exception("粗稿文件太大，请分批生成。");
         return JsonNode.Parse(File.ReadAllText(dialog.FileName)) ?? throw new Exception("粗稿为空。");
     }
     private object? PickDraftAssets()
     {
-        using var dialog=new OpenFileDialog{Title="批量导入素材（配音请在对白上传）",Filter="模型、背景、动作、音乐、视频|*.vrm;*.vrma;*.fbx;*.glb;*.png;*.jpg;*.jpeg;*.webp;*.mp3;*.wav;*.ogg;*.mp4;*.webm",Multiselect=true};
+        using var dialog=new OpenFileDialog{Title=EditorLanguage.T("批量导入素材（配音请在对白上传）"),Filter="模型、背景、动作、音乐、视频|*.vrm;*.vrma;*.fbx;*.glb;*.png;*.jpg;*.jpeg;*.webp;*.mp3;*.wav;*.ogg;*.mp4;*.webm",Multiselect=true};
         return dialog.ShowDialog(this)==DialogResult.OK?ImportDraftAssets(dialog.FileNames):null;
     }
     private object ImportDraftAssets(string[] paths)

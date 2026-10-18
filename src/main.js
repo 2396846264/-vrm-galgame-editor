@@ -1,3 +1,14 @@
+import {showVehicleEditorPicker} from './editor-picker.js';
+import {ensureShipLibrary,voxelPreset} from './vehicle-documents.js';
+import {partFamily,normalizeCombat} from './aircombat-schema.js';
+import {airDialogueEditor,airDialogueList} from './aircombat-dialogue-editor.js';
+import {offstageSettings} from './offstage-motion.js';
+import {characterNameColor,validNameColor,defaultNameColor} from './character-name-color.js';
+import {gameLoadingMarkup} from './game-ui-composition.js';
+import {createActIntro} from './act-intro.js';
+import './act-intro.css';
+import {enableEditorLanguage,editorLanguages,editorLocale,setEditorLanguage,editorLabel,editorText,setEditorText,editorAttributes} from './editor-language.js';
+import {gameControlsMarkup,dialogueMarkup} from './game-ui-controls.js';
 import {ensureVehicleLibrary} from './vehicle-documents.js';
 import {assetsOfType,syncAssetOrganization,motionsForCharacter,motionFolderId,commonMotionFolderId,setAudioKind,copyCharacterMotions} from './asset-organization.js';
 import {DialogueCameraController,snapshotCamera,applyDialogueCamera,resolveDialogueCamera} from './dialogue-camera.js';
@@ -32,10 +43,12 @@ import './vn-theme.css';
 import './ios7-theme.css';
 import './chapters.css';
 import './menu-motion.css';
-import './game-glass.css';
+import {normalizeLoading,normalizeUiLayout} from './game-ui-loading.js';
+import {bindUiPreview} from './game-ui-preview.js';
+import {gameTitleActions} from './game-ui-themes.js';
 import {gameUiPresets,normalizeGameUi,gameUiPicker} from './game-ui.js';
 import './game-ui.css';
-import './game-ui-alignment.css';
+import {normalizeGamePalettes} from './game-ui-palette.js';
 import './render-presets.css';
 import {updateRenderDependencies,updateRenderReferenceHints} from './render-dependencies.js';
 import {helpLabel,installRenderHelp} from './render-help.js';
@@ -47,6 +60,10 @@ import './save-thumbnail.css';
 import {createRoleDetails} from './role-details.js';
 import {createDetailIdle} from './detail-idle.js';
 import './role-details.css';
+import './game-glass.css';
+import './game-pink.css';
+import './game-wechat.css';
+import {playerGameSkin,rememberGameSkin} from './game-ui-skin.js';
 import {portraitBodyFrame} from './portrait-body-frame.js';
 import './weather.css';
 import './events.css';
@@ -106,12 +123,14 @@ let playAct = 0;
 let playStep = 0;
 let preparedAct = -1;
 let transitioning = false;
+let airDialogueLine=null;
+const actIntro=createActIntro();
 let dialogueCamera=null,cameraActId="",cameraStepId="",skipCameraTravel=false,cameraSpeed=1;
 let playRequest = 0;
 let previewRequest = 0;
 let titleRequest = 0;
 let modulePanel=null,moduleBaseline=null,moduleBaselineRevision=0,moduleRefreshPending=null,moduleNotifyTimer=null;
-const moduleLabels={characters:"角色",items:"物品",title:"标题",render:"渲染",knowledge:"知识库",aircraft:"载具"};
+const moduleLabels={characters:"角色",items:"物品",title:"标题",render:"渲染",knowledge:"知识库",aircraft:"飞机",warship:"战舰",ui:"游戏 UI"};
 let dirty = false;
 let changeRevision = 0;
 let saveInFlight = null;
@@ -128,7 +147,7 @@ const editorVoicePreview = new Audio();
 let previewVoiceId = '';
 editorVoicePreview.addEventListener('ended', () => { previewVoiceId = ''; renderAssetDock(); });
 let audioSettings = { master: 1, music: 0.8, voice: 1, effects: 0.8 };
-let textSpeed = 35;
+let textSpeed = 5;
 let graphicsPreferences=normalizeGraphics(),graphicsDraft=normalizeGraphics();
 let typingTimer = null;
 let typingCharacters = [];
@@ -215,9 +234,9 @@ const library = createLibrary({ project: () => project, escape, assetUrl, bridge
   progress: () => lifetimeProgress, refresh: () => { renderSidebar(); renderInspector(); updatePreview(); },
   openModal: view => { closePlayerModal(); document.querySelector('#player-modal')?.remove(); saveModalMode = view; } });
 const events = createEvents({ project: () => project, escape, asset, assetUrl,
-  volume:()=>audioSettings.master,
+  volume:()=>audioSettings.master,effectsVolume:()=>audioSettings.master*audioSettings.effects,
   paused: () => Boolean(saveModalMode || document.querySelector('#player-modal.closing')),
-  player: () => mode === 'player', prepare: prepareEventScene,
+  player: () => mode === 'player', prepare: prepareEventScene,showDialogue:showAirDialogue,clearDialogue:clearAirDialogue,finishDialogueTyping:finishTyping,
   audio: e => {
     eventMusicActive = true; transitionMusic(e.bgmId);
     const previous = new Set(activeEffects);
@@ -251,7 +270,7 @@ const storyAssistant = createStoryAssistant({project:()=>project,mode:()=>mode,e
 const step = () => act()?.steps[selectedStep];
 const character = id => project.characters.find(item => item.id === id);
 const options = (items, value, empty = '无') =>
-  `<option value="">${escape(empty)}</option>${items.map(item =>
+  `<option value="">${editorLabel(empty)}</option>${items.map(item =>
     `<option value="${escape(item.id)}" ${item.id === value ? 'selected' : ''}>${escape(item.name)}</option>`).join('')}`;
 const byType = type => assetsOfType(project,type).filter(item => !internalPortrait(project, item));
 const vrmThumbnails = new Map();
@@ -295,16 +314,16 @@ function refreshVrmThumbnails() {
     })();
   }
 }
-const field = (label, control) => `<label class="field"><span>${label}</span>${control}</label>`;
-const input = (key, value, placeholder = '') => `<input data-field="${key}" value="${escape(value)}" placeholder="${escape(placeholder)}">`;
-const textarea = (key, value, placeholder = '') => `<textarea data-field="${key}" placeholder="${escape(placeholder)}">${escape(value)}</textarea>`;
+const field = (label, control) => `<label class="field"><span>${editorLabel(label)}</span>${control}</label>`;
+const input = (key, value, placeholder = '') => `<input data-field="${key}" value="${escape(value)}" placeholder="${escape(editorText(placeholder))}" data-editor-placeholder="${escape(placeholder)}">`;
+const textarea = (key, value, placeholder = '') => `<textarea data-field="${key}" placeholder="${escape(editorText(placeholder))}" data-editor-placeholder="${escape(placeholder)}">${escape(value)}</textarea>`;
 const select = (key, items, value, empty) => `<select data-field="${key}">${options(items, value, empty)}</select>`;
-const button = (label, action, extra = '') => `<button type="button" data-action="${action}" ${extra}>${label}</button>`;
-const loadingSpinner = '<span class="loading-spinner" role="status" aria-label="人物加载中"><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+const button = (label, action, extra = '') => `<button type="button" data-action="${action}" ${editorAttributes(extra)}>${editorLabel(label)}</button>`;
+const loadingSpinner = () => gameLoadingMarkup(project?.ui);
 function setStagePlaceholder(node, message, loading = false) {
   if (!node) return;
-  if (loading) node.innerHTML = loadingSpinner;
-  else node.textContent = message;
+  if (loading) node.innerHTML = loadingSpinner();
+  else setEditorText(node,message);
 }
 const defaultSize = 1.15;
 const expressionLabels = {
@@ -358,7 +377,8 @@ async function refreshMotionHints() {
   for (const hint of document.querySelectorAll('[data-motion-hint]')) {
     const scope = hint.dataset.motionHint;
     let motion, model, actorKey;
-    if (scope === 'step') {
+    if(scope==='offstage'){motion=asset(offstageSettings(step()).motionId);actorKey=step()?.characterId;model=asset(character(actorKey)?.modelId);}
+    else if (scope === 'step') {
       motion = asset(step()?.motionId);
       model = modelForStep(step());
       actorKey = step()?.characterId || model?.id;
@@ -522,9 +542,9 @@ async function displayActStep(currentAct, current) {
   await stage.showCast(cast,speaker||null,playing);
 }
 const adjustmentSlider = (key, label, value, min, max, stepSize, display) =>
-  `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-adjust-output="${key}">${display}</output></label>`;
+  `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${editorLabel(label)}</span><input type="range" data-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-adjust-output="${key}">${display}</output></label>`;
 const titleSlider = (key, label, value, min, max, stepSize, display) =>
-  `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${label}</span><input type="range" data-title-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-title-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-title-output="${key}">${display}</output></label>`;
+  `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${editorLabel(label)}</span><input type="range" data-title-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-title-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-title-output="${key}">${display}</output></label>`;
 function titleActorEditor(actor,index){
   const role=character(actor.characterId);
   const transforms=[['size','大小',50,500,5],['offsetX','左右位置',-100,100,.01],['offsetY','上下位置',-100,100,.01],['offsetZ','前后位置',-100,100,.01],['yaw','左右转身',-360,360,.1],['pitch','上下转角',-360,360,.1]];
@@ -544,16 +564,13 @@ function titleMarkup(interactive) {
   const logo = asset(project.title.logoImageId);
   const logoMarkup = logo
     ? `<img class="title-logo-image" src="${escape(assetUrl(logo))}" alt="${escape(project.name)}">`
-    : `<div class="title-logo-fallback"><small>VRM GALGAME</small><strong>${escape(project.name)}</strong></div>`;
-  const items = [
-    ['继续游戏', 'continue-game'], ['开始游戏', 'play'], ['载入游戏', 'load-game'],
-    ['系统设置', 'settings'], ['附加鉴赏', 'gallery'], ['角色详情', 'role-details'], ['游玩进度', 'play-progress'], ['退出游戏', 'exit-game']
-  ];
+    : `<div class="title-logo-fallback"><strong>${escape(project.name)}</strong>${project.title.subtitle?`<small>${escape(project.title.subtitle)}</small>`:''}</div>`;
+  const items = gameTitleActions;
   const hasSave = interactive && readSaveSlots().some(Boolean);
   const menu = items.map(([label, action]) => interactive
     ? `<button type="button" data-action="${action}" ${action === 'continue-game' && !hasSave ? 'disabled' : ''}>${label}</button>`
-    : `<span>${label}</span>`).join('');
-  return `${interactive ? '<button class="knowledge-title-button" data-action="knowledge-open" title="知识库" aria-label="打开知识库"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5C8 2 3 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-3-2-7-1-10 1Z"/><path d="M12 5v15"/></svg></button>' : ''}${project.title.logoImageId === '__none__' ? '' : `<div class="title-logo-region">${logoMarkup}</div>`}<nav class="title-bottom-menu">${menu}</nav>`;
+    : `<span>${editorLabel(label)}</span>`).join('');
+  return `${project.title.logoImageId === '__none__' ? '' : `<div class="title-logo-region">${logoMarkup}</div>`}<nav class="title-bottom-menu">${menu}</nav>`;
 }
 async function showTitleScene(interactive = false) {
   stage.spatialCamera.setSettings(project.title.spatialCamera);
@@ -1125,6 +1142,7 @@ function normalize() {
   project.characters ||= [];
   for (const item of project.characters) {
     item.autoMouth = item.autoMouth !== false;
+    item.nameColor=characterNameColor(item);
     item.portraitId ||= '';
     item.portraitSource ||= item.portraitId
       ? asset(item.portraitId)?.name === '自动头像.png' ? 'auto' : 'manual' : '';
@@ -1144,6 +1162,9 @@ function normalize() {
   project.ui ||= { dialogueImageId: '', clickSoundId: '' };
   project.ui.clickSoundId ||= '';
   project.ui.gameTheme = normalizeGameUi(project.ui.gameTheme);
+  project.ui.loading = normalizeLoading(project.ui.loading);
+  project.ui.layout = normalizeUiLayout(project.ui.layout);
+  project.ui.gamePalettes = normalizeGamePalettes(project.ui.gamePalettes);
   project.ui.spatialCamera=normalizeSpatialCamera(project.ui.spatialCamera);
   project.title = { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
     size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12, ...project.title };
@@ -1223,7 +1244,7 @@ function toast(message, isError = false) {
     node.id = 'toast';
     document.body.appendChild(node);
   }
-  node.textContent = message;
+  setEditorText(node,message);
   node.className = isError ? 'show error' : 'show';
   clearTimeout(node.timer);
   node.timer = setTimeout(() => node.className = '', 4500);
@@ -1301,7 +1322,7 @@ async function restoreEditorHistory(direction) {
     project = entry.project;
     const view = entry.view;
     selectedAct = Math.max(0, Math.min(view.selectedAct, project.acts.length - 1));
-    selectedStep = Math.max(0, Math.min(view.selectedStep, (act()?.steps.length || 1) - 1));
+    selectedStep = Math.max(0, Math.min(view.selectedStep, act()?.event?.type==='aircombat'?act().event.combat.dialogues.length:(act()?.steps.length || 1) - 1));
     selectedCharacter = Math.max(0, Math.min(view.selectedCharacter, project.characters.length - 1));
     selectedRenderPresetId=view.selectedRenderPresetId||project.renderPresets[0]?.id||'';activePanel = view.activePanel; activeAssetType = view.activeAssetType;
     Object.assign(currentAssetFolder, view.folders); editorGalleryStoryIndex = view.storyIndex;
@@ -1339,6 +1360,7 @@ function markDirty(options) {
 }
 async function save() {
   if (!project || mode !== 'editor') return;
+  if(modulePanel==='ui'&&document.querySelector('#game-ui-picker'))applyUiDraft(document.querySelector('#game-ui-picker'));
   if (saveInFlight) await saveInFlight;
   editorHistory.seal();
   const revision = changeRevision;
@@ -1397,6 +1419,7 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeCloseEdit=
   project.acts[0].steps[0].text=text;markDirty({label:'关闭提醒验证'});
 };
 function loadEditorSettings() {
+  enableEditorLanguage();
   try {
     const saved = JSON.parse(localStorage.getItem('vrm-editor-settings') || 'null');
     if ([5, 10, 30, 60].includes(Number(saved?.autoSaveMinutes)))
@@ -1417,7 +1440,9 @@ function applyEditorTheme() {
   }
 }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(editorSettings.theme==='system')applyEditorTheme();});
+window.addEventListener('editorlanguagechange',()=>{applyEditorTheme();updateHistoryButtons();});
 function saveEditorSettings() {
+  editorSettings.language=editorLocale();
   localStorage.setItem('vrm-editor-settings', JSON.stringify(editorSettings));
 }
 function restartEditorAutoSave() {
@@ -1429,26 +1454,31 @@ function restartEditorAutoSave() {
 }
 function renderEditorSettings() {
   document.querySelector('#editor-settings-modal')?.remove();
-  document.querySelector('.editor')?.insertAdjacentHTML('beforeend', `<div id="editor-settings-modal" class="editor-settings-backdrop" role="dialog" aria-modal="true" aria-label="编辑器设置">
+  (document.querySelector('.editor')||app).insertAdjacentHTML('beforeend', `<div id="editor-settings-modal" class="editor-settings-backdrop" role="dialog" aria-modal="true" aria-label="编辑器设置">
     <div class="editor-settings-card"><header><h2>编辑器设置</h2>${button('关闭 ×', 'close-editor-settings')}</header>
+      <label class="field"><span>编辑器语言</span><select id="editor-language" aria-label="编辑器语言">
+        ${editorLanguages.map(([id,label])=>`<option value="${id}" ${editorLocale()===id?'selected':''}>${label}</option>`).join('')}
+      </select></label><p>立即生效，并同步到已打开的编辑器窗口；不会翻译工程内容。</p>
       <label class="field"><span>自动保存间隔</span><select id="editor-auto-save-minutes">
         ${[[5, '每 5 分钟'], [10, '每 10 分钟'], [30, '每 30 分钟'], [60, '每 1 小时']].map(([value, label]) =>
-          `<option value="${value}" ${editorSettings.autoSaveMinutes === value ? 'selected' : ''}>${label}</option>`).join('')}
+          `<option value="${value}" ${editorSettings.autoSaveMinutes === value ? 'selected' : ''}>${editorLabel(label)}</option>`).join('')}
       </select></label><label class="field"><span>界面外观</span><select id="editor-theme">
         <option value="system" ${editorSettings.theme === 'system' ? 'selected' : ''}>跟随系统 · 自动切换</option><option value="light" ${editorSettings.theme === 'light' ? 'selected' : ''}>日间 · 白色</option>
         <option value="dark" ${editorSettings.theme === 'dark' ? 'selected' : ''}>夜间 · 深灰色</option>
-      </select></label><p>外观设置只影响编辑器；游戏外观在“游戏 UI”中选择。</p>
+      </select></label><p>外观设置只影响编辑器；游戏使用固定液态玻璃界面。</p>
+      ${button('第三方声明与许可', 'third-party-notices')}
       <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
     </div></div>`);
 }
 function renderWelcome() {
   app.innerHTML = `<main class="welcome"><div class="welcome-card">
-    <div class="eyebrow">VRM GALGAME STUDIO</div>
-    <h1>让 VRM 角色走进你的故事</h1>
+    <div class="eyebrow">场景 · 剧情 · 载具 · AI 协作</div>
+    <h1>公民文艺生产综合自动化系统</h1>
     <p>导入模型和动作，写对白，选表情。工程和全部素材会装进一个工程包。</p>
     <label class="field"><span>新工程名称</span><input id="new-name" value="我的 VRM 故事"></label>
     <div class="welcome-actions">${button('新建工程', 'new-project', 'class="primary"')}${button('打开工程包', 'open-project')}</div>
-    <small>新建时选择保存位置，程序会建立一个 .vrmg 单文件工程包。</small>
+    <small>新建时选择保存位置，程序会建立一个 .vrmg 单文件工程包。模型与动作由制作者自行导入。</small>
+    <div class="welcome-actions">${button('编辑器设置', 'editor-settings')}${button('第三方声明与许可', 'third-party-notices')}</div>
     ${recentProjects.length ? `<div class="recent-projects"><h2>最近打开</h2>${recentProjectButtons()}</div>` : ''}
   </div></main>`;
 }
@@ -1463,33 +1493,38 @@ function renderRecentProjectsModal() {
       ${recentProjects.length ? recentProjectButtons() : '<p>还没有打开过工程包。</p>'}</div></div>`);
 }
 function renderEditor() {
+  actIntro.cancel();
   roleDetails.close(false);
   dialogueCamera?.dispose();dialogueCamera=null;
   previewResizer?.dispose();previewResizer=null;
   sceneAnimationDialog.close(false);cancelSceneAnimations();
   events.cancel();
   stage?.destroy();
+  if(modulePanel==='ui'){
+    stage=null;
+    app.innerHTML=`<div class="editor module-editor ui-module-editor"><header class="topbar"><div class="brand">✦ <b>游戏 UI 编辑器</b></div><div class="project-title"><span id="save-state">✓ 已应用到工程</span></div><div class="editor-history-controls" role="group" aria-label="撤销和重做">${button('↶ 撤销','editor-undo')}${button('↷ 重做','editor-redo')}</div><div class="editor-tools-row"><nav>${button('保存并应用到工程','save')}${button('☾','toggle-editor-theme')}${button('设置','editor-settings')}</nav></div></header><div id="sidebar-body" hidden></div><footer class="status"><span>${escape(directory)}</span><span>独立窗口 · 保存后同步到工程</span></footer></div>`;
+    applyEditorTheme();updateHistoryButtons();editorSaveNotice.refresh();renderGameUiPicker();return;
+  }
   if (activePanel === 'assets') activePanel = 'story';
   app.innerHTML = `<div class="editor ${modulePanel?"module-editor":"story-editor"}">
-    <header class="topbar"><div class="brand">✦ <b>VRM Galgame</b><span>编辑器</span></div>
+    <header class="topbar"><div class="brand">✦ <b>公民文艺生产综合自动化系统</b></div>
       <div class="project-title"><input id="text-search" placeholder="查找与替换剧情、角色名称…" aria-label="查找剧情文本，按回车打开替换工具"><button class="search-open-button" data-action="search-open" title="查找与替换">⌕</button><span id="save-state">✓ 已保存</span></div>
       <div class="editor-history-controls" role="group" aria-label="撤销和重做">${button('↶ 撤销', 'editor-undo', 'disabled')}${button('↷ 重做', 'editor-redo', 'disabled')}</div>
       <div class="editor-tools-row">${modulePanel?'<nav>'+button('保存并应用到工程','save')+button('☾','toggle-editor-theme')+button('重播动作','restart-character-preview','title="重新播放预览人物动作"')+'</nav>':`<nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('游戏 UI', 'game-ui')}${button('剧情助手', 'assistant-open')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}${button('编辑器 ▦', 'choose-editor','aria-label="选择编辑器"')}${button('重播动作','restart-character-preview','title="重新播放预览人物动作"')}</nav><div class="story-current" id="story-current" role="status"></div>`}</div>
     </header>
     <div class="workspace ${modulePanel?'':'story-workspace'}">
-      ${modulePanel?'<aside class="sidebar"><div class="module-sidebar-title">'+moduleLabels[modulePanel]+'编辑器<span id="stage-caption" class="module-context-caption"></span></div><div id="sidebar-body"></div></aside>':'<div class="story-left"><aside class="inspector"><div class="inspector-heading">当前对白编辑</div><div id="inspector-body"></div></aside><aside class="sidebar"><div id="sidebar-body"></div></aside></div>'}
+      ${modulePanel?'<aside class="sidebar"><div class="module-sidebar-title">'+editorLabel(moduleLabels[modulePanel]+'编辑器')+'<span id="stage-caption" class="module-context-caption"></span></div><div id="sidebar-body"></div></aside>':'<div class="story-left"><aside class="inspector"><div class="inspector-heading">当前对白编辑</div><div id="inspector-body"></div></aside><aside class="sidebar"><div id="sidebar-body"></div></aside></div>'}
       <main class="center">
-        <div class="stage-frame"><div id="scene-bg"></div><div id="stage-canvas"></div><div id="title-preview" class="title-composition hidden"></div>
+        <div class="player editor-preview-player" data-game-ui="${normalizeGameUi(project.ui.gameTheme)}"><div class="stage-frame"><div id="scene-bg"></div><div id="stage-canvas"></div><div id="title-preview" class="title-composition hidden"></div>
           <div id="character-preview" class="character-editor-preview hidden"></div>
           <div id="stage-placeholder">导入 VRM 角色后，这里会显示 3D 人物</div>
           <div id="speaker-portrait" class="speaker-portrait hidden"><img alt="说话角色头像"></div>
-          <div id="dialogue" class="dialogue"><div class="speaker" id="dialogue-speaker"></div><div id="dialogue-text"></div></div>
-          <button type="button" id="auto-play-button" class="auto-play-button hidden" data-action="auto-toggle" aria-pressed="false">▶ 自动播放</button>
+          ${dialogueMarkup()}<div data-preview-controls inert>${gameControlsMarkup({preview:true})}</div>
           <div id="choice-list"></div>
           <div id="play-controls">${button('退出试玩', 'stop-play')}</div>
-          <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
+          <div id="act-loading" class="act-loading hidden">${loadingSpinner()}</div>
           <div id="game-fps" class="game-fps hidden" aria-label="当前帧数">— FPS</div>
-        </div>
+        </div></div>
         <section class="asset-dock" aria-label="常驻素材库"><div class="asset-dock-heading"><strong>素材库</strong><small>图片直接显示缩略图；在这里导入、分类、删除素材</small></div><div id="asset-dock-tabs" class="asset-dock-tabs" role="tablist" aria-label="素材类型"></div><div id="asset-dock-body" class="asset-dock-body"></div></section>
       </main>
       ${modulePanel?'<aside class="inspector"><div class="inspector-heading">属性</div><div id="inspector-body"></div></aside>':'<aside class="dialogue-column"><div id="dialogue-list-body"></div></aside>'}
@@ -1515,9 +1550,11 @@ function renderEditor() {
   editorSaveNotice.refresh();
   renderSidebar();
   renderInspector();
+  if(modulePanel==='ui'){document.querySelector('.editor').classList.add('ui-module-editor');stage.renderSuspended=true;renderGameUiPicker();}
   updatePreview();
 }
 function renderSidebar() {
+  if(modulePanel==='ui'){const picker=document.querySelector('#game-ui-picker');if(picker&&!picker.contains(document.activeElement))renderGameUiPicker();return;}
   if(!modulePanel){if(activePanel!=="story"){openEditorModule(activePanel).catch(error=>toast(error.message,true));activePanel="story";}renderStoryLists();renderAssetDock();return;}
   document.querySelectorAll('[data-panel]').forEach(node => node.classList.toggle('active', node.dataset.panel === activePanel));
   const body = document.querySelector('#sidebar-body');
@@ -1534,7 +1571,7 @@ function renderSidebar() {
     body.innerHTML = `<div class="section-heading">角色 ${button('＋ 新增', 'add-character')}</div>
       <div class="list">${project.characters.map((item, index) =>
         `<button class="list-row ${index === selectedCharacter ? 'selected' : ''}" data-action="select-character" data-index="${index}">
-          <span class="number">✦</span><span>${escape(item.name)}</span><small>${item.modelId ? (isFbxModel(item.modelId)?'FBX':'VRM') : '未设模型'}</small></button>`).join('')}</div>
+          <span class="number">✦</span><span>${escape(item.name)}</span><small>${item.modelId ? ({vrm:'VRM',fbxCharacter:'FBX',mmdCharacter:'MMD'}[asset(item.modelId)?.type]||'未知模型') : '未设模型'}</small></button>`).join('')}</div>
       <div class="sidebar-note">角色只需设置一次。对白选中角色后就能调用它的模型。</div>`;
   } else if (activePanel === 'render') {
     if(isEvent(act())){selectedAct=Math.max(0,project.acts.findIndex(a=>!isEvent(a)&&a.steps?.length));selectedStep=0;}
@@ -1570,9 +1607,17 @@ function objectContext(target){
  if(target.closest('#inspector-body')){if(isEvent(act())&&activePanel==='story')return{kind:'act',source:act()};const kind={render:'renderPreset',story:'step',characters:'character',items:'item',knowledge:'book',title:'titleActor'}[activePanel];return{kind,source:{renderPreset:editedRenderPreset(),step:step(),character:project.characters[selectedCharacter],item:project.items[selectedItem],book:project.knowledgeBooks?.[library.editorState().selected]}[kind],ownerId:kind==='step'?act()?.id:undefined};}
  return null;
 }
+function applyUiDraft(picker){
+ const patch={gameTheme:normalizeGameUi(picker?.querySelector('[name=game-ui-skin]:checked')?.value||project.ui.gameTheme)};
+ document.querySelector('.editor-preview-player')?.setAttribute('data-game-ui',patch.gameTheme);
+ if(Object.entries(patch).some(([k,v])=>JSON.stringify(project.ui[k])!==JSON.stringify(v))){Object.assign(project.ui,patch);markDirty({label:'游戏 UI 与加载动画'});}
+}
 function renderGameUiPicker() {
   document.querySelector('#game-ui-picker')?.remove();
-  document.querySelector('.editor')?.insertAdjacentHTML('beforeend', gameUiPicker(project.ui.gameTheme));
+  document.querySelector('.editor')?.insertAdjacentHTML('beforeend', gameUiPicker(project.ui.gameTheme,project.ui.loading,project.ui.layout));
+  const picker=document.querySelector('#game-ui-picker');
+  if(modulePanel==='ui'){picker.classList.add('ui-module-content');picker.removeAttribute('role');picker.removeAttribute('aria-modal');picker.style.setProperty('top',document.querySelector('.topbar').getBoundingClientRect().bottom+'px','important');}
+  bindUiPreview(picker,null,{background:asset(project.title.backgroundId)?assetUrl(asset(project.title.backgroundId)):'',portrait:asset(project.characters.find(c=>c.portraitId)?.portraitId)?assetUrl(asset(project.characters.find(c=>c.portraitId)?.portraitId)) : ''});
   document.querySelector('#game-ui-picker input:checked')?.focus();
 }
 function captureObject(context){
@@ -1632,14 +1677,14 @@ function renderStoryLists(){
  const body=document.querySelector('#sidebar-body'),right=document.querySelector('#dialogue-list-body');if(!body||!right||!project)return;
  const current=act(),changed=storyListAct!==current?.id;storyListAct=current?.id||'';
  body.innerHTML=`<div class="section-heading">幕列表 <span class="heading-actions">${button('＋ 幕','add-act')}${button('＋ 事件','event-add')}${button('＋ 过场','event-add-cutscene')}${button('＋ 空战','event-add-aircombat')}</span></div><div class="list act-list" data-order-list="act">${project.acts.map((item,index)=>`<button class="list-row sortable-row ${index===selectedAct?'selected':''}" draggable="true" data-order-kind="act" data-order-index="${index}" data-action="select-act" data-index="${index}" ${index===selectedAct?'aria-current="true"':''}><span class="number">${String(index+1).padStart(2,'0')}</span><span>${isEvent(item)?'▤ ':''}${escape(item.name)}</span><small>${isEvent(item)?(item.event?.type==='aircombat'?'空战':item.event?.type==='cutscene'?'过场':'事件'):item.steps.length+'句'}</small><span class="drag-grip">⋮⋮</span></button>`).join('')}</div>`;
- right.innerHTML=`<div class="section-heading"><strong id="stage-caption">${escape(current?.name||'本幕对白')}</strong><small> · 只显示当前幕</small><span class="heading-actions">${button('＋ 新增对白','add-step',current&&!isEvent(current)?'':'disabled')}</span></div>${current&&!isEvent(current)?`<div class="list step-list" data-order-list="step">${current.steps.map((line,index)=>`<button class="list-row sortable-row ${index===selectedStep?'selected':''}" draggable="true" data-order-kind="step" data-order-index="${index}" data-action="select-step" data-index="${index}" ${index===selectedStep?'aria-current="true"':''}><span class="number">${index+1}</span><span><b>${escape(line.speaker||character(line.characterId)?.name||'旁白')}</b><small>${escape(line.text||'空对白')}</small></span><span class="drag-grip">⋮⋮</span></button>`).join('')||'<p class="tip">点击“新增对白”写第一句。</p>'}</div>`:'<p class="sidebar-note">当前是事件、过场或空战幕，设置在左上方；载具建造在独立窗口。</p>'}`;
+ right.innerHTML=`<div class="section-heading"><strong id="stage-caption">${escape(current?.name||'本幕对白')}</strong><small> · 只显示当前幕</small><span class="heading-actions">${button('＋ 新增对白','add-step',current&&(!isEvent(current)||current.event?.type==='aircombat')?'':'disabled')}</span></div>${current?.event?.type==='aircombat'?airDialogueList(current,{project:()=>project,escape},selectedStep):current&&!isEvent(current)?`<div class="list step-list" data-order-list="step">${current.steps.map((line,index)=>`<button class="list-row sortable-row ${index===selectedStep?'selected':''}" draggable="true" data-order-kind="step" data-order-index="${index}" data-action="select-step" data-index="${index}" ${index===selectedStep?'aria-current="true"':''}><span class="number">${index+1}</span><span><b>${escape(line.speaker||character(line.characterId)?.name||'旁白')}</b><small>${escape(line.text||'空对白')}</small></span><span class="drag-grip">⋮⋮</span></button>`).join('')||'<p class="tip">点击“新增对白”写第一句。</p>'}</div>`:'<p class="sidebar-note">当前是事件、过场或空战幕，设置在左上方；载具建造在独立窗口。</p>'}`;
  if(changed)right.parentElement.scrollTop=0;
- if(storyListStep!==step()?.id){storyListStep=step()?.id||'';right.querySelector('.selected')?.scrollIntoView({block:'nearest'});}
+ const currentLineId=current?.event?.type==='aircombat'?current.event.combat.dialogues[selectedStep]?.id||'air-settings':step()?.id||'';if(storyListStep!==currentLineId){storyListStep=currentLineId;right.querySelector('.selected')?.scrollIntoView({block:'nearest'});}
  updateStoryCurrent();
 }
 function updateStoryCurrent(){
  const node=document.querySelector('#story-current');if(!node)return;
- node.textContent=act()?.event?.type==='aircombat'?`正在编辑：空战幕「${act().name}」`:isEvent(act())?`正在编辑：第 ${selectedAct+1} 个事件 · ${act()?.name||''}`:`正在编辑：第 ${selectedAct+1} 幕「${act()?.name||''}」 · ${step()?'第 '+(selectedStep+1)+' 句对白':'还没有对白'}`;
+ setEditorText(node,act()?.event?.type==='aircombat'?`正在编辑：空战幕「${act().name}」`:isEvent(act())?`正在编辑：第 ${selectedAct+1} 个事件 · ${act()?.name||''}`:step()?`正在编辑：第 ${selectedAct+1} 幕「${act()?.name||''}」 · 第 ${selectedStep+1} 句对白`:`正在编辑：第 ${selectedAct+1} 幕「${act()?.name||''}」 · 还没有对白`);
  node.title=node.textContent;
 }
 let cameraEditOwner=null;
@@ -1870,13 +1915,13 @@ function renderAssetDock() {
   const settingsOpen = body.querySelector('.asset-dock-settings')?.open || false;
   const tabs = [['image', '图像'], ['vrm', 'VRM'], ['fbxCharacter','FBX 人物'], ['mmdCharacter','MMD 人物'], ['sceneModel','物品与模型'], ['motion', '动作'], ['music', '音乐'], ['effect', '音效'], ['voice', '配音'], ['video', '视频']];
   document.querySelector('#asset-dock-tabs').innerHTML = tabs.map(([key, label]) =>
-    `<button type="button" role="tab" aria-selected="${type === key}" class="${type === key ? 'active' : ''}" data-action="asset-tab" data-type="${key}">${label}<small>${byType(key).length}</small></button>`).join('');
+    `<button type="button" role="tab" aria-selected="${type === key}" class="${type === key ? 'active' : ''}" data-action="asset-tab" data-type="${key}">${editorLabel(label)}<small>${byType(key).length}</small></button>`).join('');
   if (type === 'voice') { renderVoiceLibrary(body, folderId, folders, selectedFolder, scroll); return; }
   refreshVrmThumbnails();
   const visible = byType(type).filter(item => folderId ? item.folderId === folderId : !folders.some(folder => folder.id === item.folderId));
   modelThumbnails.refresh(visible);
   body.innerHTML = `<div class="asset-browser-toolbar">
-      <div class="asset-browser-location">${folderId ? button('← 返回', 'asset-folder-back') : '<strong>全部文件夹</strong>'}<span>${escape(selectedFolder?.name || (folderId ? '文件夹' : '未分类素材'))}</span></div>
+      <div class="asset-browser-location">${folderId ? button('← 返回', 'asset-folder-back') : '<strong>全部文件夹</strong>'}<span>${selectedFolder?escape(selectedFolder.name):editorLabel(folderId?'文件夹':'未分类素材')}</span></div>
       <div class="asset-browser-actions">${selectedFolder?.locked||type==='motion'&&!folderId?'':folderId?button('改名','rename-asset-folder',`data-folder-id="${escape(folderId)}"`):button('＋ 文件夹','add-asset-folder',`data-type="${type}"`)}${button('＋ 导入', 'import', `data-type="${type}" data-folder-id="${escape(folderId)}"`)}</div>
     </div><div class="asset-file-area" data-asset-dropzone="${type}" aria-label="${escape(type)} 素材文件区">
       <div class="asset-tile-grid">${!folderId ? folders.map(folder => renderAssetFolderTile(folder)).join('') : ''}${visible.map(item => renderAssetTile(item, folders)).join('')}</div>
@@ -2081,11 +2126,15 @@ function propEditor(item) {
       return `<div class="prop-axis" data-prop-axis="${escape(prop.id)}.${kind}.${axis}"><label class="prop-number"><span>${['X · 左右','Y · 上下','Z · 前后'][axis]}</span><input type="number" ${data} data-mode="number" min="${kind==='scale'?.001:-10000}" max="10000" step="${kind==='rotation'?.1:.001}" value="${Number(value.toFixed(5))}"></label><label><span>细调</span><input type="range" ${data} data-mode="fine" min="-100" max="100" step="1" value="0"></label></div>`;
     }).join('')}</details>`).join('')}<p class="tip">细调一次：位置 0.001 米、旋转 0.1 度、缩放 0.001。松开细调滑块后会回到中间，保留修改结果。模型先按最长边约 0.8 米摆放。</p>${button('移除这个绑定','remove-character-prop',`data-prop-id="${escape(prop.id)}" class="danger"`)}</details>`).join('')}</section>`;
 }
+function offstageEditor(line){
+ const role=character(line.characterId);if(!isLiveModel(role?.modelId)||Object.values(line.cast||{}).some(c=>c.characterId===line.characterId))return '';
+ const off=offstageSettings(line);return `<section class="offstage-motion-editor"><b>场外头像动作</b><p class="tip">人物不上场时，模型在缓存中隐藏，所选动作仍会反映在可动头像上。</p><select data-offstage-motion>${options(motionsForCharacter(project,line.characterId),off.motionId,'自然待机')}</select>${motionAdvanced(off,'offstage')}</section>`;
+}
 function castEditor(currentAct, slot) {
   const settings = castSettingsOf(currentAct, slot);
   const actorId = settings.characterId;
   const slider=(key,label,value,min,max,stepSize,unit='')=>preciseTransform(label,value,key.startsWith('offset')?-100:key==='yaw'||key==='pitch'?-360:min,key.startsWith('offset')?100:key==='yaw'||key==='pitch'?360:max,`data-cast-adjust="${slot}.${key}"`,`data-cast-output="${slot}.${key}"`,unit,key==='yaw'||key==='pitch'?.1:key==='size'?.1:.01);
-  return `<details class="cast-editor" ${actorId && actorId===step()?.characterId?'open':''}><summary>${castSlotLabels[slot]} · ${escape(character(actorId)?.name || '未选择')}</summary>
+  return `<details class="cast-editor" ${actorId && actorId===step()?.characterId?'open':''}><summary>${editorLabel(castSlotLabels[slot])} · ${character(actorId)?.name?escape(character(actorId).name):editorLabel('未选择')}</summary>
     <div class="cast-editor-body">
       ${field('角色', `<select data-cast-slot="${slot}">${options(project.characters.filter(item => item.modelId || item.id === actorId), actorId, '此位置无人')}</select>`)}
       ${actorId ? `${field('这一句的动作', `<select data-cast-motion="${slot}">${options(motionsForCharacter(project,actorId), settings.motionId, '保持站立')}</select>`)}
@@ -2146,23 +2195,26 @@ function renderSelectionEditor(value,scope){
 function renderPresetEditor(entry){
  if(!entry)return `<div class="render-preset-empty"><p>在这里制作可以重复使用的画面预设。</p>${button('＋ 新建渲染预设','add-render-preset')}</div>`;
  const settings=entry.settings;
- return `${field(helpLabel('预设名称','presetName'),`<input class="render-preset-name" data-render-preset-name value="${escape(entry.name)}" maxlength="100">`)}<div class="inline-actions">${button('复制预设','duplicate-render-preset')}${button('删除预设','delete-render-preset','class="danger"')}</div><p class="render-preset-help">调整会保存到这个预设。选用它的对白、标题会同步更新；左侧参考镜头仅用于预览。</p><h3>预设基础调色</h3>${Object.keys(colorAdjustments).map(key=>field(helpLabel({brightness:'亮度',contrast:'对比度',saturation:'饱和度'}[key],key),`<div class="npr-slider"><input type="range" data-preset-color="${key}" min="0" max="200" step="1" value="${settings[key]}"><input type="number" data-preset-color="${key}" min="0" max="200" step="1" value="${settings[key]}"></div>`)).join('')}${Object.entries(filterGroups).map(([group,name])=>`<details class="npr-filter-group"><summary>${name}</summary>${group==='depth'?`<p class="tip">焦点附近清晰，前后逐渐虚化。</p>${button('按画面人物对焦','dof-focus','data-render-scope="preset"')+helpLabel('','focus')}`:''}${customFilterSpecs.filter(spec=>spec[6]===group).map(([key,label,min,max,step])=>field(helpLabel(label,key),min==='color'?`<input type="color" data-preset-filter="${key}" value="${settings.filters[key]}">`:`<div class="npr-slider"><input type="range" data-preset-filter="${key}" min="${min}" max="${max}" step="${step}" value="${settings.filters[key]}"><input type="number" data-preset-filter="${key}" min="${min}" max="${max}" step="${step}" value="${settings.filters[key]}"></div>`)).join('')}</details>`).join('')}`;
+ return `${field(helpLabel('预设名称','presetName'),`<input class="render-preset-name" data-render-preset-name value="${escape(entry.name)}" maxlength="100">`)}<div class="inline-actions">${button('复制预设','duplicate-render-preset')}${button('删除预设','delete-render-preset','class="danger"')}</div><p class="render-preset-help">调整会保存到这个预设。选用它的对白、标题会同步更新；左侧参考镜头仅用于预览。</p><h3>预设基础调色</h3>${Object.keys(colorAdjustments).map(key=>field(helpLabel({brightness:'亮度',contrast:'对比度',saturation:'饱和度'}[key],key),`<div class="npr-slider"><input type="range" data-preset-color="${key}" min="0" max="200" step="1" value="${settings[key]}"><input type="number" data-preset-color="${key}" min="0" max="200" step="1" value="${settings[key]}"></div>`)).join('')}${Object.entries(filterGroups).map(([group,name])=>`<details class="npr-filter-group"><summary>${editorLabel(name)}</summary>${group==='depth'?`<p class="tip">焦点附近清晰，前后逐渐虚化。</p>${button('按画面人物对焦','dof-focus','data-render-scope="preset"')+helpLabel('','focus')}`:''}${customFilterSpecs.filter(spec=>spec[6]===group).map(([key,label,min,max,step])=>field(helpLabel(label,key),min==='color'?`<input type="color" data-preset-filter="${key}" value="${settings.filters[key]}">`:`<div class="npr-slider"><input type="range" data-preset-filter="${key}" min="${min}" max="${max}" step="${step}" value="${settings.filters[key]}"><input type="number" data-preset-filter="${key}" min="${min}" max="${max}" step="${step}" value="${settings.filters[key]}"></div>`)).join('')}</details>`).join('')}`;
 }
 function spatialCameraEditor(scope){
  const value=normalizeSpatialCamera(scope==='title'?project.title.spatialCamera:project.ui.spatialCamera);
  return `<details class="spatial-camera-editor"><summary>${scope==='title'?'标题':'对白'}空间镜头</summary>${field(helpLabel('鼠标轻微跟随','spatialEnabled'),`<select data-spatial-camera="enabled" data-spatial-scope="${scope}"><option value="off" ${!value.enabled?'selected':''}>关闭</option><option value="on" ${value.enabled?'selected':''}>开启</option></select>`)}${field(helpLabel('跟随强度','spatialStrength'),`<div class="npr-slider"><input type="range" data-spatial-camera="strength" data-spatial-scope="${scope}" min="0" max="100" step="1" value="${Math.round(value.strength*100)}"><input type="number" data-spatial-camera="strength" data-spatial-scope="${scope}" min="0" max="100" step="1" value="${Math.round(value.strength*100)}" aria-label="跟随强度百分比"></div>`)}<p class="tip">鼠标移动时，三维镜头轻微摆动。${scope==='title'?'只用于标题界面。':'用于整个工程的对白画面。'}文字和按钮不跟着移动。</p></details>`;
 }
 function renderInspector() {
+  if(modulePanel==='ui')return;
   updateStoryCurrent();
   sceneAnimationDialog.close(false);
   if(activePanel==='items'){const item=project.items[selectedItem],body=document.querySelector('#inspector-body');body.innerHTML=item?`<div class="inspector-content"><h2>玩家物品设置</h2>${field('名字',`<input data-item-field="name" maxlength="100" value="${escape(item.name)}">`)}${asset(item.imageId)?`<img class="inventory-editor-image" src="${escape(assetUrl(asset(item.imageId)))}" alt="${escape(item.name)}">`:'<p class="tip">还没有立绘。</p>'}${button('上传物品立绘（自动整理为 1:1）','upload-inventory-image')}${field('物品介绍（建议约 100 字）',`<textarea data-item-field="description" maxlength="3000" placeholder="写清用途、来历和特点">${escape(item.description||'')}</textarea>`)}<p class="tip">所有物品统一管理。名字、立绘、介绍都填写后才可用于对白；是否扣除由分支选项决定。</p>${button('删除物品','delete-inventory-item','class="danger"')}</div>`:'<p class="tip">先新增物品。</p>';updatePreview();return;}
   if (activePanel === 'knowledge') { library.editor(); return; }
   const body = document.querySelector('#inspector-body');
-  if (isEvent(act()) && activePanel==='story') { body.innerHTML = events.editor(act()); return; }
+  if (isEvent(act()) && activePanel==='story') { body.innerHTML = act().event?.type==='aircombat'&&selectedStep<act().event.combat.dialogues.length?`<div class="inspector-content">${airDialogueEditor(act(),{project:()=>project,escape},selectedStep)}</div>`:events.editor(act()); return; }
   if (activePanel === 'characters') {
     const item = project.characters[selectedCharacter];
     body.innerHTML = item ? `<div class="inspector-content"><h2>角色设置</h2>
       ${field('角色名字', input('character.name', item.name))}
+      ${field('姓名颜色', `<input type="color" data-field="character.nameColor" value="${characterNameColor(item)}" aria-label="姓名颜色">`)}
+      <p class="tip">每个角色单独设置，跟随对白姓名显示。</p>
       ${field('人物模型', select('character.modelId', actorModels(), item.modelId, '请选择模型'))}
       ${!isFbxModel(item.modelId) ? `<label class="field"><span>自动说话嘴型</span><select data-field="character.autoMouth"><option value="on" ${item.autoMouth !== false ? 'selected' : ''}>开启（默认）</option><option value="off" ${item.autoMouth === false ? 'selected' : ''}>关闭</option></select></label>
       <p class="tip">跟随对白文字显示动嘴，标点处稍作停顿；文字显示完就停止。有 A、I、U、E、O 嘴型的模型可使用。</p>` : '<p class="tip">FBX 人物只播放身体动作。</p>'}
@@ -2188,6 +2240,7 @@ function renderInspector() {
     const title = project.title;
     body.innerHTML = `<div class="inspector-content"><h2>标题画面</h2>
       ${title.logoImageId==='__none__'?'':field('游戏名称', `<input id="project-name" value="${escape(project.name)}" aria-label="游戏名称">`)}
+      ${field('标题副标题', `<input data-title-field="subtitle" value="${escape(title.subtitle||'')}" placeholder="例如：第一章 / 写给明天的信">`)}
       ${field('Logo 图片', `<select data-title-field="logoImageId"><option value="__none__" ${title.logoImageId==='__none__'?'selected':''}>不显示（留空）</option>${options(byType('image'), title.logoImageId, '使用游戏名称')}</select>`)}
       <div data-copy-environment>${field('标题场景', `<select data-title-field="environmentId">${options(project.environments || [], title.environmentId, '默认天空')}</select>`)}${button('编辑标题环境（独立窗口）','edit-environment')}</div>
       ${field('标题音乐', `<select data-title-field="bgmId">${options(byType('music'), title.bgmId, '无音乐')}</select>`)}
@@ -2222,6 +2275,7 @@ function renderInspector() {
     ${current ? `
       ${field('说话角色', select('step.characterId', project.characters, current.characterId, '旁白 / 场外说话'))}
       ${field('显示名字', input('step.speaker', current.speaker, '留空时用角色名字'))}
+      ${offstageEditor(current)}
     <section class="dialogue-camera-options"><b>本句镜头</b><p class="tip">${current.camera?'已设置独立镜头':'沿用之前对白的镜头；本幕开始时使用初始镜头'}</p><div class="inline-actions">${button('镜头 · WASD 调整','edit-dialogue-camera')}${current.camera?button('清除本句镜头','clear-dialogue-camera'):''}</div></section>
       ${field('对白内容', textarea('step.text', current.text, '在这里写台词'))}
       <hr><h3>这一句在场的人物</h3><p class="tip">最多 30 人，默认每排 3 人、共 10 排。前排左、中、右保持原来的位置，后面各排依次向后。人物的位置仍可单独调整；说话角色可以不在队列中。</p>
@@ -2256,7 +2310,7 @@ function renderCastExpressionControls() {
     const names = record.vrm.expressionManager?.expressions?.map(item => item.expressionName) || [];
     node.innerHTML = names.length ? names.map(name => {
       const value = Math.round(Math.max(0, Math.min(1, Number(weights[name]) || 0)) * 100);
-      return `<label class="expression-slider"><span title="${escape(name)}">${escape(expressionLabels[name] || name)}</span>
+      return `<label class="expression-slider"><span title="${escape(name)}">${expressionLabels[name]?editorLabel(expressionLabels[name]):escape(name)}</span>
         <input type="range" data-cast-expression="${slot}.${escape(name)}" min="0" max="100" step="1" value="${value}">
         <output data-cast-expression-output="${slot}.${escape(name)}">${value}%</output></label>`;
     }).join('') : '<p class="tip">这个模型没有可调表情。</p>';
@@ -2269,7 +2323,7 @@ function renderTitleExpressionControls() {
     const names=record?.vrm?.expressionManager?.expressions?.map(expression=>expression.expressionName)||[];
     if(!names.length){node.innerHTML='<p class="tip">读取人物后会显示可调的表情。</p>';continue;}
     node.innerHTML=names.map(name=>{const value=Math.round((Number(actor.expressionWeights[name])||0)*100);
-      return `<label class="expression-slider"><span>${escape(expressionLabels[name]||name)}</span><input type="range" data-title-actor-id="${actor.id}" data-title-actor-expression="${escape(name)}" min="0" max="100" step="1" value="${value}"><output>${value}%</output></label>`;
+      return `<label class="expression-slider"><span>${expressionLabels[name]?editorLabel(expressionLabels[name]):escape(name)}</span><input type="range" data-title-actor-id="${actor.id}" data-title-actor-expression="${escape(name)}" min="0" max="100" step="1" value="${value}"><output>${value}%</output></label>`;
     }).join('')+button('表情全部归零','reset-title-expressions',`data-id="${actor.id}"`);
   }
 }
@@ -2288,13 +2342,14 @@ function renderExpressionControls() {
   const weights = expressionWeightsOf(current);
   node.innerHTML = names.map(name => {
     const value = Math.round(Math.max(0, Math.min(1, Number(weights[name]) || 0)) * 100);
-    return `<label class="expression-slider"><span title="${escape(name)}">${escape(expressionLabels[name] || name)}</span>
+    return `<label class="expression-slider"><span title="${escape(name)}">${expressionLabels[name]?editorLabel(expressionLabels[name]):escape(name)}</span>
       <input type="range" data-expression="${escape(name)}" min="0" max="100" step="1" value="${value}">
       <output data-expression-output="${escape(name)}">${value}%</output></label>`;
   }).join('') + `<div class="inline-actions">${button('表情全部归零', 'reset-expressions')}</div>`;
 }
 async function updatePreview() {
-  if (!stage || !project || playing) return;
+  if (!stage || !project || playing || modulePanel==='ui') return;
+  document.querySelector('.editor-preview-player')?.setAttribute('data-game-ui',normalizeGameUi(project.ui.gameTheme));
   stage.spatialCamera.setSettings(['story','render'].includes(activePanel)&&!isEvent(act())?project.ui.spatialCamera:{});
   if(dialogueCamera?.editing){if(cameraEditOwner?.actId===act()?.id&&cameraEditOwner?.stepId===step()?.id)return;dialogueCamera.cancelEdit();}
   const request = ++previewRequest;
@@ -2317,7 +2372,7 @@ async function updatePreview() {
   document.querySelector('.stage-frame')?.classList.remove('title-mode');
   stage.setCameraAngle(0);
   const currentAct = act();
-  if (isEvent(currentAct)) { document.querySelector('#stage-caption').textContent = currentAct.name; await events.show(currentAct, true); return; }
+  if (isEvent(currentAct)) { document.querySelector('#stage-caption').textContent = currentAct.name;if(currentAct.event?.type==='aircombat'&&selectedStep<currentAct.event.combat.dialogues.length)await events.previewAirDialogue(currentAct,currentAct.event.combat.dialogues[selectedStep]);else await events.show(currentAct, true); return; }
   events.cancel();
   const current = step();
   const modelAsset = modelForStep(current);
@@ -2357,6 +2412,13 @@ function eventBackdrop(node) {
   const previous = project.acts.slice(0, index).findLast(item => !isEvent(item));
   return { chapter: previous, backgroundId: node.event.backgroundId || previous?.backgroundId || project.title.backgroundId || '' };
 }
+async function showAirDialogue(line,valid=()=>true){
+  if(!valid())return;clearTyping();voice.pause();airDialogueLine=line;
+  await updateSpeakerPortrait(line.characterId,true);if(!valid())return;
+  showDialogue(line.speaker||character(line.characterId)?.name||'旁白',line.text,true,line.characterId);recordViewedDialogue(line);
+  const clip=asset(line.voiceId);if(clip){voice=takePreparedAudio(line.voiceId)||voice;voice.muted=false;voice.volume=audioSettings.master*audioSettings.voice;voice.src=assetUrl(clip);voice.play().catch(()=>{});}
+}
+function clearAirDialogue(){airDialogueLine=null;clearTyping();voice.pause();document.querySelector('#dialogue')?.classList.remove('visible');updateSpeakerPortrait('',false);}
 async function prepareEventScene(node) {
   cancelSceneAnimations();
   updateSpeakerPortrait('',false);
@@ -2368,6 +2430,7 @@ async function prepareEventScene(node) {
   document.querySelector('#auto-play-button')?.classList.add('hidden');
   document.querySelector('#act-loading')?.classList.add('hidden');
   if(node.event.type==='cutscene'){document.querySelector('#scene-bg video')?.pause();setSceneWeather();await stage.showCast([], '', false);return;}
+  if(node.event.type==='aircombat'){const pending=previewRequest,loading=document.querySelector('#act-loading');loading?.classList.remove('hidden');try{await stage.prepareAct(actResourceEntries(project,node));await prepareCurrentActMedia(node);}finally{if(pending===previewRequest)loading?.classList.add('hidden');}return;}
   const backdrop = eventBackdrop(node), bg = asset(backdrop.backgroundId);
   const sameBackground = displayedBackgroundId === backdrop.backgroundId;
   setSceneWeather();
@@ -2418,9 +2481,13 @@ function playEventSignal() {
 async function handleEventAction(action, node) {
   if (action === 'event-confirm') { events.confirm(); return; }
   if (playing) return;
+  if(action==='event-air-ship-open'){const row=act().event.combat.ships[Number(node.dataset.index)];await bridge('openEditorModule',{module:'warship',project:structuredClone(project),revision:changeRevision,view:{selectedAct,vehicleId:row.blueprint.vehicleId}});return;}
+  if(action==='event-air-ship-add'){ensureShipLibrary(project);act().event.combat.ships.push({id:uid(),team:'enemy',count:1,x:0,z:-6500,heading:180,blueprint:structuredClone(project.vehicles.find(v=>v.vehicleType==='warship').blueprint)});markDirty();renderInspector();await updatePreview();return;}
   if(action==='event-air-open'){await bridge('openEditorModule',{module:'aircraft',project:structuredClone(project),revision:changeRevision,view:{selectedAct,selectedStep,aircraftRole:node.dataset.role||'aircraft'}});return;}
-  if(action==='event-air-test'){events.testAir(act());return;}
-  if(events.airAction(act(),action,node)){markDirty();renderSidebar();renderInspector();await updatePreview();return;}
+  if(action==='event-air-dialogue-select'||action==='event-air-settings'){selectedStep=action==='event-air-settings'?act().event.combat.dialogues.length:Number(node.dataset.index);renderSidebar();renderInspector();await updatePreview();return;}
+  if(action==='event-air-upload-fire'){const imported=await bridge('importAsset',{type:'audio'});if(!imported?.length)return;for(const item of imported){item.audioKind='effect';item.galleryImage=false;project.assets.push(item);}act().event.combat.fireSounds[node.dataset.weaponType]=imported[0].id;markDirty();renderAssetDock();renderInspector();return;}
+  if(action==='event-air-test'){await events.testAir(act());return;}
+  if(events.airAction(act(),action,node)){if(action==='event-air-dialogue-add')selectedStep=act().event.combat.dialogues.length-1;else if(action==='event-air-dialogue-up')selectedStep=Math.max(0,Number(node.dataset.index)-1);else if(action==='event-air-dialogue-down'||action==='event-air-dialogue-duplicate')selectedStep=Math.min(act().event.combat.dialogues.length-1,Number(node.dataset.index)+1);else if(action==='event-air-dialogue-remove')selectedStep=Math.min(Number(node.dataset.index),act().event.combat.dialogues.length);markDirty();renderSidebar();renderInspector();await updatePreview();return;}
   if(action==='event-add-aircombat'){
     const item=newEvent(uid(),uid());item.name='新空战幕';item.event=normalizeEvent({...item.event,type:'aircombat'});project.acts.splice(selectedAct+1,0,item);selectedAct++;selectedStep=0;activePanel='story';
   }
@@ -2474,9 +2541,9 @@ function setSceneWeather(chapter) {
 function weatherEditor(chapter) {
   const w = normalizeWeather(chapter.weather);
   const slider = (key,label,min=0,max=100) => field(label, `<input type="range" data-weather="${key}" min="${min}" max="${max}" step="1" value="${Math.round(w[key]*100)}"><output data-weather-output="${key}">${Math.round(w[key]*100)}%</output>`);
-  const toggle = (key,label) => `<label class="weather-toggle"><input type="checkbox" data-weather="${key}" ${w[key] ? 'checked' : ''}><span>${label}</span></label>`;
+  const toggle = (key,label) => `<label class="weather-toggle"><input type="checkbox" data-weather="${key}" ${w[key] ? 'checked' : ''}><span>${editorLabel(label)}</span></label>`;
   return `<section class="weather-editor"><h3>本幕天气</h3>
-    ${field('天气', `<select data-weather="type">${Object.entries(weatherNames).map(([key,name]) => `<option value="${key}" ${w.type===key?'selected':''}>${name}</option>`).join('')}</select>`)}
+    ${field('天气', `<select data-weather="type">${Object.entries(weatherNames).map(([key,name]) => `<option value="${key}" ${w.type===key?'selected':''}>${editorLabel(name)}</option>`).join('')}</select>`)}
     ${w.type !== 'none' ? `${slider('intensity','天气强度')}
     ${slider('wind','风速')}
     ${field('风向', `<select data-weather="direction"><option value="1" ${w.direction===1?'selected':''}>向右吹 →</option><option value="-1" ${w.direction===-1?'selected':''}>向左吹 ←</option></select>`)}
@@ -2631,9 +2698,9 @@ async function updateSpeakerPortrait(characterId, visible) {
   if(visible&&isLiveModel(item?.modelId)){
     image.removeAttribute('src');node.classList.add('live-portrait');node.classList.remove('hidden');
     try{
-      const current=playing?project.acts[playAct]?.steps[playStep]:step();
-      const weights=Object.values(current?.cast||{}).find(c=>c.characterId===characterId)?.expressionWeights||{};
-      const record=await stage.setLivePortrait(model,characterId,node,weights);
+      const current=airDialogueLine||(playing?project.acts[playAct]?.steps[playStep]:step());
+      const off=offstageSettings(current),weights=Object.values(current?.cast||{}).find(c=>c.characterId===characterId)?.expressionWeights||off.expressionWeights;
+      const record=await stage.setLivePortrait(model,characterId,node,weights,{motionAsset:asset(off.motionId),motionOptions:off.motionOptions,playbackKey:'offstage:'+current?.id});
       if(token!==portraitRequest)return;
       if(record)return;
     }catch(error){console.warn('实时头像暂时不可用',error.message);}
@@ -2651,7 +2718,8 @@ function showDialogue(speaker, text, visible = true, characterId = '') {
   node.classList.toggle('visible', visible || mode === 'editor');
   node.classList.toggle('custom-dialogue', Boolean(project.ui.dialogueImageId));
   document.querySelector('#dialogue-speaker').textContent = speaker;
-  if (mode === 'player' && playing && visible) startTyping(text, characterId);
+  node.style.setProperty('--speaker-color',characterNameColor(character(characterId)));
+  if (visible && ((mode === 'player' && playing) || airDialogueLine)) startTyping(text, characterId);
   else { clearTyping(); document.querySelector('#dialogue-text').textContent = text; }
   updateSpeakerPortrait(characterId, visible || mode === 'editor');
   node.style.backgroundImage = project.ui.dialogueImageId ? `url("${assetUrl(asset(project.ui.dialogueImageId))}")` : '';
@@ -2663,6 +2731,7 @@ function clearTyping() {
   typingTimer = null;
   typingCharacters = [];
   typingIndex = 0;
+  document.querySelector('.player .stage-frame')?.classList.remove('dialogue-speaking');
 }
 function finishTyping() {
   if (!typingTimer) return false;
@@ -2678,6 +2747,7 @@ function startTyping(value, characterId = project.acts[playAct]?.steps[playStep]
   const node = document.querySelector('#dialogue-text');
   if (!node) return;
   typingCharacters = Array.from(String(value || ''));
+  document.querySelector('.player .stage-frame')?.classList.add('dialogue-speaking');
   node.textContent = '';
   if (!typingCharacters.length) return;
   const role = character(characterId);
@@ -2751,7 +2821,7 @@ function loadAudioSettings() {
       if (Number.isFinite(Number(saved[key]))) audioSettings[key] = Math.max(0, Math.min(1, Number(saved[key])));
   } catch { /* Use the default volumes if old settings are invalid. */ }
   const savedSpeed = Number(localStorage.getItem(`vrm-text-speed-${project.id || project.name}`));
-  textSpeed = Number.isFinite(savedSpeed) && savedSpeed >= 5 && savedSpeed <= 100 ? savedSpeed : 35;
+  textSpeed = Number.isFinite(savedSpeed) && savedSpeed >= 5 && savedSpeed <= 100 ? savedSpeed : 5;
   cameraSpeed=Math.max(.85,Math.min(1.15,Number(localStorage.getItem('vrm-camera-speed-'+project.id))||1));
   const initialGraphics=window.__vrmAndroid?{aa:'fxaa',renderScale:75,shadows:'medium'}:{};
   try{graphicsPreferences=normalizeGraphics(JSON.parse(localStorage.getItem('vrm-player-graphics-'+project.id)||JSON.stringify(initialGraphics)));}catch{graphicsPreferences=normalizeGraphics(initialGraphics);}
@@ -2766,7 +2836,7 @@ function clearAutoAdvance() {
 function scheduleAutoAdvance(current) {
   clearAutoAdvance();
   if(maybeGrantCurrentItems())return;
-  if (events.active() || isEvent(project.acts[playAct]) || !autoPlay || !playing || !current || current.choices?.length || saveModalMode || typingTimer) return;
+  if (transitioning || events.active() || isEvent(project.acts[playAct]) || !autoPlay || !playing || !current || current.choices?.length || saveModalMode || typingTimer) return;
   const wait = Math.max(1800, Math.min(7000, 1100 + (current.text?.length || 0) * 95));
   const advance = () => { autoTimer = setTimeout(() => next(), wait); };
   if (current.voiceId && !voice.paused && !voice.ended) {
@@ -2777,12 +2847,14 @@ function scheduleAutoAdvance(current) {
 function updateAutoButton() {
   const button = document.querySelector('#auto-play-button');
   if (!button) return;
-  button.textContent = autoPlay ? '自动播放中' : '自动播放';
+  const label=button.querySelector('.game-button-label');
+  if(label)label.textContent=autoPlay?'自动播放中':'自动播放';else button.textContent=autoPlay?'自动播放中':'自动播放';
   button.title = autoPlay ? '关闭自动播放' : '开启自动播放';
   button.classList.toggle('active', autoPlay);
   button.setAttribute('aria-pressed', String(autoPlay));
 }
-async function showPlayStep() {
+async function showPlayStep({resume=false}={}) {
+  actIntro.cancel();
   stage.spatialCamera.setSettings(project.ui.spatialCamera);
   stage.spatialCamera.reset();
   dialogueCamera?.cancelTravel();
@@ -2797,6 +2869,8 @@ async function showPlayStep() {
   const currentAct = project.acts[playAct];
   const current = currentAct?.steps[playStep];
   if (!current) { stopPlay(); toast('故事播放完毕'); return; }
+  const introduceAct=!resume&&playStep===0&&(preparedAct!==playAct||cameraActId!==currentAct.id);
+  if(introduceAct){document.querySelector('#dialogue')?.classList.remove('visible');document.querySelector('#choice-list')?.replaceChildren();document.querySelector('#speaker-portrait')?.classList.add('hidden');voice.pause();}
   if (isEvent(currentAct)) {
     preparedAct=-1;transitioning=true;const loading=document.querySelector('#act-loading');loading?.classList.remove('hidden');
     try{await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,30)));await prepareCurrentActMedia(currentAct,()=>request===playRequest&&playing);if(request!==playRequest||!playing)return;const remaining=restoredEventRemaining;restoredEventRemaining=undefined;const runtime=await events.show(currentAct,false,remaining);if(new URLSearchParams(location.search).has('smoke')&&currentAct.event.type==='aircombat')window.__airSmokeRuntime=runtime;}
@@ -2805,7 +2879,7 @@ async function showPlayStep() {
   const leavingEvent = events.active() || eventMusicActive;
   events.cancel();
   transitioning = true;
-  let displayed = false;
+  let displayed = false,musicStarted=false;
   const loading = document.querySelector('#act-loading');
   try {
     if (preparedAct !== playAct) {
@@ -2847,13 +2921,21 @@ async function showPlayStep() {
       if (character(id)) rememberDiscovery('character', id);
     if (mode === 'player' && character(current.characterId)) rememberDiscovery('character', current.characterId);
     showBackground(null);
+    if(introduceAct){
+      loading?.classList.add('hidden');
+      document.querySelector('#player-start')?.classList.add('hidden');
+      if(leavingEvent)transitionMusic(currentAct.bgmId);else setMusic(currentAct.bgmId);
+      musicStarted=true;
+      if(!await actIntro.play(document.querySelector('.stage-frame'),currentAct.name,()=>request===playRequest&&playing))return;
+      if(request!==playRequest||!playing)return;
+    }
     await updateSpeakerPortrait(current.characterId,true);
     if (request !== playRequest || !playing) return;
     await playSceneAnimations(currentAct,current,{sound:true,force:true});
     if(request!==playRequest||!playing)return;
     showDialogue(current.speaker || character(current.characterId)?.name || '旁白', current.text, true, current.characterId);
     recordViewedDialogue(current);
-    if (leavingEvent) transitionMusic(currentAct.bgmId); else setMusic(currentAct.bgmId);
+    if(!musicStarted){if (leavingEvent) transitionMusic(currentAct.bgmId); else setMusic(currentAct.bgmId);}
     eventMusicActive = false;
     if (current.seId) playEffect(current.seId);
     voice.pause();
@@ -2904,6 +2986,7 @@ function startPlay() {
   showPlayStep();
 }
 function stopPlay() {
+  actIntro.cancel();
   dialogueCamera?.cancelTravel();cameraActId="";cameraStepId="";
   document.querySelector('#inventory-reward')?.remove();
   releasePreparedMedia();
@@ -3185,7 +3268,7 @@ function loadSlot(index) {
   playAct = targetAct; playStep = targetStep; playing = true; preparedAct = -1;
   restartPlayerAutoSave();
   closePlayerModal();
-  showPlayStep();
+  return showPlayStep({resume:true});
 }
 function renderSaveModal(view) {
   if (view === 'save' && !playing) { toast('请先开始游戏'); return; }
@@ -3242,12 +3325,12 @@ function setupPlayerGraphics(){
 function graphicsSettingsMarkup(){
  const settings=normalizeGraphics(graphicsDraft),plan=stage?.graphicsPlan(settings);
  return `<label class="field"><span>抗锯齿</span><select data-graphics="aa">${aaOptions.map(([key,label])=>{const supported=stage?.graphicsPlan({...settings,aa:key}).supported;return `<option value="${key}" ${settings.aa===key?'selected':''} ${supported===false?'disabled':''}>${label}${supported===false?' · 当前不可用':''}</option>`;}).join('')}</select></label>
- <label class="field"><span>画面重建</span><select data-graphics="upscale" ${settings.aa.startsWith('ssaa')?'disabled':''}>${fsrOptions.map(([key,label])=>`<option value="${key}" ${settings.upscale===key?'selected':''}>${label}</option>`).join('')}</select></label>
+ <label class="field"><span>画面重建</span><select data-graphics="upscale" ${settings.aa.startsWith('ssaa')?'disabled':''}>${fsrOptions.map(([key,label])=>`<option value="${key}" ${settings.upscale===key?'selected':''}>${editorLabel(label)}</option>`).join('')}</select></label>
  <label class="volume-line"><span>绘制分辨率</span><input type="range" data-graphics="renderScale" min="50" max="100" step="5" value="${settings.renderScale}" ${settings.upscale!=='off'||settings.aa.startsWith('ssaa')?'disabled':''}><output data-graphics-output="renderScale">${settings.renderScale}%</output></label>
  <label class="volume-line"><span>FSR 锐度</span><input type="range" data-graphics="sharpness" min="0" max="100" value="${settings.sharpness}" ${settings.upscale==='off'?'disabled':''}><output data-graphics-output="sharpness">${settings.sharpness}%</output></label>
- <label class="field"><span>阴影精度</span><select data-graphics="shadows">${[['off','关闭'],['low','低'],['medium','中'],['high','高']].map(([key,label])=>`<option value="${key}" ${settings.shadows===key?'selected':''}>${label}</option>`).join('')}</select></label>
+ <label class="field"><span>阴影精度</span><select data-graphics="shadows">${[['off','关闭'],['low','低'],['medium','中'],['high','高']].map(([key,label])=>`<option value="${key}" ${settings.shadows===key?'selected':''}>${editorLabel(label)}</option>`).join('')}</select></label>
  <p class="graphics-summary" data-graphics-summary>${plan?`场景绘制：${plan.inputWidth} × ${plan.inputHeight} → 显示：${plan.outputWidth} × ${plan.outputHeight}`:''}</p>
- <label class="field"><span>MMD 头发与衣饰物理</span><select data-graphics="mmdPhysics">${[['balanced','开启 · 性能优先（默认）'],['full','开启 · 完整更新'],['off','关闭 · 降低人物计算负担']].map(([key,label])=>`<option value="${key}" ${settings.mmdPhysics===key?'selected':''}>${label}</option>`).join('')}</select></label>
+ <label class="field"><span>MMD 头发与衣饰物理</span><select data-graphics="mmdPhysics">${[['balanced','开启 · 性能优先（默认）'],['full','开启 · 完整更新'],['off','关闭 · 降低人物计算负担']].map(([key,label])=>`<option value="${key}" ${settings.mmdPhysics===key?'selected':''}>${editorLabel(label)}</option>`).join('')}</select></label>
  <p>超采样倍数指绘制像素总量；倍数越大，显卡负担越高。FSR 1.0 用较低分辨率重建画面，与超采样二选一。文字和菜单保持清晰。</p>
  <div class="inline-actions">${button('应用画面设置','apply-graphics')}${button('恢复默认画质','reset-graphics')}</div><hr>`;
 }
@@ -3262,9 +3345,9 @@ function renderSettingsModal() {
   saveModalMode = 'settings';
   document.querySelector('#player-modal')?.remove();
   const resolutions = availableResolutions.length ? availableResolutions : ['960x540', '1280x720'];
-  const volume = (key, label) => `<label class="volume-line"><span>${label}</span><input type="range" data-volume="${key}" min="0" max="100" value="${Math.round(audioSettings[key] * 100)}"><output data-volume-output="${key}">${Math.round(audioSettings[key] * 100)}%</output></label>`;
+  const volume = (key, label) => `<label class="volume-line"><span>${editorLabel(label)}</span><input type="range" data-volume="${key}" min="0" max="100" value="${Math.round(audioSettings[key] * 100)}"><output data-volume-output="${key}">${Math.round(audioSettings[key] * 100)}%</output></label>`;
   document.querySelector('.player .stage-frame').insertAdjacentHTML('beforeend', `<section id="player-modal" class="player-modal" role="dialog" aria-modal="true" aria-label="游戏设置">
-    <div class="modal-box settings-box"><header><div><small>GAME MENU</small><h2>游戏设置</h2></div>${button('关闭 ×', 'close-modal')}</header>
+    <div class="modal-box settings-box"><header><div><small>GAME MENU</small><h2>游戏设置</h2></div><label class="skin-menu-control"><span>界面皮肤</span><select data-game-skin>${gameUiPresets.map(skin=>`<option value="${skin.id}" ${skin.id===playerGameSkin(project,localStorage)?'selected':''}>${editorLabel(skin.name)}</option>`).join('')}</select></label>${button('关闭 ×', 'close-modal')}</header>
       <div class="settings-body">
       <h3>音量</h3>${volume('master', '总音量')}${volume('music', '背景音乐')}${volume('voice', '角色语音')}${volume('effects', '按钮与场景音效')}
       <h3>对白</h3><label class="volume-line"><span>文字出现速度</span><input type="range" data-text-speed min="5" max="100" value="${textSpeed}"><output data-text-speed-output>${textSpeed} 字/秒</output></label>
@@ -3275,6 +3358,7 @@ function renderSettingsModal() {
       ${button('应用窗口大小', 'apply-resolution', playerFullscreen ? 'disabled' : '')}
       <div class="settings-line"><span>全屏显示</span>${button(playerFullscreen ? '退出全屏' : '进入全屏', 'toggle-fullscreen')}</div>`}
       <p>无论窗口大小或显示器比例如何，游戏画面始终保持 16:9。</p>
+      ${button('第三方声明与许可', 'third-party-notices')}
       <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
     </div></div></section>`);
 }
@@ -3285,7 +3369,7 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeUi33=async
  const controls=()=>[...document.querySelectorAll('#play-controls button')].map(b=>b.dataset.action).sort().join(',');
  if(phase==='picker'){
   await Promise.all([...portraitJobs.values()]);const theme=editorSettings.theme,revision=changeRevision;
-  document.querySelector('[data-action="game-ui"]').click();assert(document.querySelectorAll('#game-ui-picker input[type="radio"]').length===gameUiPresets.length,'Game presets missing');assert(!document.querySelector('#game-ui-picker input[type="color"],#game-ui-picker input[type="range"]'),'Picker must not be an editor');
+  document.querySelector('[data-action="game-ui"]').click();assert(document.querySelectorAll('#game-ui-picker input[type="radio"]').length===gameUiPresets.length,'Game presets missing');assert(!document.querySelector('#game-ui-picker input[type="color"]'),'Classic glass must remain unchanged');
   document.querySelector('#game-ui-picker input[value="terminal"]').checked=true;document.querySelector('[data-action="close-game-ui"]').click();assert(changeRevision===revision,'Cancel changed project');
   renderGameUiPicker();document.querySelector('#game-ui-picker input[value="pop"]').checked=true;document.querySelector('[data-action="apply-game-ui"]').click();assert(project.ui.gameTheme==='pop'&&dirty,'Choice not applied');assert(editorSettings.theme===theme,'Changed editor skin');renderGameUiPicker();return{ok:true,threePresets:true,cancelPreservesProject:true,editorUnaffected:true};
  }
@@ -3370,6 +3454,7 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeGaze50=asy
   save:()=>bridge('saveProject',{project:structuredClone(project)})
  });
 };
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeSecondary53=async phase=>{const{secondarySmoke}=await import('./secondary-smoke.js');return secondarySmoke(phase,{blank:()=>defaultProject('衣发物理验证'),cast:emptyDialogueCast,project:()=>project,asset,stage:()=>stage,setProject:p=>{project=p;normalize();lifetimeProgress=null;},start:async()=>{mode='player';playing=false;renderPlayer();await new Promise(r=>setTimeout(r,400));audioSettings.master=0;applyAudioSettings();playing=true;titleRequest++;playAct=playStep=0;preparedAct=-1;await showPlayStep();finishTyping();}});};
 if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeMmd36=async phase=>{
  const {runMmdSmoke}=await import('./mmd-smoke.js');return runMmdSmoke(phase,{
   blank:()=>defaultProject('MMD 模型测试'),cast:emptyDialogueCast,asset,project:()=>project,stage:()=>stage,roleDetails:()=>roleDetails,
@@ -3406,7 +3491,7 @@ function paintPortrait35(){
 if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeUi34=async phase=>{
  const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
  if(phase==='picker'){
-  await Promise.all([...portraitJobs.values()]);renderGameUiPicker();assert(document.querySelectorAll('#game-ui-picker input').length===4,'Four presets missing');document.querySelector('#game-ui-picker input[value="astral"]').checked=true;document.querySelector('[data-action="apply-game-ui"]').click();assert(project.ui.gameTheme==='astral','Fourth preset not applied');renderGameUiPicker();return{ok:true,fourPresets:true,oneCombinedNewStyle:true};
+  await Promise.all([...portraitJobs.values()]);renderGameUiPicker();assert(document.querySelectorAll('#game-ui-picker .game-ui-options input[type=radio]').length===4,'Four presets missing');document.querySelector('#game-ui-picker input[value="astral"]').checked=true;document.querySelector('[data-action="apply-game-ui"]').click();assert(project.ui.gameTheme==='astral','Fourth preset not applied');renderGameUiPicker();return{ok:true,fourPresets:true,oneCombinedNewStyle:true};
  }
  if(phase==='reopen'){
   assert(project.ui.gameTheme==='astral','New style lost on save/export');mode='player';playing=false;renderPlayer();await wait(900);assert(document.querySelector('.player').dataset.gameUi==='astral','Player did not apply style');return{ok:true,persistedStyle:'astral'};
@@ -3616,7 +3701,7 @@ function galleryStoryMarkup(item, count, storyIndex = galleryStoryIndex, editorP
     return `<h3>${storyIndex ? `角色故事 · ${storyIndex}` : '角色详情'}</h3>${storyIndex ? '' : `<strong class="gallery-detail-name">${escape(hiddenName(item.name))}</strong>`}<p class="gallery-character-text">${escape(maskSecret(content || '未解锁'))}</p>`;
   }
   if (!storyIndex || !story?.text?.trim()) {
-    return `<h3>角色详情</h3><strong class="gallery-detail-name">${escape(item.name)}</strong>${item.title?.trim() ? `<p class="gallery-character-title">${escape(item.title)}</p>` : ''}
+    return `<h3>角色详情</h3><strong class="gallery-detail-name" style="color:${characterNameColor(item)}">${escape(item.name)}</strong>${item.title?.trim() ? `<p class="gallery-character-title">${escape(item.title)}</p>` : ''}
       ${item.description?.trim() ? `<p class="gallery-character-text">${escape(item.description)}</p>` : ''}`;
   }
   const required = Math.max(0, Number(story.unlockLines) || 0);
@@ -3910,32 +3995,22 @@ async function importAssets(type, folderId = '', titleImport = '', galleryImage 
   return imported;
 }
 function renderPlayer() {
+  actIntro.cancel();
   roleDetails.close(false);
   dialogueCamera?.dispose();dialogueCamera=null;
   previewResizer?.dispose();previewResizer=null;
   events.cancel();
   stage?.destroy();
   if (!project) { app.innerHTML = '<div class="fatal">游戏工程文件不完整</div>'; return; }
-  app.innerHTML = `<div class="player" data-game-ui="${normalizeGameUi(project.ui.gameTheme)}"><div class="stage-frame">
+  app.innerHTML = `<div class="player" data-game-ui="${playerGameSkin(project,localStorage)}" data-ui-layout="auto"><div class="stage-frame">
     <div id="scene-bg"></div><div id="stage-canvas"></div><div id="stage-placeholder"></div>
     <div id="speaker-portrait" class="speaker-portrait hidden"><img alt="说话角色头像"></div>
-    <div id="dialogue" class="dialogue"><div class="speaker" id="dialogue-speaker"></div><div id="dialogue-text"></div></div>
+    ${dialogueMarkup()}
     <div id="choice-list"></div><div id="play-controls" class="hidden">
-      <div class="scene-top-actions">
-        <button type="button" data-action="stop-play" class="scene-icon-button" title="返回标题" aria-label="返回标题"><span class="scene-icon">↶</span><small>标题</small></button>
-        <button type="button" data-action="save-game" class="scene-icon-button" title="存档" aria-label="存档"><span class="scene-icon">▣</span><small>存档</small></button>
-        <button type="button" data-action="settings" class="scene-icon-button" title="设置" aria-label="设置"><span class="scene-icon">☰</span><small>菜单</small></button>
-      </div>
-      <div class="scene-quick-actions">
-        <button type="button" id="auto-play-button" class="auto-play-button hidden" data-action="auto-toggle" aria-pressed="false" title="自动播放">自动播放</button>
-        <button type="button" data-action="load-game" title="读档">读档</button>
-        <button type="button" data-action="save-game" title="存档">存档</button>
-        <button type="button" data-action="open-inventory" title="物品栏">物品栏</button>
-        ${window.__vrmAndroid?'':`<button type="button" data-action="toggle-fullscreen" title="切换全屏">${playerFullscreen ? '窗口' : '全屏'}</button>`}
-      </div>
+      ${gameControlsMarkup({android:Boolean(window.__vrmAndroid),fullscreen:playerFullscreen})}
     </div>
     <div id="player-start" class="title-composition"></div>
-    <div id="act-loading" class="act-loading hidden">${loadingSpinner}</div>
+    <div id="act-loading" class="act-loading hidden">${loadingSpinner()}</div>
           <div id="game-fps" class="game-fps hidden" aria-label="当前帧数">— FPS</div>
   </div></div>`;
   stageError = '';
@@ -3970,17 +4045,19 @@ document.addEventListener('click', async event => {
     return;
   }
   const action = node.dataset.action;
-  if(action==='game-ui'&&mode==='editor'){renderGameUiPicker();return;}
+  if(action==='game-ui'&&mode==='editor'){if(modulePanel==='ui')renderGameUiPicker();else await openEditorModule('ui');return;}
+  if(action==='close-game-ui'&&modulePanel==='ui'){renderGameUiPicker();return;}
   if(action==='close-game-ui'){document.querySelector('#game-ui-picker')?.remove();document.querySelector('[data-action="game-ui"]')?.focus();return;}
   if(action==='apply-game-ui'&&mode==='editor'){
-    const value=normalizeGameUi(document.querySelector('#game-ui-picker input:checked')?.value);
-    if(project.ui.gameTheme!==value){project.ui.gameTheme=value;markDirty();renderAssetDock();}
-    document.querySelector('#game-ui-picker')?.remove();document.querySelector('[data-action="game-ui"]')?.focus();toast('游戏 UI 已应用；点击试玩查看完整效果。');return;
+    const picker=document.querySelector('#game-ui-picker');
+    applyUiDraft(picker);
+    if(modulePanel==='ui'){try{await save();toast('游戏 UI 已保存并应用到工程。');}catch(error){toast(error.message,true);}}
+    else{renderAssetDock();picker.remove();toast('游戏 UI 已应用；点击试玩查看完整效果。');}return;
   }
   if(action==='edit-dialogue-camera'){await beginDialogueCameraEdit();return;}
   if(action==='clear-dialogue-camera'){delete step().camera;markDirty();renderInspector();updatePreview();return;}
   if(action==='restart-character-preview'){try{for(const record of stage?.visibleRecords.values()||[])record.currentMotionToken='';await updatePreview();stage?.restartCharacterPreview();}catch(error){toast(error.message,true);}return;}
-  if(action==='choose-editor'){showEditorPicker(moduleLabels,key=>{if(key==='environment'){const trigger=document.createElement('button');trigger.dataset.action='edit-environment';document.querySelector('.editor').append(trigger);trigger.click();trigger.remove();}else openEditorModule(key).catch(error=>toast(error.message,true));});return;}
+  if(action==='choose-editor'){showEditorPicker({...Object.fromEntries(Object.entries(moduleLabels).filter(([k])=>k!=='warship')),aircraft:'载具'},key=>{if(key==='aircraft'){showVehicleEditorPicker(k=>openEditorModule(k).catch(error=>toast(error.message,true)));}else if(key==='environment'){const trigger=document.createElement('button');trigger.dataset.action='edit-environment';document.querySelector('.editor').append(trigger);trigger.click();trigger.remove();}else openEditorModule(key).catch(error=>toast(error.message,true));});return;}
   if(action==='open-module'){try{await openEditorModule(node.dataset.module);}catch(error){toast(error.message,true);}return;}
   if (new URLSearchParams(location.search).has('smoke')) window.__lastClickAction = action;
   try {
@@ -4040,7 +4117,7 @@ document.addEventListener('click', async event => {
       directory = info.directory;
       project = defaultProject(name);
       if (info.presetAssets?.length) {
-        project.assetFolders.push({ id: 'preset-motion-folder', type: 'motion', name: 'Mixamo动作库' });
+        project.assetFolders.push({ id: 'preset-motion-folder', type: 'motion', name: '导入动作' });
         project.assets.push(...info.presetAssets);
         openAssetFolders.add('preset-motion-folder');
       }
@@ -4077,6 +4154,7 @@ document.addEventListener('click', async event => {
     }
     else if(action==='new-environment'){const owner=activePanel==='title'?project.title:act();const old=owner.environmentId;owner.environmentId='';try{await editEnvironment(owner);}catch(error){owner.environmentId=old;renderInspector();throw error;}}
     else if (action === 'edit-environment') await editEnvironment(activePanel==='title'?project.title:act());
+    else if (action === 'third-party-notices') await bridge('openThirdPartyNotices');
     else if (action === 'editor-settings') renderEditorSettings();
     else if (action === 'toggle-editor-theme') {
       editorSettings.theme = resolvedEditorTheme(editorSettings.theme) === 'dark' ? 'light' : 'dark';
@@ -4119,10 +4197,12 @@ document.addEventListener('click', async event => {
       project.acts.splice(selectedAct, 1); selectedAct = Math.max(0, selectedAct - 1); selectedStep = 0;
       markDirty(); renderSidebar(); renderInspector(); updatePreview();
     } else if (action === 'add-step') {
+      if(act().event?.type==='aircombat'){await handleEventAction('event-air-dialogue-add',node);return;}
       act().steps.push(createNextDialogue(act().steps.at(-1),uid()));
       selectedStep = act().steps.length - 1; markDirty(); renderSidebar(); renderInspector(); updatePreview();
       document.querySelector('.story-left .inspector')?.scrollTo(0,0);document.querySelector('[data-field="step.text"]')?.focus({preventScroll:true});
     } else if (action === 'duplicate-step') {
+      if(act().event?.type==='aircombat'){await handleEventAction('event-air-dialogue-duplicate',{dataset:{index:selectedStep}});return;}
       const original = step();
       if (!original) { toast('先选中一句对白', true); return; }
       const copy = structuredClone(original);
@@ -4137,16 +4217,18 @@ document.addEventListener('click', async event => {
       selectedStep = Number(node.dataset.index); renderSidebar(); renderInspector(); updatePreview();
       const editor=document.querySelector('.story-left .inspector');if(editor)editor.scrollTop=0;
     } else if (action === 'delete-step') {
+      if(act().event?.type==='aircombat'){if(selectedStep<act().event.combat.dialogues.length)await handleEventAction('event-air-dialogue-remove',{dataset:{index:selectedStep}});return;}
       if (!confirm('删除这句对白？')) return;
       act().steps.splice(selectedStep, 1); selectedStep = Math.max(0, selectedStep - 1);
       markDirty(); renderSidebar(); renderInspector(); updatePreview();
     } else if (action === 'move-up' || action === 'move-down') {
+      if(act().event?.type==='aircombat'){if(selectedStep<act().event.combat.dialogues.length)await handleEventAction(action==='move-up'?'event-air-dialogue-up':'event-air-dialogue-down',{dataset:{index:selectedStep}});return;}
       const target = selectedStep + (action === 'move-up' ? -1 : 1);
       if (target < 0 || target >= act().steps.length) return;
       [act().steps[selectedStep],act().steps[target]] = [act().steps[target],act().steps[selectedStep]];
       selectedStep = target; markDirty(); renderSidebar(); renderInspector();
     } else if (action === 'add-character') {
-      project.characters.push({ id:uid(), name:`角色${project.characters.length + 1}`, autoMouth:true, modelId:'', portraitId:'', title:'', description:'',
+      project.characters.push({ id:uid(), name:`角色${project.characters.length + 1}`, nameColor:defaultNameColor, autoMouth:true, modelId:'', portraitId:'', title:'', description:'',
         galleryMotionId: project.assets.some(item => item.id === 'preset-mixamo-029') ? 'preset-mixamo-029' : '',
         galleryYaw: 0, galleryPoseFrame: 1,
         stories: Array.from({ length: 3 }, () => ({ text:'', unlockLines:0 })) });
@@ -4380,7 +4462,7 @@ document.addEventListener('click', async event => {
       playerFullscreen = result.fullscreen;
       playerResolution = result.windowResolution;
       const quickButton = document.querySelector('.scene-quick-actions [data-action="toggle-fullscreen"]');
-      if (quickButton) quickButton.textContent = playerFullscreen ? '窗口' : '全屏';
+      if (quickButton) quickButton.querySelector('.game-button-label').textContent = playerFullscreen ? '窗口' : '全屏';
       if (saveModalMode === 'settings') renderSettingsModal();
     }
     else if (action === 'choose') {
@@ -4390,7 +4472,7 @@ document.addEventListener('click', async event => {
       const target = project.acts.findIndex(item => item.id === choice.actId);
       if (target < 0) { toast('这个选项还没有设置目标幕', true); return; }
       const used=useChoiceItems(choice,playerInventory,project.items);if(!used.ok){refreshChoiceItems();toast('缺少所需物品。',true);return;}
-      playAct = target; playStep = 0; showPlayStep();
+      playAct = target; playStep = 0; preparedAct = -1; showPlayStep();
     }
   } catch (error) { toast(error.message, true); }
 });
@@ -4399,7 +4481,7 @@ document.addEventListener('input', event => {
   if(routePreciseInput(event.target))return;
   if (library.input(event.target)) return;
   const node = event.target;
-  if(project){const changed=events.airInput(act(),node);if(changed){if(changed==='mount-select')return;if(changed!=='select')markDirty();if(changed==='select')renderInspector();renderSidebar();if(!node.dataset.airField||changed==='select')updatePreview();return;}}
+  if(project){const changed=events.airInput(act(),node);if(changed){if(changed==='mount-select')return;if(changed==='dialogue-text'){markDirty();renderSidebar();if(airDialogueLine){Object.assign(airDialogueLine,act().event.combat.dialogues[selectedStep]);showDialogue(airDialogueLine.speaker||character(airDialogueLine.characterId)?.name||'旁白',airDialogueLine.text,true,airDialogueLine.characterId);}return;}if(changed!=='select')markDirty();if(['select','dialogue-select','fleet-layout','ship-select'].includes(changed))renderInspector();renderSidebar();if(!node.dataset.airField||changed==='select')updatePreview();return;}}
   if (node.dataset.eventField && isEvent(act())) {
     const key = node.dataset.eventField;
     const holder = key === 'name' ? act() : node.hasAttribute('data-event-row') ? act().event.declarations[Number(node.dataset.eventRow)] : act().event;
@@ -4424,9 +4506,10 @@ document.addEventListener('input', event => {
     const number=row.querySelector('[data-mode=number]');number.value=String(value);
     markDirty();updatePreview();return;
   }
+  if(node.hasAttribute('data-offstage-motion')&&step()){step().offstage={...offstageSettings(step()),motionId:node.value};markDirty();renderInspector();updatePreview();return;}
   if (node.dataset.motionOptions && project) {
     const scope = node.dataset.motionOptions;
-    const holder = scope === 'step' ? step() : scope === 'title' ? project.title : scope.startsWith('titleActor:') ? project.title.actors.find(a=>a.id===scope.slice(11))
+    const holder = scope === 'offstage' ? (step().offstage ||= offstageSettings(step())) : scope === 'step' ? step() : scope === 'title' ? project.title : scope.startsWith('titleActor:') ? project.title.actors.find(a=>a.id===scope.slice(11))
       : scope.startsWith('cast:') ? step()?.cast?.[scope.slice(5)] : null;
     if (!holder) return;
     holder.motionOptions ||= {};
@@ -4445,6 +4528,11 @@ document.addEventListener('input', event => {
     markDirty();
     if (scope === 'title' || scope.startsWith('titleActor:')) showTitleScene(false);
     else updatePreview();
+    return;
+  }
+  if (node.id === 'editor-language') {
+    setEditorLanguage(node.value);
+    editorSettings.language=editorLocale();
     return;
   }
   if (node.id === 'editor-auto-save-minutes') {
@@ -4552,7 +4640,7 @@ document.addEventListener('input', event => {
     return;
   }
   if (node.hasAttribute('data-text-speed') && project) {
-    textSpeed = Math.max(5, Math.min(100, Number(node.value) || 35));
+    textSpeed = Math.max(5, Math.min(100, Number(node.value) || 5));
     localStorage.setItem(`vrm-text-speed-${project.id || project.name}`, String(textSpeed));
     document.querySelector('[data-text-speed-output]').textContent = `${textSpeed} 字/秒`;
     if (typingTimer) {
@@ -4692,6 +4780,8 @@ document.addEventListener('input', event => {
     : scope === 'character' ? project.characters[selectedCharacter] : project;
   if (!target) return;
   if (path === 'step.voiceId' && node.value && !voicesForCharacter(project, target.characterId).some(item => item.id === node.value)) { toast('只能选择当前角色的专属配音。', true); renderInspector(); return; }
+  if(path==='character.nameColor'&&!validNameColor(node.value))return;
+  if(path==='step.characterId'&&target.characterId!==node.value)delete target.offstage;
   if (nested) target[property][nested] = node.value;
   else target[property] = path === 'character.autoMouth' ? node.value !== 'off' : node.value;
   markDirty();
@@ -4736,7 +4826,7 @@ document.addEventListener('keydown', event => {
   const uiPicker=document.querySelector('#game-ui-picker');
   if(uiPicker){
     if(event.key==='Escape'){event.preventDefault();document.querySelector('[data-action="close-game-ui"]')?.click();}
-    if(event.key==='Tab'){const targets=[...uiPicker.querySelectorAll('button,input:checked')];const first=targets[0],last=targets.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
+    if(event.key==='Tab'){const targets=[...uiPicker.querySelectorAll('button:not(:disabled),input:not(:disabled),select,textarea,summary')].filter(e=>e.offsetParent!==null);const first=targets[0],last=targets.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
     return;
   }
   if (event.key === 'Escape' && document.querySelector('#gallery-lightbox')) {
@@ -5451,6 +5541,10 @@ if (new URLSearchParams(location.search).has('smoke'))
       return { ok: true, replayAct: playAct, replayStep: playStep, lifetimeSeen: before };
     }
   });
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeCommercial55=async phase=>{
+  const {commercialSmoke}=await import('./commercial-smoke.js');
+  return commercialSmoke({project:()=>project,library:()=>library,dirty:()=>markDirty(),save},phase);
+};
 window.__vrmDiagnostics = () => ({
   directory,
   editorAutoSaveMinutes: editorSettings.autoSaveMinutes,
@@ -5661,9 +5755,9 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeDetails43=
 };
 
 async function agentEditorControl(command,args){
- if(command==='repair'){selectedAct=Math.max(0,Math.min(selectedAct,project.acts.length-1));selectedStep=Math.max(0,Math.min(selectedStep,(act()?.steps.length||1)-1));selectedCharacter=Math.max(0,Math.min(selectedCharacter,project.characters.length-1));selectedItem=Math.max(0,Math.min(selectedItem,project.items.length-1));return{};}
+ if(command==='repair'){selectedAct=Math.max(0,Math.min(selectedAct,project.acts.length-1));selectedStep=Math.max(0,Math.min(selectedStep,act()?.event?.type==='aircombat'?act().event.combat.dialogues.length:(act()?.steps.length||1)-1));selectedCharacter=Math.max(0,Math.min(selectedCharacter,project.characters.length-1));selectedItem=Math.max(0,Math.min(selectedItem,project.items.length-1));return{};}
  if(command==='state')return{activePanel,selectedActId:act()?.id||'',selectedDialogueId:step()?.id||'',selectedCharacterId:project.characters[selectedCharacter]?.id||'',selectedItemId:project.items[selectedItem]?.id||''};
- if(command==='open'){if(!['story','characters','items','title','render','knowledge'].includes(args.panel))throw Error('编辑器板块无效');if(args.panel==='story'){activePanel='story';renderSidebar();renderInspector();await updatePreview();}else await openEditorModule(args.panel);return{opened:true,panel:args.panel};}
+ if(command==='open'){if(!['story','characters','items','title','render','knowledge','ui'].includes(args.panel))throw Error('编辑器板块无效');if(args.panel==='story'){activePanel='story';renderSidebar();renderInspector();await updatePreview();}else await openEditorModule(args.panel);return{opened:true,panel:args.panel};}
  if(command==='select'){if(args.kind==='act'){const index=project.acts.findIndex(a=>a.id===args.id);if(index<0)throw Error('幕不存在');selectedAct=index;selectedStep=0;}else if(args.kind==='dialogue'){const index=project.acts.findIndex(a=>a.steps?.some(l=>l.id===args.id));if(index<0)throw Error('对白不存在');selectedAct=index;selectedStep=act().steps.findIndex(l=>l.id===args.id);}else if(args.kind==='character'){const index=project.characters.findIndex(r=>r.id===args.id);if(index<0)throw Error('角色不存在');selectedCharacter=index;await openEditorModule('characters');return{selected:true};}else if(args.kind==='item'){const index=project.items.findIndex(r=>r.id===args.id);if(index<0)throw Error('物品不存在');selectedItem=index;await openEditorModule('items');return{selected:true};}else throw Error('请选择幕、对白、角色或物品');activePanel='story';renderSidebar();renderInspector();await updatePreview();return{selected:true,actId:act()?.id,dialogueId:step()?.id};}
  if(command==='portrait'){const role=project.characters.find(r=>r.id===args.characterId),model=asset(role?.modelId),current=project,revision=changeRevision;if(!model)throw Error('请先给角色指定模型');const captured=await captureCharacterPortrait(model,null,1,null,true);if(project!==current||changeRevision!==revision||role.modelId!==model.id)throw Error('拍摄时工程已变化，请重新读取');const saved=await bridge('saveGeneratedPortrait',{dataUrl:captured.dataUrl,characterId:role.id,name:role.name,previousRevision:asset(role.portraitId)?.revision||''});editorHistory.seal();editorHistory.begin();await replaceAutoPortrait(role,saved,true);markDirty({label:'MCP 生成头像'});return{characterId:role.id,portraitId:role.portraitId};}
  if(command==='inspect'){const role=project.characters.find(r=>r.id===args.characterId),model=asset(role?.modelId);if(!model)throw Error('角色还没有模型');const record=await stage.loadModel(model,role.id);const bones=[];record.vrm.scene.traverse(o=>{if(o.isBone)bones.push(o.name);});return{characterId:role.id,modelId:model.id,type:model.type,expressions:(record.vrm.expressionManager?.expressions||[]).map(e=>e.expressionName),bones:[...new Set(bones)],propBones:availablePropBones(record),motions:motionsForCharacter(project,role.id).map(a=>({id:a.id,name:a.name,folderId:a.folderId}))};}
@@ -5702,4 +5796,208 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeGeometry52
   const assert=(v,m)=>{if(!v)throw Error(m);};selectedAct=0;selectedStep=0;activePanel='story';renderSidebar();renderInspector();await updatePreview();await new Promise(r=>setTimeout(r,600));const e=project.environments.find(e=>e.id===project.acts[0].environmentId),batch=e?.nodes.find(n=>n.kind==='geometryBatch');assert(batch&&batch.primitives.length>15000,'几何体工程丢失');const garden=project.environments.find(e=>e.name==='Agent花园住宅');assert(garden?.nodes.some(n=>n.kind==='geometryBatch'&&n.primitives.length>6000),'庭院工程丢失');const meshes=[];stage.environmentRuntime.root.traverse(o=>{if(o.isInstancedMesh)meshes.push(o);});assert(meshes.length===9&&meshes.reduce((n,m)=>n+m.count,0)===batch.primitives.length,'批量渲染几何体丢失');assert(!stage.renderer.info.programs.some(p=>p.diagnostics&&!p.diagnostics.runnable),'场景shader错误');return{ok:true,geometryCount:batch.primitives.length,instancedGroups:meshes.length,assetsNeeded:false,archiveReopened:phase==='reopen'};
  }
  throw Error(phase);
+};
+
+
+// Native and browser regression entrypoint. No authoring/project data in this hook
+// is accessed unless the executable or test host explicitly enables smoke mode.
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeReference59=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ if(phase==='prepare'){
+  assert(project.characters.length>=2,'需要两个验证角色');
+  const story=JSON.stringify(project.acts),previousModule=modulePanel;activePanel='characters';modulePanel='characters';selectedCharacter=0;renderEditor();
+  for(const[index,color]of [[0,'#6bc9ff'],[1,'#e6a1d5']]){selectedCharacter=index;renderInspector();const input=document.querySelector('[data-field="character.nameColor"]');input.value=color;input.dispatchEvent(new Event('input',{bubbles:true}));}
+  assert(project.characters[0].nameColor==='#6bc9ff'&&project.characters[1].nameColor==='#e6a1d5','姓名配色串联');assert(JSON.stringify(project.acts)===story,'修改颜色改变对白');modulePanel=previousModule;await save();return{ok:true,independentNameColors:true,storyUnchanged:true};
+ }
+ if(phase==='reopen'){assert(project.characters[0].nameColor==='#6bc9ff'&&project.characters[1].nameColor==='#e6a1d5','重开颜色丢失');assert(project.ui.gameTheme==='classic','旧风格没有迁移');return{ok:true,nameColorsRoundtrip:true,legacyThemeMigrated:true};}
+ if(phase==='editor'){mode='editor';modulePanel='characters';activePanel='characters';selectedCharacter=0;renderEditor();return{ok:true};}
+ if(phase==='title'){mode='player';modulePanel=null;playing=false;renderPlayer();for(let n=0;n<120&&!document.querySelector('#player-start button');n++)await wait(50);await wait(350);assert(document.querySelectorAll('#player-start .title-bottom-menu button').length===9,'标题菜单数量错误');assert(!document.querySelector('.knowledge-title-button'),'左上图标残留');return{ok:true,libraryInBottomMenu:true};}
+ if(phase==='story'){playing=true;titleRequest++;playAct=Math.max(0,project.acts.findIndex(a=>!isEvent(a)&&a.steps?.length));playStep=0;preparedAct=-1;await showPlayStep();finishTyping();return{ok:true};}
+ if(phase==='name0'||phase==='name1'||phase==='name2'){
+  const role=project.characters[Number(phase.slice(-1))];showDialogue(role.name,'我知道！可是你一盯着我，我就只记得你在盯着我了。',true,role.id);finishTyping();await updateSpeakerPortrait(role.id,true);
+  if(isLiveModel(role.modelId)){for(let i=0;i<180&&(!document.querySelector('.live-portrait-canvas')||!stage.livePortrait.frames);i++)await wait(50);assert(document.querySelector('.live-portrait-canvas')&&stage.livePortrait.frames>0,'可动头像没有显示在玻璃前');}
+  await wait(300);let portraitPixels=null;const canvas=document.querySelector('.live-portrait-canvas');if(canvas){const image=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height),data=image.data;let minY=canvas.height,maxY=0,minX=canvas.width,maxX=0;for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;x++)if(data[(y*canvas.width+x)*4+3]>80){minY=Math.min(minY,y);maxY=Math.max(maxY,y);minX=Math.min(minX,x);maxX=Math.max(maxX,x);}assert(minY>2&&minY<canvas.height,'头像头顶被画布裁切或未显示');portraitPixels={canvas:[canvas.width,canvas.height],bounds:[minX,minY,maxX,maxY],topMargin:minY};}const dialogueBox=document.querySelector('.dialogue').getBoundingClientRect(),stageBox=document.querySelector('.stage-frame').getBoundingClientRect();assert(!document.querySelector('.portrait-glass-frame'),'头像垫底未删除');assert(Math.abs(dialogueBox.left-stageBox.left)<1&&Math.abs(dialogueBox.width-stageBox.width)<2,'对白框未延伸至屏幕左侧');assert(Math.abs(dialogueBox.height/stageBox.height-.26)<.002,'对白框高度不正确');const portraitBox=document.querySelector('.speaker-portrait').getBoundingClientRect();const portraitLayout={left:(portraitBox.left-stageBox.left)/stageBox.width,bottom:(stageBox.bottom-portraitBox.bottom)/stageBox.height,width:portraitBox.width/stageBox.width,height:portraitBox.height/stageBox.height};const livePortrait=document.querySelector('.speaker-portrait').classList.contains('live-portrait');assert(!portraitBox.width||(Math.abs(portraitLayout.left-(livePortrait?0:.04))<.002&&Math.abs(portraitLayout.width-(livePortrait?.54:.5))<.002),'头像绘制范围未贴齐屏幕左缘');const edgeStyle=getComputedStyle(document.querySelector('.dialogue'));const bottomEdge={border:edgeStyle.borderBottomWidth,leftRadius:edgeStyle.borderBottomLeftRadius,rightRadius:edgeStyle.borderBottomRightRadius,bottom:stageBox.bottom-dialogueBox.bottom};assert(bottomEdge.border==='0px'&&bottomEdge.leftRadius==='0px'&&bottomEdge.rightRadius==='0px'&&Math.abs(bottomEdge.bottom)<1,'对白框底部未无边线贴齐屏幕');const dialogueLayout={left:dialogueBox.left-stageBox.left,width:dialogueBox.width/stageBox.width,height:dialogueBox.height/stageBox.height,bottomEdge};assert(!document.querySelector('.dialogue-glints,.scene-top-actions [data-action=save-game]'),'装饰线或重复存档未移除');assert(document.querySelectorAll('.scene-quick-actions [data-action=save-game]').length===1,'底部存档按钮缺失');const color=getComputedStyle(document.querySelector('#dialogue-speaker')).color;assert(color===(phase==='name0'?'rgb(107, 201, 255)':phase==='name1'?'rgb(230, 161, 213)':'rgb(255, 191, 220)'),'姓名颜色未跟随角色');return{ok:true,role:role.name,color,livePortrait:stage.livePortrait.frames,portraitCanvas:Boolean(document.querySelector('.live-portrait-canvas')),portraitPixels,portraitLayout,dialogueLayout,portraitProjection:{zoom:stage.livePortrait.camera.zoom,left:stage.livePortrait.camera.left,right:stage.livePortrait.camera.right,area:stage.element.getBoundingClientRect().toJSON(),node:portraitBox.toJSON()}};
+ }
+ if(phase==='settings'){renderSettingsModal();return{ok:true};}
+ if(phase==='saves'){renderSaveModal('save');return{ok:true};}
+ if(phase==='library'){
+  await library.click('knowledge-open',document.createElement('button'));await wait(350);
+  const cards=[...document.querySelectorAll('.book-library .book-card')].map(card=>{
+   const box=card.getBoundingClientRect(),style=getComputedStyle(card);
+   const text=[...card.querySelectorAll('b,small')].map(node=>{const r=node.getBoundingClientRect();return{text:node.textContent,inside:r.left>=box.left&&r.right<=box.right+1&&r.top>=box.top&&r.bottom<=box.bottom+1,wrapped:node.scrollWidth<=node.clientWidth+1};});
+   assert(parseFloat(style.borderTopLeftRadius)<=20,'资料库仍然是胶囊边框');assert(text.every(t=>t.inside&&t.wrapped),'资料库文字超出卡片');return{width:box.width,height:box.height,radius:style.borderTopLeftRadius,text};
+  });return{ok:true,cards};
+ }
+ if(phase==='inventory'){renderBackpack();return{ok:true};}
+ if(phase==='progress'){renderProgressModal();return{ok:true};}
+ if(phase==='close'){closePlayerModal();await wait(350);return{ok:true};}
+ if(phase==='diagnostics'){return{ok:!stageError,stageError,frames:stage?.livePortrait.frames||0,pending:Boolean(stage?.livePortrait.readingPortrait),shaders:(stage?.renderer.info.programs||[]).filter(p=>p.diagnostics&&!p.diagnostics.runnable).length};}
+ throw Error(phase);
+};
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeReference59Import=async imported=>{
+ const models=imported.filter(a=>['vrm','mmdCharacter'].includes(a.type));if(models.length<3)throw Error('需要导入两个 VRM 和一个 PMX');
+ project.assets.push(...imported);project.characters=models.map((a,i)=>({id:uid(),name:['木裳','嬅','千早爱音'][i]||a.name,modelId:a.id,nameColor:defaultNameColor,autoMouth:true,stories:[]}));
+ const old=project.acts.find(a=>!isEvent(a)&&a.steps?.length),cast=emptyDialogueCast();
+ for(const[i,slot]of ['left','center','right'].entries())cast[slot]={...cast[slot],characterId:project.characters[i].id,size:1.15};
+ project.acts=[{id:uid(),name:'真实角色 · UI 验证',backgroundId:old?.backgroundId||'',environmentId:old?.environmentId||'',bgmId:'',steps:project.characters.slice(0,3).map(role=>({id:uid(),characterId:role.id,speaker:'',text:'我知道！可是你一盯着我，我就只记得你在盯着我了。',choices:[],cast:structuredClone(cast)}))}];
+ project.title.actors=[];normalize();selectedAct=selectedStep=0;activePanel='story';modulePanel=null;markDirty();renderEditor();await updatePreview();
+ return{ok:true,importedModels:models.map(a=>({id:a.id,name:a.name,type:a.type})),importedFiles:imported.length,originalFilesPreserved:true};
+};
+
+document.addEventListener('change',event=>{if(!event.target.matches?.('[data-game-skin]')||!project)return;const skin=rememberGameSkin(project,event.target.value,localStorage);document.querySelector('.player')?.setAttribute('data-game-ui',skin);document.querySelector('.book-reader')?.setAttribute('data-game-ui',skin);});
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeSkin63=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ if(phase==='editor'){mode='editor';playing=false;modulePanel=null;activePanel='story';selectedAct=selectedStep=0;renderEditor();await updatePreview();await wait(350);assert(document.querySelector('.editor-preview-player .dialogue-copy'),'主预览缺少游戏 UI');assert(document.querySelectorAll('[data-preview-resize]').length===1&&document.querySelector('[data-preview-resize=corner]'),'缩放按钮没有精简');return{ok:true,livePreview:true,oneCornerHandle:true};}
+ if(phase==='pink'){renderGameUiPicker();const radio=document.querySelector('[name=game-ui-skin][value=pink-pop]');radio.checked=true;radio.dispatchEvent(new Event('change',{bubbles:true}));assert(document.querySelector('.ui-live-preview .player').dataset.gameUi==='pink-pop','切换没有实时预览');document.querySelector('[data-action=apply-game-ui]').click();assert(project.ui.gameTheme==='pink-pop','工程皮肤未应用');await wait(100);assert(document.querySelector('.editor-preview-player').dataset.gameUi==='pink-pop','主预览皮肤未同步');return{ok:true,immediatePreview:true};}
+ if(phase==='preview'){await updatePreview();await wait(350);return{ok:true,skin:document.querySelector('.editor-preview-player').dataset.gameUi};}
+ if(phase==='save'){await save();return{ok:true,skin:project.ui.gameTheme};}
+ if(phase==='reopen'){assert(project.ui.gameTheme==='pink-pop','工程皮肤重开丢失');mode='editor';playing=false;modulePanel=null;activePanel='story';renderEditor();await updatePreview();await wait(350);return{ok:true,skin:project.ui.gameTheme};}
+ if(phase==='classic-runtime'||phase==='pink-runtime'){const skin=phase==='classic-runtime'?'classic':'pink-pop';renderSettingsModal();const node=document.querySelector('[data-game-skin]');node.value=skin;node.dispatchEvent(new Event('change',{bubbles:true}));assert(document.querySelector('.player').dataset.gameUi===skin,'玩家切换没有反馈');assert(project.ui.gameTheme==='pink-pop','玩家偏好改变了作者工程');closePlayerModal();await wait(350);return{ok:true,skin,authorDefault:project.ui.gameTheme};}
+ throw Error(phase);
+};
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeSkin64=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ if(['editor','preview','save'].includes(phase))return window.__vrmSmokeSkin63(phase);
+ if(phase==='green'){renderGameUiPicker();const radio=document.querySelector('[name=game-ui-skin][value=wechat-green]');radio.checked=true;radio.dispatchEvent(new Event('change',{bubbles:true}));assert(document.querySelector('.ui-live-preview .player').dataset.gameUi==='wechat-green','微信皮肤没有实时反馈');document.querySelector('[data-action=apply-game-ui]').click();assert(project.ui.gameTheme==='wechat-green','默认皮肤没有应用');rememberGameSkin(project,'wechat-green',localStorage);return{ok:true,skin:project.ui.gameTheme};}
+ if(phase==='reopen'){assert(project.ui.gameTheme==='wechat-green','默认微信皮肤重开丢失');if(mode!=='player'){modulePanel=null;activePanel='story';renderEditor();await updatePreview();}return{ok:true,skin:project.ui.gameTheme};}
+ if(['dark-runtime','light-runtime'].includes(phase)){const skin=phase==='dark-runtime'?'wechat-dark':'wechat-green';renderSettingsModal();const select=document.querySelector('[data-game-skin]');select.value=skin;select.dispatchEvent(new Event('change',{bubbles:true}));assert(document.querySelector('.player').dataset.gameUi===skin,'玩家切换没有反馈');assert(project.ui.gameTheme==='wechat-green','玩家切换改变了作者默认皮肤');closePlayerModal();await wait(350);return{ok:true,skin};}
+ if(['light-settings','dark-settings'].includes(phase)){renderSettingsModal();return{ok:true};}
+ throw Error(phase);
+};
+
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeIntro66=async phase=>{
+ const wait=ms=>new Promise(r=>setTimeout(r,ms)),assert=(v,m)=>{if(!v)throw Error(m);};
+ const state=window.__intro66||=( {phases:[],pending:null} );
+ const watch=()=>{state.observer?.disconnect();state.phases=[];state.observer=new MutationObserver(()=>{const n=document.querySelector('.act-intro');if(n&&state.phases.at(-1)?.phase!==n.dataset.phase)state.phases.push({phase:n.dataset.phase,time:performance.now()});});state.observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['data-phase']});};
+ const hold=async()=>{for(let i=0;i<600&&document.querySelector('.act-intro')?.dataset.phase!=='hold';i++)await wait(25);const n=document.querySelector('.act-intro');assert(n?.dataset.phase==='hold','幕名没有进入停留阶段');return n;};
+ const finish=async()=>{await state.pending;finishTyping();assert(!actIntro.active&&!document.querySelector('.act-intro'),'幕名残留');assert(document.querySelector('#dialogue').classList.contains('visible'),'幕名退出后没有显示对白');assert(playViewedStepIds.has(project.acts[playAct].steps[playStep].id),'对白没有按时记录');const [enter,held,exit]=state.phases;assert(enter?.phase==='enter'&&held?.phase==='hold'&&exit?.phase==='exit','幕名动画顺序不正确');assert(Math.abs(state.holdDuration-800)<.001,'幕名时间轴未固定停留 0.8 秒');return{ok:true,phases:state.phases,holdMs:state.holdDuration,callbackHoldMs:exit.time-held.time,firstDialogueAfterExit:true};};
+ if(phase.startsWith('hold-')){
+  if(mode!=='player'){mode='player';playing=false;renderPlayer();await wait(400);}
+  const skin=phase.slice(5);document.querySelector('.player').dataset.gameUi=skin;
+  playing=true;titleRequest++;playAct=project.acts.findIndex(a=>!isEvent(a)&&a.steps.length);playStep=0;cameraActId='';playViewedStepIds=new Set();
+  watch();state.pending=showPlayStep();const node=await hold();const effect=node.getAnimations()[0].effect,frames=effect.getKeyframes();state.holdDuration=(frames[2].offset-frames[1].offset)*effect.getTiming().duration;
+  assert(node.textContent===project.acts[playAct].name,'幕名不是当前幕名称');assert(!document.querySelector('#dialogue').classList.contains('visible'),'幕名期间对白提前显示');assert(!typingTimer&&voice.paused,'幕名期间文字或语音提前播放');assert(!playViewedStepIds.size,'幕名期间提前记录对白');next();next();assert(playStep===0,'连点跳过幕名');
+  return{ok:true,skin,name:node.textContent,phase:node.dataset.phase,typingBlocked:true,inputBlocked:true};
+ }
+ if(phase==='finish')return finish();
+ if(phase==='sequence'){
+  const originalActs=project.acts.slice(),originalAct=playAct,key=saveKey(),oldSlots=localStorage.getItem(key);
+  try{
+   watch();if(project.acts[playAct].steps[1]){playStep=1;await showPlayStep();finishTyping();assert(!state.phases.length,'普通下一句重复弹出幕名');}
+   const branch=structuredClone(project.acts[originalAct]);branch.id='intro66-branch';branch.name='回家路上 · 写给明天的信';branch.steps=[{...structuredClone(branch.steps[0]),id:'intro66-branch-line',choices:[]}];project.acts.push(branch);playAct=project.acts.length-1;playStep=0;
+   watch();state.pending=showPlayStep();await hold();await finish();
+   const slots=Array(20).fill(null);slots[1]=snapshotSlot();localStorage.setItem(key,JSON.stringify(slots));playing=false;watch();await loadSlot(1);finishTyping();assert(!state.phases.length,'读档重复播放幕名');assert(project.acts[playAct].id===branch.id,'读档位置变化');
+   preparedAct=-1;cameraActId='';watch();state.pending=showPlayStep();await hold();stopPlay();await state.pending;await wait(100);assert(!actIntro.active&&!document.querySelector('.act-intro')&&!playing&&!typingTimer,'返回标题后幕名或对白泄漏');
+   return{ok:true,nextLineDoesNotRepeat:true,nextActIntroduced:true,resumeDoesNotRepeat:true,cancelledOnTitle:true};
+  }finally{project.acts=originalActs;playAct=originalAct;playStep=0;if(oldSlots===null)localStorage.removeItem(key);else localStorage.setItem(key,oldSlots);state.observer?.disconnect();}
+ }
+ throw Error(phase);
+};
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeAir67Import=async rows=>{
+ const role=project.characters.find(r=>asset(r.modelId)?.type==='mmdCharacter');if(!role)throw Error('缺少实际 MMD 角色');
+ for(const row of rows){row.folderId=motionFolderId(role.id);project.assets.push(row);}if(!project.assetFolders.some(f=>f.id===motionFolderId(role.id)))project.assetFolders.push({id:motionFolderId(role.id),type:'motion',name:role.name+'动作'});
+ return{ok:true,motionImported:rows.map(a=>a.id)};
+};
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeAir67=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms));
+ const ready=async()=>{for(let i=0;i<1600&&(window.__airSmokeRuntime?.dialogueLoading||!stage.livePortrait.frames);i++)await wait(25);assert(!window.__airSmokeRuntime?.dialogueLoading&&stage.livePortrait.frames>0,'头像未就绪');};
+ const sample=async()=>{const r=stage.livePortrait.record;assert(r&&!stage.visibleRecords.size&&!r.vrm.scene.visible,'人物没有隐藏在场外');assert(r===await stage.modelCache.get(r.actorKey||project.characters.find(c=>c.modelId===stage.portraitModelId)?.id),'头像没有复用缓存模型');const {createAutoBlink}=await import('./auto-blink.js');assert(r.autoBlink&&r.talkingMouth,'模型缺少口型或眼睑');r.autoBlink=createAutoBlink(r.vrm.expressionManager,()=>0);let blink=0;const observedBlink=r.autoBlink,updateBlink=observedBlink.update.bind(observedBlink);observedBlink.update=(...args)=>{updateBlink(...args);blink=Math.max(blink,observedBlink.diagnostics().weight);};for(let i=0;i<59;i++)r.autoBlink.update(.1);let mouth=0,movement=0;const head=r.vrm.humanoid.getNormalizedBoneNode('head'),start=head.quaternion.clone(),before=stage.livePortrait.frames;for(let i=0;i<36;i++){await wait(90);mouth=Math.max(mouth,...r.talkingMouth.diagnostics().values);blink=Math.max(blink,r.autoBlink.diagnostics().weight);movement=Math.max(movement,head.quaternion.angleTo(start));}assert(stage.livePortrait.frames>before,'空战中头像渲染被暂停');assert(mouth>.02,'头像没有实际说话');assert(r.autoBlink.diagnostics().count>0&&blink>.1,'头像没有实际眨眼');return{model:r.vrm.isMmd?'MMD':'VRM',mouth,blink,movement,frames:stage.livePortrait.frames-before,motionId:r.currentMotionId};};
+ const fixture=()=>project.acts.find(a=>a.id==='air67-fixture');
+ if(phase==='setup'){
+  if(mode==='player'){assert(fixture()?.event.combat.dialogues.length===2,'导出对话丢失');return{ok:true,exportSettingsPreserved:true};}
+  const mmd=project.characters.find(r=>asset(r.modelId)?.type==='mmdCharacter'),vrm=project.characters.find(r=>asset(r.modelId)?.type==='vrm');assert(mmd&&vrm,'需要实际 VRM 和 MMD');const motion=motionsForCharacter(project,mmd.id).find(m=>m.path.toLowerCase().endsWith('.vmd')&&m.name.includes('头像点头'))||motionsForCharacter(project,mmd.id).find(m=>m.path.toLowerCase().endsWith('.vmd'));assert(motion,'实际 VMD 动作未导入');
+  const story=project.acts.find(a=>!isEvent(a));story.environmentId='';story.name='场外头像动作 · 验证';const line=story.steps[0];line.characterId=mmd.id;line.cast=emptyDialogueCast();line.offstage={motionId:motion.id,motionOptions:{loop:true,placement:'inPlace'},expressionWeights:{}};line.text='场外角色正在说话、眨眼和点头。'.repeat(30);
+  const n=newEvent('air67-fixture',uid());n.name='云中通讯 · 验证';n.event=normalizeEvent({type:'aircombat',combat:{dialogues:[{id:'air67-mmd',characterId:mmd.id,text:'保持航向，先听完我们的通讯。'.repeat(35),offstage:structuredClone(line.offstage)},{id:'air67-vrm',characterId:vrm.id,text:'云层即将散去，准备接管飞机。'.repeat(35)}],enemies:2,allies:1,duration:180,altitude:600}});project.acts=project.acts.filter(a=>a.id!==n.id);project.acts.push(n);
+  selectedAct=project.acts.indexOf(story);selectedStep=0;activePanel='story';renderEditor();renderInspector();assert(document.querySelector('[data-offstage-motion]')?.value===motion.id,'场外动作编辑入口缺失');selectedAct=project.acts.length-1;renderSidebar();renderInspector();assert(document.querySelectorAll('[data-air-dialogue=text]').length===1,'空战对话编辑入口缺失');selectedStep=n.event.combat.dialogues.length;renderSidebar();renderInspector();markDirty();await save();return{ok:true,mmd:mmd.name,vrm:vrm.name,motion:motion.name,saved:true};
+ }
+ if(phase==='preview'){stopPlay();mode='editor';renderEditor();const state=await events.testAir(fixture());for(let i=0;i<1600&&(state.dialogueLoading||!stage.livePortrait.frames);i++)await wait(25);assert(state.dialogueActive&&state.root.parentElement.classList.contains('stage-frame'),'Editor dialogue escaped preview frame');const result=await sample();assert(result.movement>.01,'Editor offstage motion missing');assert(document.querySelector('#dialogue').classList.contains('visible'),'Editor dialogue hidden');const button=document.querySelector('.air-dialogue-next').getBoundingClientRect(),copy=document.querySelector('.dialogue-copy').getBoundingClientRect(),area=document.querySelector('.stage-frame').getBoundingClientRect();assert(button.top>=copy.bottom&&button.height<area.height*.07,'Continue button overlaps preview dialogue');return{ok:true,editorPreview:true,buttonClearOfText:true,...result};}
+ if(phase==='offstage'){stopPlay();mode='player';renderPlayer();await wait(300);playing=true;titleRequest++;playAct=project.acts.findIndex(a=>!isEvent(a));playStep=0;preparedAct=-1;await showPlayStep();const result=await sample();assert(result.movement>.01,'普通场外动作没有驱动头像');return{ok:true,...result};}
+ if(phase==='hold'){stopPlay();playing=true;titleRequest++;playAct=project.acts.indexOf(fixture());playStep=0;preparedAct=-1;await showPlayStep();await ready();const state=window.__airSmokeRuntime;assert(state?.dialogueActive,'未进入空战对话');state.paused=false;const positions=state.units.map(u=>u.flight.position.toArray()),health=state.units.map(u=>u.flight.spec.parts.map(p=>p.health));const enemy=state.units.find(u=>u.team==='enemy');enemy.flight.position.copy(state.units[0].flight.position).add(new THREE.Vector3(1,0,0));const near=enemy.flight.position.toArray();let propNode;for(const m of state.units[0].model.userData.models.values())if(m.userData.prop)propNode=m.userData.prop;assert(propNode,'缺少真实螺旋桨');const angle=propNode.rotation.z,travel=state.clouds.travel;for(let i=0;i<36000;i++)state.step(1/60);const result=await sample();assert(result.movement>.01&&result.motionId,'MMD 动作没有反映在空战头像');assert(state.elapsed===0&&state.shots===0&&!state.result,'长时间对话期间战斗推进');assert(JSON.stringify(enemy.flight.position.toArray())===JSON.stringify(near)&&state.units.every(u=>u.flight.alive),'敌机移动或发生碰撞');assert(JSON.stringify(health)===JSON.stringify(state.units.map(u=>u.flight.spec.parts.map(p=>p.health))),'对话期间受到伤害');assert(Math.abs(propNode.rotation.z-angle)>.01&&state.clouds.travel>travel,'螺旋桨或云雾停止');enemy.flight.position.fromArray(positions[state.units.indexOf(enemy)]);return{ok:true,simulatedWaitSeconds:600,allFlightsFrozen:true,collisionBlocked:true,propellerMoving:true,cloudsMoving:true,...result};}
+ if(phase==='handoff'){finishTyping();events.confirm();await ready();const result=await sample();assert(result.model==='VRM','第二位实际角色未切换');finishTyping();events.confirm();assert(!document.querySelector('#dialogue').classList.contains('visible'),'说完后对话框未消失');const state=window.__airSmokeRuntime,start=state.units[0].flight.position.clone();for(let i=0;i<80&&state.handoff>0;i++){state.paused=false;await wait(50);}await wait(350);assert(!state.dialogueActive&&state.clouds.alpha===0&&state.elapsed>0,'云雾散去后空战未恢复');assert(state.units[0].flight.position.distanceTo(start)>1,'玩家没有接管飞机');return{ok:true,...result,cloudsCleared:true,combatResumed:true};}
+ if(phase==='checkpoint'){const snapshot=snapshotSlot(),slots=Array(20).fill(null);slots[1]=snapshot;localStorage.setItem(saveKey(),JSON.stringify(slots));playing=false;await loadSlot(1);await ready();assert(window.__airSmokeRuntime.dialogueActive&&window.__airSmokeRuntime.elapsed===0,'读档检查点未安全恢复');stopPlay();await wait(250);assert(!events.airActive()&&!document.querySelector('.air-dialogue-next')&&!airDialogueLine&&!stage.livePortrait.record,'退出后遗留头像或云雾');return{ok:true,checkpointSafe:true,cancelClean:true};}
+ throw Error(phase);
+};
+
+if(new URLSearchParams(location.search).has('smoke')){
+ window.__vrmSmokeAir68Import=async rows=>{for(const item of rows){item.audioKind='effect';project.assets.push(item);}markDirty();return{ok:true,imported:rows.length};};
+ window.__vrmSmokeAir68=async phase=>{
+  const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms)),node=()=>project.acts.find(a=>a.id==='air67-fixture');
+  if(phase==='setup'){
+   const prior=await window.__vrmSmokeAir67('setup');
+   if(mode==='player'){assert(Object.values(node().event.combat.fireSounds).length>=2,'Weapon sounds missing from export');return{ok:true,exportedIndependentSounds:true};}
+   const first=project.assets.find(a=>a.name.includes('机枪验证')),second=project.assets.find(a=>a.name.includes('机炮验证'));assert(first&&second,'Need two real sound imports');
+   const c=node().event.combat;c.enemies=8;c.allies=4;c.duration=900;const types=[...new Set(['aircraft','allyAircraft','enemyAircraft'].flatMap(role=>c[role].parts.filter(p=>['gun','turret'].includes(partFamily(p.type))).map(p=>p.type)))];assert(types.length>=2,'Need distinct weapons');c.fireSounds=Object.fromEntries(types.map((type,i)=>[type,i%2?second.id:first.id]));selectedStep=c.dialogues.length;renderSidebar();renderInspector();markDirty();await save();return{ok:true,...prior,weaponTypes:types,independentSounds:true};
+  }
+  if(phase==='layout'){
+   const right=document.querySelector('#dialogue-list-body'),pick=async i=>{right.querySelector(`[data-action=event-air-dialogue-select][data-index="${i}"]`).click();await wait(350);};
+   await pick(0);assert(document.querySelectorAll('[data-air-dialogue=text]').length===1,'Dialogue inspector must show one line');assert(!document.querySelector('[data-air-vehicle]'),'Dialogue inspector contains plane placement');
+   const count=node().event.combat.dialogues.length;document.querySelector('#dialogue-list-body [data-action=add-step]').click();await wait(350);assert(node().event.combat.dialogues.length===count+1&&selectedStep===count,'Add dialogue does not select new line');
+   document.querySelector(`[data-action=event-air-dialogue-remove][data-index="${count}"]`).click();await wait(350);assert(node().event.combat.dialogues.length===count,'Remove dialogue failed');
+   document.querySelector('[data-action=event-air-settings]').click();await wait(350);assert(right.querySelector('.step-list').lastElementChild.dataset.action==='event-air-settings','Settings is not fixed last');
+   const fields=[...document.querySelectorAll('[data-air-fire-type]')];assert(fields.length>=2,'Per-weapon sound selectors missing');const [a,b]=fields,old=a.value,other=b.value;a.value=other;a.dispatchEvent(new Event('input',{bubbles:true}));assert(node().event.combat.fireSounds[b.dataset.airFireType]===other,'Changing one weapon changed another');a.value=old;a.dispatchEvent(new Event('input',{bubbles:true}));
+   await pick(1);assert(document.querySelector('[data-air-dialogue=text]').dataset.index==='1','Second dialogue did not select');await pick(0);for(let i=0;i<2400&&(!document.querySelector('.stage-frame.air-dialogue-active')||stage.livePortrait.record?.actorKey!==node().event.combat.dialogues[0].characterId||!document.querySelector('#dialogue-text').textContent.startsWith(node().event.combat.dialogues[0].text.slice(0,4)));i++)await wait(25);assert(document.querySelector('.stage-frame.air-dialogue-active')&&stage.livePortrait.record?.actorKey===node().event.combat.dialogues[0].characterId&&document.querySelector('#dialogue-text').textContent.startsWith(node().event.combat.dialogues[0].text.slice(0,4)),'Selected dialogue preview is stale');return{ok:true,selectedDialogueActuallyPreviewed:true,individualDialogueInspector:true,addDelete:true,settingsFixedLast:true,independentSoundSelectors:fields.length};
+  }
+  if(phase==='tracers'){
+   const state=window.__airSmokeRuntime;assert(state&&!state.dialogueActive,'Need active combat');
+   const points=state.initialSpawns.map(r=>new THREE.Vector3(...r.position));let min=Infinity,cross=Infinity;
+   for(let i=0;i<points.length;i++)for(let j=i+1;j<points.length;j++){const d=points[i].distanceTo(points[j]);min=Math.min(min,d);if((state.initialSpawns[i].team==='enemy')!==(state.initialSpawns[j].team==='enemy'))cross=Math.min(cross,d);}
+   assert(min>=2000&&cross>=10000&&points.length===13,'Runtime spawn spacing wrong');
+   state.paused=false;state.fire=true;for(let i=0;i<5;i++)state.step(1/60);state.fire=false;state.paused=true;state.tracers.update(state.bullets);
+   assert(state.bullets.length&&state.bullets.every(b=>b.trail?.length),'A fired bullet has no trail');assert(state.tracers.lines.geometry.drawRange.count>0&&state.tracers.lines.material.color.getHex()===0xffffff,'White trajectory is missing');await wait(700);
+   const types=[...new Set(state.units[0].flight.spec.parts.filter(p=>partFamily(p.type)==='gun').map(p=>p.type))];assert(types.length>=2&&types.every(type=>state.shotAudioPlaysByType[type]>0),'Independent weapon sounds did not play: '+JSON.stringify(state.shotAudioPlaysByType));
+   return{ok:true,aircraft:points.length,minAircraftSpacing:min,minTeamSpacing:cross,everyBulletWhiteTrail:true,actualAudioPlaysByWeapon:state.shotAudioPlaysByType};
+  }
+  if(phase==='range'){
+   const state=window.__airSmokeRuntime,player=state.units[0];for(const u of state.units.slice(1))u.flight.ammo=0;state.config.mission='survive';state.config.duration=900;
+   state.paused=false;for(let i=0;i<1200;i++)state.step(1/60);state.paused=true;assert(state.rangeExpirations>0&&state.lastProjectileRange===7000,'Shots did not expire at 7 km');assert(!state.bullets.some(b=>!b.bomb),'Projectile exceeded 7 km');
+   state.paused=false;state.fire=true;state.step(1/60);state.fire=false;const bullet=state.bullets.find(b=>!b.bomb),victim=state.units.find(u=>u.team==='enemy'&&u.flight.alive);assert(bullet&&victim,'Need a projectile and target');
+   const old=victim.flight.position.clone(),part=victim.flight.spec.parts.find(p=>partFamily(p.type)==='fuselage'),f=victim.flight;f.position.set(0,1000,-200);f.velocity.set(0,0,0);f.throttle=0;
+   const center=(part.type.startsWith('voxel_')?part.position:part.center).clone().sub(f.spec.com).applyQuaternion(f.rotation).add(f.position);bullet.position.copy(center).add(new THREE.Vector3(0,0,3));bullet.velocity.set(0,0,-1200);bullet.trail=[bullet.position.clone()];const hits=state.hits;state.step(1/60);state.paused=true;assert(state.hits>hits&&state.hitText==='命中','Hit text is not exactly 命中');f.position.copy(old);await wait(150);
+   assert([...state.root.querySelectorAll('.air-tag.enemy')].every(tag=>/^\d+\.\d km$/.test(tag.textContent)),'Enemy labels contain extra words');return{ok:true,expiredAtMetres:state.lastProjectileRange,rangeExpirations:state.rangeExpirations,actualCollisionHit:true,hitText:state.hitText,distanceOnlyLabels:true};
+  }
+  return window.__vrmSmokeAir67(phase);
+ };
+}
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeAir69=async phase=>{
+ if(phase==='setup'){
+  const result=await window.__vrmSmokeAir68('setup');if(mode==='player')return result;
+  const c=project.acts.find(a=>a.id==='air67-fixture').event.combat,sounds=project.assets.filter(a=>a.name.includes('机枪验证')||a.name.includes('机炮验证'));
+  for(const [i,role]of ['aircraft','allyAircraft','enemyAircraft'].entries()){const a=c[role];a.fireSounds=Object.fromEntries([...new Set(a.parts.filter(p=>['gun','turret'].includes(partFamily(p.type))).map(p=>p.type))].map((type,j)=>[type,sounds[(i+j)%2].id]));const d=project.vehicles.find(v=>v.id===a.vehicleId);if(d)d.blueprint.fireSounds={...a.fireSounds};}
+  markDirty();await save();return{...result,perAircraftSounds:true};
+ }
+ return window.__vrmSmokeAir68(phase);
+};
+
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeNaval70=async phase=>{
+ const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms)),node=()=>project.acts.find(a=>a.id==='air67-fixture');
+ if(phase==='setup'){
+  if(mode==='player'){assert(node()?.event.combat.ships.length===2,'Export lost ship groups');assert(node().event.combat.fleets.enemy.formation==='ring','Export lost formation');return{ok:true,exportedFleets:true};}
+  if(!node())await window.__vrmSmokeAir69('setup');
+  const {warshipPreset}=await import('./warship-schema.js'),{createPart}=await import('./aircombat-schema.js');ensureShipLibrary(project);const docs=project.vehicles.filter(d=>d.vehicleType==='warship'),dd=docs.find(d=>d.blueprint.shipClass==='destroyer'),bb=docs.find(d=>d.blueprint.shipClass==='battleship'),sound=project.assets.find(a=>a.type==='audio'&&a.audioKind==='effect');
+  for(const d of [dd,bb]){d.blueprint.fireSounds=Object.fromEntries(d.blueprint.parts.filter(p=>partFamily(p.type)==='turret').map(p=>[p.type,sound?.id||'']));}
+  const c=node().event.combat;c.enemies=2;c.allies=1;c.duration=900;c.mission='protectShips';c.aircraft=voxelPreset('b25');const planeDoc=project.vehicles.find(d=>d.vehicleType!=='warship');c.aircraft.vehicleId=planeDoc.id;for(const [i,type]of ['bomb_he250','bomb_ap500','aerial_torpedo'].entries()){const p=createPart(type);p.offset=[(i-1)*2,-1,0];c.aircraft.parts.push(p);}planeDoc.blueprint=structuredClone(c.aircraft);planeDoc.name=c.aircraft.name;
+  c.ships=[{id:'naval70-enemy',team:'enemy',count:5,blueprint:structuredClone(dd.blueprint)},{id:'naval70-ally',team:'ally',count:3,blueprint:structuredClone(bb.blueprint)}];c.fleets={ally:{formation:'doubleColumn',x:-2000,z:-1000,heading:0,speed:10,spacing:600},enemy:{formation:'ring',x:1000,z:-6000,heading:180,speed:10,spacing:600}};
+  node().event.combat=normalizeCombat(c);selectedAct=project.acts.indexOf(node());selectedStep=c.dialogues.length;mode='editor';activePanel='story';modulePanel=null;renderEditor();renderSidebar();renderInspector();markDirty();await save();return{ok:true,shipClasses:docs.length,enemyShips:5,allyShips:3,pilotOnlyPlayer:true};
+ }
+ if(phase==='fleet-layout'){selectedAct=project.acts.indexOf(node());selectedStep=node().event.combat.dialogues.length;mode='editor';modulePanel=null;activePanel='story';renderEditor();renderSidebar();renderInspector();assert(document.querySelectorAll('[data-fleet-field=formation]').length===2,'Fleet controls missing');const select=document.querySelector('[data-fleet-team=enemy][data-fleet-field=formation]');for(const type of ['singleColumn','doubleColumn','lineAbreast','echelon','ring']){const el=document.querySelector('[data-fleet-team=enemy][data-fleet-field=formation]');el.value=type;el.dispatchEvent(new Event('input',{bubbles:true}));assert(node().event.combat.fleets.enemy.formation===type,'Formation switch not applied');}assert(document.querySelectorAll('.fleet-diagram').length===2,'Formation feedback missing');document.querySelector('[data-fleet-team=enemy][data-fleet-field=formation]').closest('details').scrollIntoView({block:'start'});await wait(200);return{ok:true,fiveFormationChoices:true,immediateFeedback:true};}
+ if(phase==='naval-runtime'){
+  const s=window.__airSmokeRuntime;assert(s&&!s.dialogueActive,'Combat not ready');s.paused=true;s.config.mission='survive';for(const u of s.units)if(!u.flight.ship&&u.team!=='player')u.flight.ammo=0;
+  const {fleetFormations,normalizeFleets,createFleets,stepFleets}=await import('./naval-formations.js'),{remainingCores,damageShipPart}=await import('./warship-runtime.js'),{intersectVehicle}=await import('./vehicle-hit.js'),{createProjectile}=await import('./aircombat-rules.js');
+  const ships=s.units.filter(u=>u.flight.ship),enemy=ships.find(u=>u.team==='enemy'),player=s.units[0];assert(ships.length===8,'Wrong ship deployment');
+  const formations=[];for(const type of Object.keys(fleetFormations)){s.fleets=createFleets(s.units,normalizeFleets({...s.config.fleets,enemy:{...s.config.fleets.enemy,formation:type}}));const fleet=s.fleets.find(f=>f.team==='enemy');for(let i=0;i<180;i++)stepFleets(s.fleets,1);for(const u of fleet.members){const r=u.flight.position.clone().sub(fleet.anchor).applyQuaternion(fleet.rotation.clone().invert()),o=fleet.offsets[u.flight.fleetSlot];assert(Math.hypot(r.x-o[0],r.z-o[1])<.001,'Formation broke');}formations.push(type);}
+  s.fleets=createFleets(s.units,s.config.fleets);player.flight.position.copy(enemy.flight.position).add(new THREE.Vector3(0,400,700));player.flight.velocity.set(0,0,-60);player.flight.rotation.identity();player.flight.throttle=.6;s.paused=false;for(let i=0;i<360;i++)s.step(1/60);s.paused=true;const fired=enemy.flight.spec.parts.filter(p=>partFamily(p.type)==='turret').reduce((n,p)=>n+(p.shots||0),0);assert(fired>0&&s.turretTurns>0,'Ship AA did not aim/fire');for(const u of ships)u.flight.ammo=0;s.bullets=[];
+  s.paused=false;window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyT',bubbles:true}));s.keys.clear();s.paused=true;const torp=s.bullets.find(b=>b.torpedo);assert(torp&&s.torpedoLaunches,'Actual torpedo release missing');
+  const f=enemy.flight,a=f.position.clone().add(new THREE.Vector3(-120,0,0)),b=f.position.clone().add(new THREE.Vector3(120,0,0));a.y=b.y=-1.5;const hit=intersectVehicle(enemy,a,b);assert(hit,'Torpedo ray missed hull');const contact=a.clone().lerp(b,hit.t);torp.position.copy(contact).add(new THREE.Vector3(-.1,0,0));torp.velocity.set(24,0,0);torp.waterborne=true;torp.waterTravel=0;const previousHits=s.bombHits;s.paused=false;s.step(1/60);s.paused=true;assert(s.bombHits>previousHits,'Waterborne torpedo did not hit ship');
+  s.paused=false;window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyB',bubbles:true}));s.keys.clear();s.paused=true;const bomb=s.bullets.find(b=>b.bomb&&!b.torpedo);assert(bomb,'Actual bomb release missing');const start=f.position.clone().add(new THREE.Vector3(0,100,15)),end=start.clone().add(new THREE.Vector3(0,-200,0)),bh=intersectVehicle(enemy,start,end);assert(bh,'Bomb ray missed deck');bomb.position.copy(start).lerp(end,bh.t).add(new THREE.Vector3(0,.1,0));bomb.velocity.set(0,-120,0);s.paused=false;s.step(1/60);s.paused=true;assert(s.bombHits>=previousHits+2,'Bomb did not collide with ship');
+  for(const [ammoType,fuze]of [['he','proximity'],['type3','timed']]){const at=player.flight.position.clone().add(new THREE.Vector3(12,0,0)),shot={...createProjectile(at,new THREE.Vector3(-600,0,0)),owner:enemy,part:enemy.flight.spec.parts.find(p=>p.type==='ship_dp127'),damage:1,shell:true,ammoType,fuze,burstTime:.01,proximityRadius:20,age:0,travelled:200};s.bullets.push(shot);const before=s.flakBursts;s.paused=false;s.step(1/60);s.paused=true;assert(s.flakBursts>before,ammoType+' airburst did not trigger');}
+  const intact=ships.find(u=>u!==enemy&&u.flight.alive&&remainingCores(u.flight)>1).flight,live=intact.cores.filter(c=>c.health>0);for(const c of live.slice(0,-1))damageShipPart(intact,c.id,1e9);assert(intact.alive&&remainingCores(intact)===1,'Ship sank before last living core');damageShipPart(intact,live.at(-1).id,1e9);assert(!intact.alive&&intact.sinking,'Last core did not sink ship');
+  s.smokeCamera={position:s.fleets[0].anchor.clone().add(new THREE.Vector3(1100,1200,1600)),target:s.fleets[0].anchor.clone()};await wait(150);return{ok:true,formations,ships:8,shipAACannonShots:fired,angularTraverse:true,actualTorpedoReleaseAndHit:true,actualBombReleaseAndHit:true,proximityAndType3:true,allCoreSinking:true,flakBursts:s.flakBursts,bombHits:s.bombHits};
+ }
+ return window.__vrmSmokeAir67(phase);
 };

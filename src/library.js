@@ -51,7 +51,7 @@ export function createLibrary(ctx) {
   const asset = id => ctx.project().assets.find(item => item.id === id);
   const pdfOptions = item => ({ url: assetUrl(item), cMapUrl: new URL('./pdf-resources/cmaps/', location.href).href,
     cMapPacked: true, standardFontDataUrl: new URL('./pdf-resources/standard_fonts/', location.href).href,
-    wasmUrl: new URL('./pdf-resources/wasm/', location.href).href, isEvalSupported: false });
+    wasmUrl: new URL('./pdf-resources/wasm/', location.href).href, isEvalSupported: false, enableXfa: false, useSystemFonts: true });
   const options = (items, value, empty) => `<option value="">${empty}</option>${items.map(item => `<option value="${esc(item.id)}" ${item.id === value ? 'selected' : ''}>${esc(item.name)}</option>`).join('')}`;
   function editor() {
     const book = books()[selected];

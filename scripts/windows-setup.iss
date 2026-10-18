@@ -3,8 +3,8 @@
 #endif
 [Setup]
 AppId={{A3A46892-17CA-4D01-8A3B-63D3395A84C5}
-AppName=VRM Galgame 编辑器
-AppVersion=0.0.52
+AppName=公民文艺生产综合自动化系统
+AppVersion=0.0.70
 AppPublisher=VRM Galgame
 DefaultDirName={localappdata}\Programs\VRMGalgame
 DefaultGroupName=VRM Galgame
@@ -12,7 +12,7 @@ PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=installer-output
-OutputBaseFilename=VRMGalgame-Setup-0.0.52
+OutputBaseFilename=VRMGalgame-Setup-0.0.70
 SetupIconFile=..\Desktop\app.ico
 UninstallDisplayIcon={app}\VRMGalgame.exe
 Compression=lzma2

@@ -1,8 +1,0 @@
-/* Centre only the Astral game skin. Other skins and the editor retain their
-   original layout from game-ui.css and vn-theme.css. */
-.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue){left:18%;right:18%;text-align:center}
-.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue) #dialogue-text{text-align:center;text-wrap:pretty}
-.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue) .speaker{text-align:center}
-.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue) .speaker{left:auto;transform:none}
-.player[data-game-ui="astral"] .scene-quick-actions{left:50%;right:auto;transform:translateX(-50%);justify-content:center}
-@media(max-width:700px){.player[data-game-ui="astral"] .dialogue:not(.custom-dialogue){left:17%;right:17%}}

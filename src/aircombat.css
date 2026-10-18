@@ -8,3 +8,14 @@
 .air-hit-feedback{position:absolute;left:50%;top:59%;transform:translateX(-50%);color:#ffe696;font-weight:700;font-size:20px;text-shadow:0 2px 4px #17242c;pointer-events:none}.air-hit-feedback.kill{color:#ffae73}
 
 .air-plane-summary select{display:block;width:100%;max-width:100%;margin:5px 0}
+
+.stage-frame.air-dialogue-active #dialogue{visibility:visible!important;z-index:15}.stage-frame.air-dialogue-active #speaker-portrait{visibility:visible!important;z-index:16}.air-dialogue :is(.air-metrics,.air-marker-layer,.air-aim,.air-boresight,.air-bottom,.air-hit-feedback),.air-handoff :is(.air-marker-layer,.air-aim,.air-boresight){visibility:hidden}.air-dialogue-next{position:absolute;right:10%;bottom:2.3%;z-index:18}.air-dialogue .air-message{top:12%}
+.air-dialogue-next{color:var(--glass-ink,#fff);background:var(--glass-fill,#304653e8);border:1px solid var(--glass-line,#dcecffaa);border-radius:999px;padding:8px 18px;box-shadow:var(--glass-shadow);backdrop-filter:blur(12px);cursor:pointer;font:inherit}.player[data-game-ui=pink-pop] .air-dialogue-next{color:var(--pink-ink);border-color:#ddd;border-radius:9px}.player[data-game-ui^=wechat-] .air-dialogue-next{color:var(--chat-ink);border-color:var(--chat-line);border-radius:7px;background:var(--chat-surface);backdrop-filter:none}
+.air-dialogue [data-air-run=expand]{display:none}
+.player .air-dialogue-next{height:5.2cqh;min-height:0;min-width:0;margin:0;padding:0 1.5cqw;font-family:'HarmonyOS Sans SC','Microsoft YaHei UI',sans-serif;font-size:1.13cqw;line-height:1;white-space:nowrap}
+
+.air-step-list .air-settings-row{margin-top:12px;border-top:2px solid var(--ui-border,#d5dce5)}.air-weapon-sound{padding:10px 0;border-bottom:1px solid var(--ui-border,#d5dce5)}
+
+.ship-deployment{border:1px solid var(--line,#ccd4dc);border-radius:12px;padding:12px;margin:12px 0;min-width:0}.ship-deployment summary{cursor:pointer;font-weight:600}.ship-deployment select,.ship-deployment input{max-width:100%;min-width:0}.air-tag.ship{max-width:220px}
+
+.fleet-diagram{display:block;width:100%;height:112px;margin:10px 0;background:#879baa12;border:1px solid #879baa28;border-radius:10px;fill:#35a693}.fleet-diagram text{fill:currentColor;font:11px sans-serif}

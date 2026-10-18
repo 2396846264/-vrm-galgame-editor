@@ -260,16 +260,16 @@
 .editor .tabs { background: #1b2d3a; }
 .editor .tabs button.active { color: #fff; background: #486b7c; }
 .editor .tabs button:not(.active):hover { color: #fff; background: #345267; }
-.editor button:not(.list-row):not([data-panel]):not([data-action="choose"]) {
+.editor button:not(.player *):not(.list-row):not([data-panel]):not([data-action="choose"]) {
   border-color: #9bb8c462;
   background-color: #d5e9f017;
   color: #e8f4f8;
 }
-.editor button:not(.list-row):not([data-panel]):hover { background-color: #c4e0eb30; border-color: #badbe7; }
-.editor button.primary:not(.list-row) { background-color: #cfe7ec; border-color: #effaff; color: #1d3945; }
+.editor button:not(.player *):not(.list-row):not([data-panel]):hover { background-color: #c4e0eb30; border-color: #badbe7; }
+.editor button:not(.player *).primary:not(.list-row) { background-color: #cfe7ec; border-color: #effaff; color: #1d3945; }
 .editor .list-row.selected { background: #3a5c70; border-color: #8eb9ca; }
-.editor input, .editor select, .editor textarea { background: #172b3b; border-color: #7896a268; }
-.editor input:focus, .editor select:focus, .editor textarea:focus { border-color: #d6edf4; box-shadow: 0 0 0 2px #b8e1ec33; }
+.editor input:not(.player *), .editor select:not(.player *), .editor textarea:not(.player *) { background: #172b3b; border-color: #7896a268; }
+.editor input:not(.player *):focus, .editor select:not(.player *):focus, .editor textarea:not(.player *):focus { border-color: #d6edf4; box-shadow: 0 0 0 2px #b8e1ec33; }
 .editor .expression-controls, .editor .cast-editor { background: #213b4d; border-color: #7797a366; }
 .editor .adjustment input[type="range"], .editor .expression-slider input[type="range"] { accent-color: #a9d8e7; }
 .editor .adjustment output, .editor .expression-slider output { color: #d7f0f7; }

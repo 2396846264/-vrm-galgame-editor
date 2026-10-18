@@ -25,8 +25,6 @@ body[data-editor-theme] .editor .center .stage-frame button.preview-resize-handl
 body[data-editor-theme] .editor .center .stage-frame button.preview-resize-handle[data-preview-resize]:hover{background:rgba(15,142,124,.12);border:0;}
 .preview-resize-corner{right:0;bottom:0;width:26px;height:26px;cursor:nwse-resize;}
 .preview-resize-corner svg{width:20px;height:20px;fill:none;stroke:rgba(255,255,255,.8);stroke-width:1.5;filter:drop-shadow(0 1px 1px #234);}
-.preview-resize-right{right:0;top:12px;bottom:26px;width:8px;cursor:ew-resize;}
-.preview-resize-bottom{bottom:0;left:12px;right:26px;height:8px;cursor:ns-resize;}
 .preview-resizing{user-select:none;}
 .editor.is-playing .preview-resize-handle{display:none;}
 @supports (height: 1cqh) {
@@ -280,3 +278,5 @@ body[data-editor-theme] .editor .center .stage-frame button.preview-resize-handl
 .binding-preview-tools small { display:block; padding-top:6px; font-size:11px; }
 .binding-view-mode canvas { cursor:grab; touch-action:none; }
 .binding-view-mode canvas:active { cursor:grabbing; }
+
+.editor-preview-player.player{display:contents}.editor-preview-player.player .stage-frame{border-radius:12px}.editor-preview-player [data-preview-controls]{pointer-events:none}.editor:not(.is-playing) .editor-preview-player .auto-play-button{display:flex!important}

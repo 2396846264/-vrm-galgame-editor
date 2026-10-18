@@ -1,8 +1,11 @@
+import {damageShipPart} from './warship-runtime.js';
+import {buildCollisionIndex} from './vehicle-hit.js';
+import {prepareStructure,reconcileStructure} from './vehicle-damage.js';
 import * as THREE from 'three';
 import {compileAircraft,setGearProjection} from './aircombat-models.js';
 import {partFamily} from './aircombat-schema.js';
 const clamp=THREE.MathUtils.clamp;
-export function createFlight(blueprint,position=[0,600,0],heading=0){const spec=compileAircraft(blueprint),rotation=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,heading,0));return {spec,position:new THREE.Vector3().fromArray(position),rotation,velocity:new THREE.Vector3(0,0,-75).applyQuaternion(rotation),angular:new THREE.Vector3(),throttle:.85,alive:true,lift:0,drag:0,horsepower:spec.powerHp,airSpeed:75,stall:false,control:{pitch:0,yaw:0,roll:0},kills:0,gearCommand:'auto',grounded:false,groundLevel:0,surface:'land',brake:0,ammo:spec.parts.reduce((n,p)=>{p.ammo=['gun','turret'].includes(partFamily(p.type))?(p.def.ammo||600):0;return n+p.ammo;},0),bombs:spec.parts.filter(p=>partFamily(p.type)==='bomb').length};}
+export function createFlight(blueprint,position=[0,600,0],heading=0){const spec=compileAircraft(blueprint),rotation=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,heading,0));prepareStructure(spec);buildCollisionIndex(spec);return {spec,position:new THREE.Vector3().fromArray(position),rotation,velocity:new THREE.Vector3(0,0,-75).applyQuaternion(rotation),angular:new THREE.Vector3(),throttle:.85,alive:true,lift:0,drag:0,horsepower:spec.powerHp,airSpeed:75,stall:false,control:{pitch:0,yaw:0,roll:0},kills:0,gearCommand:'auto',grounded:false,groundLevel:0,surface:'land',brake:0,ammo:spec.parts.reduce((n,p)=>{p.ammo=['gun','turret'].includes(partFamily(p.type))?(p.def.ammo||600):0;return n+p.ammo;},0),bombs:spec.parts.filter(p=>partFamily(p.type)==='bomb').length};}
 export function steerFlight(flight,direction,manual={}){
  const aim=direction.clone().normalize(),forward=new THREE.Vector3(0,0,-1).applyQuaternion(flight.rotation),currentYaw=Math.atan2(-forward.x,-forward.z),targetYaw=Math.atan2(-aim.x,-aim.z),yawError=Math.atan2(Math.sin(targetYaw-currentYaw),Math.cos(targetYaw-currentYaw));
  const rho=1.225*Math.exp(-Math.max(0,flight.position.y)/8500),q=.5*rho*Math.max(35,flight.airSpeed)**2;
@@ -45,5 +48,5 @@ export function stepFlight(f,dt,wind=0){
   if(f.surface!=='water'&&f.position.y<=clearance&&gearDown&&upright>.85&&f.velocity.y>-6){f.position.y=clearance;f.velocity.y=Math.max(0,f.velocity.y);f.velocity.x*=Math.max(0,1-dt*.012);f.velocity.z*=Math.max(0,1-dt*.012);f.grounded=true;if(f.brake){const horizontal=Math.hypot(f.velocity.x,f.velocity.z),ratio=horizontal?Math.max(0,horizontal-dt*5*f.brake)/horizontal:0;f.velocity.x*=ratio;f.velocity.z*=ratio;}}
   if(f.position.y<(f.groundLevel||0)+.1||f.position.y<clearance*.8&&!f.grounded||!Number.isFinite(f.position.lengthSq()))f.alive=false;
 }
-export function damagePart(f,partId,damage){const p=f.spec.parts.find(p=>p.id===partId);if(!p||!f.alive)return;p.health=Math.max(0,p.health-damage);if(partFamily(p.type)==='fuselage'&&p.health<=0)f.alive=false;}
+export function damagePart(f,partId,damage,options){if(f.ship){damageShipPart(f,partId,damage,options);return;}const p=f.spec.parts.find(p=>p.id===partId);if(!p||!f.alive)return;const before=p.health;p.health=Math.max(0,p.health-damage);if(before>0&&p.health===0){p.destroyed=true;reconcileStructure(f);}}
 export function segmentSphere(a,b,center,radius){const delta=b.clone().sub(a),length=delta.lengthSq(),t=length?clamp(center.clone().sub(a).dot(delta)/length,0,1):0;return a.clone().addScaledVector(delta,t).distanceToSquared(center)<=radius*radius?t:null;}

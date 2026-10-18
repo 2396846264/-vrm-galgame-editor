@@ -1,3 +1,4 @@
+import {editorLabel,editorText,setEditorText} from './editor-language.js';
 // Plain-language explanations shared by preset, title and dialogue editors.
 export const renderHelp={
  preset:'选择已经做好的画面效果。选择“原始画面”就不用滤镜。预设内容在渲染编辑器中修改。',
@@ -82,11 +83,11 @@ export const renderHelp={
  spatialStrength:'空间镜头开启时，镜头摆动有多明显。小一些更舒适，大一些立体感更强。',
 };
 const escape=s=>String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-export function helpLabel(label,key){if(!renderHelp[key])throw Error('Missing render help: '+key);return `${escape(label)} <span class="render-question" role="button" tabindex="0" data-render-help="${key}" aria-label="${escape(label)}的说明">?</span>`;}
+export function helpLabel(label,key){if(!renderHelp[key])throw Error('Missing render help: '+key);return `${editorLabel(label)} <span class="render-question" role="button" tabindex="0" data-render-help="${key}" aria-label="${escape(label)}的说明">?</span>`;}
 export function installRenderHelp(doc=document){
  let active=null,timer=null,box=null;const delay=2000;
  const close=()=>{clearTimeout(timer);timer=null;active?.removeAttribute('aria-describedby');active=null;box?.remove();box=null;};
- const show=()=>{if(!active?.isConnected)return close();box=doc.createElement('div');box.id='render-help-popup';box.className='render-help-popup';box.role='tooltip';box.textContent=renderHelp[active.dataset.renderHelp];doc.body.append(box);active.setAttribute('aria-describedby',box.id);const a=active.getBoundingClientRect(),b=box.getBoundingClientRect(),w=doc.defaultView.innerWidth,h=doc.defaultView.innerHeight;box.style.left=Math.max(8,Math.min(a.left-b.width/2,w-b.width-8))+'px';box.style.top=Math.max(8,Math.min(a.bottom+10,h-b.height-8))+'px';};
+ const show=()=>{if(!active?.isConnected)return close();box=doc.createElement('div');box.id='render-help-popup';box.className='render-help-popup';box.role='tooltip';setEditorText(box,renderHelp[active.dataset.renderHelp]);doc.body.append(box);active.setAttribute('aria-describedby',box.id);const a=active.getBoundingClientRect(),b=box.getBoundingClientRect(),w=doc.defaultView.innerWidth,h=doc.defaultView.innerHeight;box.style.left=Math.max(8,Math.min(a.left-b.width/2,w-b.width-8))+'px';box.style.top=Math.max(8,Math.min(a.bottom+10,h-b.height-8))+'px';};
  const start=node=>{if(active===node)return;close();active=node;timer=setTimeout(show,delay);};
  doc.addEventListener('pointerover',e=>{const node=e.target.closest?.('[data-render-help]');if(node)start(node);});
  doc.addEventListener('pointerout',e=>{if(active&&e.target===active&&!active.contains(e.relatedTarget))close();});

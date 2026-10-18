@@ -1,6 +1,5 @@
 export const voiceFolderId = characterId => `character-voice-${characterId}`;
-export const dialogueLines = project => (project.acts || []).filter(act => act.kind !== 'event')
-  .flatMap(act => (act.steps || []).map(line => ({ act, line })));
+export const dialogueLines = project => (project.acts || []).flatMap(act => (act.event?.type==='aircombat'?act.event.combat?.dialogues||[]:act.kind!=='event'?act.steps||[]:[]).map(line => ({ act, line })));
 function collectStrings(value, result = new Set()) {
   if (typeof value === 'string') result.add(value);
   else if (value && typeof value === 'object') Object.values(value).forEach(item => collectStrings(item, result));

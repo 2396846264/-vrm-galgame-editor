@@ -2,31 +2,31 @@
 body[data-editor-theme]{--ui-bg:#f5f5f7;--ui-surface:#fff;--ui-surface-soft:#f2f2f7;--ui-text:#202124;--ui-muted:#62656d;--ui-border:#d9dbe1;--ui-accent:#007aff;--apple-tint:#e9f2ff;--apple-glass:#f8f8fadf;--apple-shadow:0 16px 48px #19243724}
 body[data-editor-theme=dark]{--ui-bg:#1c1c1e;--ui-surface:#252527;--ui-surface-soft:#2c2c2e;--ui-text:#f2f2f7;--ui-muted:#afb0b8;--ui-border:#444449;--ui-accent:#409cff;--apple-tint:#183557;--apple-glass:#242426e8;--apple-shadow:0 16px 48px #0006}
 body[data-editor-theme] .editor,body.apple-module{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','HarmonyOS Sans SC','Microsoft YaHei UI',sans-serif;background:var(--ui-bg);color:var(--ui-text)}
-body[data-editor-theme] .editor :is(button,input,select,textarea),body.apple-module :is(button,input,select,textarea){font:inherit;color:var(--ui-text);background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:8px;box-shadow:none;transition:background .15s,border-color .15s}
-body[data-editor-theme] .editor button,body.apple-module button{padding:7px 12px;min-height:32px}
-body[data-editor-theme] .editor button:hover,body.apple-module button:hover{background:var(--ui-surface-soft);border-color:var(--ui-accent)}
-body[data-editor-theme] .editor :is(button.primary,button.selected,button.active),body.apple-module button.selected{background:var(--apple-tint);color:var(--ui-accent);border-color:transparent}
-body[data-editor-theme] .editor button.primary{background:var(--ui-accent);color:#fff}
-body[data-editor-theme] .editor :is(input,select,textarea):focus,body.apple-module :is(input,select,textarea):focus{border-color:var(--ui-accent);outline:2px solid color-mix(in srgb,var(--ui-accent) 28%,transparent);outline-offset:1px;box-shadow:none}
-body[data-editor-theme] .editor button:focus-visible,body.apple-module button:focus-visible{outline:2px solid var(--ui-accent);outline-offset:3px}
-body[data-editor-theme] .editor :is(.topbar,.sidebar,.inspector,.inspector-heading,.tabs,.editor-tools-row,.module-sidebar-title,.status),body.apple-module :is(header,.scene-panel,.document-panel,.asset-library,.library){background:var(--apple-glass);color:var(--ui-text);border-color:var(--ui-border)}
+body[data-editor-theme] .editor :is(button,input,select,textarea):not(.player *),body.apple-module :is(button,input,select,textarea){font:inherit;color:var(--ui-text);background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:8px;box-shadow:none;transition:background .15s,border-color .15s}
+body[data-editor-theme] .editor button:not(.player *),body.apple-module button{padding:7px 12px;min-height:32px}
+body[data-editor-theme] .editor button:not(.player *):hover,body.apple-module button:hover{background:var(--ui-surface-soft);border-color:var(--ui-accent)}
+body[data-editor-theme] .editor :is(button.primary,button.selected,button.active):not(.player *),body.apple-module button.selected{background:var(--apple-tint);color:var(--ui-accent);border-color:transparent}
+body[data-editor-theme] .editor button:not(.player *).primary{background:var(--ui-accent);color:#fff}
+body[data-editor-theme] .editor :is(input,select,textarea):not(.player *):focus,body.apple-module :is(input,select,textarea):focus{border-color:var(--ui-accent);outline:2px solid color-mix(in srgb,var(--ui-accent) 28%,transparent);outline-offset:1px;box-shadow:none}
+body[data-editor-theme] .editor button:not(.player *):focus-visible,body.apple-module button:focus-visible{outline:2px solid var(--ui-accent);outline-offset:3px}
+body[data-editor-theme] .editor :is(.topbar,.sidebar,.inspector,.inspector-heading,.tabs,.editor-tools-row,.module-sidebar-title,.status):not(.player *),body.apple-module :is(header,.scene-panel,.document-panel,.asset-library,.library){background:var(--apple-glass);color:var(--ui-text);border-color:var(--ui-border)}
 body[data-editor-theme] .editor .topbar{gap:16px;box-shadow:0 1px 0 var(--ui-border);padding:12px 20px;backdrop-filter:blur(20px)}
 body[data-editor-theme] .editor .brand{font-size:17px;color:var(--ui-text);letter-spacing:-.3px}
-body[data-editor-theme] .editor :is(.brand span,.tip,.field>span,.stage-hint,.story-current,.status,.list-row small,.sidebar-note,.module-context-caption){color:var(--ui-muted)}
-body[data-editor-theme] .editor :is(.section-heading,.inspector-heading,.inspector-content h2,.number){color:var(--ui-text)}
+body[data-editor-theme] .editor :is(.brand span,.tip,.field>span,.stage-hint,.story-current,.status,.list-row small,.sidebar-note,.module-context-caption):not(.player *){color:var(--ui-muted)}
+body[data-editor-theme] .editor :is(.section-heading,.inspector-heading,.inspector-content h2,.number):not(.player *){color:var(--ui-text)}
 body[data-editor-theme] .editor .center{background:var(--ui-bg);padding:16px}
 body[data-editor-theme] .editor .list-row{background:transparent;border-color:transparent}
 body[data-editor-theme] .editor .list-row.selected{background:var(--apple-tint);border-color:transparent;color:var(--ui-accent)}
 body[data-editor-theme] .editor .list-row b{color:inherit}
-body[data-editor-theme] .editor :is(.choice-editor,.asset-row){background:var(--ui-surface-soft);color:var(--ui-text)}
-body[data-editor-theme] .editor :is(.editor-settings-card,.module-picker){background:var(--ui-surface);color:var(--ui-text);border:1px solid var(--ui-border);border-radius:20px;box-shadow:var(--apple-shadow)}
+body[data-editor-theme] .editor :is(.choice-editor,.asset-row):not(.player *){background:var(--ui-surface-soft);color:var(--ui-text)}
+body[data-editor-theme] .editor :is(.editor-settings-card,.module-picker):not(.player *){background:var(--ui-surface);color:var(--ui-text);border:1px solid var(--ui-border);border-radius:20px;box-shadow:var(--apple-shadow)}
 body[data-editor-theme] .editor .editor-tools-row nav{gap:6px}
 body[data-editor-theme] .editor .editor-tools-row nav button{white-space:nowrap}
 body[data-editor-theme]{--ui-accent-soft:var(--apple-tint);--ui-raised:var(--ui-surface-soft)}
-body[data-editor-theme] .editor button:not(.list-row):not([data-panel]):not([data-action=choose]){background:var(--ui-surface);color:var(--ui-text);border-color:var(--ui-border);border-radius:8px}
-body[data-editor-theme] .editor button:not(.list-row):not([data-panel]):not([data-action=choose]):hover{background:var(--apple-tint);border-color:var(--ui-accent)}
-body[data-editor-theme] .editor button.primary:not(.list-row){background:var(--ui-accent);color:#fff;border-color:transparent}
-body[data-editor-theme] .editor button.primary:not(.list-row):hover{background:color-mix(in srgb,var(--ui-accent) 85%,#fff);color:#fff}
+body[data-editor-theme] .editor button:not(.player *):not(.list-row):not([data-panel]):not([data-action=choose]){background:var(--ui-surface);color:var(--ui-text);border-color:var(--ui-border);border-radius:8px}
+body[data-editor-theme] .editor button:not(.player *):not(.list-row):not([data-panel]):not([data-action=choose]):hover{background:var(--apple-tint);border-color:var(--ui-accent)}
+body[data-editor-theme] .editor button:not(.player *).primary:not(.list-row){background:var(--ui-accent);color:#fff;border-color:transparent}
+body[data-editor-theme] .editor button:not(.player *).primary:not(.list-row):hover{background:color-mix(in srgb,var(--ui-accent) 85%,#fff);color:#fff}
 body[data-editor-theme] .welcome{background:var(--ui-bg);color:var(--ui-text)}
 body[data-editor-theme] .welcome-card{background:var(--ui-surface);border-color:var(--ui-border);border-radius:20px;box-shadow:var(--apple-shadow)}
 body[data-editor-theme] .welcome :is(h1,.eyebrow){color:var(--ui-text)}

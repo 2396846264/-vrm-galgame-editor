@@ -23,7 +23,31 @@ export class LivePortrait {
     renderer.render(this.overlayScene,this.overlayCamera);
   }
   set(record,node){this.record=record;this.node=node;}
-  clear(){this.record=null;this.node=null;}
+  clear(){this.node?.querySelector?.('.live-portrait-canvas')?.remove();this.record=null;this.node=null;}
+  // In the game the portrait must be above the frosted dialogue surface. Render
+  // the SAME animated actor to a small target using the existing WebGL context,
+  // then transfer pixels asynchronously to a clipped DOM canvas. Editor framing
+  // and its original direct viewport path remain unchanged.
+  renderGlassPortrait(renderer,scene,node,rect){
+    if(this.readingPortrait)return;
+    const ratio=Math.min(renderer.getPixelRatio(),2),width=Math.max(1,Math.round(rect.width*ratio)),height=Math.max(1,Math.round(rect.height*ratio));
+    if(!this.portraitTarget){this.portraitTarget=new THREE.WebGLRenderTarget(width,height);this.portraitTarget.texture.colorSpace=THREE.SRGBColorSpace;}
+    if(this.portraitTarget.width!==width||this.portraitTarget.height!==height)this.portraitTarget.setSize(width,height);
+    let canvas=node.querySelector('.live-portrait-canvas');
+    if(!canvas){canvas=document.createElement('canvas');canvas.className='live-portrait-canvas';canvas.setAttribute('aria-hidden','true');node.append(canvas);}
+    if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
+    const target=renderer.getRenderTarget(),clearColor=renderer.getClearColor(new THREE.Color()),clearAlpha=renderer.getClearAlpha();
+    try{
+      renderer.setRenderTarget(this.portraitTarget);renderer.setScissorTest(false);renderer.setViewport(0,0,width,height);renderer.setClearColor(0,0);renderer.clear();renderer.render(scene,this.camera);
+      this.readingPortrait=true;
+      renderer.readRenderTargetPixelsAsync(this.portraitTarget,0,0,width,height,new Uint8Array(width*height*4)).then(bytes=>{
+        if(!canvas.isConnected||canvas.width!==width||canvas.height!==height)return;
+        const pixels=new Uint8ClampedArray(bytes.length),stride=width*4;
+        for(let y=0;y<height;y++)pixels.set(bytes.subarray((height-1-y)*stride,(height-y)*stride),y*stride);
+        canvas.getContext('2d').putImageData(new ImageData(pixels,width,height),0,0);this.frames++;
+      }).catch(error=>{if(!this.disposed)console.warn('Portrait transfer unavailable',error.message);}).finally(()=>{this.readingPortrait=false;});
+    }finally{renderer.setRenderTarget(target);renderer.setClearColor(clearColor,clearAlpha);}
+  }
   render(renderer,scene,element){
     const {record,node,camera}=this;
     if(!record||!node?.isConnected||node.classList.contains('hidden'))return;
@@ -33,6 +57,20 @@ export class LivePortrait {
     record.anchor.updateWorldMatrix(true,true);
     const {target,orientation,scale}=portraitBodyFrame(record);
     setShoulderPortraitCamera(camera,target,scale,orientation,rect.height/rect.width);
+    if(node.closest?.('.player')){
+      // Extend the drawing area to the stage edge without shifting or resizing
+      // the actor: retain the projection of the previous 4% / 50% viewport.
+      const viewWidth=2/1.1*scale,unitsPerPixel=viewWidth/(area.width*.5);
+      // The existing target viewport scales with the renderer's pixel ratio.
+      // Compensate only the added strip so high-DPI displays keep the same pose.
+      const viewportScale=renderer.getPixelRatio?.()||1;
+      camera.left=-.25*scale-(area.left+area.width*.04-rect.left)*unitsPerPixel/viewportScale;
+      camera.right=camera.left+rect.width*unitsPerPixel;
+      camera.bottom=-.24*scale;camera.top=camera.bottom+rect.height*unitsPerPixel;
+      camera.position.copy(target).add(new THREE.Vector3(-.85,.05,1.7).multiplyScalar(scale).applyQuaternion(orientation));
+      camera.lookAt(target.clone().add(new THREE.Vector3(0,.03,0).multiplyScalar(scale).applyQuaternion(orientation)));camera.updateProjectionMatrix();
+
+    }
     camera.layers.set(31);
     const viewport=renderer.getViewport(new THREE.Vector4()),scissor=renderer.getScissor(new THREE.Vector4());
     const state={background:scene.background,autoClear:renderer.autoClear,scissor:renderer.getScissorTest(),shadow:renderer.shadowMap.autoUpdate,visible:record.vrm.scene.visible};
@@ -40,6 +78,7 @@ export class LivePortrait {
     scene.traverse(o=>{if(o.isLight){layers.push([o,o.layers.mask]);o.layers.enable(31);}});
     try{
       record.vrm.scene.visible=true;scene.background=null;renderer.autoClear=false;renderer.shadowMap.autoUpdate=false;
+      if(node.closest?.('.player')){this.renderGlassPortrait(renderer,scene,node,rect);return;}
       this.overlay(renderer,element);
       // Preserve shoulder size and angle, but extend the view upward for hair/headroom.
       const x=rect.left-area.left,y=area.bottom-rect.bottom;
@@ -51,5 +90,5 @@ export class LivePortrait {
       renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(state.scissor);
     }
   }
-  dispose(){this.clear();this.overlayTextures?.forEach(t=>t.dispose());this.overlayMaterial?.dispose();this.overlayScene?.children[0]?.geometry.dispose();}
+  dispose(){this.disposed=true;this.clear();this.portraitTarget?.dispose();this.overlayTextures?.forEach(t=>t.dispose());this.overlayMaterial?.dispose();this.overlayScene?.children[0]?.geometry.dispose();}
 }

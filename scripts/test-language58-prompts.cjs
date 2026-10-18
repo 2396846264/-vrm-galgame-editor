@@ -1,0 +1,10 @@
+const {chromium}=require('playwright'),fs=require('node:fs'),path=require('node:path');
+(async()=>{const output=process.argv[2],catalog=JSON.parse(fs.readFileSync('src/editor-languages.json','utf8')),b=await chromium.launch({executablePath:process.env.UI57_CHROMIUM,headless:true}),p=await b.newPage({viewport:{width:1600,height:1000}});p.setDefaultTimeout(90000);
+try{await p.goto('http://127.0.0.1:4173/language58-review.html?kind=main');await p.waitForSelector('.editor');
+ for(const language of ['en','ja']){await p.locator('[data-action=editor-settings]').click();await p.locator('#editor-language').selectOption(language);await p.locator('[data-action=close-editor-settings]').click();if(language==='en')await p.locator('[data-action=toggle-editor-theme]').click();
+  const dark=await p.locator('body').getAttribute('data-editor-theme'),expected=catalog[dark==='dark'?'切换到日间模式':'切换到夜间模式'][language];if(await p.locator('[data-action=toggle-editor-theme]').getAttribute('title')!==expected)throw Error('Live theme tooltip language incorrect');
+  const name=language==='en'?'保存_English':'保存_日本語';let message,defaultValue;p.once('dialog',async dialog=>{message=dialog.message();defaultValue=dialog.defaultValue();await dialog.accept(name);});await p.evaluate(()=>{const button=document.createElement('button');button.dataset.action='add-asset-folder';button.dataset.type='image';document.querySelector('.editor').append(button);button.click();button.remove();});await p.waitForFunction(name=>window.editorProjectSnapshot().assetFolders.some(f=>f.name===name),name);
+  if(message!==catalog['新文件夹叫什么名字？'][language]||defaultValue!=='新文件夹')throw Error('Prompt message or original default name changed');
+ }
+ fs.writeFileSync(path.join(output,'prompt-and-tooltip.json'),JSON.stringify({ok:true,englishJapanesePrompts:true,originalDefaultName:true,typedAuthorNamesPreserved:true,liveThemeTooltips:true},null,2));console.log('PASS: translated prompt labels, unchanged defaults/typed names, live theme tooltips.');
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

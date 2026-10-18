@@ -1,4 +1,5 @@
 import {createProjectAgent,projectAgentTools,projectAgentWrites} from './project-agent.js';
+import {readDocumentSource} from './document-source.js';
 import {compileDraft,applyCompiledDraft,draftContext,draftInstructions,splitTextDraft,parseDraft} from './story-draft.js';
 import {createEnvironmentAgent,environmentAgentTools,environmentAgentWrites,editorSummary} from './environment-agent.js';
 import './story-assistant.css';
@@ -94,8 +95,7 @@ export function createStoryAssistant(ctx) {
     if(name==='get_act'){check();const a=project().acts.find(a=>a.id===args.actId);if(!a)throw new Error('找不到这一幕。');return {act:structuredClone(a),revision:revision()};}
     if(name==='get_source') {
       check();const d=project().authoring?.documents?.find(d=>d.id===args.documentId);if(!d)throw new Error('找不到这份故事素材。');
-      const offset=Math.max(0,Math.floor(Number(args.offset)||0)),length=Math.min(24000,Math.max(1,Math.floor(Number(args.length)||12000)));
-      return {id:d.id,name:d.name,text:d.text.slice(offset,offset+length),offset,nextOffset:Math.min(d.text.length,offset+length),total:d.text.length,complete:offset+length>=d.text.length};
+      return readDocumentSource(d,args);
     }
     if(name==='propose_draft'){guard(args);return propose(args.draft);}
     if(name==='apply_draft')return apply(args);

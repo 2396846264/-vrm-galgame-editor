@@ -127,15 +127,15 @@ body[data-editor-theme] .editor .step-cast-positions small,
 body[data-editor-theme] .editor .character-story-editor h3 { color: var(--ui-text); }
 body[data-editor-theme] .editor .asset-folder .asset-row,
 body[data-editor-theme] .editor .asset-row { color: var(--ui-text); background: var(--ui-raised); }
-body[data-editor-theme] .editor input,
-body[data-editor-theme] .editor select,
-body[data-editor-theme] .editor textarea {
+body[data-editor-theme] .editor input:not(.player *),
+body[data-editor-theme] .editor select:not(.player *),
+body[data-editor-theme] .editor textarea:not(.player *) {
   color: var(--ui-text); background: var(--ui-surface); border-color: var(--ui-border);
   border-radius: 8px;
 }
-body[data-editor-theme] .editor input:focus,
-body[data-editor-theme] .editor select:focus,
-body[data-editor-theme] .editor textarea:focus {
+body[data-editor-theme] .editor input:not(.player *):focus,
+body[data-editor-theme] .editor select:not(.player *):focus,
+body[data-editor-theme] .editor textarea:not(.player *):focus {
   border-color: var(--ui-accent); box-shadow: 0 0 0 3px var(--ui-accent-soft);
 }
 body[data-editor-theme] .editor .project-title input { background: transparent; }
@@ -143,17 +143,17 @@ body[data-editor-theme] .editor .adjustment,
 body[data-editor-theme] .editor .expression-slider { color: var(--ui-text); }
 body[data-editor-theme] .editor .adjustment input[type="range"],
 body[data-editor-theme] .editor .expression-slider input[type="range"] { accent-color: var(--ui-accent); }
-body[data-editor-theme] .editor button:not(.list-row):not([data-panel]):not([data-action="choose"]) {
+body[data-editor-theme] .editor button:not(.player *):not(.list-row):not([data-panel]):not([data-action="choose"]) {
   color: var(--ui-text); background: var(--ui-surface); border: 1px solid var(--ui-border);
   box-shadow: none; border-radius: 8px;
 }
-body[data-editor-theme] .editor button:not(.list-row):not([data-panel]):hover {
+body[data-editor-theme] .editor button:not(.player *):not(.list-row):not([data-panel]):hover {
   color: var(--ui-accent); background: var(--ui-accent-soft); border-color: var(--ui-accent);
 }
-body[data-editor-theme] .editor button.primary:not(.list-row) {
+body[data-editor-theme] .editor button:not(.player *).primary:not(.list-row) {
   color: #fff; background: #168b70; border-color: #168b70;
 }
-body[data-editor-theme] .editor button.primary:not(.list-row):hover { background: #08775e; color: #fff; }
+body[data-editor-theme] .editor button:not(.player *).primary:not(.list-row):hover { background: #08775e; color: #fff; }
 body[data-editor-theme] .editor .theme-toggle {
   min-width: 35px; padding-inline: 7px; font-size: 20px; line-height: 1;
 }
@@ -171,17 +171,17 @@ body[data-editor-theme] .editor-settings-card {
 body[data-editor-theme] .welcome h1,
 body[data-editor-theme] .welcome .eyebrow,
 body[data-editor-theme] .recent-projects h2,
-body[data-editor-theme] .editor-settings-card h2 { color: var(--ui-text); }
+body[data-editor-theme] .editor-settings-card h2:not(.player *) { color: var(--ui-text); }
 body[data-editor-theme] .welcome p,
 body[data-editor-theme] .welcome small,
-body[data-editor-theme] .editor-settings-card p,
+body[data-editor-theme] .editor-settings-card p:not(.player *),
 body[data-editor-theme] .recent-project small { color: var(--ui-muted); }
 body[data-editor-theme] .welcome input,
-body[data-editor-theme] .editor-settings-card select {
+body[data-editor-theme] .editor-settings-card select:not(.player *) {
   color: var(--ui-text); background: var(--ui-surface-soft); border-color: var(--ui-border);
 }
 body[data-editor-theme] .welcome button,
-body[data-editor-theme] .editor-settings-card button {
+body[data-editor-theme] .editor-settings-card button:not(.player *) {
   color: var(--ui-text); background: var(--ui-surface-soft); border-color: var(--ui-border);
 }
 body[data-editor-theme] .welcome button.primary { color: white; background: #168b70; border-color: #168b70; }

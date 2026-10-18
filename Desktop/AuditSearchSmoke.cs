@@ -1,0 +1,11 @@
+using Microsoft.Web.WebView2.Core;
+namespace VRMGalgame;
+internal sealed partial class EditorWindow {
+ private async Task RunAuditSearchSmoke(){
+  for(int i=0;i<1200;i++){if(await web.CoreWebView2.ExecuteScriptAsync("Boolean(document.querySelector('[data-action=search-open]')&&window.editorProjectSnapshot?.())")=="true")break;await Task.Delay(100);}
+  string script="""
+  (async()=>{const wait=ms=>new Promise(r=>setTimeout(r,ms)),assert=(v,m)=>{if(!v)throw Error(m)},snap=()=>window.editorProjectSnapshot(),original=snap().acts[0].steps[0].text,paths=new Map(snap().assets.map(a=>[a.id,a.path]));document.querySelector('#text-search').value=original;document.querySelector('[data-action=search-open]').click();for(let i=0;i<100&&!document.querySelector('#replace-find');i++)await wait(50);assert(document.querySelectorAll('.search-results article').length>0,'查找结果为空');document.querySelector('#replace-with').value='真实查找替换验证';document.querySelector('[data-action=search-replace]').click();for(let i=0;i<400&&snap().acts[0].steps[0].text!=='真实查找替换验证';i++)await wait(50);assert(snap().acts[0].steps[0].text==='真实查找替换验证','实际替换按钮未修改对白');assert(snap().assets.filter(a=>paths.has(a.id)).every(a=>paths.get(a.id)===a.path),'替换修改了素材路径');document.querySelector('[data-action=search-undo]').click();for(let i=0;i<800&&snap().acts[0].steps[0].text!==original;i++)await wait(50);assert(snap().acts[0].steps[0].text===original,'替换撤销未恢复原文');document.querySelector('[data-action=search-close]').click();await window.editorSaveBeforeClose();return {ok:true,actualSearchReplaceButtons:true,assetPathsPreserved:true,undoRestored:true,saved:true}})().then(r=>window.__auditSearch=r).catch(e=>window.__auditSearch={error:e.message,stack:e.stack})
+  """;
+  await web.CoreWebView2.ExecuteScriptAsync("window.__auditSearch=null;"+script);string result="null";for(int i=0;i<2400;i++){result=await web.CoreWebView2.ExecuteScriptAsync("window.__auditSearch");if(result!="null")break;await Task.Delay(50);}File.WriteAllText(smokeBase+".search-ui.json",result);using(var shot=File.Create(smokeBase+".search-ui.png"))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,shot);if(!result.Contains("\"ok\":true"))throw new Exception(result);
+ }
+}

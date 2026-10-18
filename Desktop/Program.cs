@@ -156,8 +156,9 @@ internal sealed partial class EditorWindow : Form
             smokeBase = Path.GetFullPath(arguments[smokeOpenIndex + 2]);
             projectDirectory = null;
             startupProjectPath = null;
+            if(arguments.Contains("--smoke-preload-raw"))projectDirectory=smokeOpenDirectory;
         }
-        Text = playerMode ? "VRM Galgame" : "VRM Galgame 编辑器";
+        Text = "公民文艺生产综合自动化系统";
         using (var iconStream = typeof(EditorWindow).Assembly.GetManifestResourceStream("VRMGalgame.app.ico"))
             if (iconStream != null) Icon = new System.Drawing.Icon(iconStream, SystemInformation.IconSize);
         if (playerMode)
@@ -176,6 +177,7 @@ internal sealed partial class EditorWindow : Form
         }
         StartPosition = FormStartPosition.CenterScreen;
         Controls.Add(web);
+        if (playerMode) SetFullscreen(true);
         Shown += async (_, _) => await InitializeWebAsync();
         FormClosing += OnEditorClosing;
         FormClosed += (_, _) => { StopAgentBridge(); foreach(var child in moduleWindows.Values.ToArray())child.CloseWithoutPrompt(); CleanupTemporaryProject(); playerResources?.Dispose(); };
@@ -190,10 +192,13 @@ internal sealed partial class EditorWindow : Form
                 throw new Exception("程序文件不完整：找不到 web/index.html。请重新解压完整安装包。");
             ProtectedResources.Verify(appDirectory);
             OpenPlayerResources();
+            var smokeProfileArgs = Environment.GetCommandLineArgs();
+            int smokeProfileIndex = Array.IndexOf(smokeProfileArgs,"--smoke-promo-profile");
+            string? smokeProfilePath = smokeBase != null && smokeProfileIndex >= 0 && smokeProfileIndex + 1 < smokeProfileArgs.Length ? Path.GetFullPath(smokeProfileArgs[smokeProfileIndex+1]) : null;
             var environment = await CoreWebView2Environment.CreateAsync(
-                userDataFolder: Environment.GetCommandLineArgs().Contains("--smoke-fresh-audio")
+                userDataFolder: smokeProfilePath ?? (Environment.GetCommandLineArgs().Contains("--smoke-fresh-audio")
                     ? Path.Combine(Path.GetTempPath(), "VRMGalgame", "AudioSmoke", Guid.NewGuid().ToString("N"))
-                    : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VRMGalgame", "WebView2"));
+                    : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VRMGalgame", "WebView2")));
             await web.EnsureCoreWebView2Async(environment);
             await web.CoreWebView2.Profile.SetPermissionStateAsync(CoreWebView2PermissionKind.Autoplay,
                 $"https://{AppHost}", CoreWebView2PermissionState.Allow);
@@ -238,7 +243,7 @@ internal sealed partial class EditorWindow : Form
         }
         catch (Exception ex)
         {
-            if (smokeBase != null) File.WriteAllText(smokeBase + ".error.txt", ex.Message);
+            if (smokeBase != null) File.WriteAllText(smokeBase + ".error.txt", ex.ToString());
             else MessageBox.Show(this, ex.Message, "无法启动", MessageBoxButtons.OK, MessageBoxIcon.Error);
             Close();
         }
@@ -248,6 +253,23 @@ internal sealed partial class EditorWindow : Form
     {
         try
         {
+            if(Environment.GetCommandLineArgs().Contains("--smoke-reference59")){await RunReference59Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-editor-language")){await RunEditorLanguageSmoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-ui57")){await RunUi57Smoke();return;}
+            if(Environment.GetCommandLineArgs().Any(a=>a.StartsWith("--smoke-palette56"))){await RunPalette56Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-commercial55")){await RunCommercial55Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-commercial55-player")){await RunCommercial55PlayerSmoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-commercial55-legacy")){await RunCommercial55LegacySmoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-defaults54")){await RunDefaults54Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-secondary53")){await RunSecondary53Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-promo-package")){await RunPromoPackageSmoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-promo-player")){await RunPromoPlayerSmoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-promo-extras")){await RunPromoExtrasSmoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-audit-module")){await RunAuditModuleSmoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-audit-story")){await RunAuditStorySmoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-audit-search")){await RunAuditSearchSmoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-audit-cutscene")){await RunAuditRuntimeSmoke("cutscene");return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-audit-war")){await RunAuditRuntimeSmoke("war");return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-blink49")){await RunBlink49Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-gaze50")){await RunGaze50Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-geometry52")){await RunGeometry52Smoke();return;}
@@ -315,7 +337,7 @@ internal sealed partial class EditorWindow : Form
             if (smokeOpenDirectory != null)
             {
                 await Task.Delay(150);
-                await web.CoreWebView2.ExecuteScriptAsync(
+                if(!Environment.GetCommandLineArgs().Contains("--smoke-preload-raw"))await web.CoreWebView2.ExecuteScriptAsync(
                     "document.querySelector('[data-action=open-project]')?.click()");
                 if (smokeCharacterTwo)
                 {
@@ -570,6 +592,8 @@ internal sealed partial class EditorWindow : Form
                 }
                 if (smokeSaveTwice && !playerMode)
                 {
+                    for(int i=0;i<2400&&archiveSaveRunning;i++)await Task.Delay(50);
+                    if(archiveSaveRunning)throw new Exception("等待前台保存完成超时。");
                     SaveProject(ReadProject());
                     SaveProject(ReadProject());
                     File.WriteAllText(smokeBase + ".save-twice.txt", "OK");
@@ -925,12 +949,15 @@ internal sealed partial class EditorWindow : Form
             }
             if (Environment.GetCommandLineArgs().Contains("--smoke-menu-polish"))
             {
-                ClientSize = new Size(960, 540);
+                if(Environment.GetCommandLineArgs().Contains("--smoke-agent-direct"))SetFullscreen(true);
+                else ClientSize = new Size(960, 540);
                 var menuPhases = new List<string> { "audio", "settings", "gallery" };
                 if (Environment.GetCommandLineArgs().Contains("--smoke-glass")) menuPhases.AddRange(new[] { "music", "characters", "chapters", "saves", "story" });
                 if (Environment.GetCommandLineArgs().Contains("--smoke-library")) menuPhases.AddRange(new[] { "library-search", "library-editor", "library-shelf", "library-reader", "library-turn" });
                 if (Environment.GetCommandLineArgs().Contains("--smoke-weather")) menuPhases = new List<string> { "weather-editor", "weather-lifecycle", "weather-rain", "weather-snow", "weather-wind", "weather-sunny", "weather-cloudy", "weather-depth" };
+                if(Environment.GetCommandLineArgs().Contains("--smoke-audit-current-weather"))menuPhases.Remove("weather-lifecycle");
                 if (Environment.GetCommandLineArgs().Contains("--smoke-events")) menuPhases = new List<string> { "events-editor", "events-news", "events-war", "events-burst", "events-major", "events-save", "events-flow" };
+                if(Environment.GetCommandLineArgs().Contains("--smoke-audit-current-events"))menuPhases.Remove("events-war");
                 if (playerMode) menuPhases.Remove("events-editor");
                 if (Environment.GetCommandLineArgs().Contains("--smoke-history")) menuPhases = new List<string> { "history-editor" };
                 if (Environment.GetCommandLineArgs().Contains("--smoke-history-portrait")) menuPhases = new List<string> { "history-portrait" };
@@ -983,11 +1010,12 @@ internal sealed partial class EditorWindow : Form
                     File.Copy(videoPath, smokeBase + ".test-video.webm", true);
                     menuPhases = new List<string> { "events-media" };
                 }
+                if(Environment.GetCommandLineArgs().Contains("--smoke-agent-direct"))menuPhases.Clear();
                 foreach (string phase in menuPhases)
                 {
                     await web.CoreWebView2.ExecuteScriptAsync("window.__polishResult=null; window.__vrmSmokeMenuPolish(" + JsonSerializer.Serialize(phase) + ").then(r=>window.__polishResult=r).catch(e=>window.__polishResult={error:e.message})");
                     string polishResult = "null";
-                    for (int attempt = 0; attempt < ((phase.StartsWith("history-") || phase.StartsWith("voices-") || phase.StartsWith("mouth-")) ? 600 : 240) && polishResult == "null"; attempt++)
+                    for (int attempt = 0; attempt < 2400 && polishResult == "null"; attempt++)
                     {
                         await Task.Delay(100);
                         polishResult = await web.CoreWebView2.ExecuteScriptAsync("window.__polishResult");
@@ -1034,14 +1062,17 @@ internal sealed partial class EditorWindow : Form
                     }
                 }
             }
-            if (Environment.GetCommandLineArgs().Contains("--smoke-agent")||Environment.GetCommandLineArgs().Contains("--smoke-agent-environment"))
-                for(int n=0;n<1200 && !File.Exists(smokeBase+".agent-done");n++){
+            if (Environment.GetCommandLineArgs().Contains("--smoke-agent")||Environment.GetCommandLineArgs().Contains("--smoke-agent-environment")){
+                File.WriteAllText(smokeBase+".agent-connection.json",JsonSerializer.Serialize(SetAgentEnabled(true)));
+                for(int n=0;n<3600 && !File.Exists(smokeBase+".agent-done");n++){
+                    if(File.Exists(smokeBase+".agent-close-environment")&&!File.Exists(smokeBase+".agent-close-environment.done.json")){environmentWindow?.CloseWithoutPrompt();File.WriteAllText(smokeBase+".agent-close-environment.done.json",JsonSerializer.Serialize(new{ok=true,closed=environmentWindow==null||environmentWindow.IsDisposed}));}
                     if(Environment.GetCommandLineArgs().Contains("--smoke-agent-environment")&&File.Exists(smokeBase+".agent-window-edit")&&!File.Exists(smokeBase+".agent-window-edit.json")){
                         if(environmentWindow==null)throw new Exception("测试环境窗口没有打开");
                         File.WriteAllText(smokeBase+".agent-window-edit.json",await environmentWindow.AgentEditSmoke());
                     }
                     await Task.Delay(500);
                 }
+            }
             if(Environment.GetCommandLineArgs().Contains("--smoke-environment")){
                 await web.CoreWebView2.ExecuteScriptAsync("window.__envOpen=null;window.__vrmSmokeEnvironmentOpen().then(r=>window.__envOpen=r).catch(e=>window.__envOpen={error:e.message})");
                 for(int i=0;i<100&&environmentWindow==null;i++)await Task.Delay(100);
@@ -1235,7 +1266,7 @@ internal sealed partial class EditorWindow : Form
         {
             File.WriteAllText(smokeBase + ".error.txt", ex.ToString());
         }
-        finally { Close(); }
+        finally { File.WriteAllText(smokeBase+".complete.json",JsonSerializer.Serialize(new{ok=!File.Exists(smokeBase+".error.txt"),completed=true}));foreach(var window in moduleWindows.Values.ToArray())if(!window.IsDisposed)window.CloseWithoutPrompt();environmentWindow?.CloseWithoutPrompt();editorCloseApproved=true;Close(); }
     }
 
     private void MapProject()
@@ -1270,6 +1301,7 @@ internal sealed partial class EditorWindow : Form
 
     private async Task<object?> HandleEditorAction(string action,JsonNode? payload)
     {
+        if(action=="editorLanguage"&&!playerMode)return EditorLanguage.Select(this,payload,"公民文艺生产综合自动化系统");
         if(archiveSaveRunning && action is not ("environmentCommitReply" or "editorModuleCommitReply" or "init"))throw new Exception("工程正在保存或导出，请稍候。");
         if(action is "newProject" or "openProject" or "openRecentProject" && moduleWindows.Values.Any(window=>!window.IsDisposed))throw new Exception("请先保存并关闭其他编辑窗口，再切换工程。");
         return action switch
@@ -1313,6 +1345,7 @@ internal sealed partial class EditorWindow : Form
                 "exportGame" when !playerMode => ExportGame(payload?["folderName"]?.GetValue<string>() ?? ""),
                 "exportAndroid" when !playerMode => await ExportAndroidAsync(payload),
                 "setWindowResolution" when playerMode => SetWindowResolution(payload?["value"]?.GetValue<string>() ?? ""),
+                "openThirdPartyNotices" => OpenThirdPartyNotices(),
                 "setFullscreen" when playerMode => SetFullscreen(payload?["value"]?.GetValue<bool>() ?? false),
                 "exitGame" when playerMode => ExitGame(),
                 "captureGameThumbnail" => await CaptureGameThumbnail(payload),
@@ -1418,7 +1451,7 @@ internal sealed partial class EditorWindow : Form
         }
         using var dialog = new SaveFileDialog
         {
-            Title = title, Filter = "VRM Galgame 工程包 (*.vrmg)|*.vrmg",
+            Title = title, Filter = "公民文艺生产综合自动化系统工程包 (*.vrmg)|*.vrmg",
             DefaultExt = "vrmg", AddExtension = true, FileName = name + ".vrmg",
             OverwritePrompt = false
         };
@@ -1547,7 +1580,9 @@ internal sealed partial class EditorWindow : Form
 
     private List<object> CopyPresetMotions(string directory)
     {
-        return OptionalPresetMotions.Copy(Path.Combine(appDirectory,"preset-motions"),directory);
+        // Editor releases never redistribute an animation source library.
+        // Existing projects retain their own imported animation files.
+        return [];
     }
 
     private object DeleteAsset(string relative)
@@ -1572,8 +1607,8 @@ internal sealed partial class EditorWindow : Form
         }
         using var dialog = new OpenFileDialog
         {
-            Title = "打开 VRM Galgame 工程包",
-            Filter = "VRM Galgame 工程包 (*.vrmg;*.zip)|*.vrmg;*.zip|所有文件 (*.*)|*.*"
+            Title = EditorLanguage.T("打开公民文艺生产综合自动化系统工程包"),
+            Filter = "公民文艺生产综合自动化系统工程包 (*.vrmg;*.zip)|*.vrmg;*.zip|所有文件 (*.*)|*.*"
         };
         if (dialog.ShowDialog(this) != DialogResult.OK) return null;
         LoadArchive(dialog.FileName);
@@ -1715,7 +1750,7 @@ internal sealed partial class EditorWindow : Form
         else if (smokeBase != null && testIndex >= 0 && testIndex + 1 < args.Length) source = Path.GetFullPath(args[testIndex + 1]);
         else
         {
-            using var dialog = new OpenFileDialog { Title = "为这句对白上传配音", Filter = "配音文件|*.mp3;*.wav;*.ogg", Multiselect = false };
+            using var dialog = new OpenFileDialog { Title = EditorLanguage.T("为这句对白上传配音"), Filter = "配音文件|*.mp3;*.wav;*.ogg", Multiselect = false };
             if (dialog.ShowDialog(this) != DialogResult.OK) return null;
             source = dialog.FileName;
         }
@@ -1784,7 +1819,7 @@ internal sealed partial class EditorWindow : Form
         {
             using var dialog = new OpenFileDialog
             {
-                Title = "选择要导入的素材",
+                Title = EditorLanguage.T("选择要导入的素材"),
                 Filter = $"支持的文件|{string.Join(';', allowed.Select(x => "*" + x))}|所有文件|*.*",
                 Multiselect = !single
             };
@@ -2025,6 +2060,10 @@ internal sealed partial class EditorWindow : Form
                 start.ArgumentList.Add("--smoke");
                 start.ArgumentList.Add("-");
                 start.ArgumentList.Add(smokeBase + ".preview-child");
+                if(Environment.GetCommandLineArgs().Contains("--smoke-commercial55")){
+                    start.ArgumentList.Add("--smoke-commercial55-player");
+                    start.ArgumentList.Add("--smoke-fresh-audio");
+                }
                 start.ArgumentList.Add(smokeDiscovery ? "--smoke-discovery" : smokeTitleMenus ? "--smoke-title-menus" : smokeGallery ? "--smoke-gallery" : "--smoke-play");
             }
             Process process = Process.Start(start) ?? throw new Exception("临时游戏程序未能启动。");

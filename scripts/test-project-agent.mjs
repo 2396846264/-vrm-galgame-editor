@@ -10,7 +10,7 @@ const ops=[
  {action:'create',kind:'dialogue',ownerId:'$chapter',ref:'line',data:{characterId:'$role',speaker:'小雪',text:'你好',camera:{position:[0,1,4],target:[0,1,0],fov:40}}},
  {action:'set_actor',id:'$line',slot:'row10-right',data:{characterId:'$role',motionId:'motion',props:['$prop'],offsetX:100,yaw:360,expressionWeights:{happy:.7},motionOptions:{loop:true,startFrame:3,endFrame:40,feet:'lock',placement:'inPlace'}}},
  {action:'create',kind:'renderPreset',ref:'look',data:{name:'冷色',settings:{filters:{rim:.4,fog:.5,dof:.5}}}},
- {action:'update',kind:'ui',data:{gameTheme:'terminal',spatialCamera:{enabled:true,strength:.4},roleDetailsRender:{presetId:'$look',brightness:80}}},
+ {action:'update',kind:'ui',data:{gameTheme:'classic',spatialCamera:{enabled:true,strength:.4},roleDetailsRender:{presetId:'$look',brightness:80}}},
  {action:'update',kind:'title',data:{bgmId:'music',render:{presetId:'$look'}}},
  {action:'update',kind:'dialogue',ownerId:'$chapter',id:'$line',data:{render:{presetId:'$look',saturation:130}}},
  {action:'create',kind:'item',ref:'item',data:{name:'信件',imageId:'image',description:'重要的信件'}},

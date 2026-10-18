@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - '.github/releases/**'
       - '.github/workflows/release-v052.yml'
+      - '.github/workflows/release-v070.yml'
   pull_request:
   workflow_dispatch:
 

@@ -1,0 +1,10 @@
+import * as THREE from 'three';
+export function navalPartModel(p){const root=new THREE.Group(),d=p.def,paint=new THREE.MeshStandardMaterial({color:p.color,roughness:.72}),steel=new THREE.MeshStandardMaterial({color:'#303e46',roughness:.5,metalness:.35}),tan=new THREE.MeshStandardMaterial({color:'#bba982'});const box=(size,pos,parent=root,mat=paint)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(...size),mat);m.position.fromArray(pos);parent.add(m);return m;};
+ if(d.family==='turret'){
+  const yaw=new THREE.Group();root.add(yaw);root.userData.turret=yaw;const [w,h,l]=d.size;box([w,h*.5,l*.4],[0,h*.25,0],yaw);const pitch=new THREE.Group();pitch.position.y=h*.45;yaw.add(pitch);root.userData.turretPitch=pitch;const n=p.type==='ship_main460'?3:p.type.includes('main')||p.type.includes('aa25')||p.type.includes('aa40')?2:1;
+  for(let i=0;i<n;i++){const barrel=new THREE.Mesh(new THREE.CylinderGeometry(Math.max(.045,d.caliber/2400),Math.max(.07,d.caliber/1800),l*.72,8),steel);barrel.rotation.x=Math.PI/2;barrel.position.set((i-(n-1)/2)*w*.22,0,-l*.34);barrel.userData.weaponBarrel=true;pitch.add(barrel);}
+ }else if(p.type==='ship_funnel'){box(d.size,[0,0,0]);box([d.size[0]*1.05,.5,d.size[2]*1.05],[0,d.size[1]/2,0],root,steel);}
+ else if(p.type==='ship_mast'||p.type==='ship_radar'||p.type==='ship_flag'){box([.4,d.size[1],.4],[0,0,0],root,steel);box([d.size[0]+3,.25,.3],[0,d.size[1]*.25,0],root,steel);if(p.type==='ship_radar')box([5,2,.25],[0,1,0]);if(p.type==='ship_flag'){const flag=box([3,2,.05],[1.5,2,0],root,tan);root.userData.flag=flag;}}
+ else if(p.type==='ship_propeller'){box([.3,.3,4],[0,0,0],root,steel);const prop=new THREE.Group();prop.position.z=2;root.add(prop);for(let i=0;i<3;i++){const blade=box([.5,2.8,.15],[0,0,0],prop,tan);blade.rotation.z=i*Math.PI/3;}root.userData.prop=prop;}
+ else if(p.type==='ship_bridge_module'){box(d.size,[0,0,0]);box([d.size[0]*.9,1,d.size[2]*.8],[0,d.size[1]*.22,0],root,steel);box([d.size[0]*.65,.4,d.size[2]*.7],[0,d.size[1]*.55,0],root,tan);}
+ else box(d.size,[0,0,0]);root.userData.partId=p.id;return root;}

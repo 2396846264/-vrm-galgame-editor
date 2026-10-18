@@ -5,3 +5,13 @@ body{overflow:hidden}.vehicle-page{grid-template-columns:minmax(0,1fr) 300px;wid
 .vehicle-page{grid-template-rows:minmax(0,1fr)}.work-area,.document-panel{min-height:0}
 
 select{background:#172b34;border:1px solid #435d66;border-radius:4px;padding:6px;color:#d7e5e8}#outliner{max-height:125px}
+
+#weapon-sounds label{display:grid;gap:6px;margin:14px 0 6px;line-height:1.6}#weapon-sounds select{width:100%;min-width:0}.sound-actions,.vehicle-sharing{display:flex;gap:6px;flex-wrap:wrap}.vehicle-sharing{margin-top:22px;padding-top:16px;border-top:1px solid #89959b44}.vehicle-sharing small{line-height:1.8;width:100%}
+
+.catalog-tabs{display:flex;gap:6px;padding:6px 12px;flex-wrap:wrap}.library{grid-template-rows:auto auto minmax(0,1fr)}.ship-class-label{display:grid;gap:7px;margin:12px 0}.ship-class-label select{width:100%;min-width:0}.ship-editor #statistics{line-height:1.6}.ship-editor #palette button small{white-space:normal}.ship-editor .direction{max-width:75%}
+
+.ship-editor #palette{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}.ship-editor #palette button{min-height:70px;padding:10px 10px 10px 86px}.ship-editor #palette button:before{display:none}.naval-part-thumbnail{position:absolute;left:3px;top:2px;width:80px;height:60px;object-fit:contain;pointer-events:none}.ship-editor #palette b{line-height:1.45}.ship-editor #palette small{margin-top:5px;line-height:1.45}
+
+body.apple-module.ship-editor #palette button{padding-left:86px;min-height:82px}body.apple-module.ship-editor #palette button:before{display:none}body.apple-module.ship-editor .vehicle-page .work-area{grid-template-rows:auto minmax(0,1fr) clamp(250px,30vh,340px) auto}
+
+body.apple-module #palette button[hidden]{display:none!important}

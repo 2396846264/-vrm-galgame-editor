@@ -28,6 +28,7 @@ import { createTalkingMouth } from './talking-mouth.js';
 import { createAutoBlink } from './auto-blink.js';
 import { createAutoGaze } from './auto-gaze.js';
 import { createNaturalActivity } from './natural-activity.js';
+import {installVrmSecondaryMotion} from './secondary-motion.js';
 
 const boneNames = {
   Hips:'hips',Spine:'spine',Spine1:'chest',Spine2:'upperChest',Neck:'neck',Head:'head',
@@ -328,7 +329,8 @@ export class VRMStage {
   animate() {
     if (!this.running) return;
     this.frame = requestAnimationFrame(() => this.animate());
-    if(this.renderSuspended||this.presentationPaused?.()||window.__editorModulePreviewActive===false){this.clock.getDelta();return;}
+    const portraitOnly=Boolean(this.presentationPaused?.());
+    if(this.renderSuspended||portraitOnly&&!this.livePortrait.record||window.__editorModulePreviewActive===false){this.clock.getDelta();return;}
     const elapsed=this.clock.getDelta();
     this.frameRateMeter.sample(elapsed,document.hidden);
     const delta = Math.min(elapsed, 0.1);
@@ -336,7 +338,7 @@ export class VRMStage {
     this.averageFrameMs = this.averageFrameMs ? this.averageFrameMs * 0.94 + delta * 1000 * 0.06 : delta * 1000;
     const updated = new Set();
     this.camera.updateMatrixWorld();const physicsFrustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse));
-    for (const record of [...this.visibleRecords.values(),this.livePortrait.record]) {
+    for (const record of portraitOnly?[this.livePortrait.record]:[...this.visibleRecords.values(),this.livePortrait.record]) {
       if(!record)continue;
       if (updated.has(record)) continue;
       updated.add(record);
@@ -359,9 +361,9 @@ export class VRMStage {
       if(this.environmentSettings)this.characterSceneLighting.apply(record.vrm.scene,true);
       this.characterProps.update(record);
     }
-    this.environmentRuntime.update(this.camera,delta,Boolean(this.sceneAnimationsPaused?.()));this.updateShadowGround();
+    if(!portraitOnly){this.environmentRuntime.update(this.camera,delta,Boolean(this.sceneAnimationsPaused?.()));this.updateShadowGround();
     this.weather?.update(delta);
-    this.spatialCamera.update(delta);this.renderScene(delta);
+    this.spatialCamera.update(delta);this.renderScene(delta);}
     this.livePortrait.render(this.renderer,this.scene,this.element);
   }
   renderScene(delta=0){return this.spatialCamera.render(()=>{if(this.stylePipeline)this.stylePipeline.render(delta);else this.renderer.render(this.scene,this.camera);});}
@@ -436,6 +438,7 @@ export class VRMStage {
       anchor.add(motionRoot);
       motionRoot.add(vrm.scene);
       anchor.updateMatrixWorld(true);
+      if(!vrm.isMmd&&!vrm.isFbx)vrm.secondaryMotionSafety=installVrmSecondaryMotion(vrm);
       const hips = vrm.humanoid.getNormalizedBoneNode('hips');
       const referenceHips = hips
         ? motionRoot.worldToLocal(hips.getWorldPosition(new THREE.Vector3())) : new THREE.Vector3();
@@ -686,7 +689,7 @@ export class VRMStage {
     if(settings.loop)segment.clip=loopMotionClip(segment.clip,hips,record.segmentClips);
     const token = JSON.stringify([motionId, settings.loop, segment.start, segment.end, settings.after, settings.placement, settings.feet,
       settings.loop ? '' : playbackKey]);
-    if (record.currentMotionToken === token && record.vrm.scene.visible) return;
+    if (record.currentMotionToken === token && (record.vrm.scene.visible||this.livePortrait.record===record)) return;
     record.vrm.resetPhysics?.();
     record.mixer.timeScale = 1;
     const previousLock = record.footLock;
@@ -847,6 +850,7 @@ export class VRMStage {
     const targetYaw = THREE.MathUtils.degToRad(yaw);
     const targetPitch = THREE.MathUtils.degToRad(pitch);
     const oldTarget = record.transformTarget;
+    if((!smooth||!record.vrm.scene.visible)&&(!oldTarget||!oldTarget.position.equals(targetPosition)||!oldTarget.scale.equals(targetScale)||oldTarget.yaw!==targetYaw||oldTarget.pitch!==targetPitch))record.vrm.resetPhysics?.();
     if (smooth && record.vrm.scene.visible &&
       (!oldTarget || !oldTarget.position.equals(targetPosition) || !oldTarget.scale.equals(targetScale) || oldTarget.yaw !== targetYaw || oldTarget.pitch !== targetPitch)) {
       record.transformBlend = { elapsed: 0, duration: 0.3,
@@ -931,7 +935,7 @@ export class VRMStage {
   }
   talkingLetter(char) { this.talkingRecord?.talkingMouth?.letter(char); }
   clearLivePortrait(){this.portraitRequest=(this.portraitRequest||0)+1;this.portraitActorKey='';this.livePortrait.clear();}
-  async setLivePortrait(modelAsset,actorKey,node,weights={}){
+  async setLivePortrait(modelAsset,actorKey,node,weights={},offstage={}){
     if(!['vrm','mmdCharacter'].includes(modelAsset?.type)){this.clearLivePortrait();return null;}
     const token=this.portraitRequest=(this.portraitRequest||0)+1;
     if(this.portraitActorKey!==actorKey||this.portraitModelId!==modelAsset.id||this.livePortrait.node!==node)this.livePortrait.clear();
@@ -939,7 +943,9 @@ export class VRMStage {
     if(token!==this.portraitRequest||!record||record.vrm.isFbx)return null;
     if(!this.visibleRecords.has(actorKey)){
       if(this.livePortrait.record!==record){record.autoBlink?.reset();record.autoGaze?.reset(this.naturalActivity);}
-      if(record.currentMotionId===undefined)this.poseRecord(record,null,null,false,{},`portrait:${actorKey}`);
+      const motion=offstage.motionAsset||null,clip=motion?await this.prepareClip(modelAsset,motion,actorKey):null;
+      if(token!==this.portraitRequest)return null;
+      this.poseRecord(record,clip,motion,false,offstage.motionOptions||{},offstage.playbackKey||`portrait:${actorKey}`);
       this.expressRecord(record,weights);record.vrm.update(0);
     }
     this.portraitActorKey=actorKey;this.portraitModelId=modelAsset.id;this.livePortrait.set(record,node);this.element.style.visibility='visible';return record;

@@ -1,0 +1,5 @@
+// Kept for old project/API round trips. These values no longer affect presentation.
+export const colorThemes=['pop','terminal','tactical','ark','heian','noir','astral'];
+export const paletteKeys=['text','muted','outline','shadow','heading','dialogueText','dialogueBg','dialogueBorder','speakerText','speakerBg','speakerBorder','panelBg','panelBorder','divider','cardBg','cardText','cardBorder','buttonBg','buttonText','buttonBorder','hoverBg','hoverText','selectedBg','selectedText','inputBg','inputText','inputBorder','accent','warning','success','overlay','decoration'];
+export const normalizeColor=value=>typeof value==='string'&&/^#[a-f0-9]{6}(?:[a-f0-9]{2})?$/i.test(value)?value.toLowerCase():'';
+export function normalizeGamePalettes(value){const result={};if(!value||typeof value!=='object')return result;for(const id of colorThemes){const colors={};for(const key of paletteKeys){const v=normalizeColor(value[id]?.[key]);if(v)colors[key]=v;}if(Object.keys(colors).length)result[id]=colors;}return result;}

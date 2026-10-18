@@ -25,7 +25,7 @@ export async function createMmdActor(mesh,options={}){
  const raw=mapMmdBones(mesh.skeleton.bones);
  for(const name of ['hips','head','leftUpperArm','rightUpperArm','leftUpperLeg','rightUpperLeg'])if(!raw[name])throw Error('MMD 模型没有找到人物骨骼：'+name+'；武器请导入“物品与模型”。');
  const rest=new Map(mesh.skeleton.bones.map(b=>[b,{position:b.position.clone(),quaternion:b.quaternion.clone()}]));
- const physics=options.physics===false?null:await createMmdPhysics(mesh);
+ const physics=options.physics===false?null:await createMmdPhysics(mesh,{getBone:name=>raw[name]?.node});
  const colliderLinks=[];for(const side of ['左','右'])for(const name of ['足','ひざ','足首']){const from=mesh.skeleton.bones.find(b=>b.name===side+name+'D'),to=mesh.skeleton.bones.find(b=>b.name===side+name);if(from&&to)colliderLinks.push({from,to});}
  for(const [side,x]of [['left',1],['right',-1]]){alignChain(raw[side+'UpperArm']?.node,raw[side+'LowerArm']?.node,new THREE.Vector3(x,0,0));alignChain(raw[side+'LowerArm']?.node,raw[side+'Hand']?.node,new THREE.Vector3(x,0,0));}
  const scene=new THREE.Group();scene.add(mesh);scene.updateMatrixWorld(true);

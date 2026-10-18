@@ -34,5 +34,30 @@ hips.position.x=.3;const moved=portrait.camera.position.clone();portrait.render(
 portrait.record.portraitBodyReference=capturePortraitBodyFrame(vrm,anchor);portrait.render(renderer,scene,element);
 assert.ok(portrait.camera.position.clone().sub(head.getWorldPosition(new THREE.Vector3())).distanceTo(new THREE.Vector3(-.85,.05,1.7))<1e-8,'Calibrate rig/rest-axis offsets');
 throws=true;assert.throws(()=>portrait.render(renderer,scene,element));assert.equal(root.visible,false);assert.equal(mesh.layers.mask,1);assert.equal(renderer.shadowMap.autoUpdate,true);
+// Extending the game canvas must reveal the clipped hand without moving any
+// projected body point. Exercise the actual player camera path at three sizes.
+throws=false;
+portrait.renderGlassPortrait=()=>portrait.camera.updateMatrixWorld(true);
+for(const pixelRatio of [1,1.5,2])for(const [width,height]of [[1920,1080],[1280,720],[640,360]]){
+ renderer.getPixelRatio=()=>pixelRatio;
+ const area={left:17,bottom:height+23,width,height};
+ let rect={left:area.left+width*.04,bottom:area.bottom,width:width*.5,height:height*.68};
+ portrait.node={isConnected:true,classList:{contains:()=>false},closest:()=>({}),getBoundingClientRect:()=>rect};
+ const stageElement={getBoundingClientRect:()=>area};
+ portrait.render(renderer,scene,stageElement);const before=portrait.camera.clone();
+ const samples=[new THREE.Vector3(-1.06,-.1,0),new THREE.Vector3(-.4,.4,0),new THREE.Vector3(.6,-.6,0)].map(p=>p.unproject(before));
+ const original=rect;
+ rect={...rect,left:area.left,width:width*.54};
+ portrait.render(renderer,scene,stageElement);
+ assert.ok(before.position.distanceTo(portrait.camera.position)<1e-9);
+ assert.ok(before.quaternion.angleTo(portrait.camera.quaternion)<1e-7);
+ for(const point of samples){
+  const a=point.clone().project(before),b=point.clone().project(portrait.camera);
+  assert.ok(Math.abs(original.left+(a.x+1)*original.width*pixelRatio/2-(rect.left+(b.x+1)*rect.width*pixelRatio/2))<1e-7,'Keep exact portrait horizontal position and scale, including high-DPI targets');
+  assert.ok(Math.abs(a.y-b.y)<1e-9,'Keep portrait height and vertical position');
+ }
+ assert.ok(samples[0].clone().project(before).x<-1,'Hand is outside the former canvas');
+ assert.ok(samples[0].clone().project(portrait.camera).x>-1,'Hand now fits before the screen edge');
+}
 portrait.clear();portrait.render(renderer,scene,element);
-console.log(JSON.stringify({ok:true,sameActor:true,isolation:true,headMotionNotCancelled:true,bodyTurnsFacePlayer:true,rendererRestored:true,exceptionRestored:true,offstageHidden:true}));
+console.log(JSON.stringify({ok:true,sameActor:true,isolation:true,headMotionNotCancelled:true,bodyTurnsFacePlayer:true,rendererRestored:true,exceptionRestored:true,offstageHidden:true,screenEdgeHandVisible:true,portraitProjectionUnchanged:true}));

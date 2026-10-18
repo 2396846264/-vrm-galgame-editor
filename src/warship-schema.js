@@ -1,0 +1,30 @@
+import {navalBlocks,navalParts,shipClasses} from './naval-kit.js';
+import {normalizeStructure,expandedBlocks,cellKey} from './vehicle-structure.js';
+import {normalizeWeaponSettings} from './vehicle-weapon-settings.js';
+const clamp=(v,a,b,d)=>Number.isFinite(Number(v))?Math.max(a,Math.min(b,Number(v))):d,uid=()=>crypto.randomUUID().replaceAll('-','');
+export {shipClasses,navalBlocks,navalParts};
+export function createNavalPart(type,offset=[0,0,0]){const d=navalParts[type];if(!d)throw Error('未知舰船部件');return {id:uid(),type,offset:[...offset],rotation:[0,0,0],scale:1,color:d.color,powerHp:d.powerHp||0,...(d.family==='turret'?normalizeWeaponSettings({},d):{})};}
+export function normalizeWarship(value={}){
+ const base=normalizeStructure({...value,vehicleType:'warship'}),shipClass=shipClasses[value.shipClass]?value.shipClass:'destroyer',ids=new Set();
+ base.blocks=base.blocks.filter(b=>navalBlocks[b.kind]);base.parts=(value.parts||[]).slice(0,96).filter(p=>navalParts[p?.type]).map(p=>{let id=String(p.id||uid());if(ids.has(id))id=uid();ids.add(id);const d=navalParts[p.type];return {id,type:p.type,offset:[0,1,2].map(i=>Math.round(clamp(p.offset?.[i],-1024,1024,0)/base.gridSize)*base.gridSize),rotation:[0,1,2].map(i=>clamp(p.rotation?.[i],-180,180,0)),scale:clamp(p.scale,.25,3,1),color:/^#[\da-f]{6}$/i.test(p.color)?p.color:d.color,powerHp:clamp(p.powerHp,0,200000,d.powerHp||0),mirrorOf:String(p.mirrorOf||''),...(d.family==='turret'?normalizeWeaponSettings(p,d):{})};});
+ return {...base,shipClass,vehicleId:String(value.vehicleId||''),cruiseSpeed:clamp(value.cruiseSpeed,0,25,shipClasses[shipClass].speed),fireSounds:Object.fromEntries(Object.entries(value.fireSounds||{}).filter(([type,id])=>navalParts[type]?.family==='turret'&&typeof id==='string'))};
+}
+export function shipCoreCount(v){return expandedBlocks(v).filter(b=>b.kind==='ship_core').length;}
+export function validateWarship(v){const errors=[],blocks=expandedBlocks(v),wanted=shipClasses[v.shipClass]?.cores;if(!wanted)return ['请选择舰种'];if(shipCoreCount(v)!==wanted)errors.push(`当前舰种必须安装 ${wanted} 个核心区方块（当前 ${shipCoreCount(v)}）`);if(!blocks.some(b=>b.kind==='ship_hull'||b.kind.startsWith('ship_armor')))errors.push('缺少船体或装甲');if(!v.parts.some(p=>p.type==='ship_engine'))errors.push('缺少舰船动力机组');const keys=new Set(blocks.map(b=>cellKey(b.cell))),seen=new Set(),pending=blocks.length?[blocks[0].cell]:[];while(pending.length){const c=pending.pop(),k=cellKey(c);if(seen.has(k)||!keys.has(k))continue;seen.add(k);for(let a=0;a<3;a++)for(const n of [-1,1]){const next=[...c];next[a]+=n;pending.push(next);}}if(seen.size!==blocks.length)errors.push('存在未连接船体的方块');if(v.parts.length>96)errors.push('每舰最多96个功能附件');return errors;}
+export function exposedShipCores(v){const blocks=expandedBlocks(v),keys=new Set(blocks.map(b=>cellKey(b.cell)));return blocks.filter(b=>b.kind==='ship_core'&&[0,1,2].some(a=>[-1,1].some(n=>{const c=[...b.cell];c[a]+=n;return !keys.has(cellKey(c));}))).length;}
+const templates=new Map();
+export function warshipPreset(shipClass='destroyer'){
+ if(templates.has(shipClass))return structuredClone(templates.get(shipClass));const d=shipClasses[shipClass]||shipClasses.destroyer,v={schemaVersion:2,pilotBlockVersion:1,vehicleType:'warship',shipClass,name:d.name+' · 原型舰',gridSize:2,blocks:[],parts:[],fireSounds:{},cruiseSpeed:d.speed},cells=new Map(),put=(cell,kind,color,shape='cube',shapeRotation=[0,0,0])=>cells.set(cellKey(cell),{cell,kind,color:color||navalBlocks[kind].color,shape,shapeRotation});
+ const half=Math.round(d.length/4),beam=Math.round(d.beam/4),draft=d.draft/2,deck=2;
+ for(let z=-half;z<=half;z++){const width=Math.max(0,Math.round(beam*Math.sqrt(Math.max(.02,1-(z/(half+1))**4))));for(let x=0;x<=width;x++)for(let y=-draft;y<=deck;y++)if(x===width||y===-draft||y===deck||z===0||Math.abs(z)===half){put([x,y,z],y===deck?'ship_deck':'ship_hull',y<0?'#803e42':undefined);}}
+ const start=-Math.floor(d.cores/2);for(let z=start-1;z<=start+d.cores;z++){for(let y=-2;y<=0;y++){put([1,y,z],d.cores>=20?'ship_armor200':'ship_armor100');if(y!==-1)put([0,y,z],'ship_armor100');}if(z===start-1||z===start+d.cores)put([0,-1,z],'ship_armor100');}
+ for(let i=0;i<d.cores;i++)put([0,-1,start+i],'ship_core');
+ // The central bulkhead connects the protected citadel to the outer hull.
+ for(let x=0;x<=beam;x++)for(let y=-draft;y<=deck;y++)if(!cells.has(cellKey([x,y,0])))put([x,y,0],'ship_hull');
+ v.blocks=[...cells.values()];v.parts=[createNavalPart('ship_engine',[0,-4,Math.round(d.length*.18/2)*2]),createNavalPart('ship_propeller',[0,-4,half*2]),createNavalPart('ship_bridge_module',[0,8,-8]),createNavalPart('ship_funnel',[0,10,8]),createNavalPart('ship_mast',[0,18,0]),createNavalPart('ship_radar',[0,24,0])];
+ const heavy=d.cores>=20,main=heavy?'ship_main460':d.cores>=10?'ship_main203':'ship_dp127';for(const z of [-d.length*.31,d.length*.31])v.parts.push(createNavalPart(main,[0,6,Math.round(z/2)*2]));
+ for(const z of [-12,12])for(const x of [-1,1])v.parts.push(createNavalPart(d.cores>=10?'ship_dp127':'ship_aa40',[Math.round(beam*.65)*2*x,6,z]));
+ if(shipClass==='carrier'){for(let y=3;y<=4;y++)put([0,y,0],'ship_hull');for(let z=-half;z<=half;z++)for(let x=0;x<=beam+1;x++)put([x,4,z],'ship_deck');v.blocks=[...cells.values()];v.parts=v.parts.filter(p=>p.type!=='ship_main460');for(const p of v.parts){if(p.type==='ship_bridge_module'||['ship_funnel','ship_mast','ship_radar'].includes(p.type)){p.offset[0]=beam*1.4;p.offset[1]+=6;}if(navalParts[p.type].family==='turret'){p.offset[0]=Math.sign(p.offset[0])*(beam+1)*2;p.offset[1]=10;}}}
+ const result=normalizeWarship(v);templates.set(shipClass,result);return structuredClone(result);
+}
+export function normalizeShipDeployments(rows){return(Array.isArray(rows)?rows:[]).slice(0,12).map((row,i)=>({id:String(row.id||'ship-group-'+i),team:row.team==='ally'?'ally':'enemy',count:Math.round(clamp(row.count,1,16,1)),x:clamp(row.x,-30000,30000,(i%2?1:-1)*1000),z:clamp(row.z,-30000,30000,row.team==='ally'?-1500:-6500),heading:clamp(row.heading,-180,180,row.team==='ally'?0:180),blueprint:normalizeWarship(row.blueprint||warshipPreset('destroyer'))}));}

@@ -1,0 +1,40 @@
+/* WeChat-inspired surfaces only. Geometry and all actions stay in the shared UI. */
+:is(.player,.book-reader)[data-game-ui^=wechat-]{--chat-bg:#ededed;--chat-surface:#fff;--chat-panel:#edededf2;--chat-ink:#191919;--chat-muted:#6d6d6d;--chat-line:#dcdcdc;--chat-bubble:#95ec69;--chat-green:#07c160;--chat-soft:#e7f7ec;--glass-fill:var(--chat-surface);--glass-shadow:none;color:var(--chat-ink);color-scheme:light}
+:is(.player,.book-reader)[data-game-ui=wechat-dark]{--chat-bg:#111;--chat-surface:#2c2c2c;--chat-panel:#1e1e1ef5;--chat-ink:#d8d8d8;--chat-muted:#a0a0a0;--chat-line:#3a3a3a;--chat-bubble:#22b662;--chat-soft:#183b28;color-scheme:dark}
+.player[data-game-ui^=wechat-] :is(#player-start,#title-preview) .title-bottom-menu{background:var(--chat-panel);border-color:var(--chat-line);box-shadow:0 2px 12px #0001;backdrop-filter:none}
+.player[data-game-ui^=wechat-] :is(#player-start,#title-preview) .title-bottom-menu::after{background:none;filter:none}
+.player[data-game-ui^=wechat-] :is(#player-start,#title-preview) .title-bottom-menu button,.player[data-game-ui^=wechat-] :is(#player-start,#title-preview) .title-bottom-menu button[data-action=play],.player[data-game-ui^=wechat-] .scene-top-actions .scene-icon-button,.player[data-game-ui^=wechat-] .scene-quick-actions button,.player[data-game-ui^=wechat-] .player-modal :is(button,.save-slot,.save-slot.auto-save-slot),.player[data-game-ui^=wechat-] #choice-list button,.player[data-game-ui^=wechat-] .inventory-reward-dialogue button,.player[data-game-ui^=wechat-] .role-details :is(header button,footer button){background:var(--chat-surface);color:var(--chat-ink);border-color:var(--chat-line);border-radius:.55cqw;box-shadow:none;text-shadow:none;backdrop-filter:none}
+.player[data-game-ui^=wechat-] :is(#player-start,#title-preview) .title-bottom-menu button[data-action=play],.player[data-game-ui^=wechat-] .scene-quick-actions button[data-action=save-game]{background:var(--chat-green);color:#fff;border-color:var(--chat-green)}
+.player[data-game-ui^=wechat-] :is(#player-start,#title-preview) .title-bottom-menu button:hover,.player[data-game-ui^=wechat-] .scene-top-actions button:hover,.player[data-game-ui^=wechat-] .scene-quick-actions button:hover,.player[data-game-ui^=wechat-] .player-modal button:hover,.player[data-game-ui^=wechat-] #choice-list button:hover{background:var(--chat-soft);color:var(--chat-green);border-color:var(--chat-green);box-shadow:none}
+.player[data-game-ui^=wechat-] :is(.scene-quick-actions button.active,.player-modal button.active,.player-modal .modal-tabs button.active,.player-modal .gallery-main-tabs button.active){background:var(--chat-green);border-color:var(--chat-green);color:#fff;box-shadow:none}
+.player[data-game-ui^=wechat-] :is(#player-start,#title-preview) .title-bottom-menu button:disabled{color:var(--chat-muted);opacity:.55}
+.player[data-game-ui^=wechat-] .game-icon{filter:none}
+.player[data-game-ui^=wechat-] .dialogue:not(.custom-dialogue){background:var(--chat-panel)!important;border-color:var(--chat-line);box-shadow:none;backdrop-filter:none}
+.player[data-game-ui^=wechat-] .dialogue:not(.custom-dialogue) #dialogue-text{width:fit-content;max-width:100%;background:var(--chat-bubble);padding:.45cqw .7cqw;border-radius:.65cqw;box-shadow:none;color:#102016;text-shadow:none;font-family:'HarmonyOS Sans SC','Microsoft YaHei UI',sans-serif}
+.player[data-game-ui^=wechat-] .dialogue:not(.custom-dialogue) .speaker{text-shadow:none;filter:brightness(.65) saturate(1.1)}
+.player[data-game-ui=wechat-dark] .dialogue:not(.custom-dialogue) .speaker{filter:none}
+.player[data-game-ui^=wechat-] .dialogue:not(.custom-dialogue) .speaker::after{content:none;display:none}
+.player[data-game-ui^=wechat-] .dialogue-wave i{background:var(--chat-green);box-shadow:none}
+.player[data-game-ui^=wechat-] .dialogue-next{background:var(--chat-green);border-color:var(--chat-green);box-shadow:none}
+.player[data-game-ui^=wechat-] :is(.dialogue-copy,.settings-body,.book-shelf,.gallery-story-list){scrollbar-color:var(--chat-green) var(--chat-bg)}
+.player[data-game-ui^=wechat-] .player-modal{color:var(--chat-ink);background:#0006;backdrop-filter:none}
+.player[data-game-ui^=wechat-] .player-modal>.modal-box,.player[data-game-ui^=wechat-] .inventory-reward-dialogue{color:var(--chat-ink);background:var(--chat-bg);border-color:var(--chat-line);box-shadow:0 6px 24px #0003;backdrop-filter:none}
+.player[data-game-ui^=wechat-] .modal-box>header{border-color:var(--chat-line)}
+.player[data-game-ui^=wechat-] .player-modal :is(h2,h3,strong,.gallery-detail-name,.gallery-character-name,.gallery-character-content h3){color:var(--chat-ink)}
+.player[data-game-ui^=wechat-] .player-modal :is(header small,.settings-box p,.volume-line,.volume-line output,.modal-box footer,.save-details span,.save-details small,.gallery-empty,.gallery-character-title,.gallery-character-text,.gallery-progress-note,.gallery-story-locked,.gallery-story-locked small,.gallery-track-list button small,.gallery-music-player>small,.author-note-text,.progress-character-row b,.progress-character-row small,.field>span){color:var(--chat-muted)}
+.player[data-game-ui^=wechat-] .player-modal :is(input,select){background:var(--chat-surface);border-color:var(--chat-line);color:var(--chat-ink);accent-color:var(--chat-green)}
+.player[data-game-ui^=wechat-] .player-modal select option{background:var(--chat-surface);color:var(--chat-ink)}
+.player[data-game-ui^=wechat-] input[type=range]{accent-color:var(--chat-green)}
+.player[data-game-ui^=wechat-] .player-modal :is(.gallery-image-tile,.chapter-card,.inventory-card){background:var(--chat-surface)!important;border-color:var(--chat-line)!important;color:var(--chat-ink);box-shadow:none}
+.player[data-game-ui^=wechat-] .player-modal .save-thumb{background:var(--chat-surface);color:var(--chat-ink)}
+.player[data-game-ui^=wechat-] :is(.chapter-card-caption,.chapter-card-caption h3,.chapter-card-caption span,.chapter-card-caption small,.chapter-total strong,.chapter-caption-heading b){background-color:transparent;color:var(--chat-ink)}
+.player[data-game-ui^=wechat-] .chapter-progress>div{background:var(--chat-line)}.player[data-game-ui^=wechat-] .chapter-progress i{background:var(--chat-green);box-shadow:none}
+.player[data-game-ui^=wechat-] .player-modal .book-library .book-shelf .book-card{background:var(--chat-surface);border-color:var(--chat-line);box-shadow:none;backdrop-filter:none}
+.player[data-game-ui^=wechat-] .book-library .book-card :is(b,small){color:var(--chat-ink)}
+.player[data-game-ui^=wechat-] .ui-example-cover{background:var(--chat-soft);border-color:var(--chat-green);color:var(--chat-green)}
+.player[data-game-ui^=wechat-] .ui-example-settings p{color:var(--chat-muted)!important}
+.player[data-game-ui^=wechat-] .act-loading{background:var(--chat-panel);color:var(--chat-ink);backdrop-filter:none}.player[data-game-ui^=wechat-] .loading-spinner i{background:var(--chat-green);box-shadow:none}
+.player[data-game-ui^=wechat-] button:focus-visible{outline-color:var(--chat-green)}
+.player[data-game-ui^=wechat-] .role-details{--rd-ink:var(--chat-ink);--rd-muted:var(--chat-muted);--rd-accent:var(--chat-green);--rd-line:var(--chat-line);background:var(--chat-bg)}
+.player[data-game-ui^=wechat-] .role-details :is(.role-details-about,.role-details-stories){background:var(--chat-surface);border-color:var(--chat-line);color:var(--chat-ink);box-shadow:none;text-shadow:none;backdrop-filter:none}
+.book-reader[data-game-ui^=wechat-]{background:var(--chat-bg);color:var(--chat-ink);backdrop-filter:none}.book-reader[data-game-ui^=wechat-] :is(header,footer){background:var(--chat-surface);border-color:var(--chat-line);color:var(--chat-ink);backdrop-filter:none}.book-reader[data-game-ui^=wechat-] button{background:var(--chat-surface);border-color:var(--chat-line);color:var(--chat-ink);border-radius:8px;box-shadow:none;backdrop-filter:none}.book-reader[data-game-ui^=wechat-] button:hover{background:var(--chat-soft);color:var(--chat-green)}

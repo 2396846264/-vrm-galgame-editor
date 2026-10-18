@@ -1,0 +1,325 @@
+{
+  "release": "0.0.70",
+  "components": [
+    {
+      "name": "@moeru/three-mmd",
+      "version": "0.0.5",
+      "license": "MIT",
+      "repository": "git+https://github.com/moeru-ai/three-mmd.git",
+      "files": [
+        {
+          "file": "npm/@moeru_three-mmd/LICENSE.md",
+          "sha256": "b97a07c6a9b8c1ee7c24d40b01e9f2cbce35d66a030a15cc8d3322774d990098"
+        }
+      ]
+    },
+    {
+      "name": "@pixiv/three-vrm",
+      "version": "3.5.5",
+      "license": "MIT",
+      "repository": "https://github.com/pixiv/three-vrm.git",
+      "files": [
+        {
+          "file": "npm/@pixiv_three-vrm/LICENSE",
+          "sha256": "279ec82987aec7e72ecb9850bb704a87e352d577bc7581454c30f3551a88ea92"
+        }
+      ]
+    },
+    {
+      "name": "@pixiv/three-vrm-animation",
+      "version": "3.5.5",
+      "license": "MIT",
+      "repository": "https://github.com/pixiv/three-vrm.git",
+      "files": [
+        {
+          "file": "npm/@pixiv_three-vrm-animation/LICENSE",
+          "sha256": "279ec82987aec7e72ecb9850bb704a87e352d577bc7581454c30f3551a88ea92"
+        }
+      ]
+    },
+    {
+      "name": "ammojs-typed",
+      "version": "1.1.0",
+      "license": "MIT",
+      "repository": "https://github.com/giniedp/ammojs-typed.git",
+      "files": [
+        {
+          "file": "npm/ammojs-typed/LICENSE.md",
+          "sha256": "a7aacaf6afd46ed2c47fed13e5a4f7d2b9b419559c43cbb417828885d3a1f632"
+        }
+      ]
+    },
+    {
+      "name": "mmd-parser",
+      "version": "1.1.4",
+      "license": "MIT",
+      "repository": "git+https://github.com/takahirox/mmd-parser.git",
+      "files": [
+        {
+          "file": "npm/mmd-parser/LICENSE",
+          "sha256": "23c9323625b14f3064c0ceca73d75e6e84c98151dcab2f1eccb54254f5a310c2"
+        }
+      ]
+    },
+    {
+      "name": "pdfjs-dist",
+      "version": "6.3.289",
+      "license": "Apache-2.0",
+      "repository": "git+https://github.com/mozilla/pdf.js.git",
+      "files": [
+        {
+          "file": "npm/pdfjs-dist/LICENSE",
+          "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+        }
+      ]
+    },
+    {
+      "name": "three",
+      "version": "0.180.0",
+      "license": "MIT",
+      "repository": "https://github.com/mrdoob/three.js",
+      "files": [
+        {
+          "file": "npm/three/LICENSE",
+          "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+        }
+      ]
+    },
+    {
+      "name": "fflate",
+      "version": "0.8.2",
+      "license": "MIT",
+      "repository": "https://github.com/101arrowz/fflate/tree/v0.8.2",
+      "files": [
+        {
+          "file": "upstream/fflate-0.8.2-LICENSE.txt",
+          "sha256": "805f6cb28bb8b6d3a0badd83c93bccd9671fa01a3b4b92b7042b0743325ac243"
+        }
+      ]
+    },
+    {
+      "name": "SharpZipLib",
+      "version": "1.4.2",
+      "license": "MIT",
+      "repository": "https://github.com/icsharpcode/SharpZipLib/tree/v1.4.2",
+      "files": [
+        {
+          "file": "upstream/SharpZipLib-1.4.2-LICENSE.txt",
+          "sha256": "d7fbbc16f871bf24fa5624c7eaf945054b778985f32676dcacba41fddca61133"
+        }
+      ]
+    },
+    {
+      "name": "Ammo.js",
+      "version": "via ammojs-typed 1.1.0",
+      "license": "Zlib",
+      "repository": "https://github.com/kripken/ammo.js",
+      "files": [
+        {
+          "file": "upstream/ammo.js-LICENSE.txt",
+          "sha256": "f9a230c1a7f6cb856a80b31041e8c0228c5eece8ef6f564b79b3bc8097927a97"
+        }
+      ]
+    },
+    {
+      "name": "Bullet Physics",
+      "version": "via ammojs-typed 1.1.0",
+      "license": "Zlib",
+      "repository": "https://github.com/bulletphysics/bullet3",
+      "files": [
+        {
+          "file": "upstream/Bullet-LICENSE.txt",
+          "sha256": "885cd516a8420acb7c3e0b1a7119913b686495001ae564e3229740460e8cff59"
+        }
+      ]
+    },
+    {
+      "name": "apple-design-skill",
+      "version": "development design reference",
+      "license": "MIT",
+      "repository": "https://github.com/dayviwong/apple-design-skill",
+      "files": [
+        {
+          "file": "upstream/apple-design-skill-LICENSE.txt",
+          "sha256": "f8de08ef11562a0a10d428f8b2c68542225aca75a30532cc636ef373c267f585"
+        }
+      ]
+    },
+    {
+      "name": "Microsoft.NETCore.App.Runtime.win-x64",
+      "version": "10.0.12",
+      "license": "MIT",
+      "repository": "https://github.com/dotnet",
+      "files": [
+        {
+          "file": "native/Microsoft.NETCore.App.Runtime.win-x64/LICENSE.TXT",
+          "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+        },
+        {
+          "file": "native/Microsoft.NETCore.App.Runtime.win-x64/THIRD-PARTY-NOTICES.TXT",
+          "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+        }
+      ]
+    },
+    {
+      "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+      "version": "10.0.12",
+      "license": "MIT",
+      "repository": "https://github.com/dotnet",
+      "files": [
+        {
+          "file": "native/Microsoft.WindowsDesktop.App.Runtime.win-x64/LICENSE",
+          "sha256": "a89886665765362eb77e0f8e26602c924520041d1711b2eedc136434fe4d01ab"
+        }
+      ]
+    },
+    {
+      "name": "Microsoft.Web.WebView2",
+      "version": "1.0.3537.50",
+      "license": "BSD-3-Clause",
+      "repository": "https://learn.microsoft.com/microsoft-edge/webview2/",
+      "files": [
+        {
+          "file": "native/Microsoft.Web.WebView2/LICENSE.txt",
+          "sha256": "0af8f1b807512aae39c2ac1aa4d0cae65cabecb6fd554b8439a5162a0d6eca55"
+        },
+        {
+          "file": "native/Microsoft.Web.WebView2/NOTICE.txt",
+          "sha256": "106423785c5b7eba0a8e61d1837f2132e9c828e20ad530f565d981c1df60dd90"
+        }
+      ]
+    },
+    {
+      "name": "AMD FidelityFX FSR",
+      "version": "1 / GLSL adaptation",
+      "license": "MIT",
+      "repository": "https://github.com/GPUOpen-Effects/FidelityFX-FSR",
+      "files": [
+        {
+          "file": "AMD-FidelityFX-FSR.txt",
+          "sha256": "db089274ce766da70f5b7d791029c3486f9f9e27c8c79c652689603d3192e802"
+        }
+      ]
+    },
+    {
+      "name": "HarmonyOS Sans SC",
+      "version": "1.0 / unmodified Regular and Bold",
+      "license": "HarmonyOS Sans Fonts License",
+      "repository": "https://developer.huawei.com/consumer/en/design/resource/",
+      "files": [
+        {
+          "file": "fonts/HarmonyOS_Sans_SC_LICENSE.txt",
+          "sha256": "b2ffec0e6269ee41c3b5fc0345ab37600b46d66ebea6c9c58ff37f517bdfa164"
+        }
+      ]
+    },
+    {
+      "name": "PDF.js bundled resource: cmaps/LICENSE",
+      "version": "pdfjs-dist 6.3.289",
+      "license": "See original license",
+      "repository": "https://github.com/mozilla/pdf.js/tree/v6.3.289/external",
+      "files": [
+        {
+          "file": "pdf/cmaps/LICENSE",
+          "sha256": "aa92ab5a472974865a96fd4a4e9c13bb41bf6fe1b309cb6b8da48bc9e19839a2"
+        }
+      ]
+    },
+    {
+      "name": "PDF.js bundled resource: PDF.js-LICENSE",
+      "version": "pdfjs-dist 6.3.289",
+      "license": "See original license",
+      "repository": "https://github.com/mozilla/pdf.js/tree/v6.3.289/external",
+      "files": [
+        {
+          "file": "pdf/PDF.js-LICENSE",
+          "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+        }
+      ]
+    },
+    {
+      "name": "PDF.js bundled resource: standard_fonts/LICENSE_FOXIT",
+      "version": "pdfjs-dist 6.3.289",
+      "license": "See original license",
+      "repository": "https://github.com/mozilla/pdf.js/tree/v6.3.289/external",
+      "files": [
+        {
+          "file": "pdf/standard_fonts/LICENSE_FOXIT",
+          "sha256": "b578cdd2345840ada550bd12519533812320d5f1d21cf4c1c7e1b1b0a31c98b7"
+        }
+      ]
+    },
+    {
+      "name": "PDF.js bundled resource: wasm/LICENSE_JBIG2",
+      "version": "pdfjs-dist 6.3.289",
+      "license": "See original license",
+      "repository": "https://github.com/mozilla/pdf.js/tree/v6.3.289/external",
+      "files": [
+        {
+          "file": "pdf/wasm/LICENSE_JBIG2",
+          "sha256": "9e66b7f1b934a28b37f3bc4dac97915de1674271e79a0a88182a18ed9731b4d1"
+        }
+      ]
+    },
+    {
+      "name": "PDF.js bundled resource: wasm/LICENSE_OPENJPEG",
+      "version": "pdfjs-dist 6.3.289",
+      "license": "See original license",
+      "repository": "https://github.com/mozilla/pdf.js/tree/v6.3.289/external",
+      "files": [
+        {
+          "file": "pdf/wasm/LICENSE_OPENJPEG",
+          "sha256": "a6af136f3e15038a666b61f376612a07d9a4e48cb7c01adbf3e33b3f14ab49b6"
+        }
+      ]
+    },
+    {
+      "name": "PDF.js bundled resource: wasm/LICENSE_PDFJS_JBIG2",
+      "version": "pdfjs-dist 6.3.289",
+      "license": "See original license",
+      "repository": "https://github.com/mozilla/pdf.js/tree/v6.3.289/external",
+      "files": [
+        {
+          "file": "pdf/wasm/LICENSE_PDFJS_JBIG2",
+          "sha256": "aad3cce09842e00e9e11ad5e8fef8cc02fbc3a3768fe2f007443b9cee37aaee5"
+        }
+      ]
+    },
+    {
+      "name": "PDF.js bundled resource: wasm/LICENSE_PDFJS_OPENJPEG",
+      "version": "pdfjs-dist 6.3.289",
+      "license": "See original license",
+      "repository": "https://github.com/mozilla/pdf.js/tree/v6.3.289/external",
+      "files": [
+        {
+          "file": "pdf/wasm/LICENSE_PDFJS_OPENJPEG",
+          "sha256": "717fc62da03292dbb4dd0c8280bd4ce7bb8550dcf31d772bc93455fb50313425"
+        }
+      ]
+    },
+    {
+      "name": "PDF.js bundled resource: wasm/LICENSE_PDFJS_QCMS",
+      "version": "pdfjs-dist 6.3.289",
+      "license": "See original license",
+      "repository": "https://github.com/mozilla/pdf.js/tree/v6.3.289/external",
+      "files": [
+        {
+          "file": "pdf/wasm/LICENSE_PDFJS_QCMS",
+          "sha256": "508a77d2e7b51d98adeed32648ad124b7b30241a8e70b2e72c99f92d8e5874d1"
+        }
+      ]
+    },
+    {
+      "name": "PDF.js bundled resource: wasm/LICENSE_QCMS",
+      "version": "pdfjs-dist 6.3.289",
+      "license": "See original license",
+      "repository": "https://github.com/mozilla/pdf.js/tree/v6.3.289/external",
+      "files": [
+        {
+          "file": "pdf/wasm/LICENSE_QCMS",
+          "sha256": "36d847ae882f6574ebc72f56a4f354e4f104fde4a584373496482e97d52d31bc"
+        }
+      ]
+    }
+  ]
+}

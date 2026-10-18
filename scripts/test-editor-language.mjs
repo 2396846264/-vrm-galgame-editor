@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {editorLanguagePlugin} from './editor-language-plugin.mjs';
+import {editorText,editorLabel,editorHtml,editorMessage,enableEditorLanguage,setEditorLanguage,setEditorText,editorLocale} from '../src/editor-language.js';
+const catalog=JSON.parse(fs.readFileSync('src/editor-languages.json','utf8'));
+for(const [source,translations]of Object.entries(catalog))for(const language of ['en','ja']){
+ assert.equal(typeof translations[language],'string',source+' '+language);
+ assert.deepEqual([...source.matchAll(/\{\d+\}/g)].map(m=>m[0]).sort(),[...translations[language].matchAll(/\{\d+\}/g)].map(m=>m[0]).sort(),source+' placeholders');
+}
+assert.equal(editorText('保存'),'保存');assert.equal(editorLabel('保存'),'保存');
+let saved=JSON.stringify({theme:'dark',autoSaveMinutes:10});
+globalThis.localStorage={getItem:()=>saved,setItem:(_key,value)=>saved=value};
+globalThis.NodeFilter={SHOW_COMMENT:128};globalThis.Node={TEXT_NODE:3,ELEMENT_NODE:1};
+globalThis.document={documentElement:{},body:{dataset:{}},createTreeWalker:()=>({nextNode:()=>null}),querySelectorAll:()=>[],querySelector:()=>null};
+globalThis.window=new EventTarget();globalThis.MutationObserver=class{observe(){}disconnect(){}};
+enableEditorLanguage();setEditorLanguage('en');
+assert.equal(editorLocale(),'en');assert.equal(editorText('保存'),'Save');
+const author='保存';const rendered=editorHtml`<button title="保存">保存</button><textarea>${author}</textarea><input value="${author}" placeholder="新工程名称">`;
+assert.match(rendered,/>Save<!--\/editor-text-->/);assert.match(rendered,/<textarea>保存<\/textarea>/);assert.match(rendered,/value="保存"/);assert.match(rendered,/data-editor-placeholder="新工程名称"/);
+const node={isConnected:true,textContent:''};setEditorText(node,'● 未保存');assert.equal(node.textContent,'● Unsaved');
+setEditorLanguage('ja');assert.equal(node.textContent,'● 未保存');assert.equal(editorText('角色'),'キャラクター');
+assert.equal(editorMessage`每 ${5} 分钟`,catalog['每 {0} 分钟']?.ja?.replace('{0}','5')??'每 5 分钟');
+setEditorLanguage('zh-CN');assert.equal(node.textContent,'● 未保存');assert.equal(JSON.parse(saved).theme,'dark');assert.equal(JSON.parse(saved).autoSaveMinutes,10);
+setEditorLanguage('invalid');assert.equal(editorLocale(),'zh-CN');
+const sample="const user='保存';function render(){app.innerHTML=`<button>保存</button><textarea>${escape(user)}</textarea>`;status.textContent=dirty?'未保存':'已保存';}";
+const transformed=editorLanguagePlugin().transform(sample,'C:/project/src/sample.js').code;
+assert.match(transformed,/__editorHtml`<button>保存/);assert.match(transformed,/\$\{escape\(user\)\}/);assert.match(transformed,/const user='保存'/);assert.match(transformed,/__setEditorText\(status,/);
+const semantics="const data={text:'<p>保存</p>'};const failure=new Error('保存');function render(){app.innerHTML=`<b>${kind==='中文'?'标签':''}${obj['中文']}${names.includes('中文')}</b>`;}";
+const safe=editorLanguagePlugin().transform(semantics,'C:/project/src/sample.js').code;
+assert.match(safe,/text:'<p>保存<\/p>'/);assert.match(safe,/new Error\('保存'\)/);assert.match(safe,/kind==='中文'/);assert.match(safe,/obj\['中文'\]/);assert.match(safe,/names.includes\('中文'\)/);
+setEditorLanguage('en');const promptSource="const created=prompt('编辑器设置','保存');";
+const promptCode=editorLanguagePlugin().transform(promptSource,'C:/project/src/sample.js').code.replace(/^import[^\n]+\n/,'');
+assert.equal(new Function('__editorText','prompt',promptCode+'return created;')(editorText,(label,value)=>{assert.equal(label,'Editor settings');assert.equal(value,'保存');return value;}),'保存');
+console.log('PASS: bilingual catalog completeness, placeholders, source-only UI translation, author values, live status restoration, preference isolation and unchanged player defaults.');
