@@ -17,7 +17,7 @@ internal sealed class EditorModuleWindow : Form
         Deactivate+=(_,_)=>view.CoreWebView2?.PostWebMessageAsJson("{\"modulePreviewActive\":false}");
         Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async(sharedEnvironment);view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.Settings.IsStatusBarEnabled=false;view.CoreWebView2.WebMessageReceived+=Message;
             view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};
-            view.Source=new Uri("https://app.galgame/"+((module is "aircraft" or "warship")?"aircraft.html":"index.html")+"?module="+Uri.EscapeDataString(module)+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-ui57" or "--smoke-audit-module" or "--smoke-geometry52" or "--smoke-editor-modules" or "--smoke-aircombat" or "--smoke-air67" or "--smoke-air69" or "--smoke-naval70" or "--smoke-ocean51")?"&smoke=1":""));
+            view.Source=new Uri("https://app.galgame/"+((module is "aircraft" or "warship")?"aircraft.html":"index.html")+"?module="+Uri.EscapeDataString(module)+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-motion72" or "--smoke-ui57" or "--smoke-audit-module" or "--smoke-geometry52" or "--smoke-editor-modules" or "--smoke-aircombat" or "--smoke-air67" or "--smoke-air69" or "--smoke-naval70" or "--smoke-ocean51")?"&smoke=1":""));
         }catch(Exception error){MessageBox.Show(this,error.Message,"窗口无法打开");closing=true;Close();}};
         FormClosing+=async(_,e)=>{if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(checking)return;checking=true;
             try{await SetClosePendingAsync(true);if(await IsBusyAsync()){MessageBox.Show(this,EditorLanguage.T("当前操作或保存还没完成，请稍后关闭。"));return;}
@@ -89,11 +89,14 @@ internal sealed partial class EditorWindow
             if(directory!=projectDirectory)throw new Exception("工程已切换，请关闭本窗口后重新打开。");
             if((module is "aircraft" or "warship")&&(action is "exportVehicleFile" or "importVehicleFile")){data??=new JsonObject();data["vehicleType"]=module=="warship"?"warship":"aircraft";return VehicleFile(action,data,child!);}
             if(action=="saveModule")return await CommitEditorModule(module,data);
+            if(action=="exportMixamoWhite"&&module=="characters")return ExportMixamoWhiteFile(data,child!);
             if(action=="discardModule"){
                 var snapshot=JsonNode.Parse(await web.CoreWebView2.ExecuteScriptAsync("window.editorProjectSnapshot()"));return RestoreHistoryAssets(snapshot);
             }
             if(action=="deleteAsset")return new{deferred=true};
             if(action=="openEditorModule")return OpenEditorModule(data);
+            if(action=="engineOrigin")return EngineAttribution.Origin();
+            if(action=="openCreatorHomepage")return EngineAttribution.OpenHomepage();
             if(action=="openEnvironment"){
                 var latest=JsonNode.Parse(await web.CoreWebView2.ExecuteScriptAsync("window.editorEnvironmentFromModule("+data!.ToJsonString()+")"));return OpenEnvironment(latest);
             }
@@ -104,3 +107,4 @@ internal sealed partial class EditorWindow
         return new{opened=true,reused=false};
     }
 }
+

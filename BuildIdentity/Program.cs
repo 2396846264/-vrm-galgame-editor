@@ -21,7 +21,7 @@ if (args[0] == "generate")
     string code = "namespace VRMGalgame;\ninternal static class ProtectedBuildConstants\n{\n"
         + $"    internal const string PublicKey = {JsonSerializer.Serialize(publicKey)};\n"
         + $"    internal static string ArchivePassword() => {JsonSerializer.Serialize(password)};\n"
-        + $"    internal static string FeedbackGroup() => {JsonSerializer.Serialize(args[3])};\n}}\n";
+        + $"    internal static string FeedbackGroup() => {"EngineAttribution.Text(\"feedbackGroup\")"};\n}}\n";
     string output = Path.GetFullPath(args[2]);
     Directory.CreateDirectory(Path.GetDirectoryName(output)!);
     File.WriteAllText(output, code);

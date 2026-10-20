@@ -19,21 +19,22 @@ export function cameraTravelSeconds(from,to,speed=1){
  return THREE.MathUtils.clamp(distance/4+angle/Math.PI*.7+fov/100,.35,4)/THREE.MathUtils.clamp(Number(speed)||1,.85,1.15);
 }
 export class DialogueCameraController{
- constructor(camera,viewport,{confirmed=()=>{},cancelled=()=>{},paused=()=>false}={}){
-  this.camera=camera;this.viewport=viewport;this.confirmed=confirmed;this.cancelled=cancelled;this.paused=paused;this.editing=false;this.travel=null;this.keys=new Set();this.frame=0;
+ constructor(camera,viewport,{confirmed=()=>{},cancelled=()=>{},paused=()=>false,secondary=()=>{},tickEdit=()=>{},ended=()=>{}}={}){
+  this.secondary=secondary;this.tickEdit=tickEdit;this.ended=ended;this.camera=camera;this.viewport=viewport;this.confirmed=confirmed;this.cancelled=cancelled;this.paused=paused;this.editing=false;this.travel=null;this.keys=new Set();this.frame=0;
   this.keyDown=e=>{if(!this.editing)return;if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();this.cancelEdit();return;}if(e.ctrlKey||e.metaKey||!viewport.contains(document.activeElement)&&document.pointerLockElement!==viewport)return;if(!['KeyW','KeyA','KeyS','KeyD','KeyQ','KeyE','ShiftLeft','ShiftRight','AltLeft','AltRight'].includes(e.code))return;e.preventDefault();e.stopImmediatePropagation();this.keys.add(e.code);};
   this.keyUp=e=>this.keys.delete(e.code);
   this.mouseMove=e=>{if(!this.editing||!viewport.contains(e.target)&&document.pointerLockElement!==viewport)return;const dx=document.pointerLockElement===viewport?e.movementX:this.lastMouse?e.clientX-this.lastMouse.x:0,dy=document.pointerLockElement===viewport?e.movementY:this.lastMouse?e.clientY-this.lastMouse.y:0;this.lastMouse={x:e.clientX,y:e.clientY};const rotation=new THREE.Euler().setFromQuaternion(camera.quaternion,'YXZ');rotation.y-=dx*.0025;rotation.x=THREE.MathUtils.clamp(rotation.x-dy*.0025,-Math.PI*.49,Math.PI*.49);camera.quaternion.setFromEuler(rotation);};
-  this.mouseDown=e=>{if(!this.editing||e.button!==0||!viewport.contains(e.target)&&document.pointerLockElement!==viewport)return;e.preventDefault();e.stopImmediatePropagation();const pose=snapshotCamera(camera);this.endEdit();this.confirmed(pose);};
+  this.mouseDown=e=>{if(!this.editing||![0,2].includes(e.button)||!viewport.contains(e.target)&&document.pointerLockElement!==viewport)return;e.preventDefault();e.stopImmediatePropagation();if(e.button===2){this.secondary();return;}const pose=snapshotCamera(camera);this.endEdit();this.confirmed(pose);};
+  this.contextMenu=e=>{if(this.editing&&(viewport.contains(e.target)||document.pointerLockElement===viewport))e.preventDefault();};viewport.addEventListener('contextmenu',this.contextMenu);
   this.lostPointer=()=>{if(this.editing&&this.locked&&document.pointerLockElement!==viewport)this.cancelEdit();};
   this.blur=()=>this.keys.clear();this.visibility=()=>{this.last=performance.now();this.keys.clear();};
   document.addEventListener('keydown',this.keyDown,true);document.addEventListener('keyup',this.keyUp,true);document.addEventListener('mousemove',this.mouseMove,true);document.addEventListener('mousedown',this.mouseDown,true);document.addEventListener('pointerlockchange',this.lostPointer);document.addEventListener('visibilitychange',this.visibility);window.addEventListener('blur',this.blur);
  }
  get moving(){return Boolean(this.travel);}
- startEdit(){this.finish();this.original=snapshotCamera(this.camera);this.editing=true;this.locked=false;this.lastMouse=null;this.keys.clear();this.viewport.tabIndex=0;this.viewport.focus({preventScroll:true});this.viewport.classList.add('camera-editing');this.startTick();}
+ startEdit(){this.finish();this.original=snapshotCamera(this.camera);this.editing=true;this.locked=false;this.lastMouse=null;this.keys.clear();this.viewport.tabIndex=0;this.viewport.focus({preventScroll:true});this.viewport.classList.add('camera-editing');this.crosshair?.remove();this.crosshair=document.createElement('div');this.crosshair.className='dialogue-camera-crosshair';this.crosshair.setAttribute('aria-hidden','true');this.crosshair.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 2v6m0 8v6M2 12h6m8 0h6" fill="none" stroke="#141414" stroke-width="4"/><path d="M12 2v6m0 8v6M2 12h6m8 0h6" fill="none" stroke="white" stroke-width="2"/><circle cx="12" cy="12" r="1.5" fill="white"/></svg>';this.viewport.append(this.crosshair);this.startTick();}
  requestMouseLock(){try{const result=this.viewport.requestPointerLock?.();result?.then?.(()=>{this.locked=true;}).catch(()=>{});}catch{}}
- endEdit(){this.editing=false;this.keys.clear();this.viewport.classList.remove('camera-editing');if(document.pointerLockElement===this.viewport)document.exitPointerLock();this.locked=false;}
- cancelEdit(){if(!this.editing)return;const original=this.original;this.endEdit();applyDialogueCamera(this.camera,original);this.cancelled();}
+ endEdit(cancel=false){this.ended(cancel);this.editing=false;this.keys.clear();this.viewport.classList.remove('camera-editing');this.crosshair?.remove();this.crosshair=null;if(document.pointerLockElement===this.viewport)document.exitPointerLock();this.locked=false;}
+ cancelEdit(){if(!this.editing)return;const original=this.original;this.endEdit(true);applyDialogueCamera(this.camera,original);this.cancelled();}
  moveKeys(delta){
   let speed=3;if(this.keys.has('ShiftLeft')||this.keys.has('ShiftRight'))speed*=3;if(this.keys.has('AltLeft')||this.keys.has('AltRight'))speed*=.25;
   const direction=new THREE.Vector3((this.keys.has('KeyD')?1:0)-(this.keys.has('KeyA')?1:0),(this.keys.has('KeyE')?1:0)-(this.keys.has('KeyQ')?1:0),(this.keys.has('KeyS')?1:0)-(this.keys.has('KeyW')?1:0));
@@ -43,9 +44,9 @@ export class DialogueCameraController{
  finish(){if(!this.travel)return;const travel=this.travel;this.travel=null;applyDialogueCamera(this.camera,travel.target);travel.resolve();}
  cancelTravel(){if(!this.travel)return;const travel=this.travel;this.travel=null;travel.resolve();}
  startTick(){if(this.frame)return;this.last=performance.now();this.frame=requestAnimationFrame(time=>this.tick(time));}
- tick(time){this.frame=0;const delta=Math.max(0,(time-this.last)/1000);this.last=time;if(this.editing)this.moveKeys(Math.min(delta,.1));
+ tick(time){this.frame=0;const delta=Math.max(0,(time-this.last)/1000);this.last=time;if(this.editing){this.moveKeys(Math.min(delta,.1));this.tickEdit(Math.min(delta,.1));}
   if(this.travel&&!this.paused()){const t=this.travel;t.elapsed+=delta;const progress=THREE.MathUtils.smoothstep(Math.min(1,t.elapsed/t.seconds),0,1);this.camera.position.fromArray(t.from.position).lerp(new THREE.Vector3().fromArray(t.target.position),progress);this.camera.quaternion.fromArray(t.from.rotation).slerp(new THREE.Quaternion().fromArray(t.target.rotation),progress);this.camera.fov=THREE.MathUtils.lerp(t.from.fov,t.target.fov,progress);this.camera.updateProjectionMatrix();if(t.elapsed>=t.seconds)this.finish();}
   if(this.editing||this.travel)this.frame=requestAnimationFrame(next=>this.tick(next));
  }
- dispose(){this.cancelEdit();this.cancelTravel();cancelAnimationFrame(this.frame);document.removeEventListener('keydown',this.keyDown,true);document.removeEventListener('keyup',this.keyUp,true);document.removeEventListener('mousemove',this.mouseMove,true);document.removeEventListener('mousedown',this.mouseDown,true);document.removeEventListener('pointerlockchange',this.lostPointer);document.removeEventListener('visibilitychange',this.visibility);window.removeEventListener('blur',this.blur);}
+ dispose(){this.viewport.removeEventListener('contextmenu',this.contextMenu);this.cancelEdit();this.cancelTravel();cancelAnimationFrame(this.frame);document.removeEventListener('keydown',this.keyDown,true);document.removeEventListener('keyup',this.keyUp,true);document.removeEventListener('mousemove',this.mouseMove,true);document.removeEventListener('mousedown',this.mouseDown,true);document.removeEventListener('pointerlockchange',this.lostPointer);document.removeEventListener('visibilitychange',this.visibility);window.removeEventListener('blur',this.blur);}
 }

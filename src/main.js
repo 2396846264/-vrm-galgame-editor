@@ -1,4 +1,7 @@
 import {showVehicleEditorPicker} from './editor-picker.js';
+import {setMotionFitProfiles,normalizeMotionFit} from './motion-fit.js';
+import {exportMixamoWhite,exportMixamoObj} from './mixamo-white-export.js';
+import './motion-fit.css';
 import {ensureShipLibrary,voxelPreset} from './vehicle-documents.js';
 import {partFamily,normalizeCombat} from './aircombat-schema.js';
 import {airDialogueEditor,airDialogueList} from './aircombat-dialogue-editor.js';
@@ -13,6 +16,11 @@ import {ensureVehicleLibrary} from './vehicle-documents.js';
 import {assetsOfType,syncAssetOrganization,motionsForCharacter,motionFolderId,commonMotionFolderId,setAudioKind,copyCharacterMotions} from './asset-organization.js';
 import {DialogueCameraController,snapshotCamera,applyDialogueCamera,resolveDialogueCamera} from './dialogue-camera.js';
 import './dialogue-camera.css';
+import {VoiceDialogueClock} from './voice-dialogue-clock.js';
+import {DialogueCharacterGrab} from './dialogue-character-grab.js';
+import './cast-grid.css';
+import {normalizePortraitFraming,readPortraitFraming} from './portrait-framing.js';
+import {castFineControls} from './cast-fine-controls.js';
 import {normalizeSpatialCamera} from './spatial-camera.js';
 import './story-workspace.css';
 import {createNextDialogue} from './dialogue-new.js';
@@ -90,12 +98,15 @@ import './editor-history.css';
 import { syncDialogueVoices, voicesForCharacter, voiceFolderId, dialogueLines, clearVoiceReferences } from './dialogue-voices.js';
 import './dialogue-voices.css';
 import './feedback.css';
+import {EditorAttribution,installOriginEgg} from './editor-attribution.js';
 import { createStoryAssistant } from './story-assistant.js';
 
 import './apple-editor.css';
 import {resolvedEditorTheme} from './apple-editor-theme.js';
 import {showEditorPicker} from './editor-picker.js';
 const app = document.querySelector('#app');
+const editorAttribution = new EditorAttribution();
+installOriginEgg({read:()=>bridge('engineOrigin')});
 // Flight smoke checks run only in the existing dedicated native smoke mode.
 const pending = new Map();
 let counter = 0;
@@ -125,6 +136,7 @@ let preparedAct = -1;
 let transitioning = false;
 let airDialogueLine=null;
 const actIntro=createActIntro();
+let characterGrab=null;
 let dialogueCamera=null,cameraActId="",cameraStepId="",skipCameraTravel=false,cameraSpeed=1;
 let playRequest = 0;
 let previewRequest = 0;
@@ -150,6 +162,7 @@ let audioSettings = { master: 1, music: 0.8, voice: 1, effects: 0.8 };
 let textSpeed = 5;
 let graphicsPreferences=normalizeGraphics(),graphicsDraft=normalizeGraphics();
 let typingTimer = null;
+let voiceTyping=null;
 let typingCharacters = [];
 let typingIndex = 0;
 const activeEffects = new Set();
@@ -203,6 +216,45 @@ function bridge(action, payload = {}) {
     window.chrome.webview.postMessage({ id, action, payload });
   });
 }
+setMotionFitProfiles(()=>project?.characters||[]);
+function motionFitEditor(item){
+ const id=item.fitPreviewMotionId||'',own=item.motionFitOverrides?.[id],s=normalizeMotionFit(own||item.motionFit);
+ const slider=(key,label,min,max,step,value)=>field(label,`<div class="npr-slider"><input type="range" data-motion-fit="${key}" min="${min}" max="${max}" step="${step}" value="${value}"><output data-motion-fit-output="${key}">${value}</output></div>`);
+ return `<details class="motion-fit-editor" open><summary>${editorLabel('动作适配与 Mixamo')}</summary>
+ ${field('测试动作',`<select data-fit-preview><option value="">${editorLabel('自然待机')}</option>${motionsForCharacter(project,item.id).map(m=>`<option value="${escape(m.id)}" ${id===m.id?'selected':''}>${escape(m.name)}</option>`).join('')}</select>`)}
+ ${id?`<div class="inline-actions">${button('暂停 / 继续','fit-preview-play')}</div><label class="field"><span>${editorLabel('检查动作帧')}</span><input type="range" data-fit-frame min="1" max="1" value="1"><output data-fit-frame-output>1</output></label>`:''}
+ <p class="tip">${editorLabel(own?'正在调整当前动作的独立设置。':'正在调整此角色的默认设置。')}</p>
+ ${field('双手防穿模',`<select data-motion-fit="enabled"><option value="on" ${s.enabled?'selected':''}>${editorLabel('开启')}</option><option value="off" ${!s.enabled?'selected':''}>${editorLabel('关闭')}</option></select>`)}
+ ${slider('strength','修正强度',0,100,1,Math.round(s.strength*100))}${slider('clearance','身体安全间距（厘米）',0,8,.5,Math.round(s.clearance*1000)/10)}${slider('bodyScale','身体包络大小（百分比）',65,150,1,Math.round(s.bodyScale*100))}
+ <div class="inline-actions">${id?button(own?'恢复角色默认适配':'为此动作单独适配',own?'fit-motion-reset':'fit-motion-own'):''}${button('重置动作适配','fit-reset')}</div>
+ <p class="tip">自动估算身体范围，修正手腕与前臂。衣摆和头发保留原有物理。抱胸、摸脸或持物动作可单独减弱或关闭。原生 VMD 保持原动作。</p>
+ <div class="inline-actions">${button('导出 Mixamo 白模（FBX）','export-mixamo-white',item.modelId?'':'disabled')}${button('导出兼容白模（OBJ）','export-mixamo-obj',item.modelId?'':'disabled')}</div>
+ <p class="tip">FBX 使用 2013 兼容格式并保留骨骼。若网站仍提示骨骼映射失败，请上传 OBJ 白模，按提示标记关节后由 Mixamo 自动绑骨。</p>
+ <p class="tip">导出当前体型的 T 姿势、白色蒙皮和 Mixamo 骨骼，不包含贴图、表情或物理。上传 Mixamo 调整后，下载 FBX Binary、Without Skin，作为动作导回此角色。</p></details>`;
+}
+async function saveMixamoWhite(item,format='fbx'){
+ const model=asset(item?.modelId);if(!model)throw Error('请先选择人物模型');
+ const key='white-export:'+uid();toast('正在生成 Mixamo 白模…');
+ try{
+  const record=await stage.loadModel(model,key);if(!record)throw Error('人物模型不可用');record.vrm.setPhysicsEnabled?.(false);
+  const {buffer,stats}=(format==='obj'?exportMixamoObj:exportMixamoWhite)(record.vrm),bytes=new Uint8Array(buffer);let binary='';
+  for(let i=0;i<bytes.length;i+=32768)binary+=String.fromCharCode(...bytes.subarray(i,i+32768));
+  const result=await bridge('exportMixamoWhite',{name:item.name,format,base64:btoa(binary),stats});
+  if(new URLSearchParams(location.search).has('smoke'))window.__lastWhiteExport=result;
+  if(result)toast('Mixamo 白模已导出。');return result;
+ }finally{await stage.releaseModel(key);}
+}
+document.addEventListener('input',event=>{
+ const node=event.target;if(modulePanel!=='characters'||!project)return;
+ const item=project.characters[selectedCharacter];if(!item)return;
+ if(node.hasAttribute('data-fit-frame')){stage.setMotionPoseFrame(Number(node.value));document.querySelector('[data-fit-frame-output]')?.replaceChildren(node.value);return;}
+ if(node.hasAttribute('data-fit-preview')){item.fitPreviewMotionId=node.value;markDirty();renderInspector();return;}
+ const key=node.dataset.motionFit;if(!key)return;
+ const id=item.fitPreviewMotionId||'',own=item.motionFitOverrides?.[id],settings=normalizeMotionFit(own||item.motionFit);
+ settings[key]=key==='enabled'?node.value==='on':Number(node.value)/100;
+ if(own)item.motionFitOverrides[id]=normalizeMotionFit(settings);else item.motionFit=normalizeMotionFit(settings);
+ document.querySelector(`[data-motion-fit-output="${key}"]`)?.replaceChildren(String(node.value));markDirty();
+});
 window.chrome?.webview?.addEventListener('message', event => {
   const message = event.data;
 
@@ -538,8 +590,10 @@ function updateRuntimePreparation(){
 setInterval(updateRuntimePreparation,200);
 
 async function displayActStep(currentAct, current) {
+  const edit=castPopover?.castEdit;if(edit?.owner===project&&edit.line===current)current={...current,cast:{...current.cast,[edit.slot]:edit.draft}};
   const cast=castForAct(currentAct,current),speaker=cast.find(entry=>entry.actorKey===current?.characterId);
   await stage.showCast(cast,speaker||null,playing);
+  if(castPopover?.castEdit)paintCastEdit(castPopover.castEdit,castPopover.castEdit.draft);
 }
 const adjustmentSlider = (key, label, value, min, max, stepSize, display) =>
   `<label class="adjustment ${key === 'offsetZ' ? 'depth-adjustment' : ''}"><span>${editorLabel(label)}</span><input type="range" data-adjust="${key}" min="${min}" max="${max}" step="${key === 'offsetZ' ? 'any' : stepSize}" value="${value}">${key === 'offsetZ' ? `<input class="depth-number" type="number" data-adjust="${key}" aria-label="${label}精确数值" min="${min}" max="${max}" step="0.01" value="${value}">` : ''}<output ${key === 'offsetZ' ? 'hidden' : ''} data-adjust-output="${key}">${display}</output></label>`;
@@ -602,7 +656,7 @@ async function showTitleScene(interactive = false) {
   const loading = document.querySelector('#act-loading');
   const entries = (project.title.actors || []).filter(item=>asset(item.modelId)).map(item=>{
     const role=character(item.characterId);
-    return {actorKey:`title:${item.id}`,modelAsset:asset(item.modelId),motionAsset:asset(item.motionId),
+    return {actorKey:`title:${item.id}`,characterProfileId:item.characterId,modelAsset:asset(item.modelId),motionAsset:asset(item.motionId),
       motionOptions:motionOptionsOf(item),expressionWeights:item.expressionWeights,position:'center',transform:transformOf(item),
       props:role?.modelId===item.modelId?role.props||[]:[],visiblePropIds:item.props,assets:project.assets,
       returnToIdle:true,playbackKey:`title:${item.id}:${item.motionId}`};
@@ -1111,7 +1165,7 @@ const sceneAnimationDialog=createSceneAnimationDialog({
 });
 async function showEnvironment(owner){const env=project.environments?.find(e=>e.id===owner?.environmentId);await stage.setEnvironment(env,project.assets);return Boolean(env);}
 const isFbxModel=id=>asset(id)?.type==='fbxCharacter';
-const isLiveModel=id=>['vrm','mmdCharacter'].includes(asset(id)?.type);
+const isLiveModel=id=>['vrm','mmdCharacter','fbxCharacter'].includes(asset(id)?.type);
 const actorModels=()=>project.assets.filter(a=>['vrm','fbxCharacter','mmdCharacter'].includes(a.type));
 function chapterRender(chapter,inherited={}){return project?.renderPresetSchema===1?resolveDialogueRender(project,chapter,chapter?.steps?.[0]):legacyChapterRender(chapter,inherited);}
 function dialogueRender(chapter,line,inherited={}){return project?.renderPresetSchema===1?resolveDialogueRender(project,chapter,line):legacyDialogueRender(chapter,line,inherited);}
@@ -1141,6 +1195,7 @@ function normalize() {
   for (const folder of project.assetFolders) if (folder.id === 'auto-character-portraits') folder.hidden = true;
   project.characters ||= [];
   for (const item of project.characters) {
+    item.motionFit=normalizeMotionFit(item.motionFit);
     item.autoMouth = item.autoMouth !== false;
     item.nameColor=characterNameColor(item);
     item.portraitId ||= '';
@@ -1166,6 +1221,7 @@ function normalize() {
   project.ui.layout = normalizeUiLayout(project.ui.layout);
   project.ui.gamePalettes = normalizeGamePalettes(project.ui.gamePalettes);
   project.ui.spatialCamera=normalizeSpatialCamera(project.ui.spatialCamera);
+  project.ui.portraitFraming=normalizePortraitFraming(project.ui.portraitFraming);
   project.title = { logoImageId: '', backgroundId: '', modelId: '', motionId: '', expressionWeights: {}, bgmId: '', authorNote: '',
     size: 1.7, offsetX: 0.65, offsetY: -1.15, offsetZ: 0, yaw: 0, pitch: 0, cameraAngle: 12, ...project.title };
   migrateTitleActors(project.title, uid);
@@ -1206,6 +1262,7 @@ async function init() {
     if(info.moduleView){selectedAct=info.moduleView.selectedAct||0;selectedCharacter=info.moduleView.selectedCharacter||0;selectedItem=info.moduleView.selectedItem||0;}
     storyAssistant.setConnection(info.agent);
     feedbackGroup = info.feedbackGroup || '';
+    if(mode==='editor')editorAttribution.configure(info.editorNotice,info.editorElapsedMilliseconds);
     directory = info.directory || '';
     recentProjects = info.recentProjects || [];
     playerResolution = info.windowResolution || playerResolution;
@@ -1467,7 +1524,7 @@ function renderEditorSettings() {
         <option value="dark" ${editorSettings.theme === 'dark' ? 'selected' : ''}>夜间 · 深灰色</option>
       </select></label><p>外观设置只影响编辑器；游戏使用固定液态玻璃界面。</p>
       ${button('第三方声明与许可', 'third-party-notices')}
-      <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
+      <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p><div class="engine-version-row"><button type="button" data-engine-version>引擎版本 0.0.78</button></div>
     </div></div>`);
 }
 function renderWelcome() {
@@ -1493,6 +1550,7 @@ function renderRecentProjectsModal() {
       ${recentProjects.length ? recentProjectButtons() : '<p>还没有打开过工程包。</p>'}</div></div>`);
 }
 function renderEditor() {
+  disposeUiPortraitPreview();
   actIntro.cancel();
   roleDetails.close(false);
   dialogueCamera?.dispose();dialogueCamera=null;
@@ -1507,10 +1565,10 @@ function renderEditor() {
   }
   if (activePanel === 'assets') activePanel = 'story';
   app.innerHTML = `<div class="editor ${modulePanel?"module-editor":"story-editor"}">
-    <header class="topbar"><div class="brand">✦ <b>公民文艺生产综合自动化系统</b></div>
+    <header class="topbar"><div class="brand"><button type="button" class="creator-star" data-action="creator-homepage" aria-label="打开作者的哔哩哔哩主页" title="作者的哔哩哔哩主页">★</button> <b>公民文艺生产综合自动化系统</b></div>
       <div class="project-title"><input id="text-search" placeholder="查找与替换剧情、角色名称…" aria-label="查找剧情文本，按回车打开替换工具"><button class="search-open-button" data-action="search-open" title="查找与替换">⌕</button><span id="save-state">✓ 已保存</span></div>
       <div class="editor-history-controls" role="group" aria-label="撤销和重做">${button('↶ 撤销', 'editor-undo', 'disabled')}${button('↷ 重做', 'editor-redo', 'disabled')}</div>
-      <div class="editor-tools-row">${modulePanel?'<nav>'+button('保存并应用到工程','save')+button('☾','toggle-editor-theme')+button('重播动作','restart-character-preview','title="重新播放预览人物动作"')+'</nav>':`<nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('游戏 UI', 'game-ui')}${button('剧情助手', 'assistant-open')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}${button('编辑器 ▦', 'choose-editor','aria-label="选择编辑器"')}${button('重播动作','restart-character-preview','title="重新播放预览人物动作"')}</nav><div class="story-current" id="story-current" role="status"></div>`}</div>
+      <div class="editor-tools-row">${modulePanel?'<nav>'+button('保存并应用到工程','save')+button('☾','toggle-editor-theme')+button('重播动作','restart-character-preview','title="重新播放预览人物动作"')+'</nav>':`<nav>${button('新建', 'new-project')}${button('打开', 'open-project')}${button('最近', 'recent-projects')}${button('保存', 'save')}${button('另存为', 'save-as')}${button('☾', 'toggle-editor-theme', 'class="theme-toggle" aria-label="切换夜间模式" aria-pressed="false" title="切换到夜间模式"')}${button('设置', 'editor-settings')}${button('剧情助手', 'assistant-open')}${button('试玩', 'play', 'class="primary"')}${button('导出游戏', 'export')}${button('编辑器 ▦', 'choose-editor','aria-label="选择编辑器"')}${button('重播动作','restart-character-preview','title="重新播放预览人物动作"')}</nav><div class="story-current" id="story-current" role="status"></div>`}</div>
     </header>
     <div class="workspace ${modulePanel?'':'story-workspace'}">
       ${modulePanel?'<aside class="sidebar"><div class="module-sidebar-title">'+editorLabel(moduleLabels[modulePanel]+'编辑器')+'<span id="stage-caption" class="module-context-caption"></span></div><div id="sidebar-body"></div></aside>':'<div class="story-left"><aside class="inspector"><div class="inspector-heading">当前对白编辑</div><div id="inspector-body"></div></aside><aside class="sidebar"><div id="sidebar-body"></div></aside></div>'}
@@ -1608,16 +1666,28 @@ function objectContext(target){
  return null;
 }
 function applyUiDraft(picker){
- const patch={gameTheme:normalizeGameUi(picker?.querySelector('[name=game-ui-skin]:checked')?.value||project.ui.gameTheme)};
+ const patch={gameTheme:normalizeGameUi(picker?.querySelector('[name=game-ui-skin]:checked')?.value||project.ui.gameTheme),portraitFraming:readPortraitFraming(picker)};
+ stage?.livePortrait.setSettings(patch.portraitFraming);
  document.querySelector('.editor-preview-player')?.setAttribute('data-game-ui',patch.gameTheme);
- if(Object.entries(patch).some(([k,v])=>JSON.stringify(project.ui[k])!==JSON.stringify(v))){Object.assign(project.ui,patch);markDirty({label:'游戏 UI 与加载动画'});}
+ if(Object.entries(patch).some(([k,v])=>JSON.stringify(project.ui[k])!==JSON.stringify(v))){Object.assign(project.ui,patch);markDirty({label:'游戏 UI 与头像设置'});}
+}
+let uiPortraitStage=null;
+function disposeUiPortraitPreview(){uiPortraitStage?.destroy();uiPortraitStage=null;}
+async function startUiPortraitPreview(picker){
+ const speaker=character(step()?.characterId),role=isLiveModel(speaker?.modelId)?speaker:project.characters.find(c=>isLiveModel(c.modelId));if(!role||!isLiveModel(role.modelId))return;
+ const node=picker.querySelector('.ui-demo-portrait'),host=document.createElement('div');host.className='ui-portrait-render-host';picker.querySelector('.ui-live-preview .stage-frame').append(host);
+ const viewer=uiPortraitStage=new VRMStage(host,error=>console.warn('头像预览',error));viewer.presentationPaused=()=>true;viewer.setGraphicsSettings({...graphicsPreferences,mmdPhysics:'off',aa:'fxaa'});viewer.livePortrait.setSettings(readPortraitFraming(picker));
+ node.classList.add('live-portrait');for(const child of node.children)child.style.transform='';
+ try{const line=step(),settings=offstageSettings(line),record=await viewer.setLivePortrait(asset(role.modelId),role.id,node,{}, {motionAsset:asset(line?.characterId===role.id?settings.motionId:role.galleryMotionId),motionOptions:settings.motionOptions});if(viewer!==uiPortraitStage||!picker.isConnected)return;if(record){node.querySelector('.portrait-placeholder')?.remove();picker.querySelector('[data-preview-tab=story]')?.click();}else node.classList.remove('live-portrait');}catch(error){if(viewer===uiPortraitStage)node.classList.remove('live-portrait');console.warn('头像预览暂时不可用',error.message);}
 }
 function renderGameUiPicker() {
+  disposeUiPortraitPreview();
   document.querySelector('#game-ui-picker')?.remove();
-  document.querySelector('.editor')?.insertAdjacentHTML('beforeend', gameUiPicker(project.ui.gameTheme,project.ui.loading,project.ui.layout));
+  document.querySelector('.editor')?.insertAdjacentHTML('beforeend', gameUiPicker(project.ui.gameTheme,project.ui.loading,project.ui.layout,project.ui.portraitFraming));
   const picker=document.querySelector('#game-ui-picker');
   if(modulePanel==='ui'){picker.classList.add('ui-module-content');picker.removeAttribute('role');picker.removeAttribute('aria-modal');picker.style.setProperty('top',document.querySelector('.topbar').getBoundingClientRect().bottom+'px','important');}
-  bindUiPreview(picker,null,{background:asset(project.title.backgroundId)?assetUrl(asset(project.title.backgroundId)):'',portrait:asset(project.characters.find(c=>c.portraitId)?.portraitId)?assetUrl(asset(project.characters.find(c=>c.portraitId)?.portraitId)) : ''});
+  bindUiPreview(picker,null,{portraitChanged:settings=>uiPortraitStage?.livePortrait.setSettings(settings),background:asset(project.title.backgroundId)?assetUrl(asset(project.title.backgroundId)):'',portrait:asset(project.characters.find(c=>c.portraitId)?.portraitId)?assetUrl(asset(project.characters.find(c=>c.portraitId)?.portraitId)) : ''});
+  startUiPortraitPreview(picker);
   document.querySelector('#game-ui-picker input:checked')?.focus();
 }
 function captureObject(context){
@@ -1661,7 +1731,7 @@ async function deleteContextObject(context){
  markDirty({label:'删除'+copyLabels[context.kind]});editorHistory.seal();renderSidebar();renderInspector();await updatePreview();
 }
 document.addEventListener('contextmenu',event=>{
- if(mode!=='editor'||!project||playing||historyBusy||event.target.closest('input[type=text],input:not([type]),textarea,[contenteditable=true],#player-modal,#book-reader'))return;
+ if(mode!=='editor'||!project||playing||historyBusy||dialogueCamera?.editing||event.target.closest('[data-cast-cell],.cast-popover')||event.target.closest('input[type=text],input:not([type]),textarea,[contenteditable=true],#player-modal,#book-reader'))return;
  const context=objectContext(event.target);if(!context?.kind)return;event.preventDefault();
  const clipboard=projectClipboard(project.id,localStorage).read(),pasteDisabled=clipboard?.kind!==context.kind||context.kind==='step'&&act()?.kind==='event';
  const locked=context.kind==='folder'&&context.source?.locked;
@@ -1726,9 +1796,11 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeV024=async
  }
 };
 function setupDialogueCamera(){
+ characterGrab?.dispose();characterGrab=new DialogueCharacterGrab(stage,{placed:(id,position)=>{const slot=castSlots.find(s=>step()?.cast?.[s]?.characterId===id);if(!slot)return;const base=dialogueSlotPosition(slot,stage.visibleRecords.size>1);Object.assign(step().cast[slot],{offsetX:position.x-base.x,offsetY:position.y,offsetZ:position.z-base.z});markDirty({label:'摆放人物'});}});
  stage.presentationPaused=()=>events.airActive();
  stage.spatialCamera.paused=()=>Boolean(dialogueCamera?.editing||dialogueCamera?.moving||stage.bindingView.enabled||saveModalMode||document.hidden||transitioning||events.active()||document.querySelector('#player-modal')||document.querySelector('#inventory-reward')||document.querySelector('#editor-settings-modal')||mode==='editor'&&modulePanel&&!['title','render'].includes(activePanel));
  dialogueCamera?.dispose();dialogueCamera=new DialogueCameraController(stage.camera,document.querySelector('.stage-frame'),{
+  secondary:()=>characterGrab.toggle(),tickEdit:delta=>characterGrab.update(delta),ended:cancel=>characterGrab.end(cancel),
   paused:()=>Boolean(saveModalMode||document.hidden),
   confirmed:pose=>{const owner=cameraEditOwner;cameraEditOwner=null;if(!owner||act()?.id!==owner.actId||step()?.id!==owner.stepId)return;step().camera=pose;markDirty({label:'设置对白镜头'});renderInspector();toast('视角已应用当前对白。');},
   cancelled:()=>{cameraEditOwner=null;toast('镜头调整已取消。');}
@@ -1899,6 +1971,7 @@ function renderVoiceLibrary(body, folderId, folders, selectedFolder, scroll) {
 }
 
 function renderAssetDock() {
+  refreshCastAvatars();
   const body = document.querySelector('#asset-dock-body');
   if (!body || !project) return;
   if (dockInitializedProjectId !== project.id) {
@@ -2171,7 +2244,7 @@ function showItemReward(){
 }
 document.addEventListener('keydown',event=>{if(saveModalMode==='item-reward'&&['Enter',' ','Escape'].includes(event.key)){event.preventDefault();event.stopImmediatePropagation();document.querySelector('[data-action="confirm-item-reward"]')?.click();}},true);
 function maybeGrantCurrentItems(){
- if(!playing||transitioning||typingTimer||saveModalMode)return false;const line=project.acts[playAct]?.steps[playStep];if(!line)return false;
+ if(!playing||transitioning||typingTimer||voiceTyping&&!voiceTyping.finished||saveModalMode)return false;const line=project.acts[playAct]?.steps[playStep];if(!line)return false;
  try{const gained=grantDialogueItems(line,playerInventory,project.items,project.assets);if(gained.length&&mode==='player'){const progress=loadLifetimeProgress();progress.seenItemIds||=[];for(const row of gained)if(!progress.seenItemIds.includes(row.itemId))progress.seenItemIds.push(row.itemId);localStorage.setItem(lifetimeKey(),JSON.stringify(progress));}refreshChoiceItems();return showItemReward();}catch(error){toast(error.message,true);return false;}
 }
 function itemViewState(){if(playing||inventorySession)return playerInventory;const last=readSaveSlots().filter(Boolean).sort((a,b)=>(Date.parse(b.savedAt)||0)-(Date.parse(a.savedAt)||0))[0];return normalizeInventory(last?.inventory,project.items);}
@@ -2182,12 +2255,78 @@ function itemGalleryMarkup(backpack=false){
 function renderBackpack(){clearAutoAdvance();saveModalMode='inventory';document.querySelector('#player-modal')?.remove();document.querySelector('.stage-frame').insertAdjacentHTML('beforeend',`<section id="player-modal" class="player-modal"><div class="modal-box"><header><h2>物品栏</h2>${button('关闭 ×','close-modal')}</header>${itemGalleryMarkup(true)}</div></section>`);}
 function renderItemDetail(id){const item=inventoryItem(id),state=itemViewState(),known=new Set([...(loadLifetimeProgress().seenItemIds||[]),...state.known]);if(!item||mode!=='editor'&&!known.has(id)&&!state.counts[id])return;const gallery=saveModalMode==='gallery';document.querySelector('#player-modal .gallery-content, #player-modal .inventory-grid')?.replaceWith(Object.assign(document.createElement('div'),{className:'inventory-detail',innerHTML:`<img src="${escape(assetUrl(asset(item.imageId)))}" alt="${escape(item.name)}"><h3>${escape(item.name)}</h3><p class="inventory-count">当前持有：${state.counts[id]||0}</p><p>${escape(item.description)}</p>${button('返回物品列表',gallery?'inventory-gallery-back':'open-inventory')}`}));}
 
-function renderCastRows(currentAct){
- return castSlots.slice(0,3).map(slot=>castEditor(currentAct,slot)).join('')+Array.from({length:9},(_,i)=>{
-  const slots=castSlots.slice((i+1)*3,(i+2)*3),count=slots.filter(s=>step()?.cast?.[s]?.characterId).length,open=slots.some(s=>step()?.cast?.[s]?.characterId&&step().cast[s].characterId===step().characterId);
-  return `<details class="cast-queue-row" ${open?'open':''}><summary>第 ${i+2} 排 · ${count} / 3 人</summary>${slots.map(s=>castEditor(currentAct,s)).join('')}</details>`;
- }).join('');
+function castAvatar(id){
+ const role=character(id),model=asset(role?.modelId),portrait=asset(role?.portraitId);
+ const url=portrait?assetUrl(portrait):model?.thumbnailPath?assetUrl({path:model.thumbnailPath}):vrmThumbnails.get(model?assetUrl(model):'')?.url;
+ return url?`<img src="${escape(url)}" alt="" loading="lazy">`:'<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="23" r="12"/><path d="M10 60v-7a22 22 0 0 1 44 0v7z"/></svg>';
 }
+function refreshCastAvatars(){
+ if(!project)return;
+ for(const cell of document.querySelectorAll('[data-cast-cell]')){const id=step()?.cast?.[cell.dataset.castCell]?.characterId;if(id)cell.innerHTML=castAvatar(id);}
+ for(const cell of document.querySelectorAll('[data-pick-character]'))cell.innerHTML=castAvatar(cell.dataset.pickCharacter);
+}
+function renderCastRows(){
+ return `<p class="tip">左键选择头像，右键设置人物。每行 3 个，共 10 行。</p><div class="cast-avatar-grid">${castSlots.map(slot=>{const id=step()?.cast?.[slot]?.characterId;return `<button type="button" class="cast-avatar-slot ${id?'occupied':''}" data-cast-cell="${slot}" aria-label="${escape(castSlotLabels[slot])}${id?'：已有人物':'：空位'}">${id?castAvatar(id):''}</button>`;}).join('')}</div>`;
+}
+let castPopover=null;
+function paintCastEdit(edit,settings){
+ if(edit.owner!==project||edit.line!==step())return;
+ const record=stage?.visibleRecords.get(edit.original.characterId);if(!record)return;
+ record.vrm.scene.visible=Boolean(settings.characterId);
+ if(settings.characterId){stage.transformRecord(record,edit.slot,settings,false);stage.expressRecord(record,settings.expressionWeights||{},false);}
+}
+function closeCastPopover(accept=false){
+ const popup=castPopover,edit=popup?.castEdit;castPopover=null;popup?.remove();
+ if(!edit||!edit.changed)return;
+ if(accept&&edit.owner===project&&step()===edit.line){
+  editorHistory.seal();editorHistory.begin();edit.line.cast[edit.slot]=structuredClone(edit.draft);markDirty({label:'设置在场人物'});editorHistory.seal();renderInspector();
+ }else if(edit.owner===project&&step()===edit.line){
+  paintCastEdit(edit,edit.original);displayActStep(act(),step()).catch(error=>toast(error.message,true));
+ }
+}
+function showCastPopover(cell,settings=false){
+ closeCastPopover();objectMenu.close();const line=step(),owner=project,slot=cell.dataset.castCell;if(!line)return;
+ const popup=document.createElement('section');castPopover=popup;popup.className='cast-popover';popup.setAttribute('role','dialog');popup.setAttribute('aria-label',settings?'人物设置':'选择角色');
+ const valid=()=>owner===project&&step()===line;
+ if(settings){
+  if(!line.cast[slot]?.characterId)return closeCastPopover();
+  popup.innerHTML=`<header><b>人物设置</b><button type="button" data-pop-close aria-label="关闭">×</button></header>${castEditor(act(),slot)}<div class="cast-remove-action"><button type="button" class="danger" data-pop-remove>移除此人物</button></div><footer><button type="button" data-pop-cancel>取消</button><button type="button" class="primary" data-pop-apply>应用</button></footer>`;
+  (document.querySelector('.editor')||document.body).append(popup);renderCastExpressionControls();
+  const oldEditor=popup.querySelector('.cast-editor'),body=document.createElement('div');body.className='cast-editor';body.append(oldEditor.querySelector('.cast-editor-body'));oldEditor.replaceWith(body);popup.querySelector('[data-cast-slot]').closest('.field').remove();
+  // Isolate these draft controls from the editor's live input routing.
+  for(const node of popup.querySelectorAll('*'))for(const attr of [...node.attributes])if(/^data-(cast-|motion-)/.test(attr.name)){node.setAttribute(attr.name.replace('data-','data-draft-'),attr.value);node.removeAttribute(attr.name);}
+  castFineControls(popup);
+  popup.querySelector('[id^=cast-expression-]')?.removeAttribute('id');
+  const edit=popup.castEdit={owner,line,slot,original:structuredClone(line.cast[slot]),draft:structuredClone(line.cast[slot]),changed:false};
+  const preview=event=>{
+   event.stopPropagation();if(!valid())return closeCastPopover();
+   if(event.target.dataset.draftMotionSetting==='loop')popup.querySelector('[data-draft-motion-setting=after]').disabled=event.target.value==='true';
+   if(event.target.dataset.draftCastExpression)event.target.nextElementSibling.textContent=event.target.value+'%';
+   const draft=structuredClone(edit.original);
+   for(const node of popup.querySelectorAll('[data-draft-cast-adjust]')){const key=node.dataset.draftCastAdjust.split('.')[1],value=Number(node.dataset.draftCastValue);if(!Number.isFinite(value))return;draft[key]=value/(key==='size'?100:1);}
+   draft.motionId=popup.querySelector('[data-draft-cast-motion]').value;draft.expressionWeights||={};
+   for(const node of popup.querySelectorAll('[data-draft-cast-expression]'))draft.expressionWeights[node.dataset.draftCastExpression.slice(slot.length+1)]=Number(node.value)/100;
+   draft.props=[...popup.querySelectorAll('[data-draft-cast-prop]:checked')].map(n=>n.dataset.propId);
+   draft.motionOptions||={};for(const node of popup.querySelectorAll('[data-draft-motion-setting]')){const key=node.dataset.draftMotionSetting;draft.motionOptions[key]=key==='loop'?node.value==='true':key==='startFrame'?Math.max(1,Number(node.value)||1):key==='endFrame'?(node.value?Math.max(1,Number(node.value)):null):node.value;}
+   if(JSON.stringify(edit.draft)===JSON.stringify(draft))return;
+   edit.draft=draft;edit.changed=JSON.stringify(edit.original)!==JSON.stringify(draft);paintCastEdit(edit,draft);
+   if(!event.target.dataset.draftCastAdjust&&!event.target.dataset.draftCastExpression)displayActStep(act(),line).catch(error=>toast(error.message,true));
+  };
+  popup.addEventListener('input',preview);popup.addEventListener('change',preview);
+  popup.querySelector('[data-pop-apply]').onclick=()=>closeCastPopover(true);
+  popup.querySelector('[data-pop-cancel]').onclick=()=>closeCastPopover();
+  popup.querySelector('[data-pop-remove]').onclick=()=>{edit.draft={characterId:'',size:defaultSize,motionId:'',expressionWeights:{},props:[]};edit.changed=true;paintCastEdit(edit,edit.draft);popup.querySelector('.cast-editor').hidden=true;popup.querySelector('.cast-remove-action').hidden=true;};
+
+ }else{
+  popup.innerHTML=`<header><b>选择角色</b><button type="button" data-pop-close aria-label="关闭">×</button></header><div class="cast-avatar-grid cast-picker-grid">${project.characters.map(role=>`<button type="button" class="cast-avatar-slot occupied" data-pick-character="${escape(role.id)}" aria-label="${escape(role.name)}">${castAvatar(role.id)}</button>`).join('')||'<p>请先创建角色。</p>'}</div>`;
+  (document.querySelector('.editor')||document.body).append(popup);popup.querySelectorAll('[data-pick-character]').forEach(node=>node.onclick=()=>{if(valid()){editorHistory.seal();editorHistory.begin();setDialogueActor(line,slot,node.dataset.pickCharacter);markDirty({label:'添加在场人物'});renderInspector();updatePreview();}closeCastPopover();});
+ }
+ popup.querySelector('[data-pop-close]').onclick=()=>closeCastPopover();
+ const rect=cell.getBoundingClientRect();popup.style.left=Math.max(8,Math.min(rect.left,innerWidth-popup.offsetWidth-8))+'px';popup.style.top=Math.max(8,Math.min(rect.bottom+5,innerHeight-popup.offsetHeight-8))+'px';popup.querySelector('button')?.focus({preventScroll:true});
+}
+document.addEventListener('click',event=>{const cell=event.target.closest('[data-cast-cell]');if(cell){showCastPopover(cell);return;}if(castPopover&&!castPopover.contains(event.target))closeCastPopover();});
+document.addEventListener('contextmenu',event=>{const cell=event.target.closest('[data-cast-cell]');if(cell){event.preventDefault();showCastPopover(cell,Boolean(step()?.cast?.[cell.dataset.castCell]?.characterId));}});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&castPopover){event.preventDefault();closeCastPopover();}});
 function renderSelectionEditor(value,scope){
  const choice=renderSelection(value),attr=`data-render-scope="${scope}"`;
  return `${field(helpLabel('画面预设','preset'),`<select data-render-selection ${attr}><option value="">原始画面（不使用预设）</option>${project.renderPresets.map(p=>`<option value="${escape(p.id)}" ${p.id===choice.presetId?'selected':''}>${escape(p.name)}</option>`).join('')}</select>`)}<p class="tip">详细滤镜在渲染编辑器中制作，这里只选择预设和微调。</p><h3>画面微调</h3>${Object.keys(colorAdjustments).map(key=>field(helpLabel({brightness:'亮度',contrast:'对比度',saturation:'饱和度'}[key],key),`<div class="npr-slider"><input type="range" data-render-calibration="${key}" ${attr} min="0" max="200" step="1" value="${choice[key]}"><input type="number" data-render-calibration="${key}" ${attr} min="0" max="200" step="1" value="${choice[key]}" aria-label="${key}"></div>`)).join('')}`;
@@ -2202,6 +2341,7 @@ function spatialCameraEditor(scope){
  return `<details class="spatial-camera-editor"><summary>${scope==='title'?'标题':'对白'}空间镜头</summary>${field(helpLabel('鼠标轻微跟随','spatialEnabled'),`<select data-spatial-camera="enabled" data-spatial-scope="${scope}"><option value="off" ${!value.enabled?'selected':''}>关闭</option><option value="on" ${value.enabled?'selected':''}>开启</option></select>`)}${field(helpLabel('跟随强度','spatialStrength'),`<div class="npr-slider"><input type="range" data-spatial-camera="strength" data-spatial-scope="${scope}" min="0" max="100" step="1" value="${Math.round(value.strength*100)}"><input type="number" data-spatial-camera="strength" data-spatial-scope="${scope}" min="0" max="100" step="1" value="${Math.round(value.strength*100)}" aria-label="跟随强度百分比"></div>`)}<p class="tip">鼠标移动时，三维镜头轻微摆动。${scope==='title'?'只用于标题界面。':'用于整个工程的对白画面。'}文字和按钮不跟着移动。</p></details>`;
 }
 function renderInspector() {
+  closeCastPopover();
   if(modulePanel==='ui')return;
   updateStoryCurrent();
   sceneAnimationDialog.close(false);
@@ -2210,15 +2350,17 @@ function renderInspector() {
   const body = document.querySelector('#inspector-body');
   if (isEvent(act()) && activePanel==='story') { body.innerHTML = act().event?.type==='aircombat'&&selectedStep<act().event.combat.dialogues.length?`<div class="inspector-content">${airDialogueEditor(act(),{project:()=>project,escape},selectedStep)}</div>`:events.editor(act()); return; }
   if (activePanel === 'characters') {
+    if(modulePanel!=='characters'){body.innerHTML=`<div class="inspector-content"><h2>角色编辑器</h2><p class="tip">人物设置、动作适配和白模导出统一在角色编辑器中编辑。</p>${button('打开角色编辑器','open-module','data-module="characters"')}</div>`;return;}
     const item = project.characters[selectedCharacter];
     body.innerHTML = item ? `<div class="inspector-content"><h2>角色设置</h2>
       ${field('角色名字', input('character.name', item.name))}
       ${field('姓名颜色', `<input type="color" data-field="character.nameColor" value="${characterNameColor(item)}" aria-label="姓名颜色">`)}
       <p class="tip">每个角色单独设置，跟随对白姓名显示。</p>
       ${field('人物模型', select('character.modelId', actorModels(), item.modelId, '请选择模型'))}
+      ${motionFitEditor(item)}
       ${!isFbxModel(item.modelId) ? `<label class="field"><span>自动说话嘴型</span><select data-field="character.autoMouth"><option value="on" ${item.autoMouth !== false ? 'selected' : ''}>开启（默认）</option><option value="off" ${item.autoMouth === false ? 'selected' : ''}>关闭</option></select></label>
       <p class="tip">跟随对白文字显示动嘴，标点处稍作停顿；文字显示完就停止。有 A、I、U、E、O 嘴型的模型可使用。</p>` : '<p class="tip">FBX 人物只播放身体动作。</p>'}
-      ${isLiveModel(item.modelId)?'<div class="portrait-editor"><span>说话头像 · 实时模型</span><p class="tip">固定使用此角色的可动模型头像，表情和嘴型与场上人物同步。无需上传或拍摄图片。</p></div>':`<div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}<div class="inline-actions">${button('上传 PNG 头像', 'upload-character-portrait')}${isFbxModel(item.modelId)?button('重新生成 FBX 头像','capture-character-portrait'):''}</div><p class="tip">FBX 使用静态图片头像，可自动生成或手动上传。没有模型的角色仍可上传 PNG。</p></div>`}
+      ${isLiveModel(item.modelId)?'<div class="portrait-editor"><span>说话头像 · 实时模型</span><p class="tip">使用此角色的动态模型头像，动作与模型同步。FBX 不使用表情或嘴型系统；头像位置与大小在 UI 编辑器中统一调整。</p></div>':`<div class="portrait-editor"><span>说话头像</span>${asset(item.portraitId) ? `<img src="${assetUrl(asset(item.portraitId))}" alt="${escape(item.name)}的头像">` : '<div class="portrait-empty">还没有头像</div>'}<div class="inline-actions">${button('上传 PNG 头像', 'upload-character-portrait')}${isFbxModel(item.modelId)?button('重新生成 FBX 头像','capture-character-portrait'):''}</div><p class="tip">FBX 使用静态图片头像，可自动生成或手动上传。没有模型的角色仍可上传 PNG。</p></div>`}
       ${field('角色详情待机动作', select('character.detailsIdleId', motionsForCharacter(project,item.id), item.detailsIdleId||'', '自然待机（自动）'))}
       <p class="tip">角色详情使用全身、正面的循环待机，不再设置定格帧。无需额外导入动作，也可以选择自己的待机动作。</p>
       ${propEditor(item)}
@@ -2278,7 +2420,7 @@ function renderInspector() {
       ${offstageEditor(current)}
     <section class="dialogue-camera-options"><b>本句镜头</b><p class="tip">${current.camera?'已设置独立镜头':'沿用之前对白的镜头；本幕开始时使用初始镜头'}</p><div class="inline-actions">${button('镜头 · WASD 调整','edit-dialogue-camera')}${current.camera?button('清除本句镜头','clear-dialogue-camera'):''}</div></section>
       ${field('对白内容', textarea('step.text', current.text, '在这里写台词'))}
-      <hr><h3>这一句在场的人物</h3><p class="tip">最多 30 人，默认每排 3 人、共 10 排。前排左、中、右保持原来的位置，后面各排依次向后。人物的位置仍可单独调整；说话角色可以不在队列中。</p>
+      <hr><h3>这一句在场的人物</h3><p class="tip">最多 30 人。空框点击添加角色，已有角色右键调整位置、动作和表情。</p>
       ${renderCastRows(currentAct)}
       ${dialogueVoiceField(current)}
       ${field('本句音效', select('step.seId', byType('effect'), current.seId, '无音效'))}
@@ -2350,6 +2492,7 @@ function renderExpressionControls() {
 async function updatePreview() {
   if (!stage || !project || playing || modulePanel==='ui') return;
   document.querySelector('.editor-preview-player')?.setAttribute('data-game-ui',normalizeGameUi(project.ui.gameTheme));
+  document.querySelector('.editor-preview-player')?.classList.toggle('character-motion-preview',activePanel==='characters');
   stage.spatialCamera.setSettings(['story','render'].includes(activePanel)&&!isEvent(act())?project.ui.spatialCamera:{});
   if(dialogueCamera?.editing){if(cameraEditOwner?.actId===act()?.id&&cameraEditOwner?.stepId===step()?.id)return;dialogueCamera.cancelEdit();}
   const request = ++previewRequest;
@@ -2415,8 +2558,7 @@ function eventBackdrop(node) {
 async function showAirDialogue(line,valid=()=>true){
   if(!valid())return;clearTyping();voice.pause();airDialogueLine=line;
   await updateSpeakerPortrait(line.characterId,true);if(!valid())return;
-  showDialogue(line.speaker||character(line.characterId)?.name||'旁白',line.text,true,line.characterId);recordViewedDialogue(line);
-  const clip=asset(line.voiceId);if(clip){voice=takePreparedAudio(line.voiceId)||voice;voice.muted=false;voice.volume=audioSettings.master*audioSettings.voice;voice.src=assetUrl(clip);voice.play().catch(()=>{});}
+  const voiceAudio=prepareDialogueVoice(line);showDialogue(line.speaker||character(line.characterId)?.name||'旁白',line.text,true,line.characterId,voiceAudio);recordViewedDialogue(line);playDialogueVoice(voiceAudio);
 }
 function clearAirDialogue(){airDialogueLine=null;clearTyping();voice.pause();document.querySelector('#dialogue')?.classList.remove('visible');updateSpeakerPortrait('',false);}
 async function prepareEventScene(node) {
@@ -2694,6 +2836,7 @@ let portraitRequest=0;
 async function updateSpeakerPortrait(characterId, visible) {
   const token=++portraitRequest,node=document.querySelector('#speaker-portrait'),image=node?.querySelector('img');
   if(!node||!image)return;
+  stage?.livePortrait.setSettings(project.ui.portraitFraming);
   const item=characterId?character(characterId):null,model=asset(item?.modelId);
   if(visible&&isLiveModel(item?.modelId)){
     image.removeAttribute('src');node.classList.add('live-portrait');node.classList.remove('hidden');
@@ -2712,20 +2855,21 @@ async function updateSpeakerPortrait(characterId, visible) {
   const portraitAsset=asset(item?.portraitId),url=portraitAsset?assetUrl(portraitAsset):temporaryPortraits.get(item?.id)||'';
   image.src=visible&&url?url:'';node.classList.toggle('hidden',!visible||!url);
 }
-function showDialogue(speaker, text, visible = true, characterId = '') {
+function showDialogue(speaker, text, visible = true, characterId = '', voiceAudio=null) {
   const node = document.querySelector('#dialogue');
   if (!node) return;
   node.classList.toggle('visible', visible || mode === 'editor');
   node.classList.toggle('custom-dialogue', Boolean(project.ui.dialogueImageId));
   document.querySelector('#dialogue-speaker').textContent = speaker;
   node.style.setProperty('--speaker-color',characterNameColor(character(characterId)));
-  if (visible && ((mode === 'player' && playing) || airDialogueLine)) startTyping(text, characterId);
+  if (visible && ((mode === 'player' && playing) || airDialogueLine)) startTyping(text, characterId,voiceAudio);
   else { clearTyping(); document.querySelector('#dialogue-text').textContent = text; }
   updateSpeakerPortrait(characterId, visible || mode === 'editor');
   node.style.backgroundImage = project.ui.dialogueImageId ? `url("${assetUrl(asset(project.ui.dialogueImageId))}")` : '';
   if (visible && project.ui.dialogueImageId) rememberDiscovery('image', project.ui.dialogueImageId);
 }
 function clearTyping() {
+  voiceTyping?.dispose();voiceTyping=null;
   stage?.stopTalking();
   clearInterval(typingTimer);
   typingTimer = null;
@@ -2735,6 +2879,7 @@ function clearTyping() {
 }
 function finishTyping() {
   if (!typingTimer) return false;
+  if(voiceTyping){voiceTyping.reveal();typingTimer=null;if(playing)scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);return true;}
   const full = typingCharacters.join('');
   clearTyping();
   const node = document.querySelector('#dialogue-text');
@@ -2742,15 +2887,25 @@ function finishTyping() {
   if (playing) scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);
   return true;
 }
-function startTyping(value, characterId = project.acts[playAct]?.steps[playStep]?.characterId) {
+function startTyping(value, characterId = project.acts[playAct]?.steps[playStep]?.characterId, voiceAudio=null) {
   clearTyping();
   const node = document.querySelector('#dialogue-text');
   if (!node) return;
   typingCharacters = Array.from(String(value || ''));
-  document.querySelector('.player .stage-frame')?.classList.add('dialogue-speaking');
   node.textContent = '';
+  const role = character(characterId),frame=document.querySelector('.player .stage-frame');
+  if(voiceAudio){
+    let session,speaking=false;
+    session=new VoiceDialogueClock(voiceAudio,typingCharacters.length,{
+      progress:end=>{if(!node.isConnected){clearTyping();return;}node.textContent=typingCharacters.slice(0,end).join('');if(end>typingIndex)stage?.talkingLetter(typingCharacters[end-1]);typingIndex=end;},
+      speaking:active=>{frame?.classList.toggle('dialogue-speaking',active);if(active!==speaking){speaking=active;if(active)stage?.startTalking(characterId,Boolean(role)&&role.autoMouth!==false);else stage?.stopTalking();}},
+      complete:()=>{if(voiceTyping!==session)return;clearTyping();if(playing)scheduleAutoAdvance(project.acts[playAct]?.steps[playStep]);},
+      failed:()=>{if(voiceTyping!==session)return;voiceAudio.pause();const full=typingCharacters.join(''),shown=typingIndex;startTyping(full,characterId);typingIndex=shown;node.textContent=Array.from(full).slice(0,shown).join('');}
+    });
+    voiceTyping=session;typingTimer=session.timer;session.tick();return;
+  }
   if (!typingCharacters.length) return;
-  const role = character(characterId);
+  frame?.classList.add('dialogue-speaking');
   stage?.startTalking(characterId, Boolean(role) && role.autoMouth !== false);
   typingTimer = setInterval(() => {
     if (!node.isConnected) { clearTyping(); return; }
@@ -2827,6 +2982,12 @@ function loadAudioSettings() {
   try{graphicsPreferences=normalizeGraphics(JSON.parse(localStorage.getItem('vrm-player-graphics-'+project.id)||JSON.stringify(initialGraphics)));}catch{graphicsPreferences=normalizeGraphics(initialGraphics);}
   applyAudioSettings();
 }
+function prepareDialogueVoice(line){
+ voice.pause();const clip=asset(line?.voiceId);if(!clip)return null;
+ voice=takePreparedAudio(line.voiceId)||voice;voice.onended=null;voice.onerror=null;voice.muted=false;voice.volume=audioSettings.master*audioSettings.voice;
+ if(voice.src!==assetUrl(clip))voice.src=assetUrl(clip);try{voice.currentTime=0;}catch{}return voice;
+}
+function playDialogueVoice(audio){if(!audio)return;const session=voiceTyping;audio.play().catch(()=>{if(voiceTyping===session&&session?.audio===audio)session.fail();});}
 function clearAutoAdvance() {
   clearTimeout(autoTimer);
   autoTimer = null;
@@ -2835,6 +2996,7 @@ function clearAutoAdvance() {
 }
 function scheduleAutoAdvance(current) {
   clearAutoAdvance();
+  if(voiceTyping&&!voiceTyping.finished)return;
   if(maybeGrantCurrentItems())return;
   if (transitioning || events.active() || isEvent(project.acts[playAct]) || !autoPlay || !playing || !current || current.choices?.length || saveModalMode || typingTimer) return;
   const wait = Math.max(1800, Math.min(7000, 1100 + (current.text?.length || 0) * 95));
@@ -2865,7 +3027,7 @@ async function showPlayStep({resume=false}={}) {
   cancelSceneAnimations();
   const request = ++playRequest;
   clearAutoAdvance();
-  clearTyping();
+  clearTyping();voice.pause();
   const currentAct = project.acts[playAct];
   const current = currentAct?.steps[playStep];
   if (!current) { stopPlay(); toast('故事播放完毕'); return; }
@@ -2933,20 +3095,13 @@ async function showPlayStep({resume=false}={}) {
     if (request !== playRequest || !playing) return;
     await playSceneAnimations(currentAct,current,{sound:true,force:true});
     if(request!==playRequest||!playing)return;
-    showDialogue(current.speaker || character(current.characterId)?.name || '旁白', current.text, true, current.characterId);
+    const voiceAudio=prepareDialogueVoice(current);
+    showDialogue(current.speaker || character(current.characterId)?.name || '旁白', current.text, true, current.characterId,voiceAudio);
     recordViewedDialogue(current);
     if(!musicStarted){if (leavingEvent) transitionMusic(currentAct.bgmId); else setMusic(currentAct.bgmId);}
     eventMusicActive = false;
     if (current.seId) playEffect(current.seId);
-    voice.pause();
-    const voiceAsset = asset(current.voiceId);
-    if (voiceAsset) {
-      const onended=voice.onended;voice=takePreparedAudio(current.voiceId)||voice;voice.onended=onended;voice.muted=false;voice.volume=audioSettings.master*audioSettings.voice;
-      if(voice.src!==assetUrl(voiceAsset))voice.src = assetUrl(voiceAsset);
-      voice.play().catch(() => {
-        if (request === playRequest && autoPlay) scheduleAutoAdvance(current);
-      });
-    }
+    playDialogueVoice(voiceAudio);
     const choiceList = document.querySelector('#choice-list');
     refreshChoiceItems();
     if (stage.visibleRecords.size || !stageError)
@@ -3359,7 +3514,7 @@ function renderSettingsModal() {
       <div class="settings-line"><span>全屏显示</span>${button(playerFullscreen ? '退出全屏' : '进入全屏', 'toggle-fullscreen')}</div>`}
       <p>无论窗口大小或显示器比例如何，游戏画面始终保持 16:9。</p>
       ${button('第三方声明与许可', 'third-party-notices')}
-      <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p>
+      <p class="font-credit">界面使用 HarmonyOS Sans 字体。© 2021 Huawei Device Co., Ltd.</p><div class="engine-version-row"><button type="button" data-engine-version>引擎版本 0.0.78</button></div>
     </div></div></section>`);
 }
 window.__androidBack=()=>{if(mode==='player'){if(document.querySelector('#player-modal'))closePlayerModal();else renderSettingsModal();}};
@@ -3820,18 +3975,20 @@ async function showCharacterEditorPreview() {
   const frame = document.querySelector('.editor .stage-frame');
   if (!overlay || !frame || !stage) return;
   const item = project.characters[selectedCharacter];
-  const bindingMode=propPreviewMode && Boolean(item?.props?.length);
+  const fitPreview=modulePanel==='characters'&&Boolean(item?.fitPreviewMotionId);
+  const bindingMode=fitPreview||propPreviewMode && Boolean(item?.props?.length);
   if(stage.element.parentElement!==frame&&(bindingMode||!overlay.querySelector('.character-preview-box')))frame.insertBefore(stage.element,overlay);
   stage.setPaintBackground(null);
   frame.classList.toggle('binding-view-mode',bindingMode);overlay.classList.toggle('binding-preview',bindingMode);
-  if(bindingMode){overlay.innerHTML=`<div class="binding-preview-tools"><div>${button('看整个人物','binding-view-reset')}${button('放大绑定部位','binding-view-bone')}${button('返回人物鉴赏','binding-view-close')}</div><small>左键拖动旋转 · Shift＋左键拖动平移 · 滚轮缩放 · 右键拖动也能平移</small></div>`;}
+  if(fitPreview){overlay.innerHTML=`<div class="motion-fit-preview-tools">${button('看整个人物','binding-view-reset')}${button('返回人物鉴赏','fit-preview-close')}</div><small class="motion-fit-preview-hint">${editorLabel('左键拖动旋转 · Shift＋左键拖动平移 · 滚轮缩放 · 右键拖动也能平移')}</small>`;}
+  else if(bindingMode){overlay.innerHTML=`<div class="binding-preview-tools"><div>${button('看整个人物','binding-view-reset')}${button('放大绑定部位','binding-view-bone')}${button('返回人物鉴赏','binding-view-close')}</div><small>左键拖动旋转 · Shift＋左键拖动平移 · 滚轮缩放 · 右键拖动也能平移</small></div>`;}
   else if(overlay.querySelector('.character-preview-box')){stage.bindingView.disable();refreshCharacterGallery(overlay,true);}
   else {stage.bindingView.disable();overlay.innerHTML = `<div class="gallery-box gallery-box-character character-preview-box">
     <header><div><small>CHARACTER DETAILS</small><h2>角色详情预览</h2></div></header>
     <div class="gallery-content">${galleryCharacterMarkup(true)}</div></div>`;}
   overlay.querySelector('.gallery-character-picker .active')?.scrollIntoView({ block: 'nearest' });
   overlay.classList.remove('hidden');
-  document.querySelector('#stage-caption').textContent = bindingMode?'物品绑定 · 可转动视角':'角色详情预览';
+  document.querySelector('#stage-caption').textContent = fitPreview?'动作适配 · 可转动视角':bindingMode?'物品绑定 · 可转动视角':'角色详情预览';
   document.querySelector('#stage-placeholder').style.display = 'none';
   document.querySelector('#dialogue')?.classList.remove('visible');
   updateSpeakerPortrait('', false);
@@ -3848,11 +4005,12 @@ async function showCharacterEditorPreview() {
   stage.sceneAnimationsPaused=()=>Boolean(saveModalMode||document.hidden);
   if(JSON.stringify(stage.renderSettings)!==JSON.stringify(resolveRender(project)))stage.setRenderSettings(resolveRender(project));
   if(!bindingMode)stage.setCameraAngle(0);
-  const idle=motionsForCharacter(project,item.id).find(motion=>motion.id===item.detailsIdleId)||null;
+  const idle=motionsForCharacter(project,item.id).find(motion=>motion.id===(item.fitPreviewMotionId||item.detailsIdleId))||null;
   await stage.show(asset(item.modelId), idle, {}, 'center',
-    { size: 1, yaw: 0 }, `gallery:${item.id}`,{loop:true,placement:'inPlace',feet:'lock'},'',{bindings:item.props||[],visibleIds:(item.props||[]).map(p=>p.id),assets:project.assets});
+    { size: 1, yaw: 0 }, `gallery:${item.id}`,{loop:true,placement:'inPlace',feet:item.fitPreviewMotionId?'free':'lock'},'',{bindings:item.props||[],visibleIds:(item.props||[]).map(p=>p.id),assets:project.assets});
   if (activePanel === 'characters' && project.characters[selectedCharacter]?.id === item.id) {
     const record=stage.visibleRecords.get(`gallery:${item.id}`);
+    const frameControl=document.querySelector('[data-fit-frame]');if(frameControl&&record.currentAction){frameControl.max=motionFrameInfo(record.currentAction.getClip()).frames;frameControl.value=1;}
     const key=`gallery:${item.id}`,old=editorGalleryKeys.indexOf(key);if(old>=0)editorGalleryKeys.splice(old,1);editorGalleryKeys.push(key);while(editorGalleryKeys.length>3)await stage.releaseModel(editorGalleryKeys.shift());
     if(bindingMode)stage.bindingView.enable(record,`gallery:${item.id}`);
     for(const select of document.querySelectorAll('[data-prop-field=bone]')){const value=select.value;select.innerHTML=availablePropBones(record).map(b=>`<option value="${escape(b.value)}">${escape(b.label)}</option>`).join('');select.value=value;}
@@ -3995,6 +4153,7 @@ async function importAssets(type, folderId = '', titleImport = '', galleryImage 
   return imported;
 }
 function renderPlayer() {
+  disposeUiPortraitPreview();
   actIntro.cancel();
   roleDetails.close(false);
   dialogueCamera?.dispose();dialogueCamera=null;
@@ -4047,12 +4206,12 @@ document.addEventListener('click', async event => {
   const action = node.dataset.action;
   if(action==='game-ui'&&mode==='editor'){if(modulePanel==='ui')renderGameUiPicker();else await openEditorModule('ui');return;}
   if(action==='close-game-ui'&&modulePanel==='ui'){renderGameUiPicker();return;}
-  if(action==='close-game-ui'){document.querySelector('#game-ui-picker')?.remove();document.querySelector('[data-action="game-ui"]')?.focus();return;}
+  if(action==='close-game-ui'){disposeUiPortraitPreview();document.querySelector('#game-ui-picker')?.remove();document.querySelector('[data-action="game-ui"]')?.focus();return;}
   if(action==='apply-game-ui'&&mode==='editor'){
     const picker=document.querySelector('#game-ui-picker');
     applyUiDraft(picker);
     if(modulePanel==='ui'){try{await save();toast('游戏 UI 已保存并应用到工程。');}catch(error){toast(error.message,true);}}
-    else{renderAssetDock();picker.remove();toast('游戏 UI 已应用；点击试玩查看完整效果。');}return;
+    else{disposeUiPortraitPreview();renderAssetDock();picker.remove();toast('游戏 UI 已应用；点击试玩查看完整效果。');}return;
   }
   if(action==='edit-dialogue-camera'){await beginDialogueCameraEdit();return;}
   if(action==='clear-dialogue-camera'){delete step().camera;markDirty();renderInspector();updatePreview();return;}
@@ -4061,6 +4220,16 @@ document.addEventListener('click', async event => {
   if(action==='open-module'){try{await openEditorModule(node.dataset.module);}catch(error){toast(error.message,true);}return;}
   if (new URLSearchParams(location.search).has('smoke')) window.__lastClickAction = action;
   try {
+    if(['export-mixamo-white','export-mixamo-obj','fit-motion-own','fit-motion-reset','fit-reset','fit-preview-play','fit-preview-close'].includes(action)){
+      if(modulePanel!=='characters')throw Error('请在角色编辑器中操作');const item=project.characters[selectedCharacter];if(!item)return;
+      if(action==='export-mixamo-white'||action==='export-mixamo-obj'){node.disabled=true;try{await saveMixamoWhite(item,action==='export-mixamo-obj'?'obj':'fbx');}finally{node.disabled=false;}return;}
+      if(action==='fit-preview-play'){const r=stage.activeRecord;if(r)r.mixer.timeScale=r.mixer.timeScale?0:1;return;}
+      if(action==='fit-preview-close'){item.fitPreviewMotionId='';markDirty();renderInspector();return;}
+      if(action==='fit-reset'){item.motionFit=normalizeMotionFit();delete item.motionFitOverrides;}
+      else if(action==='fit-motion-own'&&item.fitPreviewMotionId){item.motionFitOverrides||={};item.motionFitOverrides[item.fitPreviewMotionId]=normalizeMotionFit(item.motionFit);}
+      else if(action==='fit-motion-reset')delete item.motionFitOverrides?.[item.fitPreviewMotionId];
+      markDirty();renderInspector();return;
+    }
     if(action==='dof-focus'){
       const owner=editedRenderPreset();if(!owner||activePanel!=='render')return;
       const visible=[...stage.visibleRecords.values()].filter(r=>r.vrm.scene.visible),speaker=visible.find(r=>r===stage.talkingRecord||r===stage.livePortrait.record);
@@ -4154,6 +4323,7 @@ document.addEventListener('click', async event => {
     }
     else if(action==='new-environment'){const owner=activePanel==='title'?project.title:act();const old=owner.environmentId;owner.environmentId='';try{await editEnvironment(owner);}catch(error){owner.environmentId=old;renderInspector();throw error;}}
     else if (action === 'edit-environment') await editEnvironment(activePanel==='title'?project.title:act());
+    else if (action === 'creator-homepage') await bridge('openCreatorHomepage');
     else if (action === 'third-party-notices') await bridge('openThirdPartyNotices');
     else if (action === 'editor-settings') renderEditorSettings();
     else if (action === 'toggle-editor-theme') {
@@ -4643,7 +4813,7 @@ document.addEventListener('input', event => {
     textSpeed = Math.max(5, Math.min(100, Number(node.value) || 5));
     localStorage.setItem(`vrm-text-speed-${project.id || project.name}`, String(textSpeed));
     document.querySelector('[data-text-speed-output]').textContent = `${textSpeed} 字/秒`;
-    if (typingTimer) {
+    if (typingTimer&&!voiceTyping) {
       const remaining = typingCharacters.slice(typingIndex).join('');
       const shown = document.querySelector('#dialogue-text')?.textContent || '';
       startTyping(remaining);
@@ -5918,7 +6088,7 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeAir67=asyn
  if(phase==='preview'){stopPlay();mode='editor';renderEditor();const state=await events.testAir(fixture());for(let i=0;i<1600&&(state.dialogueLoading||!stage.livePortrait.frames);i++)await wait(25);assert(state.dialogueActive&&state.root.parentElement.classList.contains('stage-frame'),'Editor dialogue escaped preview frame');const result=await sample();assert(result.movement>.01,'Editor offstage motion missing');assert(document.querySelector('#dialogue').classList.contains('visible'),'Editor dialogue hidden');const button=document.querySelector('.air-dialogue-next').getBoundingClientRect(),copy=document.querySelector('.dialogue-copy').getBoundingClientRect(),area=document.querySelector('.stage-frame').getBoundingClientRect();assert(button.top>=copy.bottom&&button.height<area.height*.07,'Continue button overlaps preview dialogue');return{ok:true,editorPreview:true,buttonClearOfText:true,...result};}
  if(phase==='offstage'){stopPlay();mode='player';renderPlayer();await wait(300);playing=true;titleRequest++;playAct=project.acts.findIndex(a=>!isEvent(a));playStep=0;preparedAct=-1;await showPlayStep();const result=await sample();assert(result.movement>.01,'普通场外动作没有驱动头像');return{ok:true,...result};}
  if(phase==='hold'){stopPlay();playing=true;titleRequest++;playAct=project.acts.indexOf(fixture());playStep=0;preparedAct=-1;await showPlayStep();await ready();const state=window.__airSmokeRuntime;assert(state?.dialogueActive,'未进入空战对话');state.paused=false;const positions=state.units.map(u=>u.flight.position.toArray()),health=state.units.map(u=>u.flight.spec.parts.map(p=>p.health));const enemy=state.units.find(u=>u.team==='enemy');enemy.flight.position.copy(state.units[0].flight.position).add(new THREE.Vector3(1,0,0));const near=enemy.flight.position.toArray();let propNode;for(const m of state.units[0].model.userData.models.values())if(m.userData.prop)propNode=m.userData.prop;assert(propNode,'缺少真实螺旋桨');const angle=propNode.rotation.z,travel=state.clouds.travel;for(let i=0;i<36000;i++)state.step(1/60);const result=await sample();assert(result.movement>.01&&result.motionId,'MMD 动作没有反映在空战头像');assert(state.elapsed===0&&state.shots===0&&!state.result,'长时间对话期间战斗推进');assert(JSON.stringify(enemy.flight.position.toArray())===JSON.stringify(near)&&state.units.every(u=>u.flight.alive),'敌机移动或发生碰撞');assert(JSON.stringify(health)===JSON.stringify(state.units.map(u=>u.flight.spec.parts.map(p=>p.health))),'对话期间受到伤害');assert(Math.abs(propNode.rotation.z-angle)>.01&&state.clouds.travel>travel,'螺旋桨或云雾停止');enemy.flight.position.fromArray(positions[state.units.indexOf(enemy)]);return{ok:true,simulatedWaitSeconds:600,allFlightsFrozen:true,collisionBlocked:true,propellerMoving:true,cloudsMoving:true,...result};}
- if(phase==='handoff'){finishTyping();events.confirm();await ready();const result=await sample();assert(result.model==='VRM','第二位实际角色未切换');finishTyping();events.confirm();assert(!document.querySelector('#dialogue').classList.contains('visible'),'说完后对话框未消失');const state=window.__airSmokeRuntime,start=state.units[0].flight.position.clone();for(let i=0;i<80&&state.handoff>0;i++){state.paused=false;await wait(50);}await wait(350);assert(!state.dialogueActive&&state.clouds.alpha===0&&state.elapsed>0,'云雾散去后空战未恢复');assert(state.units[0].flight.position.distanceTo(start)>1,'玩家没有接管飞机');return{ok:true,...result,cloudsCleared:true,combatResumed:true};}
+ if(phase==='handoff'){finishTyping();events.confirm();await ready();const result=await sample();assert(result.model==='VRM','第二位实际角色未切换');finishTyping();events.confirm();assert(!document.querySelector('#dialogue').classList.contains('visible'),'说完后对话框未消失');const state=window.__airSmokeRuntime,start=state.units[0].flight.position.clone();for(let i=0;i<240&&state.handoff>0;i++){state.paused=false;await wait(50);}for(let i=0;i<120&&state.units[0].flight.position.distanceTo(start)<=1&&!state.result;i++){state.paused=false;await wait(50);}assert(!state.dialogueActive&&state.clouds.alpha===0&&state.elapsed>0,'云雾散去后空战未恢复');assert(state.units[0].flight.position.distanceTo(start)>1,'玩家没有接管飞机 '+JSON.stringify({elapsed:state.elapsed,handoff:state.handoff,paused:state.paused,result:state.result,position:state.units[0].flight.position.toArray(),start:start.toArray(),velocity:state.units[0].flight.velocity.toArray(),alive:state.units[0].flight.alive,startOnGround:state.config.startOnGround}));return{ok:true,...result,cloudsCleared:true,combatResumed:true};}
  if(phase==='checkpoint'){const snapshot=snapshotSlot(),slots=Array(20).fill(null);slots[1]=snapshot;localStorage.setItem(saveKey(),JSON.stringify(slots));playing=false;await loadSlot(1);await ready();assert(window.__airSmokeRuntime.dialogueActive&&window.__airSmokeRuntime.elapsed===0,'读档检查点未安全恢复');stopPlay();await wait(250);assert(!events.airActive()&&!document.querySelector('.air-dialogue-next')&&!airDialogueLine&&!stage.livePortrait.record,'退出后遗留头像或云雾');return{ok:true,checkpointSafe:true,cancelClean:true};}
  throw Error(phase);
 };
@@ -5976,6 +6146,9 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeAir69=asyn
 
 if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeNaval70=async phase=>{
  const assert=(v,m)=>{if(!v)throw Error(m);},wait=ms=>new Promise(r=>setTimeout(r,ms)),node=()=>project.acts.find(a=>a.id==='air67-fixture');
+ if(phase==='combat71'){
+  const copy=structuredClone(node());copy.event.combat.dialogues=[];copy.event.combat.startOnGround=false;const {createPart}=await import('./aircombat-schema.js');for(const type of ['bomb_he250','aerial_torpedo'])if(!copy.event.combat.aircraft.parts.some(p=>p.type===type)){const p=createPart(type);p.offset=[0,-1,0];copy.event.combat.aircraft.parts.push(p);}window.__airSmokeRuntime=await events.testAir(copy);window.__airSmokeRuntime.paused=true;return{ok:true,ordnanceFixture:true};
+ }
  if(phase==='setup'){
   if(mode==='player'){assert(node()?.event.combat.ships.length===2,'Export lost ship groups');assert(node().event.combat.fleets.enemy.formation==='ring','Export lost formation');return{ok:true,exportedFleets:true};}
   if(!node())await window.__vrmSmokeAir69('setup');
@@ -5988,16 +6161,22 @@ if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeNaval70=as
  if(phase==='fleet-layout'){selectedAct=project.acts.indexOf(node());selectedStep=node().event.combat.dialogues.length;mode='editor';modulePanel=null;activePanel='story';renderEditor();renderSidebar();renderInspector();assert(document.querySelectorAll('[data-fleet-field=formation]').length===2,'Fleet controls missing');const select=document.querySelector('[data-fleet-team=enemy][data-fleet-field=formation]');for(const type of ['singleColumn','doubleColumn','lineAbreast','echelon','ring']){const el=document.querySelector('[data-fleet-team=enemy][data-fleet-field=formation]');el.value=type;el.dispatchEvent(new Event('input',{bubbles:true}));assert(node().event.combat.fleets.enemy.formation===type,'Formation switch not applied');}assert(document.querySelectorAll('.fleet-diagram').length===2,'Formation feedback missing');document.querySelector('[data-fleet-team=enemy][data-fleet-field=formation]').closest('details').scrollIntoView({block:'start'});await wait(200);return{ok:true,fiveFormationChoices:true,immediateFeedback:true};}
  if(phase==='naval-runtime'){
   const s=window.__airSmokeRuntime;assert(s&&!s.dialogueActive,'Combat not ready');s.paused=true;s.config.mission='survive';for(const u of s.units)if(!u.flight.ship&&u.team!=='player')u.flight.ammo=0;
-  const {fleetFormations,normalizeFleets,createFleets,stepFleets}=await import('./naval-formations.js'),{remainingCores,damageShipPart}=await import('./warship-runtime.js'),{intersectVehicle}=await import('./vehicle-hit.js'),{createProjectile}=await import('./aircombat-rules.js');
+  const {fleetFormations,normalizeFleets,createFleets,stepFleets}=await import('./naval-formations.js'),{remainingCores,damageShipPart,shipHealthRatio}=await import('./warship-runtime.js'),{intersectVehicle}=await import('./vehicle-hit.js'),{createProjectile}=await import('./aircombat-rules.js');
   const ships=s.units.filter(u=>u.flight.ship),enemy=ships.find(u=>u.team==='enemy'),player=s.units[0];assert(ships.length===8,'Wrong ship deployment');
   const formations=[];for(const type of Object.keys(fleetFormations)){s.fleets=createFleets(s.units,normalizeFleets({...s.config.fleets,enemy:{...s.config.fleets.enemy,formation:type}}));const fleet=s.fleets.find(f=>f.team==='enemy');for(let i=0;i<180;i++)stepFleets(s.fleets,1);for(const u of fleet.members){const r=u.flight.position.clone().sub(fleet.anchor).applyQuaternion(fleet.rotation.clone().invert()),o=fleet.offsets[u.flight.fleetSlot];assert(Math.hypot(r.x-o[0],r.z-o[1])<.001,'Formation broke');}formations.push(type);}
-  s.fleets=createFleets(s.units,s.config.fleets);player.flight.position.copy(enemy.flight.position).add(new THREE.Vector3(0,400,700));player.flight.velocity.set(0,0,-60);player.flight.rotation.identity();player.flight.throttle=.6;s.paused=false;for(let i=0;i<360;i++)s.step(1/60);s.paused=true;const fired=enemy.flight.spec.parts.filter(p=>partFamily(p.type)==='turret').reduce((n,p)=>n+(p.shots||0),0);assert(fired>0&&s.turretTurns>0,'Ship AA did not aim/fire');for(const u of ships)u.flight.ammo=0;s.bullets=[];
-  s.paused=false;window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyT',bubbles:true}));s.keys.clear();s.paused=true;const torp=s.bullets.find(b=>b.torpedo);assert(torp&&s.torpedoLaunches,'Actual torpedo release missing');
+  s.fleets=createFleets(s.units,s.config.fleets);player.flight.position.set(30000,800,0);player.flight.velocity.set(0,0,-75);player.flight.rotation.identity();const aaTarget=s.units.find(u=>u.team==='ally'&&!u.flight.ship);assert(aaTarget,'Missing AA target');aaTarget.flight.position.copy(enemy.flight.position).add(new THREE.Vector3(0,400,700));aaTarget.flight.velocity.set(0,0,-60);aaTarget.flight.rotation.identity();s.paused=false;for(let i=0;i<360;i++)s.step(1/60);s.paused=true;const fired=enemy.flight.spec.parts.filter(p=>partFamily(p.type)==='turret').reduce((n,p)=>n+(p.shots||0),0);assert(fired>0&&s.turretTurns>0,'Ship AA did not aim/fire');for(const u of ships)u.flight.ammo=0;s.bullets=[];assert(player.flight.alive,'AA fixture damaged isolated player');player.flight.position.copy(enemy.flight.position).add(new THREE.Vector3(0,400,700));player.flight.velocity.set(0,0,-60);
+  s.paused=false;window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyT',bubbles:true}));s.keys.clear();s.paused=true;const torp=s.bullets.find(b=>b.torpedo);assert(torp&&s.torpedoLaunches,'Actual torpedo release missing '+JSON.stringify({alive:player.flight.alive,result:s.result,paused:s.paused,handoff:s.handoff,ctxPaused:stage.paused,types:player.flight.spec.parts.filter(p=>partFamily(p.type)==='bomb').map(p=>({type:p.type,released:p.released,torpedo:p.def.torpedo}))}));
   const f=enemy.flight,a=f.position.clone().add(new THREE.Vector3(-120,0,0)),b=f.position.clone().add(new THREE.Vector3(120,0,0));a.y=b.y=-1.5;const hit=intersectVehicle(enemy,a,b);assert(hit,'Torpedo ray missed hull');const contact=a.clone().lerp(b,hit.t);torp.position.copy(contact).add(new THREE.Vector3(-.1,0,0));torp.velocity.set(24,0,0);torp.waterborne=true;torp.waterTravel=0;const previousHits=s.bombHits;s.paused=false;s.step(1/60);s.paused=true;assert(s.bombHits>previousHits,'Waterborne torpedo did not hit ship');
-  s.paused=false;window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyB',bubbles:true}));s.keys.clear();s.paused=true;const bomb=s.bullets.find(b=>b.bomb&&!b.torpedo);assert(bomb,'Actual bomb release missing');const start=f.position.clone().add(new THREE.Vector3(0,100,15)),end=start.clone().add(new THREE.Vector3(0,-200,0)),bh=intersectVehicle(enemy,start,end);assert(bh,'Bomb ray missed deck');bomb.position.copy(start).lerp(end,bh.t).add(new THREE.Vector3(0,.1,0));bomb.velocity.set(0,-120,0);s.paused=false;s.step(1/60);s.paused=true;assert(s.bombHits>=previousHits+2,'Bomb did not collide with ship');
-  for(const [ammoType,fuze]of [['he','proximity'],['type3','timed']]){const at=player.flight.position.clone().add(new THREE.Vector3(12,0,0)),shot={...createProjectile(at,new THREE.Vector3(-600,0,0)),owner:enemy,part:enemy.flight.spec.parts.find(p=>p.type==='ship_dp127'),damage:1,shell:true,ammoType,fuze,burstTime:.01,proximityRadius:20,age:0,travelled:200};s.bullets.push(shot);const before=s.flakBursts;s.paused=false;s.step(1/60);s.paused=true;assert(s.flakBursts>before,ammoType+' airburst did not trigger');}
+  s.paused=false;window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyB',bubbles:true}));s.keys.clear();s.paused=true;const bomb=s.bullets.find(b=>b.bomb&&!b.torpedo);assert(bomb,'Actual bomb release missing');const bombShip=ships.find(u=>u.team==='enemy'&&u.flight.alive)||ships.find(u=>u.flight.alive),start=bombShip.flight.position.clone().add(new THREE.Vector3(0,100,15)),end=start.clone().add(new THREE.Vector3(0,-200,0)),bh=intersectVehicle(bombShip,start,end);assert(bh,'Bomb ray missed deck');bomb.position.copy(start).lerp(end,bh.t).add(new THREE.Vector3(0,.1,0));bomb.velocity.set(0,-120,0);s.paused=false;s.step(1/60);s.paused=true;assert(s.bombHits>=previousHits+2,'Bomb did not collide with ship');
+  for(const [ammoType,fuze]of [['he','proximity'],['type3','proximity']]){const at=player.flight.position.clone().add(new THREE.Vector3(12,0,0)),shot={...createProjectile(at,new THREE.Vector3(-600,0,0)),owner:enemy,part:enemy.flight.spec.parts.find(p=>p.type==='ship_dp127'),damage:1,shell:true,ammoType,fuze,burstTime:.01,proximityRadius:20,age:0,travelled:200};s.bullets.push(shot);const before=s.flakBursts;s.paused=false;s.step(1/60);s.paused=true;assert(s.flakBursts>before,ammoType+' airburst did not trigger');}
   const intact=ships.find(u=>u!==enemy&&u.flight.alive&&remainingCores(u.flight)>1).flight,live=intact.cores.filter(c=>c.health>0);for(const c of live.slice(0,-1))damageShipPart(intact,c.id,1e9);assert(intact.alive&&remainingCores(intact)===1,'Ship sank before last living core');damageShipPart(intact,live.at(-1).id,1e9);assert(!intact.alive&&intact.sinking,'Last core did not sink ship');
-  s.smokeCamera={position:s.fleets[0].anchor.clone().add(new THREE.Vector3(1100,1200,1600)),target:s.fleets[0].anchor.clone()};await wait(150);return{ok:true,formations,ships:8,shipAACannonShots:fired,angularTraverse:true,actualTorpedoReleaseAndHit:true,actualBombReleaseAndHit:true,proximityAndType3:true,allCoreSinking:true,flakBursts:s.flakBursts,bombHits:s.bombHits};
+  const thresholdShip=ships.find(u=>u.flight.alive&&u.team==='ally').flight,totalHP=thresholdShip.totalMaxHealth,coreHP=thresholdShip.cores.reduce((n,p)=>n+p.health,0),outside=thresholdShip.spec.parts.filter(p=>p.blockKind!=='ship_core'),fraction=(totalHP*.3001-coreHP)/outside.reduce((n,p)=>n+p.health,0);for(const p of outside)p.health*=fraction;const component=outside.find(p=>!p.blockCells&&p.health>totalHP*.0001);assert(component,'Missing threshold test component');damageShipPart(thresholdShip,component.id,0,{penetration:1e9});assert(thresholdShip.alive,'Sank above 30 percent');damageShipPart(thresholdShip,component.id,totalHP*.0001+.0001,{penetration:1e9});assert(!thresholdShip.alive&&thresholdShip.sinking&&remainingCores(thresholdShip)===thresholdShip.totalCores,'30 percent sinking failed with intact cores');
+  s.smokeCamera={position:s.fleets[0].anchor.clone().add(new THREE.Vector3(1100,1200,1600)),target:s.fleets[0].anchor.clone()};await wait(150);return{ok:true,formations,ships:8,shipAACannonShots:fired,angularTraverse:true,actualTorpedoReleaseAndHit:true,actualBombReleaseAndHit:true,proximityAndType3:true,allCoreSinking:true,remaining30PercentSinks:true,flakBursts:s.flakBursts,bombHits:s.bombHits};
  }
  return window.__vrmSmokeAir67(phase);
 };
+if(new URLSearchParams(location.search).has('smoke'))window.__vrmSmokeMotion72=async phase=>{
+ const {motionFitSmoke}=await import('./motion-fit-smoke.js');
+ return motionFitSmoke(phase,{project:()=>project,stage:()=>stage,normalize:async()=>{normalize();renderEditor();},select:async id=>{selectedCharacter=project.characters.findIndex(r=>r.id===id);activePanel='characters';renderSidebar();renderInspector();await updatePreview();},save:()=>save(),play:async roles=>{modulePanel=null;const a=project.acts.find(a=>!isEvent(a)&&a.steps.length);const line=a.steps[0];line.cast=emptyDialogueCast();roles.forEach((r,i)=>line.cast[['left','center','right'][i]]={characterId:r.id,motionId:'motion72-walk',size:1,props:[],expressionWeights:{},motionOptions:{loop:true,placement:'inPlace',feet:'free'}});line.characterId=roles[0].id;line.text='人物动作适配、说话头像和衣物物理正在同时运行。';line.offstage={motionId:'motion72-walk',motionOptions:{loop:true,placement:'inPlace'}};mode='player';playing=false;renderPlayer();await new Promise(r=>setTimeout(r,300));playing=true;titleRequest++;playAct=project.acts.indexOf(a);playStep=0;preparedAct=-1;await showPlayStep();finishTyping();}});
+};
+

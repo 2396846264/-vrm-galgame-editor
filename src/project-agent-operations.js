@@ -2,6 +2,7 @@ import {normalizeWarship,validateWarship} from './warship-schema.js';
 import {navalParts} from './naval-kit.js';
 import {fleetFormations} from './naval-formations.js';
 import {validNameColor} from './character-name-color.js';
+import {normalizeMotionFit} from './motion-fit.js';
 import {normalizeLoading,normalizeUiLayout} from './game-ui-loading.js';
 import {blockKit} from './vehicle-structure.js';
 import {colorThemes,paletteKeys,normalizeColor,normalizeGamePalettes} from './game-ui-palette.js';
@@ -28,7 +29,7 @@ const modelTypes=['vrm','fbxCharacter','mmdCharacter'],collections={environment:
 export const projectAgentFields={
  environment:['name','background','camera','lighting'],project:['name','authoring'],ui:['gameTheme','gamePalettes','loading','layout','dialogueImageId','clickSoundId','spatialCamera','roleDetailsRender'],title:['subtitle','logoImageId','environmentId','backgroundId','bgmId','authorNote','render','spatialCamera'],
  act:['name','backgroundId','bgmId','environmentId','coverImageId','weather','event'],dialogue:['offstage','text','speaker','characterId','voiceId','seId','render','camera','cast','sceneAnimations','itemGrants'],
- character:['name','nameColor','title','description','modelId','portraitId','portraitSource','autoMouth','detailsIdleId','galleryMotionId','stories'],titleActor:['characterId','modelId','motionId','motionOptions','expressionWeights','size','offsetX','offsetY','offsetZ','yaw','pitch','props'],
+ character:['name','nameColor','title','description','modelId','portraitId','portraitSource','autoMouth','detailsIdleId','galleryMotionId','motionFit','motionFitOverrides','stories'],titleActor:['characterId','modelId','motionId','motionOptions','expressionWeights','size','offsetX','offsetY','offsetZ','yaw','pitch','props'],
  prop:['name','assetId','bone','position','rotation','scale'],choice:['text','actId','requirements','consumeRequired'],item:['name','imageId','description'],book:['name','pdfId','coverId','description','unlockActId'],renderPreset:['name','settings'],asset:['name','description','tags','folderId','audioKind','galleryImage','galleryMusic'],folder:['name','type','audioKind']
 };
 const plain=v=>v&&typeof v==='object'&&!Array.isArray(v),own=(v,k)=>Object.hasOwn(v,k);
@@ -77,6 +78,8 @@ function patch(p,kind,target,data){keys(data,projectAgentFields[kind]||[],'对�
   if(k==='weather'){keys(v,Object.keys(weatherDefaults),'天气');const w={...target.weather,...v};if(v.type!==undefined&&!['none','sunny','cloudy','rain','snow','wind'].includes(v.type))throw Error('天气类型无效');for(const field of ['intensity','wind','ground','sunX','volume'])if(v[field]!==undefined)num(v[field],field==='ground'?.2:0,1,field);for(const field of ['splashes','atmosphere','autoMood','windMotion'])if(v[field]!==undefined)bool(v[field],field);if(v.direction!==undefined&&![1,-1].includes(v.direction))throw Error('风向应为 1 或 -1');if(v.soundId!==undefined&&v.soundId!=='auto')audio(p,v.soundId,'effect');d.weather=normalizeWeather(w);}
   if(['autoMouth','consumeRequired','galleryImage','galleryMusic'].includes(k))bool(v,k);
   if(k==='nameColor'&&!validNameColor(v))throw Error('姓名颜色应为 #RRGGBB');
+  if(k==='motionFit'){keys(v,['enabled','strength','clearance','bodyScale'],'动作适配');if(v.enabled!==undefined)bool(v.enabled,'enabled');for(const [key,min,max]of [['strength',0,1],['clearance',0,.08],['bodyScale',.65,1.5]])if(v[key]!==undefined)num(v[key],min,max,key);d.motionFit=normalizeMotionFit(v);}
+  if(k==='motionFitOverrides'){d.motionFitOverrides={};for(const [id,value]of Object.entries(v||{})){ref(p,id,['motion'],'动作');if(!motionsForCharacter(p,target.id).some(a=>a.id===id))throw Error('动作不属于当前角色');keys(value,['enabled','strength','clearance','bodyScale'],'动作适配');d.motionFitOverrides[id]=normalizeMotionFit(value);}}
   if(k==='portraitSource'&&!['auto','manual'].includes(v))throw Error('头像来源无效');if(k==='gameTheme'&&!gameUiPresets.some(preset=>preset.id===v))throw Error('游戏 UI 风格无效');
   if(k==='layout'){if(normalizeUiLayout(v)!==v)throw Error('菜单布局无效');}
   if(k==='loading'){keys(v,['style','color','speed','position'],'加载动画');const n=normalizeLoading(v);for(const key of Object.keys(v))if(n[key]!==v[key])throw Error('加载动画设置无效');d.loading=n;}

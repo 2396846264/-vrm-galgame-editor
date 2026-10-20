@@ -1,4 +1,5 @@
 import {BindingView} from './binding-view.js';
+import {installMotionFit,motionFitProfile} from './motion-fit.js';
 import {motionPlayback,motionFeetLocked,loopMotionClip,rootTravel,updateMotionRoot,motionFinishTarget} from './character-motion.js';
 import {CharacterProps} from './character-props.js';
 import {dialogueSlotPosition} from './dialogue-cast.js';
@@ -471,6 +472,7 @@ export class VRMStage {
       record.mixer.addEventListener('finished',record.finishedHandler);
       record.loopHandler=event=>{if(event.action===record.currentAction)record.motionLoops=(record.motionLoops||0)+event.loopDelta;};
       record.mixer.addEventListener('loop',record.loopHandler);
+      installMotionFit(vrm,{settings:()=>motionFitProfile(record.characterProfileId||actorKey,record.currentMotionId),active:()=>Boolean(record.currentMotionId)&&record.mmdMotionKind!=='vmd'});
       return record;
     }).catch(error => {
       if (this.modelCache.get(actorKey) === task) this.modelCache.delete(actorKey);
@@ -629,6 +631,7 @@ export class VRMStage {
       for (const entry of loaded) {
         const record = entry.record;
         if (!record) continue;
+        record.characterProfileId=entry.characterProfileId||entry.actorKey;
         if(!record.vrm.scene.visible){record.autoBlink?.reset();record.autoGaze?.reset(this.naturalActivity);}
         const speaking = entry.actorKey === speaker?.actorKey;
         record.returnMotionAsset = entry.returnToIdle ? null : entry.motionAsset || null;
@@ -936,11 +939,11 @@ export class VRMStage {
   talkingLetter(char) { this.talkingRecord?.talkingMouth?.letter(char); }
   clearLivePortrait(){this.portraitRequest=(this.portraitRequest||0)+1;this.portraitActorKey='';this.livePortrait.clear();}
   async setLivePortrait(modelAsset,actorKey,node,weights={},offstage={}){
-    if(!['vrm','mmdCharacter'].includes(modelAsset?.type)){this.clearLivePortrait();return null;}
+    if(!['vrm','mmdCharacter','fbxCharacter'].includes(modelAsset?.type)){this.clearLivePortrait();return null;}
     const token=this.portraitRequest=(this.portraitRequest||0)+1;
     if(this.portraitActorKey!==actorKey||this.portraitModelId!==modelAsset.id||this.livePortrait.node!==node)this.livePortrait.clear();
     const record=await this.loadModel(modelAsset,actorKey);
-    if(token!==this.portraitRequest||!record||record.vrm.isFbx)return null;
+    if(token!==this.portraitRequest||!record||!record.vrm.humanoid.getNormalizedBoneNode('head'))return null;
     if(!this.visibleRecords.has(actorKey)){
       if(this.livePortrait.record!==record){record.autoBlink?.reset();record.autoGaze?.reset(this.naturalActivity);}
       const motion=offstage.motionAsset||null,clip=motion?await this.prepareClip(modelAsset,motion,actorKey):null;

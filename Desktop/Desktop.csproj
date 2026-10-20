@@ -5,24 +5,20 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>0.0.70</Version>
+    <Version>0.0.78</Version>
     <AssemblyName>VRMGalgame</AssemblyName>
     <ApplicationTitle>公民文艺生产综合自动化系统</ApplicationTitle>
     <AssemblyTitle>公民文艺生产综合自动化系统</AssemblyTitle>
     <Product>公民文艺生产综合自动化系统</Product>
     <Description>公民文艺生产综合自动化系统</Description>
     <ApplicationIcon>app.ico</ApplicationIcon>
-    <ProtectedConstantsFile Condition="'$(ProtectedConstantsFile)' == ''">$(MSBuildProjectDirectory)/obj/ProtectedBuildConstants.g.cs</ProtectedConstantsFile>
+      <ProtectedConstantsFile Condition="'$(ProtectedConstantsFile)' == ''">$(MSBuildProjectDirectory)/obj/ProtectedBuildConstants.g.cs</ProtectedConstantsFile>
   </PropertyGroup>
   <ItemGroup><PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" /></ItemGroup>
   <ItemGroup><PackageReference Include="SharpZipLib" Version="1.4.2" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="engine-attribution.json" LogicalName="VRMGalgame.engine-attribution.json" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="app.ico" LogicalName="VRMGalgame.app.ico" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="../src/editor-languages.json" LogicalName="VRMGalgame.editor-languages.json" /></ItemGroup>
-  <ItemGroup>
-    <Compile Remove="ProtectedBuildConstants.cs" />
-    <Compile Include="$(ProtectedConstantsFile)" />
-  </ItemGroup>
-  <Target Name="RequireBuildIdentity" BeforeTargets="CoreCompile" Condition="!Exists('$(ProtectedConstantsFile)')">
-    <Error Text="Run scripts/build-windows.ps1 first to generate your own developer build identity. Official private credentials are not included in source." />
-  </Target>
+  <ItemGroup><Compile Remove="ProtectedBuildConstants.cs" /><Compile Include="$(ProtectedConstantsFile)" /></ItemGroup>
+  <Target Name="RequireBuildIdentity" BeforeTargets="CoreCompile" Condition="!Exists('$(ProtectedConstantsFile)')"><Error Text="Run scripts/build-windows.ps1 first." /></Target>
 </Project>

@@ -1,3 +1,4 @@
+import {damageCell} from './vehicle-cell-damage.js';
 import {damageShipPart} from './warship-runtime.js';
 import {buildCollisionIndex} from './vehicle-hit.js';
 import {prepareStructure,reconcileStructure} from './vehicle-damage.js';
@@ -48,5 +49,5 @@ export function stepFlight(f,dt,wind=0){
   if(f.surface!=='water'&&f.position.y<=clearance&&gearDown&&upright>.85&&f.velocity.y>-6){f.position.y=clearance;f.velocity.y=Math.max(0,f.velocity.y);f.velocity.x*=Math.max(0,1-dt*.012);f.velocity.z*=Math.max(0,1-dt*.012);f.grounded=true;if(f.brake){const horizontal=Math.hypot(f.velocity.x,f.velocity.z),ratio=horizontal?Math.max(0,horizontal-dt*5*f.brake)/horizontal:0;f.velocity.x*=ratio;f.velocity.z*=ratio;}}
   if(f.position.y<(f.groundLevel||0)+.1||f.position.y<clearance*.8&&!f.grounded||!Number.isFinite(f.position.lengthSq()))f.alive=false;
 }
-export function damagePart(f,partId,damage,options){if(f.ship){damageShipPart(f,partId,damage,options);return;}const p=f.spec.parts.find(p=>p.id===partId);if(!p||!f.alive)return;const before=p.health;p.health=Math.max(0,p.health-damage);if(before>0&&p.health===0){p.destroyed=true;reconcileStructure(f);}}
+export function damagePart(f,partId,damage,options){if(f.ship){damageShipPart(f,partId,damage,options);return;}const p=f.spec.parts.find(p=>p.id===partId);if(!p||!f.alive)return;if(p.blockCells){if(damageCell(f,p,damage,options?.point))reconcileStructure(f);return;}const before=p.health;p.health=Math.max(0,p.health-damage);if(before>0&&p.health===0){p.destroyed=true;reconcileStructure(f);}}
 export function segmentSphere(a,b,center,radius){const delta=b.clone().sub(a),length=delta.lengthSq(),t=length?clamp(center.clone().sub(a).dot(delta)/length,0,1):0;return a.clone().addScaledVector(delta,t).distanceToSquared(center)<=radius*radius?t:null;}

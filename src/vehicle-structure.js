@@ -6,7 +6,7 @@ export const blockKit={
  hull:{name:'轻型机身方块',color:'#71836a',density:100,hp:55,drag:.07},
  wing:{name:'升力机翼方块',color:'#879978',density:55,hp:40,drag:.022,aero:true},
  tail:{name:'尾翼 / 稳定面方块',color:'#879978',density:55,hp:40,drag:.025,control:true},
- armor:{name:'装甲方块',color:'#545d61',density:600,hp:180,drag:.09},
+ armor:{name:'装甲方块',color:'#545d61',density:600,hp:100,drag:.09},
  cockpit:{name:'不透明驾驶舱方块',color:'#293d48',density:150,hp:75,drag:.07}
 };
 Object.assign(blockKit,navalBlocks);

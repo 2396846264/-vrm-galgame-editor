@@ -10,7 +10,7 @@ export function formationSpawns(allies,enemies,altitude){return [
 export const distanceLabel=distance=>(Math.max(0,distance)/1000).toFixed(1)+' km';
 export function createProjectile(origin,velocity){return {position:origin.clone(),velocity:velocity.clone(),travelled:0,trail:[origin.clone()]};}
 export function advanceProjectile(b,dt){
- b.velocity.y-=projectileGravity*dt;
+ b.velocity.y-=(b.gravity??projectileGravity)*dt;
  const delta=b.velocity.clone().multiplyScalar(dt),remaining=projectileRange-b.travelled,length=Math.min(delta.length(),remaining);
  if(delta.lengthSq()>0)b.position.addScaledVector(delta,length/delta.length());
  b.travelled=Math.min(projectileRange,b.travelled+length);

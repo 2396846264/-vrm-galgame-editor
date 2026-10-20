@@ -16,7 +16,12 @@ internal static class Program
     [STAThread]
     private static void Main()
     {
+        EngineAttribution.Start();
         string[] args = Environment.GetCommandLineArgs();
+        int origin = Array.IndexOf(args,"--engine-origin");
+        if (origin >= 0 && origin + 1 < args.Length) {
+            File.WriteAllText(args[origin+1],JsonSerializer.Serialize(EngineAttribution.Origin()));return;
+        }
         int check = Array.IndexOf(args,"--check-package-integrity");
         if (check >= 0 && check + 2 < args.Length) {
             try { ProtectedResources.Verify(args[check+1]); File.WriteAllText(args[check+2],JsonSerializer.Serialize(new {ok=true})); }
@@ -253,6 +258,7 @@ internal sealed partial class EditorWindow : Form
     {
         try
         {
+            if(Environment.GetCommandLineArgs().Contains("--smoke-motion72")){await RunMotion72Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-reference59")){await RunReference59Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-editor-language")){await RunEditorLanguageSmoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-ui57")){await RunUi57Smoke();return;}
@@ -1337,6 +1343,7 @@ internal sealed partial class EditorWindow : Form
                 "importCutsceneVideo" when !playerMode => ImportAssets("video",true,true),
                 "importAssetChunk" when !playerMode => ImportAssetChunk(payload),
                 "saveInventoryImage" when !playerMode => SaveInventoryImage(payload?["dataUrl"]?.GetValue<string>()??"",payload?["itemId"]?.GetValue<string>()??"",payload?["name"]?.GetValue<string>()??"物品"),
+                "exportMixamoWhite" when !playerMode => ExportMixamoWhiteFile(payload,this),
                 "saveGeneratedPortrait" when !playerMode => SaveGeneratedPortrait(payload?["dataUrl"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "角色", payload?["previousRevision"]?.GetValue<string>() ?? ""),
                 "saveModelThumbnail" when !playerMode => SaveModelThumbnail(payload?["dataUrl"]?.GetValue<string>()??"",payload?["modelId"]?.GetValue<string>()??""),
                 "organizeGeneratedPortrait" when !playerMode => OrganizeGeneratedPortrait(payload?["path"]?.GetValue<string>() ?? "", payload?["characterId"]?.GetValue<string>() ?? "", payload?["name"]?.GetValue<string>() ?? "角色"),
@@ -1346,6 +1353,8 @@ internal sealed partial class EditorWindow : Form
                 "exportAndroid" when !playerMode => await ExportAndroidAsync(payload),
                 "setWindowResolution" when playerMode => SetWindowResolution(payload?["value"]?.GetValue<string>() ?? ""),
                 "openThirdPartyNotices" => OpenThirdPartyNotices(),
+                "openCreatorHomepage" when !playerMode => EngineAttribution.OpenHomepage(),
+                "engineOrigin" => EngineAttribution.Origin(),
                 "setFullscreen" when playerMode => SetFullscreen(payload?["value"]?.GetValue<bool>() ?? false),
                 "exitGame" when playerMode => ExitGame(),
                 "captureGameThumbnail" => await CaptureGameThumbnail(payload),
@@ -1366,7 +1375,9 @@ internal sealed partial class EditorWindow : Form
         mode = playerMode ? "player" : "editor",
         directory = projectArchivePath ?? projectDirectory,
         recentProjects = playerMode ? [] : ReadRecentProjects(),
-        feedbackGroup = playerMode ? "" : ProtectedBuildConstants.FeedbackGroup(),
+        feedbackGroup = playerMode ? "" : EngineAttribution.Text("feedbackGroup"),
+        editorNotice = playerMode ? "" : EngineAttribution.Text("notice"),
+        editorElapsedMilliseconds = EngineAttribution.ElapsedMilliseconds,
         agent = playerMode ? null : GetAgentConnection(),
         project = ReadProject(),
         windowResolution = $"{windowedClientSize.Width}x{windowedClientSize.Height}",

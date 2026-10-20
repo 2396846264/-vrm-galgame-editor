@@ -1,0 +1,41 @@
+name: Publish tested Windows release 0.0.78
+on:
+  push:
+    branches: [main]
+    paths: ['.github/releases/v0.0.78.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: release-v0.0.78
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Require successful source checks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/wait-public-source.mjs .github/releases/v0.0.78.json
+      - name: Reconstruct tested Windows package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/assemble-release.mjs .github/releases/v0.0.78.json
+      - name: Verify package and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          Expand-Archive -LiteralPath VRMGalgame-0.0.78-win-x64.zip -DestinationPath tested-package
+          $package=(Resolve-Path tested-package/公民文艺生产综合自动化系统-0.0.78).Path
+          $check=Start-Process -FilePath "$package/VRMGalgame.exe" -ArgumentList @('--check-package-integrity',('"'+$package+'"'),('"'+$package+'/integrity-check.json"')) -Wait -PassThru -WindowStyle Hidden
+          if($check.ExitCode -ne 0 -or !(Get-Content "$package/integrity-check.json" -Raw | ConvertFrom-Json).ok){throw 'Package validation failed'}
+          Copy-Item RELEASE_NOTES.md FEATURE_GUIDE.md
+          gh release create v0.0.78 VRMGalgame-0.0.78-win-x64.zip SHA256SUMS.txt FEATURE_GUIDE.md --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title '0.0.78 · 作者主页、发行提醒与人物编辑改进' --notes-file RELEASE_NOTES.md --latest
+          if($LASTEXITCODE -ne 0){throw 'Release publication failed'}

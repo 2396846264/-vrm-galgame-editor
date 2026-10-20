@@ -12,9 +12,9 @@ export const partKit = {
   wingRight:{name:'右机翼',mass:160,hp:110,drag:.026,area:8,color:'#889a74',size:[4,.16,2]},
   tail:{name:'尾翼组件',mass:90,hp:90,drag:.025,area:2.6,color:'#889a74',size:[3,.14,1.05]},
   engine:{name:'螺旋桨发动机',mass:190,hp:90,drag:.3,area:.65,powerHp:850,color:'#526365',size:[.8,.8,1.35]},
-  gun:{name:'前射机枪',mass:30,hp:35,drag:.12,area:.06,damage:12,rate:9,color:'#303b43',size:[.12,.12,1.5]},
-  turret:{name:'自卫机枪塔',mass:95,hp:55,drag:.35,area:.3,damage:10,rate:7,color:'#46545c',size:[.7,.55,1.1]},
-  bomb:{name:'炸弹挂载',mass:120,hp:25,drag:.2,area:.18,damage:150,color:'#665d43',size:[.32,.32,1.15]},
+  gun:{name:'前射机枪',mass:30,hp:35,drag:.12,area:.06,caliber:7.7,damage:5,rate:9,color:'#303b43',size:[.12,.12,1.5]},
+  turret:{name:'自卫机枪塔',mass:95,hp:55,drag:.35,area:.3,caliber:7.7,damage:5,rate:7,color:'#46545c',size:[.7,.55,1.1]},
+  bomb:{name:'炸弹挂载',mass:120,hp:25,drag:.2,area:.18,damage:10000,penetration:100,blastRadius:12,color:'#665d43',size:[.32,.32,1.15]},
   gear:{name:'固定起落架',mass:65,hp:60,drag:.8,area:.26,color:'#34393b',size:[2.6,.9,.4]}
 };
 const s=(id,name,position,accept)=>({id,name,position,accept:Object.keys(partKit).filter(type=>accept.includes(partFamily(type)))});

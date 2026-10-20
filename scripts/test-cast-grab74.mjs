@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {DialogueCharacterGrab} from '../src/dialogue-character-grab.js';
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(50,1,.01,100);
+camera.position.set(0,1,5);camera.lookAt(0,1,0);camera.updateMatrixWorld(true);
+const anchor=new THREE.Group(),body=new THREE.Mesh(new THREE.BoxGeometry(1,2,1),new THREE.MeshBasicMaterial());body.position.y=1;anchor.add(body);scene.add(anchor);
+const root=new THREE.Group(),floor=new THREE.Mesh(new THREE.PlaneGeometry(50,50),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.position.y=.7;root.add(floor);scene.add(root);
+const record={anchor,vrm:{scene:body},transformBlend:null},visibleRecords=new Map([['actor',record]]),placed=[];
+const grab=new DialogueCharacterGrab({scene,camera,visibleRecords,environmentRuntime:{root}},{placed:(id,p)=>placed.push({id,p})});
+assert.equal(grab.toggle(),true);assert.equal(grab.beam.visible,true);camera.position.add(new THREE.Vector3(2,2,0));grab.update(.1);assert.ok(anchor.position.x>1.99);assert.ok(anchor.position.y>1.99);
+assert.equal(grab.toggle(),true);assert.equal(grab.beam.visible,false);assert.equal(placed.length,1);assert.ok(Math.abs(placed[0].p.y-.7)<1e-6);for(let i=0;i<30;i++)grab.update(.1);assert.ok(Math.abs(anchor.position.y-.7)<1e-6,'feet must land on raised ground');
+camera.position.set(2,1.7,5);camera.lookAt(2,1.7,0);camera.updateMatrixWorld(true);scene.updateMatrixWorld(true);assert.equal(grab.toggle(),true);const original=anchor.position.clone();camera.position.x+=4;grab.update(.1);grab.end(true);assert.ok(anchor.position.distanceTo(original)<1e-8);assert.equal(placed.length,1,'cancel must not persist');
+const wall=new THREE.Mesh(new THREE.BoxGeometry(20,20,.2),new THREE.MeshBasicMaterial());wall.position.z=3;root.add(wall);camera.position.set(2,1.7,5);camera.lookAt(2,1.7,0);camera.updateMatrixWorld(true);assert.equal(grab.toggle(),false,'wall must block picking');wall.removeFromParent();
+floor.removeFromParent();anchor.position.y=3;assert.ok(Math.abs(grab.groundPosition(record).y)<1e-8,'empty stage falls to zero');grab.dispose();assert.equal(grab.beam.parent,null);
+console.log('PASS grab: mesh picking, red beam, camera movement, raised floor, gravity, cancel, wall occlusion, default ground, disposal');

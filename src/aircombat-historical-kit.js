@@ -1,3 +1,4 @@
+import {caliberDamage} from './weapon-balance.js';
 // Editable external silhouettes; historical dimensions are reference data, flight tuning is game data.
 export const historicalSpecs={
  stuka:{name:'Ju 87G-2 · 双37mm炮',length:11.5,span:15,bodyWidth:1.1,bodyHeight:1.45,wingSpan:6.95,chord:2.8,sweep:.35,gull:true,cockpitLength:2.7,engineHp:1400,bodyMass:2500,wingMass:450,engineMass:620,color:'#596d50',tailSpan:2.1,tailChord:1.2},
@@ -17,15 +18,15 @@ for(const [kit,spec]of Object.entries(historicalSpecs)){
 }
 for(const [type,name,caliber,rate,damage,mass,length]of [
  ['mg17','7.92mm MG17 机枪',7.92,13,9,15,1.15],['mg131','13mm MG131 机枪',13,12,15,25,1.2],['browning','12.7mm Browning 重机枪',12.7,10,14,29,1.45],['mg151','20mm MG151 中轴炮',20,8,24,42,1.75],['mk108','30mm MK108 机炮',30,6,42,58,1.1],['type5','30mm 五式机炮',30,6,42,70,2],['bk37','37mm BK3.7 炮舱',37,2.67,80,340,3.1],['t13','75mm B-25H 机鼻炮',75,.25,180,520,3.2]
-])add(type,'gun',name,mass,[type==='bk37'?.55:.18,type==='bk37'?.5:.18,length],{shape:'gun',caliber,rate,damage,color:'#404c4d',ammo:caliber>=75?21:caliber>=37?12:caliber>=30?80:caliber>=20?200:500,muzzleSpeed:type==='mk108'?540:type==='type5'?750:type==='mg131'?750:type==='mg151'?805:type==='bk37'?820:type==='t13'?619:850,drag:type==='bk37'?.24:.08});
-add('stuka_rear','turret','MG81Z 后座双联枪',50,[.5,.45,1.4],{shape:'turret',kit:'stuka',barrels:2,rate:12,damage:9,color:'#414a45',ammo:1000});
-add('b25_dorsal','turret','B-25 背部双联枪塔',180,[1.05,.95,1.6],{shape:'turret',kit:'b25',barrels:2,rate:10,damage:14,color:'#465650',ammo:1000});
-add('b25_tailgun','turret','B-25 尾部双联枪位',95,[.7,.55,1.5],{shape:'turret',kit:'tailgun',barrels:2,rate:10,damage:14,color:'#465650',ammo:800});
+])add(type,'gun',name,mass,[type==='bk37'?.55:.18,type==='bk37'?.5:.18,length],{shape:'gun',caliber,rate,damage:caliberDamage(caliber),color:'#404c4d',ammo:caliber>=75?21:caliber>=37?12:caliber>=30?80:caliber>=20?200:500,muzzleSpeed:type==='mk108'?540:type==='type5'?750:type==='mg131'?750:type==='mg151'?805:type==='bk37'?820:type==='t13'?619:850,drag:type==='bk37'?.24:.08});
+add('stuka_rear','turret','MG81Z 后座双联枪',50,[.5,.45,1.4],{shape:'turret',kit:'stuka',barrels:2,caliber:7.7,rate:12,damage:5,color:'#414a45',ammo:1000});
+add('b25_dorsal','turret','B-25 背部双联枪塔',180,[1.05,.95,1.6],{shape:'turret',kit:'b25',barrels:2,caliber:12.7,rate:10,damage:caliberDamage(12.7),color:'#465650',ammo:1000});
+add('b25_tailgun','turret','B-25 尾部双联枪位',95,[.7,.55,1.5],{shape:'turret',kit:'tailgun',barrels:2,caliber:12.7,rate:10,damage:caliberDamage(12.7),color:'#465650',ammo:800});
 add('b25_gunnose','cockpit','B-25J 八枪实心机鼻',260,[1.5,1.4,2.2],{shape:'gunnose',kit:'b25',color:'#697452'});
 add('b25_cannonnose','cockpit','B-25H 炮机鼻外壳',200,[1.5,1.4,2.2],{shape:'gunnose',kit:'b25',color:'#697452'});
 add('shinden_fin_left','tail','震电左翼垂尾',60,[.16,1.45,1.3],{shape:'fin',kit:'shinden',color:'#385e4e'});
 add('shinden_fin_right','tail','震电右翼垂尾',60,[.16,1.45,1.3],{shape:'fin',kit:'shinden',color:'#385e4e'});
-for(const [type,name,mass,shape,size]of [['radiator','液冷散热器',45,'radiator',[.7,.45,1.1]],['dropTank','副油箱',120,'tank',[.5,.5,1.75]],['bomb250','250kg 炸弹',250,'bomb',[.36,.36,1.55]],['bomb500','500kg 炸弹',500,'bomb',[.48,.48,1.85]]])add(type,type.startsWith('bomb')?'bomb':'accessory',name,mass,size,{shape,color:'#626654',damage:mass*.8});
+for(const [type,name,mass,shape,size]of [['radiator','液冷散热器',45,'radiator',[.7,.45,1.1]],['dropTank','副油箱',120,'tank',[.5,.5,1.75]],['bomb250','250kg 炸弹',250,'bomb',[.36,.36,1.55]],['bomb500','500kg 炸弹',500,'bomb',[.48,.48,1.85]]])add(type,type.startsWith('bomb')?'bomb':'accessory',name,mass,size,{shape,color:'#626654',damage:type==='bomb500'?16000:10000,penetration:type==='bomb500'?180:100,blastRadius:type==='bomb500'?15:12});
 export const historicalParts=parts;
 export function historicalMounts(type){
  const def=parts[type];if(!def)return null;const kit=def.kit,spec=historicalSpecs[kit];

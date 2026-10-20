@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {setShoulderPortraitCamera} from './portrait-camera.js';
 import {portraitBodyFrame} from './portrait-body-frame.js';
+import {normalizePortraitFraming,framePortraitCamera} from './portrait-framing.js';
 
 // A second camera views the existing actor. No second VRM, mixer or WebGL context.
 export class LivePortrait {
@@ -22,6 +23,7 @@ export class LivePortrait {
     this.overlayMaterial.map=this.overlayTextures[(dark?2:0)+(frame?.classList.contains('shadows-on')?1:0)];
     renderer.render(this.overlayScene,this.overlayCamera);
   }
+  setSettings(value){this.settings=normalizePortraitFraming(value);}
   set(record,node){this.record=record;this.node=node;}
   clear(){this.node?.querySelector?.('.live-portrait-canvas')?.remove();this.record=null;this.node=null;}
   // In the game the portrait must be above the frosted dialogue surface. Render
@@ -71,6 +73,7 @@ export class LivePortrait {
       camera.lookAt(target.clone().add(new THREE.Vector3(0,.03,0).multiplyScalar(scale).applyQuaternion(orientation)));camera.updateProjectionMatrix();
 
     }
+    framePortraitCamera(camera,this.settings);
     camera.layers.set(31);
     const viewport=renderer.getViewport(new THREE.Vector4()),scissor=renderer.getScissor(new THREE.Vector4());
     const state={background:scene.background,autoClear:renderer.autoClear,scissor:renderer.getScissorTest(),shadow:renderer.shadowMap.autoUpdate,visible:record.vrm.scene.visible};

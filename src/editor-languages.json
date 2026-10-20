@@ -13942,5 +13942,129 @@
   "导入战舰文件": {
     "en": "Import warship file",
     "ja": "艦船ファイルをインポート"
+  },
+  "20毫米高射炮": {
+    "en": "20 mm AA cannon",
+    "ja": "20mm高角砲"
+  },
+  "对舰弹种": {
+    "en": "Anti-ship ammunition",
+    "ja": "対艦弾種"
+  },
+  "穿甲弹": {
+    "en": "Armor-piercing shell",
+    "ja": "徹甲弾"
+  },
+  "高爆弹": {
+    "en": "High-explosive shell",
+    "ja": "榴弾"
+  },
+  "防空引信": {
+    "en": "Anti-aircraft fuze",
+    "ja": "対空信管"
+  },
+  "瞄准飞机自动装填三式对空弹；已装弹不会随目标切换而卸除。": {
+    "en": "Aircraft targets load Type 3 AA shells automatically. A loaded round remains chambered when targets change.",
+    "ja": "航空機には三式対空弾を自動装填します。目標変更時も装填済みの弾は保持されます。"
+  },
+  "瞄准飞机自动使用防空弹；轻型防空炮采用弹匣点射。": {
+    "en": "Aircraft targets use AA ammunition. Light AA guns fire magazine-fed bursts.",
+    "ja": "航空機には対空弾を使用します。小口径高角砲は弾倉式の短連射を行います。"
+  },
+  "弹匣 {0} 发 · {1} 发点射 · 装填 {2} 秒": {
+    "en": "Magazine: {0} rounds · {1}-round bursts · {2} s reload",
+    "ja": "弾倉 {0} 発 · {1} 発ずつ連射 · 装填 {2} 秒"
+  },
+  "射程 {0} km · 203毫米及以上主炮对空使用近炸三式弹，产生燃烧锥形区域。": {
+    "en": "Range {0} km · Main guns of 203 mm and above use proximity Type 3 shells against aircraft, creating an incendiary cone.",
+    "ja": "射程 {0} km · 203mm以上の主砲は航空機に近接信管式三式弾を使い、円錐形の焼夷領域を形成します。"
+  },
+  "网格 {0} · 自动对称 · 单块耐久 {1}": {
+    "en": "Grid {0} · Auto symmetry · Block HP {1}",
+    "ja": "グリッド {0} · 自動対称 · ブロック耐久 {1}"
+  },
+  "460毫米三联主炮 · 可用三式弹": {
+    "en": "460 mm triple main battery · Type 3 capable",
+    "ja": "460mm三連装主砲 · 三式弾対応"
+  },
+  "动作适配与 Mixamo": {
+    "en": "Motion fitting & Mixamo",
+    "ja": "モーション調整と Mixamo"
+  },
+  "测试动作": {
+    "en": "Preview motion",
+    "ja": "確認用モーション"
+  },
+  "正在调整当前动作的独立设置。": {
+    "en": "Editing settings for this motion only.",
+    "ja": "このモーション専用の設定を調整しています。"
+  },
+  "正在调整此角色的默认设置。": {
+    "en": "Editing this character’s default settings.",
+    "ja": "このキャラクターの既定設定を調整しています。"
+  },
+  "双手防穿模": {
+    "en": "Arm penetration correction",
+    "ja": "腕のめり込み補正"
+  },
+  "修正强度": {
+    "en": "Correction strength",
+    "ja": "補正の強さ"
+  },
+  "身体安全间距（厘米）": {
+    "en": "Body clearance (cm)",
+    "ja": "身体との余白（cm）"
+  },
+  "身体包络大小（百分比）": {
+    "en": "Body envelope size (%)",
+    "ja": "身体の衝突範囲（%）"
+  },
+  "恢复角色默认适配": {
+    "en": "Use character defaults",
+    "ja": "キャラクターの既定設定に戻す"
+  },
+  "为此动作单独适配": {
+    "en": "Customize this motion",
+    "ja": "このモーションを個別調整"
+  },
+  "重置动作适配": {
+    "en": "Reset motion fitting",
+    "ja": "モーション調整をリセット"
+  },
+  "导出 Mixamo 白模（FBX）": {
+    "en": "Export white Mixamo model (FBX)",
+    "ja": "Mixamo 用白モデルを書き出す（FBX）"
+  },
+  "暂停 / 继续": {
+    "en": "Pause / Resume",
+    "ja": "一時停止 / 再開"
+  },
+  "检查动作帧": {
+    "en": "Inspect frame",
+    "ja": "フレームを確認"
+  },
+  "人物设置、动作适配和白模导出统一在角色编辑器中编辑。": {
+    "en": "Character settings, motion fitting and white model export are available in the Character Editor.",
+    "ja": "人物設定・モーション調整・白モデル出力はキャラクターエディターで行います。"
+  },
+  "打开角色编辑器": {
+    "en": "Open Character Editor",
+    "ja": "キャラクターエディターを開く"
+  },
+  "自动估算身体范围，修正手腕与前臂。衣摆和头发保留原有物理。抱胸、摸脸或持物动作可单独减弱或关闭。原生 VMD 保持原动作。": {
+    "en": "Estimates the body envelope and corrects wrists and forearms. Keeps existing cloth and hair physics. Reduce or disable per motion for folded arms, face contact or held objects. Native VMD remains unchanged.",
+    "ja": "身体の範囲を推定し、手首と前腕を補正します。衣服と髪の既存の物理を維持します。腕組み・顔への接触・持ち物は個別に弱めるか無効にできます。VMD は変更しません。"
+  },
+  "导出当前体型的 T 姿势、白色蒙皮和 Mixamo 骨骼，不包含贴图、表情或物理。上传 Mixamo 调整后，下载 FBX Binary、Without Skin，作为动作导回此角色。": {
+    "en": "Exports the current proportions in a T-pose with white skin and a Mixamo skeleton, without textures, expressions or physics. Upload to Mixamo, adjust, then download FBX Binary / Without Skin and import as a motion for this character.",
+    "ja": "現在の体型を T ポーズ・白色スキン・Mixamo 骨格で出力します。テクスチャ・表情・物理は含みません。Mixamo で調整後、FBX Binary / Without Skin をダウンロードし、このキャラクターのモーションとして読み込んでください。"
+  },
+  "导出兼容白模（OBJ）": {
+    "en": "Export compatible white model (OBJ)",
+    "ja": "互換白モデルを書き出す（OBJ）"
+  },
+  "FBX 使用 2013 兼容格式并保留骨骼。若网站仍提示骨骼映射失败，请上传 OBJ 白模，按提示标记关节后由 Mixamo 自动绑骨。": {
+    "en": "FBX uses the 2013 format and preserves the skeleton. If skeleton mapping still fails, upload the OBJ white model and mark the joints for automatic rigging in Mixamo.",
+    "ja": "FBX は 2013 互換形式で骨格を保持します。骨格のマッピングに失敗する場合は OBJ 白モデルをアップロードし、関節位置を指定して Mixamo で自動リギングしてください。"
   }
 }

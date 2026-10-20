@@ -14,3 +14,19 @@ body[data-editor-theme] .editor .topbar .editor-tools-row>nav button{flex:none;w
 .editor-tools-row .story-current{flex:0 1 auto;width:clamp(180px,25vw,430px);min-width:160px;max-width:430px;padding:5px 9px;font-size:11px;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .editor .center{padding:10px 12px;gap:8px}
 .module-context-caption{display:block;font-weight:400;font-size:11px;color:var(--ui-muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Attribution shares the editor's existing theme and status bar geometry. */
+body[data-editor-theme] .editor .brand .creator-star,.editor .brand .creator-star{display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;padding:0 3px;color:inherit;font:inherit;line-height:1.2;border-radius:5px;box-shadow:none}
+.editor .brand .creator-star:hover{color:var(--ui-accent);background:var(--ui-surface-soft)}
+.editor .brand .creator-star:focus-visible{outline:2px solid var(--ui-accent);outline-offset:3px}
+.editor .status.has-announcement #project-path{flex:0 1 20%;max-width:220px}
+.editor .status .editor-announcement{flex:1 1 160px;min-width:30px;overflow:hidden;position:relative;color:var(--ui-text);white-space:nowrap}
+.editor-announcement .announcement-track{display:inline-flex;gap:48px;width:max-content;white-space:nowrap}
+.editor .status .announcement-track>span{flex:none;white-space:nowrap;overflow:visible}
+.editor-announcement:not(.is-scrolling) .announcement-track>span+span{display:none}
+.editor-announcement.is-scrolling .announcement-track{animation:editor-announcement-scroll var(--announcement-duration,60s) linear infinite}
+.editor-announcement:hover .announcement-track,.editor-announcement:focus-within .announcement-track{animation-play-state:paused}
+@keyframes editor-announcement-scroll{from{transform:translateX(0)}to{transform:translateX(calc(-1 * var(--announcement-distance)))}}
+.engine-version-row [data-engine-version]{background:transparent!important;border:0!important;box-shadow:none!important;color:inherit!important;font-size:11px!important;padding:4px 0!important;opacity:.65}
+.engine-origin{font-size:12px;line-height:1.6;overflow-wrap:anywhere;color:inherit}
+@media(prefers-reduced-motion:reduce){.editor .status .editor-announcement{overflow-x:auto;scrollbar-width:thin}.editor-announcement.is-scrolling .announcement-track{animation:none}.editor-announcement .announcement-track>span+span{display:none}}
