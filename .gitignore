@@ -29,3 +29,10 @@ work/
 Desktop/ProtectedBuildConstants.cs
 *.pem
 archive-password.txt
+
+# Private author authorization records never enter source control.
+author-authorization.json
+**/author-authorization.json
+私人构建资料/
+__pycache__/
+

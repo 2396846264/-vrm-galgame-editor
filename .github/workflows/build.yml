@@ -41,4 +41,6 @@ jobs:
         shell: pwsh
         run: |
           Get-ChildItem scripts/test-*.mjs | Where-Object { $_.Name -notin @('test-white-motion72.mjs','test-white73.mjs') } | ForEach-Object { node $_.FullName; if ($LASTEXITCODE -ne 0) { throw "Source check failed" } }
+      - name: Check attribution authorization workflow with dummy credentials
+        run: python scripts/test-author-authorization.py
 
