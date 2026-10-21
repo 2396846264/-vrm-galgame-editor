@@ -39,7 +39,7 @@ export async function createMmdActor(mesh,options={}){
  return {scene,mesh,isMmd:true,meta:{metaVersion:'1'},humanoid,normalizedRig:{humanoid:normalized,meta:{metaVersion:'1'}},expressionManager:expressions,mmdBoneMap:raw,physics,getRestPosition:bone=>rest.get(bone).position,diagnostics:{mappedBones:Object.keys(raw),deformLegs:raw.leftUpperLeg.node.name},
   setMotionKind(next){if(kind!==next){physics?.restore();expressions.restore();restoreRaw();normalized.resetNormalizedPose();vmdPoseReady=false;kind=next;physics?.clearInput();}},
   beforeAnimation(){physics?.restore();expressions.restore();if(kind==='vmd'&&vmdPoseReady)for(const pose of vmdPose){pose.bone.position.copy(pose.position);pose.bone.quaternion.copy(pose.quaternion);}},
-  resetPhysics:()=>physics?.reset(),setPhysicsEnabled:value=>physics?.setEnabled(value),setPhysicsActive:value=>physics?.setActive(value),setPhysicsQuality:value=>physics?.setQuality(value),preparePhysics:valid=>physics?.prepare(valid),
+  setSecondaryCollisionEnabled:value=>physics?.setSecondaryCollisionEnabled(value),resetPhysics:()=>physics?.reset(),setPhysicsEnabled:value=>physics?.setEnabled(value),setPhysicsActive:value=>physics?.setActive(value),setPhysicsQuality:value=>physics?.setQuality(value),preparePhysics:valid=>physics?.prepare(valid),
   update(delta=0){
    if(kind==='vmd'){
     const invalid=mesh.skeleton.bones.find(b=>!valid(b));if(invalid)throw Error('VMD 骨骼数据无效：'+invalid.name);

@@ -1,0 +1,9 @@
+import assert from 'node:assert/strict';
+import {normalizeEvent} from '../src/events.js';
+import {newRenderPreset,renderSelection,resolveEventRender,resolveDialogueRender,migrateRenderPresets,deleteRenderPreset} from '../src/render-presets.js';
+const p={renderPresetSchema:1,render:renderSelection(),renderPresets:[newRenderPreset('sea','海战胶片',{filters:{rim:.8,bloom:.3,monochrome:.6,toon:.5}})],acts:[]};
+const event={kind:'event',steps:[],event:normalizeEvent({type:'aircombat',render:{presetId:'sea',brightness:120,contrast:90,saturation:80}})};p.acts.push(event);
+const resolved=resolveEventRender(p,event);assert.equal(resolved.filters.rim,.8);assert.equal(resolved.filters.toon,.5);assert.equal(resolved.brightness,120);assert.equal(resolved.saturation,80);assert.deepEqual(resolved,resolveDialogueRender(p,null,{render:event.event.render}),'Sea and dialogue must use the same resolver');
+const reopened=JSON.parse(JSON.stringify(p));migrateRenderPresets(reopened);assert.deepEqual(resolveEventRender(reopened,reopened.acts[0]),resolved);reopened.renderPresets[0].settings.filters.rim=1.1;assert.equal(resolveEventRender(reopened,reopened.acts[0]).filters.rim,1.1);deleteRenderPreset(reopened,'sea');assert.equal(reopened.acts[0].event.render.presetId,'');assert.equal(resolveEventRender(reopened,reopened.acts[0]).filters.rim,0);
+assert.equal(normalizeEvent({type:'aircombat',render:{brightness:-20}}).render.brightness,0);const old={render:{preset:'custom'},acts:[{kind:'event',render:{preset:'tno'},event:{type:'aircombat'},steps:[]}]};migrateRenderPresets(old);assert(old.acts[0].event.render.presetId);assert(!old.acts[0].render);assert(resolveEventRender(old,old.acts[0]).filters.outline>0);
+console.log('PASS air-render85: same presets as dialogue, independent calibration, JSON reopen, live shared preset updates, deletion fallback and legacy event migration.');

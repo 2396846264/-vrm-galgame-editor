@@ -17,7 +17,7 @@ internal sealed class EditorModuleWindow : Form
         Deactivate+=(_,_)=>view.CoreWebView2?.PostWebMessageAsJson("{\"modulePreviewActive\":false}");
         Load+=async(_,_)=>{try{await view.EnsureCoreWebView2Async(sharedEnvironment);view.CoreWebView2.SetVirtualHostNameToFolderMapping("app.galgame",webDirectory,CoreWebView2HostResourceAccessKind.DenyCors);view.CoreWebView2.SetVirtualHostNameToFolderMapping("project.galgame",projectDirectory,CoreWebView2HostResourceAccessKind.Allow);view.CoreWebView2.Settings.IsStatusBarEnabled=false;view.CoreWebView2.WebMessageReceived+=Message;
             view.CoreWebView2.NavigationStarting+=(_,e)=>{if(!e.Uri.StartsWith("https://app.galgame/",StringComparison.OrdinalIgnoreCase))e.Cancel=true;};
-            view.Source=new Uri("https://app.galgame/"+((module is "aircraft" or "warship")?"aircraft.html":"index.html")+"?module="+Uri.EscapeDataString(module)+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-motion72" or "--smoke-ui57" or "--smoke-audit-module" or "--smoke-geometry52" or "--smoke-editor-modules" or "--smoke-aircombat" or "--smoke-air67" or "--smoke-air69" or "--smoke-naval70" or "--smoke-ocean51")?"&smoke=1":""));
+            view.Source=new Uri("https://app.galgame/"+(module=="firepower"?"firepower.html":(module is "aircraft" or "warship")?"aircraft.html":"index.html")+"?module="+Uri.EscapeDataString(module)+(Environment.GetCommandLineArgs().Any(a=>a is "--smoke-naval80" or "--smoke-motion72" or "--smoke-ui57" or "--smoke-audit-module" or "--smoke-geometry52" or "--smoke-editor-modules" or "--smoke-aircombat" or "--smoke-air67" or "--smoke-air69" or "--smoke-naval70" or "--smoke-ocean51")?"&smoke=1":""));
         }catch(Exception error){MessageBox.Show(this,error.Message,"窗口无法打开");closing=true;Close();}};
         FormClosing+=async(_,e)=>{if(closing||view.CoreWebView2==null)return;e.Cancel=true;if(checking)return;checking=true;
             try{await SetClosePendingAsync(true);if(await IsBusyAsync()){MessageBox.Show(this,EditorLanguage.T("当前操作或保存还没完成，请稍后关闭。"));return;}
@@ -75,7 +75,7 @@ internal sealed partial class EditorWindow
     private object NotifyEditorModules(JsonNode? payload){foreach(var window in moduleWindows.Values.ToArray())if(!window.IsDisposed)window.RefreshProject(payload);return new{notified=moduleWindows.Count};}
     private object OpenEditorModule(JsonNode? payload){
         string module=payload?["module"]?.GetValue<string>()??"";
-        var labels=new Dictionary<string,string>{{"characters","角色"},{"items","物品"},{"title","标题"},{"render","渲染"},{"knowledge","知识库"},{"aircraft","飞机"},{"warship","战舰"},{"ui","游戏 UI"}};
+        var labels=new Dictionary<string,string>{{"characters","角色"},{"items","物品"},{"title","标题"},{"render","渲染"},{"knowledge","知识库"},{"aircraft","飞机"},{"warship","战舰"},{"firepower","火力"},{"ui","游戏 UI"}};
         if(!labels.TryGetValue(module,out var label)||projectDirectory==null)throw new Exception("请先打开工程。");
         if(moduleWindows.TryGetValue(module,out var active)&&!active.IsDisposed){active.Activate();if(module is "aircraft" or "warship")active.SelectAircraft(payload?["view"]);return new{opened=true,reused=true};}
         string directory=projectDirectory;var initial=JsonSerializer.SerializeToNode(GetProjectInfo())!.AsObject();
@@ -88,6 +88,7 @@ internal sealed partial class EditorWindow
             if(action!="discardModule"){for(int i=0;i<6000&&archiveSaveRunning;i++)await Task.Delay(50);if(archiveSaveRunning)throw new Exception("等待工程保存完成超时，请稍后重试。");}
             if(directory!=projectDirectory)throw new Exception("工程已切换，请关闭本窗口后重新打开。");
             if((module is "aircraft" or "warship")&&(action is "exportVehicleFile" or "importVehicleFile")){data??=new JsonObject();data["vehicleType"]=module=="warship"?"warship":"aircraft";return VehicleFile(action,data,child!);}
+            if(module=="firepower"&&(action is "exportFirepowerFile" or "importFirepowerFile"))return FirepowerFile(action,data,child!);
             if(action=="saveModule")return await CommitEditorModule(module,data);
             if(action=="exportMixamoWhite"&&module=="characters")return ExportMixamoWhiteFile(data,child!);
             if(action=="discardModule"){

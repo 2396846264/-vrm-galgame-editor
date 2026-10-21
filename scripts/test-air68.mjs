@@ -7,8 +7,8 @@ import {actMediaAssets} from '../src/act-resources.js';
 import {airDialogueList,airDialogueAction,airDialogueEditor} from '../src/aircombat-dialogue-editor.js';
 for(let a=0;a<=4;a++)for(let e=1;e<=8;e++){
  const rows=formationSpawns(a,e,600);assert.equal(rows.length,a+e+1);
- for(let i=0;i<rows.length;i++)for(let j=i+1;j<rows.length;j++){const d=new THREE.Vector3(...rows[i].position).distanceTo(new THREE.Vector3(...rows[j].position));assert(d>=2000);if((rows[i].team==='enemy')!==(rows[j].team==='enemy'))assert(d>=10000);}
- assert.equal(rows.find(r=>r.team==='enemy').position[2],-10000);
+ for(let i=0;i<rows.length;i++)for(let j=i+1;j<rows.length;j++){const d=new THREE.Vector3(...rows[i].position).distanceTo(new THREE.Vector3(...rows[j].position));assert(d>=2000);if((rows[i].team==='enemy')!==(rows[j].team==='enemy'))assert(d>=20000);}
+ assert.equal(rows.find(r=>r.team==='enemy').position[2],-20000);
 }
 for(const speed of [350,570,900,1100])for(const dt of [1/60,1/30,.1]){
  const b=createProjectile(new THREE.Vector3(0,2000,0),new THREE.Vector3(0,0,-speed));let t=0,expired=false;
@@ -26,4 +26,4 @@ assert.equal((airDialogueEditor(node,ctx,1).match(/data-air-dialogue="text"/g)||
 airDialogueAction(c,'event-air-dialogue-duplicate',{dataset:{index:'0'}});assert.equal(c.dialogues.length,3);assert.notEqual(c.dialogues[0].id,c.dialogues[1].id);
 airDialogueAction(c,'event-air-dialogue-down',{dataset:{index:'0'}});assert.equal(c.dialogues[1].id,'one');
 airDialogueAction(c,'event-air-dialogue-remove',{dataset:{index:'1'}});assert.equal(c.dialogues.length,2);assert.equal(c.fireSounds.mg151,'b');
-console.log('PASS: all 40 formations, 10 km teams / 2 km spacing, 12 ballistic time steps to 7 km, slight drop, white batched trails, independent weapon sounds, preload/persistence and dialogue list ordering.');
+console.log('PASS: all 40 formations, 20 km teams / 2 km spacing, 12 ballistic time steps to 7 km, slight drop, white batched trails, independent weapon sounds, preload/persistence and dialogue list ordering.');

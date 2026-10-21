@@ -7,6 +7,7 @@ export function normalizeMotionFit(value={}){
  return {enabled:value.enabled!==false,strength:number(value.strength,.85,0,1),clearance:number(value.clearance,.015,0,.08),bodyScale:number(value.bodyScale,1,.65,1.5)};
 }
 export function motionFitProfile(actorKey,motionId){const id=String(actorKey).replace(/^(gallery|details):/,'');const role=profiles()?.find(role=>role.id===id);return normalizeMotionFit(role?.motionFitOverrides?.[motionId]||role?.motionFit);}
+export function secondaryCollisionProfile(actorKey){const id=String(actorKey).replace(/^(gallery|details):/,'');return profiles()?.find(role=>role.id===id)?.secondaryCollision!==false;}
 const point=b=>b.getWorldPosition(new THREE.Vector3());
 const unit=(x,y,z)=>new THREE.Vector3(x,y,z);
 const percentile=(values,t,fallback)=>values.length?values.sort((a,b)=>a-b)[Math.floor((values.length-1)*t)]:fallback;

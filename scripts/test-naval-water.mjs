@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import * as T from 'three';
+import {createProjectile} from '../src/aircombat-rules.js';
+import {advanceWaterShell} from '../src/naval-water-shell.js';
+import {createShellExplosions} from '../src/shell-explosions.js';
+const shell=()=>({...createProjectile(new T.Vector3(0,1,0),new T.Vector3(200,-100,0)),heavyRules:true,gravity:9.81,horizontalRange:true,maxRange:12700,launchOrigin:new T.Vector3(0,1,0),part:{def:{caliber:127}},damage:1270,remainingDamage:6350});
+const b=shell();assert.equal(advanceWaterShell(b,.02),false);assert.equal(b.position.y,0);assert.equal(b.enteredWater,true);assert.equal(b.submerged,undefined);
+const entry=b.position.clone();advanceWaterShell(b,.01);assert.equal(b.submerged,true);assert(b.position.y<0);assert(b.velocity.length()<100);assert.equal(b.remainingDamage,4445);assert.equal(b.damage,889);assert(b.position.distanceTo(entry)<1.1);
+const budget=b.remainingDamage;advanceWaterShell(b,.01);assert.equal(b.remainingDamage,budget,'Entry loss must happen only once');
+let expired=false;for(let i=0;i<150&&!expired;i++)expired=advanceWaterShell(b,.01);assert(expired,'Water path must be bounded');
+const shallow=shell();shallow.position.set(0,0,0);shallow.velocity.set(1000,-.01,0);for(let i=0;i<100;i++){if(advanceWaterShell(shallow,.02))break;}assert(shallow.waterTravel<48,'Shallow shots cannot travel indefinitely');
+const legacy=shell();legacy.heavyRules=false;advanceWaterShell(legacy,.02);assert.equal(legacy.submerged,undefined);assert.equal(legacy.enteredWater,false);
+const scene=new T.Scene(),fx=createShellExplosions(scene);for(let i=0;i<40;i++)fx.splash(new T.Vector3(),406);fx.update(.1);assert(fx.count<=768);assert(scene.children.length<=17);fx.update(3);assert.equal(fx.count,0);fx.dispose();assert.equal(scene.children.length,0);
+console.log('PASS water shells: surface segmentation, drag, one-time damage loss, bounded depth/time/range, legacy exclusion, bounded splash lifecycle.');

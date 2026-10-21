@@ -16,6 +16,8 @@ function add(name,version,license,repository,files){
  }
  rows.push({name,version,license,repository,files:saved});
 }
+add('OceanThreejs','da18e9254a83a6e990c0077b5d752026f3d5c480 / host adaptation','MIT','https://github.com/achrefelouafi/OceanThreejs',[[path.join(source,'licenses/OceanThreejs/LICENSE.txt'),'OceanThreejs/LICENSE.txt']]);
+add('Open Swing Dynamics (algorithm reference)','4d1fa5492961eb09d8f7c5620d9a060f6074caca','MIT','https://github.com/Arin3000/unity-hair-skirt-dynamics',[[path.join(source,'licenses/OpenSwing/LICENSE.txt'),'OpenSwing/LICENSE.txt']]);
 const bundle=JSON.parse(fs.readFileSync(path.join(target,'web/third-party-components.json'),'utf8'));
 for(const item of bundle.components){
  const dir=path.join(source,'node_modules',item.name),meta=JSON.parse(fs.readFileSync(path.join(dir,'package.json'),'utf8'));

@@ -45,4 +45,3 @@ const motion=load(directory+'motion/移动_女性走路.fbx'),clip=retargetFbxCl
 const fit=createMotionFit(white);for(let i=0;i<180;i++){fit.restore();mixer.update(1/60);fit.apply();}assert.ok(fit.diagnostics().frames===180);fit.restore();
 if(process.argv[2]){fs.mkdirSync(process.argv[2],{recursive:true});fs.writeFileSync(process.argv[2]+'/FBX测试.mixamo.fbx',new Uint8Array(exported.buffer));}
 console.log(JSON.stringify({ok:true,ikPreservesLengthsAndWrist:true,unreachableTargetStable:true,perCharacterAndMotionSettings:true,binaryFbxRoundtrip:true,whiteSkinnedMesh:true,sourcePosePreserved:true,realFbx:exported.stats,mixamoMotionTracks:clip.tracks.length,fit:fit.diagnostics()}));
-

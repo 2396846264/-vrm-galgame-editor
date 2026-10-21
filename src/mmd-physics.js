@@ -22,6 +22,20 @@ export function withPhysicsModelFrame(mesh,callback){
  try{mesh.parent=null;mesh.position.copy(worldPosition).divideScalar(Math.max(1e-8,Math.abs(worldScale.y)));mesh.quaternion.copy(worldRotation);mesh.scale.setScalar(1);mesh.updateMatrixWorld(true);return callback();}
  finally{mesh.parent=parent;mesh.position.copy(position);mesh.quaternion.copy(rotation);mesh.scale.copy(scale);mesh.updateMatrixWorld(true);}
 }
+export function createMmdContactTails(dynamic){
+ // PMX often ends a hair strand with an offsetPosition of zero. Those leaf
+ // bones still deform a visible tuft; use its authored rigid body extent as
+ // a virtual contact tail rather than silently omitting the last segment.
+ const tails=new Map();
+ for(const {bone,params}of dynamic){
+  if(bone.children.some(c=>c.isBone&&c.position.lengthSq()>1e-12))continue;
+  const center=new THREE.Vector3().fromArray(params.position),extent=params.shapeType===2?params.height*.5+params.width:params.shapeType===1?params.height:params.width;
+  if(!(extent>1e-6))continue;
+  const axis=new THREE.Vector3(0,extent,0).applyEuler(new THREE.Euler(...params.rotation));
+  const x=center.clone().add(axis),y=center.clone().sub(axis);tails.set(bone,x.lengthSq()>y.lengthSq()?x:y);
+ }
+ return tails;
+}
 export async function createMmdPhysics(mesh,{getBone}={}){
  const data=mesh.geometry.userData.MMD;if(!data.rigidBodies?.length)return null;
  const Physics=await engine(),owner={objects:new Set()},scope=callback=>{const previous=activeOwner;activeOwner=owner;try{return callback();}finally{activeOwner=previous;}};
@@ -31,7 +45,8 @@ export async function createMmdPhysics(mesh,{getBone}={}){
  worlds++;const zero=scope(()=>new Ammo.btVector3(0,0,0));
  const dynamic=physics.bodies.filter(b=>b.params.type&&b.params.boneIndex!==-1);
  for(const b of dynamic){const cloth=secondaryMotionKind(b.bone.name)==='cloth';b.body.setDamping(Math.max(b.params.positionDamping||0,cloth?.6:.45),Math.max(b.params.rotationDamping||0,cloth?.75:.6));}
- const limits=createSecondaryMotionLimits(mesh,dynamic.map(b=>b.bone),{getBone});
+ const tails=createMmdContactTails(dynamic);
+ const limits=createSecondaryMotionLimits(mesh,dynamic.map(b=>b.bone),{getBone,tails});
  // Carry the complete Bullet world with the model frame. Sliding or rotating
  // a cast slot must not leave its hair bodies behind in stage coordinates.
  const carryTransform=scope(()=>new Ammo.btTransform()),carryVector=scope(()=>new Ammo.btVector3(0,0,0)),carryQuaternion=scope(()=>new Ammo.btQuaternion(0,0,0,1));
@@ -84,7 +99,7 @@ export async function createMmdPhysics(mesh,{getBone}={}){
   withPhysicsModelFrame(mesh,()=>scope(()=>{carryFrame();if(needsReset)reset();physics._updateRigidBodies();if(delta>0){const fixed=fixedStep;accumulator+=Math.min(delta,.05);const count=Math.min(quality==='full'?3:1,Math.floor((accumulator+1e-8)/fixed));if(count){physics.world.stepSimulation(count*fixed,count,fixed);steps+=count;accumulator=Math.min(accumulator-count*fixed,fixed);}}physics._updateBones();if(smoothOutput)output.apply(delta);}));
   limits.apply();
  };
- return {frame,restore(){if(inputReady){for(const p of input){p.bone.position.copy(p.position);p.bone.quaternion.copy(p.quaternion);}inputRestored=true;}},reset(){this.restore();needsReset=true;},
+ return {frame,setSecondaryCollisionEnabled:value=>limits.setEnabled(value),restore(){if(inputReady){for(const p of input){p.bone.position.copy(p.position);p.bone.quaternion.copy(p.quaternion);}inputRestored=true;}},reset(){this.restore();needsReset=true;},
   clearInput(){inputReady=false;needsReset=true;},
   measure:()=>limits.measure(),
   ...(typeof location!=='undefined'&&new URLSearchParams(location.search).has('smoke')?{configureProbe({legacy=false}={}){smoothOutput=!legacy;fixedStep=legacy?1/60:1/65;for(const c of physics.constraints)for(let axis=0;axis<6;axis++)c.constraint.setParam(2,legacy?.475:correction(c),axis);needsReset=true;}}:{}),

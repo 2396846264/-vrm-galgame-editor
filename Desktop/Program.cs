@@ -267,6 +267,7 @@ internal sealed partial class EditorWindow : Form
             if(Environment.GetCommandLineArgs().Contains("--smoke-commercial55-player")){await RunCommercial55PlayerSmoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-commercial55-legacy")){await RunCommercial55LegacySmoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-defaults54")){await RunDefaults54Smoke();return;}
+            if(Environment.GetCommandLineArgs().Contains("--smoke-naval80")){await RunNaval80Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-secondary53")){await RunSecondary53Smoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-promo-package")){await RunPromoPackageSmoke();return;}
             if(Environment.GetCommandLineArgs().Contains("--smoke-promo-player")){await RunPromoPlayerSmoke();return;}

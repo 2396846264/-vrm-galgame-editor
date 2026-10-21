@@ -20,4 +20,4 @@ function componentManifest(){return {name:'approved-commercial-components',gener
 export default defineConfig({base:'./',publicDir:false,server:{watch:{ignored:['**/Desktop/**','**/AgentHost/**','**/tools/**','**/publish/**']}},plugins:[editorLanguagePlugin(),componentManifest()],
   resolve:{alias:[{find:'@noname0310/mmd-parser',replacement:fileURLToPath(new URL('./src/mmd-parser-compat.js',import.meta.url))},
     {find:/^ammojs-typed$/,replacement:fileURLToPath(new URL('./src/ammo-wasm-compat.js',import.meta.url))}]},
-  build:{rollupOptions:{input:{index:'index.html',player:'player.html',environment:'environment.html',aircraft:'aircraft.html'}}}});
+  build:{rollupOptions:{input:{index:'index.html',player:'player.html',environment:'environment.html',aircraft:'aircraft.html',firepower:'firepower.html'}}}});

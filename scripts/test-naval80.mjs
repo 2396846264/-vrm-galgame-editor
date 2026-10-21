@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import * as T from 'three';
+import {navalShellProfile,navalBlastRadius,navalBallisticAim} from '../src/naval-shell-rules.js';
+import {heavyShellBlast,penetrateHeavyShell} from '../src/naval-shell-damage.js';
+import {createShip} from '../src/warship-runtime.js';
+import {cellWorld} from '../src/vehicle-cell-damage.js';
+import {createProjectile,advanceProjectile} from '../src/aircombat-rules.js';
+import {navalParts} from '../src/naval-kit.js';
+import {ammunitionFor} from '../src/weapon-balance.js';
+import {normalizeWarship} from '../src/warship-schema.js';
+import {actMediaAssets} from '../src/act-resources.js';
+const d=navalParts.ship_dp127,p=navalShellProfile(d,'ap');
+assert.equal(p.range,12700);assert.equal(p.damage,6350);assert.equal(navalShellProfile(d).damage,1270);assert.equal(navalBlastRadius(127),3);assert.equal(navalBlastRadius(406),10);
+assert.equal(navalShellProfile(navalParts.ship_aa20),null);assert.equal(navalShellProfile(navalParts.ship_aa76),null);assert.equal(navalShellProfile({...d,caliber:100}).range,10000);
+assert.equal(navalShellProfile(navalParts.ship_main406).damage,4060);assert.equal(navalShellProfile(navalParts.ship_main406,'ap').damage,20300);assert.equal(navalShellProfile(d).proximityRadius,13);
+assert.deepEqual(ammunitionFor(d,false),{ammoType:'he',fuze:'proximity'});
+const blueprint={schemaVersion:2,pilotBlockVersion:1,vehicleType:'warship',shipClass:'destroyer',name:'Damage fixture',gridSize:2,cruiseSpeed:0,blocks:Array.from({length:8},(_,z)=>({cell:[0,0,z],kind:'ship_core',color:'#ffffff'})),parts:[]};
+const unit=()=>({flight:createShip(structuredClone(blueprint))});
+const u=unit(),a=new T.Vector3(0,0,-30),b=new T.Vector3(0,0,30);
+const ap=penetrateHeavyShell([u],null,a,b,6350);assert.equal(ap.remaining,0);assert.equal(ap.impacts.length,7);assert.equal(u.flight.spec.collisionCells.size,2);
+const last=[...u.flight.spec.parts].filter(p=>p.health>0).map(p=>p.health).sort((x,y)=>x-y);assert.deepEqual(last,[650,1000]);
+const next=unit();let one=penetrateHeavyShell([next],null,a,new T.Vector3(0,0,-2),6350);assert(one.remaining>0);const two=penetrateHeavyShell([next],null,new T.Vector3(0,0,-2),b,one.remaining);assert.equal(two.remaining,0);assert.equal(next.flight.spec.collisionCells.size,2,'AP budget must persist across updates');
+const blast=unit(),cell=blast.flight.spec.parts.find(p=>p.blockCells?.some(c=>c[2]===3)),center=cellWorld(blast.flight,cell,cell.blockCells.find(c=>c[2]===3));const hits=heavyShellBlast([blast],center,1270,3);assert.equal(hits,3);assert.equal(blast.flight.spec.collisionCells.size,5);
+const armorBp=structuredClone(blueprint);armorBp.blocks.push({cell:[0,0,-2],kind:'ship_armor400',color:'#ffffff'});const armored={flight:createShip(armorBp)},armor=armored.flight.spec.parts.find(p=>p.blockKind==='ship_armor400');heavyShellBlast([armored],cellWorld(armored.flight,armor,armor.blockCells[0]),1270,.1);assert.equal(armor.health,3730,'HE applies full per-cell damage without armour reduction');
+for(const caliber of [100,127,203,356,406,460]){
+ const profile=navalShellProfile({naval:true,caliber}),origin=new T.Vector3(0,10,0),target=new T.Vector3(0,10,-profile.range*.9),sol=navalBallisticAim(origin,target,new T.Vector3(),profile.speed);assert(sol.reachable&&sol.direction.y>0);
+ const shell={...createProjectile(origin,sol.direction.clone().multiplyScalar(profile.speed)),gravity:profile.gravity,horizontalRange:true,maxRange:profile.range,launchOrigin:origin.clone()};let time=0;
+ while(time<sol.time){const dt=Math.min(1/60,sol.time-time);advanceProjectile(shell,dt);time+=dt;}assert(shell.position.distanceTo(target)<.02,'Ballistic solution and integration must agree');
+ while(!advanceProjectile(shell,.2)){}assert(Math.abs(Math.hypot(shell.position.x-origin.x,shell.position.z-origin.z)-profile.range)<1e-5);
+}
+const soundBp=normalizeWarship({...blueprint,fireSounds:{ship_dp127:'gun'}});assert.equal(JSON.parse(JSON.stringify(soundBp)).fireSounds.ship_dp127,'gun');
+const assets=[{id:'bgm',type:'audio',audioKind:'music'},{id:'gun',type:'audio',audioKind:'effect'}],act={kind:'event',event:{type:'aircombat',bgmId:'bgm',combat:{ships:[{blueprint:soundBp}]}}};assert.deepEqual(actMediaAssets({assets,characters:[]},act).map(a=>a.id).sort(),['bgm','gun']);
+console.log('PASS naval80: >=100 mm threshold, exact HE/AP/range/proximity values, AP ordered HP budget across frames, uniform per-cell HE, armour-independent damage, 100–460 mm ballistic arrivals/range caps, ship sounds and event BGM preloading/persistence.');

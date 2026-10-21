@@ -10,6 +10,7 @@ export const blockKit={
  cockpit:{name:'不透明驾驶舱方块',color:'#293d48',density:150,hp:75,drag:.07}
 };
 Object.assign(blockKit,navalBlocks);
+export const blockHitPoints=(kind,shape='cube')=>Math.max(kind.startsWith('ship_')?500:10,Math.round(blockKit[kind].hp*(shapeKit[shape]||shapeKit.cube).volume));
 const clamp=(v,a,b,d)=>Number.isFinite(Number(v))?Math.max(a,Math.min(b,Number(v))):d;
 const color=(v,d)=>/^#[\da-f]{6}$/i.test(v)?v:d;
 export const cellKey=c=>c.join(',');

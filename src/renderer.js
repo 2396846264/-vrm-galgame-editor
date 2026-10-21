@@ -1,5 +1,5 @@
 import {BindingView} from './binding-view.js';
-import {installMotionFit,motionFitProfile} from './motion-fit.js';
+import {installMotionFit,motionFitProfile,secondaryCollisionProfile} from './motion-fit.js';
 import {motionPlayback,motionFeetLocked,loopMotionClip,rootTravel,updateMotionRoot,motionFinishTarget} from './character-motion.js';
 import {CharacterProps} from './character-props.js';
 import {dialogueSlotPosition} from './dialogue-cast.js';
@@ -29,7 +29,7 @@ import { createTalkingMouth } from './talking-mouth.js';
 import { createAutoBlink } from './auto-blink.js';
 import { createAutoGaze } from './auto-gaze.js';
 import { createNaturalActivity } from './natural-activity.js';
-import {installVrmSecondaryMotion} from './secondary-motion.js';
+import {installVrmSecondaryMotion,installFbxSecondaryMotion} from './secondary-motion.js';
 
 const boneNames = {
   Hips:'hips',Spine:'spine',Spine1:'chest',Spine2:'upperChest',Neck:'neck',Head:'head',
@@ -347,6 +347,7 @@ export class VRMStage {
       record.talkingMouth?.restore();
       record.autoBlink?.restore();
       record.autoGaze?.restore();
+      record.vrm.setSecondaryCollisionEnabled?.(secondaryCollisionProfile(record.characterProfileId||record.actorKey));
       record.vrm.beforeAnimation?.();
       this.restoreFootPose(record);
       record.mixer.update(delta);
@@ -439,7 +440,7 @@ export class VRMStage {
       anchor.add(motionRoot);
       motionRoot.add(vrm.scene);
       anchor.updateMatrixWorld(true);
-      if(!vrm.isMmd&&!vrm.isFbx)vrm.secondaryMotionSafety=installVrmSecondaryMotion(vrm);
+      if(!vrm.isMmd)vrm.secondaryMotionSafety=vrm.isFbx?installFbxSecondaryMotion(vrm):installVrmSecondaryMotion(vrm);
       const hips = vrm.humanoid.getNormalizedBoneNode('hips');
       const referenceHips = hips
         ? motionRoot.worldToLocal(hips.getWorldPosition(new THREE.Vector3())) : new THREE.Vector3();

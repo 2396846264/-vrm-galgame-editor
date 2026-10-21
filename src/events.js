@@ -1,3 +1,4 @@
+import {renderSelection} from './render-presets.js';
 import {editorLabel,editorText,setEditorText} from './editor-language.js';
 import {assetsOfType} from './asset-organization.js';
 import {createAirCombat} from './aircombat-runtime.js';
@@ -11,7 +12,7 @@ export function normalizeEvent(value = {}) {
   return { type, title: '', body: '', imageId: '', videoId: '', backgroundId: '', bgmId: '', seId: '', voiceId: '',
     paperName: '世界新闻', date: '', quote: '', buttonText: '继续', countryA: '', countryB: '', flagAId: '', flagBId: '',
     burst: false, declarations: [], burstInterval: .22, ...value, type,
-    ...(type==='aircombat'?{combat:normalizeCombat(value.combat)}:{}),
+    ...(type==='aircombat'?{combat:normalizeCombat(value.combat),...(value.render?{render:renderSelection(value.render)}:{})}:{}),
     burstInterval: Math.max(.12, Math.min(3, Number(value.burstInterval) || .22)),
     declarations: Array.isArray(value.declarations) ? value.declarations.slice(0, 59).map(row => ({ countryA: '', countryB: '', flagAId: '', flagBId: '', body: '', ...row })) : [] };
 }
@@ -177,7 +178,7 @@ export function createEvents(ctx) {
     state = null;
   }
   return { editor, show, confirm, cancel,airInput,airAction,selectAirPart,airActive:()=>air.active(),
-    previewAirDialogue:async(node,line)=>{cancel();const token=generation;await ctx.prepare(node,true);if(token!==generation)return;const preview={...node,event:{...node.event,combat:{...node.event.combat,dialogues:[line]}}};return air.show(preview,true,true,true);},
+    refreshAirRender:()=>air.refreshRender(),previewAirDialogue:async(node,line)=>{cancel();const token=generation;await ctx.prepare(node,true);if(token!==generation)return;const preview={...node,event:{...node.event,combat:{...node.event.combat,dialogues:[line]}}};return air.show(preview,true,true,true);},
     testAir:async node=>{cancel();const token=generation;await ctx.prepare(node,true);if(token!==generation)return;return air.show(node,true,true);},remaining: () => air.active()?0:state?.remaining, active: () => air.active()||Boolean(state),
     diagnostics: () => air.diagnostics() || (state ? { id: state.nodeId, type: state.event.type, remaining: state.remaining, ready: state.ready,
       preview: state.preview, received: state.shown + 1, windows: state.root.querySelectorAll('.event-crt').length } : null) };

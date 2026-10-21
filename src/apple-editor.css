@@ -83,3 +83,5 @@ body.apple-module .node-row .visibility{min-height:24px;padding:4px 0;width:18px
 body.apple-module .node-row .node-name{min-height:30px;padding:6px 2px}
 @media(max-width:800px){.module-picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.module-picker{padding:20px}body.apple-module .document-panel{padding:8px}.vehicle-page{grid-template-columns:minmax(0,1fr) 280px}}
 @media(prefers-reduced-motion:reduce){body[data-editor-theme] .editor *,body.apple-module *{transition:none!important;animation:none!important}}
+
+.vehicle-photo{width:88px;height:55px;object-fit:contain;border-radius:8px;vertical-align:middle;background:#263740;margin-right:8px}

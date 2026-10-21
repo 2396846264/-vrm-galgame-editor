@@ -15,7 +15,7 @@ export function createImagePlaneMaterial(texture,node={}) {
 }
 export function disposeTree(root) {
   const geometries=new Set(),materials=new Set(),textures=new Set();
-  root.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry)geometries.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m){materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v);}});
+  root.traverse(o=>{o.userData.disposeWater?.();if(o.isInstancedMesh)o.dispose();if(o.geometry)geometries.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m){materials.add(m);for(const v of Object.values(m))if(v?.isTexture)textures.add(v);}});
   geometries.forEach(v=>v.dispose());materials.forEach(v=>v.dispose());textures.forEach(v=>{v.dispose();v.source?.data?.close?.();});
 }
 export class EnvironmentRuntime {
