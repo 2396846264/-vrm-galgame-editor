@@ -31,6 +31,7 @@ export function createVehicle(project,name,blueprint){const id=uid(),doc={id,nam
 export function ensureVehicleLibrary(project){
  project.vehicles||=[];for(const d of project.vehicles)if(d.vehicleType!=='warship'&&d.blueprint?.schemaVersion===2&&d.blueprint.pilotBlockVersion!==1)d.blueprint=normalizeAircraft(d.blueprint);
  for(const act of project.acts||[]){const c=act.event?.type==='aircombat'?act.event.combat:null;if(!c)continue;for(const role of vehicleRoles){const a=c[role];if(!a)continue;if(!a.fireSounds)a.fireSounds=Object.fromEntries(a.parts.filter(p=>['gun','turret'].includes(partFamily(p.type))).map(p=>p.type).filter(type=>c.fireSounds?.[type]).map(type=>[type,c.fireSounds[type]]));let d=project.vehicles.find(v=>v.id===a.vehicleId);if(!d){d=createVehicle(project,a.name,a);a.vehicleId=d.id;}else if(!d.blueprint.fireSounds)d.blueprint.fireSounds={...a.fireSounds};a.fireSounds={...d.blueprint.fireSounds};}}
+ for(const act of project.acts||[]){const c=act.event?.type==='aircombat'?act.event.combat:null;if(!c)continue;for(const w of c.allyWings||[])for(let slot=0;slot<w.aircrafts.length;slot++){const a=w.aircrafts[slot];if(!a)continue;if(w.id===c.playerWingId&&slot===c.playerSlot&&c.aircraft.vehicleId)a.vehicleId=c.aircraft.vehicleId;let d=project.vehicles.find(d=>d.id===a.vehicleId);if(!d){d=createVehicle(project,a.name,a);a.vehicleId=d.id;}}}
  if(!project.vehicles.some(v=>v.vehicleType!=='warship'))for(const kit of Object.keys(historicalSpecs))createVehicle(project,historicalSpecs[kit].name,voxelPreset(kit));
  return project.vehicles;
 }

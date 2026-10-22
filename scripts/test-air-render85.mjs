@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {normalizeEvent} from '../src/events.js';
+import {normalizeEvent} from '../src/events/schema.js';
 import {newRenderPreset,renderSelection,resolveEventRender,resolveDialogueRender,migrateRenderPresets,deleteRenderPreset} from '../src/render-presets.js';
 const p={renderPresetSchema:1,render:renderSelection(),renderPresets:[newRenderPreset('sea','海战胶片',{filters:{rim:.8,bloom:.3,monochrome:.6,toon:.5}})],acts:[]};
 const event={kind:'event',steps:[],event:normalizeEvent({type:'aircombat',render:{presetId:'sea',brightness:120,contrast:90,saturation:80}})};p.acts.push(event);

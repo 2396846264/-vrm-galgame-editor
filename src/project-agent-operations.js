@@ -1,67 +1,56 @@
-import {normalizeWarship,validateWarship} from './warship-schema.js';
-import {navalParts} from './naval-kit.js';
-import {fleetFormations} from './naval-formations.js';
+import {modelTypes,collections,projectAgentFields,projectTextFields} from './agent/project-schema.js';
+import {plain,own,keys,text,num,bool,array,ref,objectRef,audio,weights,playback,selection,settings,spatial,itemRows} from './agent/validation.js';
+
+import {actor,cast,event} from './agent/value-validation.js';
+export {projectAgentFields,projectTextFields} from './agent/project-schema.js';
+
+
+
 import {validNameColor} from './character-name-color.js';
 import {normalizeMotionFit} from './motion-fit.js';
 import {normalizeLoading,normalizeUiLayout} from './game-ui-loading.js';
-import {blockKit} from './vehicle-structure.js';
+
 import {colorThemes,paletteKeys,normalizeColor,normalizeGamePalettes} from './game-ui-palette.js';
 import {gameUiPresets} from './game-ui-themes.js';
-import {shapeKit} from './vehicle-shapes.js';
+
 import {createEnvironment} from './environment-schema.js';
 import {editAgentEnvironment} from './environment-agent-operations.js';
-import {customFilterSpecs} from './render-style.js';
+
 import {presetSettings,renderSelection,deleteRenderPreset} from './render-presets.js';
 import {emptyDialogueCast,dialogueSlots,setDialogueActor} from './dialogue-cast.js';
 import {normalizeDialogueCamera} from './dialogue-camera.js';
 import {normalizeWeather,weatherDefaults} from './weather.js';
-import {normalizeEvent,newEvent} from './events.js';
-import {normalizeCombat,validateAircraft,partKit,partFamily} from './aircombat-schema.js';
+import {newEvent} from "./events/schema.js";
+
 import {newTitleActor} from './title-actors.js';
-import {motionPlayback} from './character-motion.js';
+
 import {syncAssetOrganization,setAudioKind,copyCharacterMotions,motionsForCharacter,commonMotionFolderId,motionFolderId} from './asset-organization.js';
 import {syncDialogueVoices} from './dialogue-voices.js';
 import {cloneEditorObject} from './editor-copy.js';
-import {normalizeSpatialCamera} from './spatial-camera.js';
+
 import {validatePropBinding} from './character-props.js';
-import {itemDefinitionReady} from './inventory.js';
-const modelTypes=['vrm','fbxCharacter','mmdCharacter'],collections={environment:'environments',act:'acts',character:'characters',item:'items',book:'knowledgeBooks',renderPreset:'renderPresets',asset:'assets',folder:'assetFolders'};
-export const projectAgentFields={
- environment:['name','background','camera','lighting'],project:['name','authoring'],ui:['gameTheme','gamePalettes','loading','layout','dialogueImageId','clickSoundId','spatialCamera','roleDetailsRender'],title:['subtitle','logoImageId','environmentId','backgroundId','bgmId','authorNote','render','spatialCamera'],
- act:['name','backgroundId','bgmId','environmentId','coverImageId','weather','event'],dialogue:['offstage','text','speaker','characterId','voiceId','seId','render','camera','cast','sceneAnimations','itemGrants'],
- character:['name','nameColor','title','description','modelId','portraitId','portraitSource','autoMouth','detailsIdleId','galleryMotionId','motionFit','motionFitOverrides','stories'],titleActor:['characterId','modelId','motionId','motionOptions','expressionWeights','size','offsetX','offsetY','offsetZ','yaw','pitch','props'],
- prop:['name','assetId','bone','position','rotation','scale'],choice:['text','actId','requirements','consumeRequired'],item:['name','imageId','description'],book:['name','pdfId','coverId','description','unlockActId'],renderPreset:['name','settings'],asset:['name','description','tags','folderId','audioKind','galleryImage','galleryMusic'],folder:['name','type','audioKind']
-};
-const plain=v=>v&&typeof v==='object'&&!Array.isArray(v),own=(v,k)=>Object.hasOwn(v,k);
-function keys(v,allowed,label){if(!plain(v)||Object.keys(v).some(k=>!allowed.includes(k)))throw Error(label+'含有不支持的字段');}
-function text(v,label,max=10000){if(typeof v!=='string'||v.length>max)throw Error(label+'需要文本，最多 '+max+' 字');return v;}
-function num(v,lo,hi,label){if(typeof v!=='number'||!Number.isFinite(v)||v<lo||v>hi)throw Error(label+'范围为 '+lo+' ～ '+hi);return v;}
-function bool(v,k){if(typeof v!=='boolean')throw Error(k+'需要 true 或 false');return v;}
-function array(v,max,label){if(!Array.isArray(v)||v.length>max)throw Error(label+'需要最多 '+max+' 项的列表');return v;}
-function ref(p,id,types,label){if(typeof id!=='string'||id&&!p.assets.some(a=>a.id===id&&types.includes(a.type)))throw Error(label+'素材不存在或类型不匹配');return id;}
-function objectRef(list,id,label){if(typeof id!=='string'||id&&!list.some(o=>o.id===id))throw Error(label+' ID 不存在');return id;}
-function audio(p,id,kind){ref(p,id,['audio'],kind);if(id&&p.assets.find(a=>a.id===id).audioKind!==kind)throw Error('音乐和音效不能混用');}
-function weights(v){keys(v,Object.keys(v||{}).filter(k=>!['__proto__','constructor','prototype'].includes(k)),'表情');if(Object.keys(v).length>300)throw Error('表情过多');for(const[k,n]of Object.entries(v)){text(k,'表情名称',200);num(n,0,1,'表情权重');}return structuredClone(v);}
-function playback(v){keys(v,['loop','startFrame','endFrame','after','placement','feet'],'动作播放');for(const k of ['startFrame','endFrame'])if(v[k]!=null){num(v[k],1,1e8,k);if(!Number.isInteger(v[k]))throw Error('动作帧应为整数');}if(v.loop!==undefined)bool(v.loop,'loop');for(const[k,values]of Object.entries({after:['idle','hold'],placement:['inPlace','free','bounded'],feet:['auto','free','lock']}))if(v[k]!==undefined&&!values.includes(v[k]))throw Error('动作 '+k+' 无效');if(v.endFrame&&v.endFrame<(v.startFrame||1))throw Error('结束帧不能小于起始帧');return motionPlayback(v);}
-function selection(p,v){keys(v,['presetId','brightness','contrast','saturation'],'画面选择');if(v.presetId!==undefined)objectRef(p.renderPresets||[],v.presetId,'渲染预设');for(const key of ['brightness','contrast','saturation'])if(v[key]!==undefined)num(v[key],0,200,key);return renderSelection(v);}
-function settings(v){keys(v,['schemaVersion','preset','strength','brightness','contrast','saturation','filters'],'渲染设置');for(const key of ['brightness','contrast','saturation'])if(v[key]!==undefined)num(v[key],0,200,key);if(v.filters){keys(v.filters,customFilterSpecs.map(s=>s[0]),'滤镜');for(const[k,value]of Object.entries(v.filters)){const spec=customFilterSpecs.find(s=>s[0]===k);if(spec[2]==='color'){if(typeof value!=='string'||!/^#[a-f\d]{6}$/i.test(value))throw Error('颜色应为 #RRGGBB');}else num(value,spec[2],spec[3],k);}}return presetSettings(v);}
-function spatial(v){keys(v,['enabled','strength'],'空间镜头');if(v.enabled!==undefined)bool(v.enabled,'enabled');if(v.strength!==undefined)num(v.strength,0,1,'跟随强度');return normalizeSpatialCamera(v);}
-function itemRows(p,v){return array(v,200,'物品数量').map(row=>{keys(row,['itemId','quantity'],'物品条件');if(!row.itemId)throw Error('请指定物品');objectRef(p.items||[],row.itemId,'物品');if(!itemDefinitionReady(p.items.find(i=>i.id===row.itemId),p.assets))throw Error('物品需要名字、立绘和介绍后才可用于对白或条件');num(row.quantity,1,1e6,'物品数量');if(!Number.isInteger(row.quantity))throw Error('物品数量应为整数');return structuredClone(row);});}
-function actor(p,v,current={}){keys(v,projectAgentFields.titleActor,'场上人物');const result={...current,...structuredClone(v)};if(v.characterId!==undefined)objectRef(p.characters,v.characterId,'角色');if(v.modelId!==undefined)ref(p,v.modelId,modelTypes,'人物');if(v.motionId!==undefined)ref(p,v.motionId,['motion'],'动作');if(v.motionOptions!==undefined)result.motionOptions=playback(v.motionOptions);if(v.expressionWeights!==undefined)result.expressionWeights=weights(v.expressionWeights);for(const k of ['offsetX','offsetY','offsetZ'])if(v[k]!==undefined)num(v[k],-100,100,k);for(const k of ['yaw','pitch'])if(v[k]!==undefined)num(v[k],-36000,36000,k);if(v.size!==undefined)num(v.size,.0001,100,'人物缩放');if(result.props){const role=p.characters.find(r=>r.id===result.characterId);array(result.props,100,'绑定物品').forEach(id=>{if(!id)throw Error('物品 ID 为空');objectRef(role?.props||[],id,'绑定物品');});}if(result.motionId&&!motionsForCharacter(p,result.characterId).some(m=>m.id===result.motionId))throw Error('动作不在该角色或通用动作文件夹');return result;}
-function cast(p,v,current){keys(v,dialogueSlots,'30 人位置');const result=structuredClone(current||emptyDialogueCast());for(const[slot,value]of Object.entries(v)){keys(value,projectAgentFields.titleActor.filter(k=>k!=='modelId'),'对白人物');result[slot]=actor(p,value,result[slot]);}const seen=new Set();for(const row of Object.values(result))if(row.characterId){if(seen.has(row.characterId))throw Error('同一角色不能重复站在两个位置');seen.add(row.characterId);}return result;}
-function event(p,v){const fields=['type','title','body','imageId','videoId','backgroundId','bgmId','seId','voiceId','paperName','date','quote','buttonText','countryA','countryB','flagAId','flagBId','burst','declarations','burstInterval','combat'];keys(v,fields,'事件');if(v.type!==undefined&&!['news','war','major','cutscene','aircombat'].includes(v.type))throw Error('事件类型无效');for(const k of ['imageId','backgroundId','flagAId','flagBId'])if(v[k]!==undefined)ref(p,v[k],['image'],'事件图片');if(v.videoId!==undefined){ref(p,v.videoId,['video'],'过场视频');if(v.videoId&&!/\.mp4$/i.test(p.assets.find(a=>a.id===v.videoId).path||''))throw Error('过场只支持 MP4');}if(v.bgmId!==undefined)audio(p,v.bgmId,'music');for(const k of ['seId','voiceId'])if(v[k]!==undefined)audio(p,v[k],'effect');if(v.burst!==undefined)bool(v.burst,'burst');if(v.burstInterval!==undefined)num(v.burstInterval,.12,3,'连发间隔');if(v.declarations!==undefined)array(v.declarations,59,'宣战消息').forEach(row=>{keys(row,['countryA','countryB','flagAId','flagBId','body'],'宣战消息');for(const k of ['flagAId','flagBId'])if(row[k]!==undefined)ref(p,row[k],['image'],'国旗');for(const k of ['countryA','countryB','body'])if(row[k]!==undefined)text(row[k],k);});if(v.combat!==undefined)validateAgentCombat(p,v.combat);for(const k of fields.filter(k=>!k.endsWith('Id')&&!['burst','declarations','burstInterval','combat'].includes(k)))if(v[k]!==undefined)text(v[k],k);return normalizeEvent(v);}
-function validateAgentCombat(p,c){
- keys(c,['allyWings','seaMapId','ships','fleets','fireSounds','dialogues','schemaVersion','aircraft','enemyAircraft','allyAircraft','enemies','allies','altitude','duration','difficulty','mission','wind','winActId','loseActId','allowSkip','startOnGround'],'空战配置');
- for(const[key,lo,hi]of [['enemies',0,8],['allies',0,4],['altitude',150,1800],['duration',30,900],['difficulty',.4,1.5],['wind',-15,15]])if(c[key]!==undefined)num(c[key],lo,hi,key);
- if(c.fireSounds!==undefined){keys(c.fireSounds,Object.keys(partKit).filter(type=>['gun','turret'].includes(partFamily(type))),'机炮音效');for(const id of Object.values(c.fireSounds))audio(p,id,'effect');}
- for(const key of ['winActId','loseActId'])if(c[key]!==undefined)objectRef(p.acts,c[key],'剧情出口');
- if(c.startOnGround!==undefined)bool(c.startOnGround,'startOnGround');if(c.allowSkip!==undefined)bool(c.allowSkip,'allowSkip');if(c.mission!==undefined&&!['eliminate','survive','sinkShips','protectShips'].includes(c.mission))throw Error('空战任务无效');
- for(const key of ['aircraft','enemyAircraft','allyAircraft'])if(c[key]!==undefined){const a=c[key];if(a.fireSounds!==undefined){keys(a.fireSounds,Object.keys(partKit).filter(type=>['gun','turret'].includes(partFamily(type))),'载具机炮音效');for(const id of Object.values(a.fireSounds))audio(p,id,'effect');}if(a.schemaVersion===2){keys(a,['pilotBlockVersion','schemaVersion','vehicleType','name','gridSize','blocks','parts','vehicleId','fireSounds'],'方块载具');if(a.vehicleType!=='aircraft'||![.125,.25,.5].includes(a.gridSize))throw Error('载具类型或网格无效');text(a.name,'载具名称',80);array(a.blocks,64000,'机体方块').forEach(b=>{keys(b,['cell','kind','color','shape','shapeRotation'],'方块');if(!blockKit[b.kind]||b.shape&&!shapeKit[b.shape])throw Error('方块或形状无效');if(!Array.isArray(b.cell)||b.cell.length!==3||b.cell.some((n,i)=>!Number.isInteger(n)||n<(i===0?0:-256)||n>256))throw Error('方块必须位于右半边网格');if(!/^#[\da-f]{6}$/i.test(b.color))throw Error('方块颜色无效');if(b.shapeRotation&&(!Array.isArray(b.shapeRotation)||b.shapeRotation.length!==3||b.shapeRotation.some(n=>!Number.isFinite(n)||n%90)))throw Error('形状角度必须为90度倍数');});array(a.parts,64,'功能附件').forEach(p=>{keys(p,['id','type','parentId','socketId','color','scale','powerHp','offset','rotation','mirrorOf','gearFoldDirection','firepower','firepowerId','minYaw','maxYaw','minPitch','maxPitch','yawRate','pitchRate','traverseAcceleration','ammoType','fuze','burstTime','proximityRadius'],'功能附件');if(!partKit[p.type])throw Error('附件类型无效');text(p.id,'附件ID',100);if(!/^#[\da-f]{6}$/i.test(p.color))throw Error('附件颜色无效');num(p.scale,.25,2,'倍率');if(partFamily(p.type)==='engine')num(p.powerHp,50,3000,'马力');for(const f of ['offset','rotation']){if(!Array.isArray(p[f])||p[f].length!==3)throw Error('附件向量无效');p[f].forEach(n=>num(n,f==='offset'?-32:-180,f==='offset'?32:180,f));}if(p.gearFoldDirection&&!['forward','backward','inward','outward'].includes(p.gearFoldDirection))throw Error('折叠方向无效');});if(new Set(a.parts.map(p=>p.id)).size!==a.parts.length)throw Error('附件ID重复');const errors=validateAircraft(a);if(errors.length)throw Error(errors.join('；'));continue;}keys(a,['name','parts','vehicleId','fireSounds'],'飞机');text(a.name,'飞机名称',80);array(a.parts,48,'飞机组件').forEach(part=>{keys(part,['id','type','parentId','socketId','color','scale','powerHp','offset','rotation','firepower','firepowerId','minYaw','maxYaw','minPitch','maxPitch','yawRate','pitchRate','traverseAcceleration','ammoType','fuze','burstTime','proximityRadius'],'飞机组件');if(!partKit[part.type])throw Error('飞机组件类型无效');text(part.id,'组件 ID',100);if(!/^#[\da-f]{6}$/i.test(part.color))throw Error('飞机颜色应为 #RRGGBB');num(part.scale,.6,1.5,'尺寸');if(partFamily(part.type)==='engine')num(part.powerHp,50,3000,'马力');for(const field of ['offset','rotation']){if(!Array.isArray(part[field])||part[field].length!==3)throw Error('组件向量需要三个数');part[field].forEach(value=>num(value,field==='offset'?-.3:-15,field==='offset'?.3:15,field));}});if(new Set(a.parts.map(x=>x.id)).size!==a.parts.length)throw Error('飞机组件 ID 重复');const errors=validateAircraft(a);if(errors.length)throw Error(errors.join('；'));}
- if(c.fleets!==undefined){keys(c.fleets,['ally','enemy'],'舰队');for(const f of Object.values(c.fleets)){keys(f,['formation','spacing','x','z','heading','speed'],'舰队设置');if(f.formation!==undefined&&!fleetFormations[f.formation])throw Error('未知舰队阵型');for(const[k,lo,hi]of [['spacing',300,2000],['x',-30000,30000],['z',-30000,30000],['heading',-180,180],['speed',0,25]])if(f[k]!==undefined)num(f[k],lo,hi,k);}}
- if(c.ships!==undefined)array(c.ships,12,'舰船编组').forEach(r=>{keys(r,['id','team','count','x','z','heading','blueprint'],'舰船编组');if(!['ally','enemy'].includes(r.team))throw Error('舰船必须属于友军或敌军');num(r.count,1,16,'舰船数量');const v=r.blueprint;keys(v,['schemaVersion','pilotBlockVersion','vehicleType','shipClass','gridSize','name','blocks','parts','fireSounds','vehicleId','cruiseSpeed'],'战舰');if(v.vehicleType!=='warship')throw Error('需要战舰蓝图');array(v.blocks,64000,'战舰方块');array(v.parts,96,'战舰附件');for(const p of v.parts)if(!navalParts[p.type])throw Error('未知舰船附件');for(const id of Object.values(v.fireSounds||{}))audio(p,id,'effect');const normalized=normalizeWarship(v),errors=validateWarship(normalized);if(errors.length)throw Error(errors.join('；'));});
- if(c.dialogues!==undefined)array(c.dialogues,200,'开战前对话').forEach(row=>{keys(row,['id','characterId','speaker','text','voiceId','offstage'],'空战对话');objectRef(p.characters,row.characterId,'角色');text(row.text,'对话',100000);if(row.voiceId){ref(p,row.voiceId,['voice'],'配音');if(p.assets.find(a=>a.id===row.voiceId).characterId!==row.characterId)throw Error('配音不属于当前角色');}if(row.offstage){keys(row.offstage,['motionId','motionOptions','expressionWeights'],'场外动作');ref(p,row.offstage.motionId,['motion'],'动作');if(row.offstage.motionId&&!motionsForCharacter(p,row.characterId).some(a=>a.id===row.offstage.motionId))throw Error('动作不属于当前角色');if(row.offstage.motionOptions)playback(row.offstage.motionOptions);if(row.offstage.expressionWeights)weights(row.offstage.expressionWeights);}});
- return normalizeCombat(c);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function patch(p,kind,target,data){keys(data,projectAgentFields[kind]||[],'对象设置');if(kind==='environment'){const result=editAgentEnvironment(target,[{op:'settings',...data}],p.assets);Object.assign(target,result.environment);return;}const d=structuredClone(data);
  for(const[k,v]of Object.entries(d)){
   if(['name','title','subtitle','description','text','speaker','authorNote'].includes(k))text(v,k,k==='name'?200:100000);
@@ -100,7 +89,7 @@ export function getProjectObjects(p,kind,{ownerId,offset=0,limit=100}={}){const 
 function defaults(p,kind,id,data){if(kind==='environment')return{...createEnvironment(),id};if(kind==='act')return data.kind==='event'?newEvent(id,crypto.randomUUID()):{id,name:'新幕',backgroundId:'',bgmId:'',steps:[],weather:normalizeWeather()};if(kind==='dialogue')return{id,text:'',speaker:'',characterId:'',voiceId:'',choices:[],cast:emptyDialogueCast(),render:renderSelection(p.render)};if(kind==='character')return{id,name:'新角色',title:'',description:'',modelId:'',portraitId:'',props:[],stories:[],autoMouth:true};if(kind==='titleActor')return newTitleActor(id);if(kind==='choice')return{id,text:'新选项',actId:'',requirements:[],consumeRequired:false};if(kind==='prop')return{id,name:'绑定物品',assetId:'',bone:'rightHand',position:[0,0,0],rotation:[0,0,0],scale:[1,1,1]};if(kind==='renderPreset')return{id,name:'新预设',settings:presetSettings()};if(kind==='item')return{id,name:'新物品',imageId:'',description:''};if(kind==='book')return{id,name:'新书本',pdfId:'',coverId:'',description:'',unlockActId:''};if(kind==='folder')return{id,name:'新文件夹',type:'image'};throw Error('素材请从文件导入');}
 function refsTo(v,id,path='',result=[]){if(!v||typeof v!=='object')return result;for(const[k,x]of Object.entries(v)){if(k.endsWith('Id')&&x===id||k==='props'&&Array.isArray(x)&&x.includes(id))result.push(path+'.'+k);if(typeof x==='object')refsTo(x,id,path+'.'+k,result);}return result;}
 function remove(p,kind,target,rows){if(kind==='environment'){for(const a of p.acts)if(a.environmentId===target.id){a.environmentId='';for(const l of a.steps||[])l.sceneAnimations=[];}if(p.title.environmentId===target.id)p.title.environmentId='';}if(kind==='folder'){if(target.locked)throw Error('固定文件夹不可删除');for(const a of p.assets)if(a.folderId===target.id)a.folderId='';}if(kind==='renderPreset'){deleteRenderPreset(p,target.id);return;}if(kind==='asset'){const refs=refsTo({characters:p.characters,acts:p.acts,title:p.title,ui:p.ui,items:p.items,books:p.knowledgeBooks,environments:p.environments},target.id);if(refs.length)throw Error('素材仍被使用：'+refs.slice(0,8).join('、'));}if(kind==='act'){for(const a of p.acts){const c=a.event?.combat;if(c){if(c.winActId===target.id)c.winActId='';if(c.loseActId===target.id)c.loseActId='';}}if(p.acts.length<=1)throw Error('至少保留一幕');for(const a of p.acts)for(const l of a.steps||[])for(const c of l.choices||[])if(c.actId===target.id)c.actId='';for(const b of p.knowledgeBooks||[])if(b.unlockActId===target.id)b.unlockActId='';}if(kind==='character'){for(const a of p.acts)for(const l of a.steps||[]){if(l.characterId===target.id){l.characterId='';l.voiceId='';}for(const row of Object.values(l.cast||{}))if(row.characterId===target.id)Object.assign(row,{characterId:'',motionId:'',props:[],expressionWeights:{}});}for(const a of p.title.actors||[])if(a.characterId===target.id){a.characterId='';a.props=[];}}if(kind==='item')for(const a of p.acts)for(const l of a.steps||[]){l.itemGrants=(l.itemGrants||[]).filter(r=>r.itemId!==target.id);for(const c of l.choices||[])c.requirements=(c.requirements||[]).filter(r=>r.itemId!==target.id);}if(kind==='prop'){for(const a of p.acts)for(const l of a.steps||[])for(const c of Object.values(l.cast||{}))c.props=(c.props||[]).filter(id=>id!==target.id);for(const a of p.title.actors||[])a.props=(a.props||[]).filter(id=>id!==target.id);}rows.splice(rows.indexOf(target),1);}
-export function projectTextFields(p){const out=[],add=(o,k,label)=>{if(typeof o?.[k]==='string')out.push({object:o,key:k,label});};for(const a of p.acts){add(a,'name','幕名称');if(a.kind==='event'){for(const k of ['title','body','paperName','date','quote','buttonText','countryA','countryB'])add(a.event,k,'事件 '+a.name);for(const row of a.event?.declarations||[])for(const k of ['countryA','countryB','body'])add(row,k,'连发事件');}for(const l of a.steps||[]){add(l,'speaker','显示名字');add(l,'text','对白');for(const c of l.choices||[])add(c,'text','分支选项');}}for(const r of p.characters){for(const k of ['name','title','description'])add(r,k,'角色 '+r.name);for(const s of r.stories||[])for(const k of ['title','text'])add(s,k,'角色故事');}for(const i of [...p.items||[],...p.knowledgeBooks||[]])for(const k of ['name','description'])add(i,k,'物品或书本');add(p.title,'authorNote','制作说明');return out;}
+
 export function editAgentProject(current,operations,uid=()=>crypto.randomUUID().replaceAll('-','')){array(operations,200,'编辑操作');if(!operations.length)throw Error('编辑操作不能为空');const p=structuredClone(current),aliases=Object.create(null),results=[];const resolve=v=>typeof v==='string'&&v.startsWith('$')?(aliases[v.slice(1)]||(()=>{throw Error('ref 尚未创建：'+v);})()):v;const dataRefs=(v,key='')=>Array.isArray(v)?v.map(x=>typeof x==='string'&&key==='props'?resolve(x):dataRefs(x,key)):plain(v)?Object.fromEntries(Object.entries(v).map(([k,x])=>[k,k.endsWith('Id')?resolve(x):dataRefs(x,k)])):v;
  for(const[index,op]of operations.entries())try{keys(op,['action','kind','id','ownerId','afterId','index','ref','data','slot','query','replacement'],'操作');const kind=op.kind,id=resolve(op.id),ownerId=resolve(op.ownerId),data=dataRefs(op.data||{});let result={index,action:op.action,kind};
   if(op.action==='replace_text'){text(op.query,'查找',1000);if(!op.query)throw Error('查找不能为空');text(op.replacement,'替换',10000);let count=0;for(const f of projectTextFields(p)){count+=f.object[f.key].split(op.query).length-1;f.object[f.key]=f.object[f.key].split(op.query).join(op.replacement);}result.replaced=count;}

@@ -1,23 +1,19 @@
 # 公民文艺生产综合自动化系统
 
-当前 Windows 版本为 0.0.88，前端包版本为 0.7.88。本目录为唯一继续开发的源码。
+当前 Windows 版本为 **0.0.89**，前端版本为 0.7.89。下载便携发行包请前往 [GitHub Releases](https://github.com/2396846264/-vrm-galgame-editor/releases/latest)。
 
-运行、构建、测试、工程和许可资料的当前路径见迁移包上层的 `继续开发说明.md` 或 `C:/vrm galgame引擎/开发与测试入口.md`。
+本版包含航母编队出生、补给后再次起飞及源码结构整理。功能、使用和已知问题见 [发行说明](RELEASE_NOTES.md)、[0.0.89 说明](docs/release-0.0.89.md) 和 [航母操作](docs/carrier-0.0.89.md)。
 
-`src` 为前端与运行时，`Desktop` 为 Windows 宿主，`AgentHost` 为 MCP/Agent 接口，`scripts` 保留回归与资源工具，`tools/ProtectedBuild` 保留签名工具。`legal`、`licenses` 与 `public/fonts` 是发行必要的许可与原始字体资源。
+## 开发与 Agent 规范
 
-前端使用 package-lock.json 锁定依赖；运行依赖版本还需通过 vite.config.js 的许可证审查白名单。完整构建使用上层“重新构建.ps1”，它会复制完整声明、签名并验证发行文件。
+修改前必须阅读 [AGENTS.md](AGENTS.md)、[代码开发规范](代码开发规范.md) 和 [开发维护说明](docs/DEVELOPMENT.md)。结构整理记录见 [重构说明](docs/refactoring-2026-10-22.md)。
 
-不要分发预置动作库、旧皮肤或用户工程。保留工程加密兼容逻辑与私人构建资料。测试入口为 scripts/test-*.mjs，浏览器和原生集成测试可使用 Desktop 中保留的 smoke 实现。
+`src` 是前端与运行时，`Desktop` 是 Windows 宿主，`AgentHost` 是 MCP/Agent 接口；`scripts` 保留构建和回归工具。`legal`、`licenses` 和 `public/fonts` 是发行必要资源。
 
-## 0.0.86 水体
+## 公开源码构建
 
-海空战默认接入 OceanThreejs 海洋，升级舰船与鱼雷泡沫尾迹，并让船体、鱼雷和重炮入水读取波浪。场景编辑器新增海洋、池塘、井水、喷泉预设，保留旧水面；设置随工程和游戏导出。详见 [水体使用与边界](docs/water-0.0.86.md)。
+准备 Node.js 22+、.NET SDK 10 和 Python 3。安装依赖后运行 `npm run check`、`npm run format:check`；`scripts/build-windows.ps1` 可生成独立开发身份并构建开发便携包。
 
-## 0.0.88 海战样板、地图与编队
+开发身份与正式发行身份分开。开发包不能保证打开正式版加密工程；使用正式兼容程序请下载 Releases，保留自己的开发身份以便重开自己的开发工程。不要把私人构建资料、密钥或生成的 ProtectedBuildConstants.cs 提交到仓库。
 
-新增历史舰艇样板、飘动旗帜、五种海域、照片编队和带炮声的炮塔分享文件。详见 [使用说明](docs/sea-0.0.88.md)、[开发心得](docs/development-notes-0.0.88.md) 与 [原始手稿](docs/design-sketches/README.md)。
-
-## 0.0.87 火力编辑器
-
-新增独立火力窗口，可搭建炮塔、配置炮管与高低机、射界和弹夹，并保存为工程内组件安装到飞机或战舰。详见 [火力编辑器](docs/firepower-0.0.87.md)。
+原作者为“尸工U5十三世”。保留作者入口、署名和来源，第三方组件继续遵守各自许可；详见 [署名与二次开发约定](docs/AUTHOR_ATTRIBUTION.md)。

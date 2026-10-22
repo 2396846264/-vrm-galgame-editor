@@ -1,0 +1,5 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>UI 样式验证</title><div class="editor"></div><script type="module">
+import './src/style.css';import './src/skin.css';import './src/layout.css';import './src/vn-theme.css';import './src/ios7-theme.css';import './src/menu-motion.css';import './src/game-glass.css';import './src/game-ui.css';import './src/game-ui-alignment.css';import './src/game-ui-styles.css';import './src/game-ui-loading.css';import './src/game-ui-palette.css';import './src/game-ui-palette-editor.css';
+import {gameUiPicker} from './src/game-ui.js';import {bindPaletteEditor} from './src/game-ui-palette-editor.js';import {bindUiPreview} from './src/game-ui-preview.js';
+document.querySelector('.editor').innerHTML=gameUiPicker('tactical');const root=document.querySelector('#game-ui-picker');bindPaletteEditor(root,{});bindUiPreview(root);
+</script></html>

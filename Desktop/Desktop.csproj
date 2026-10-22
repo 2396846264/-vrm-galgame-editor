@@ -5,7 +5,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>0.0.88</Version>
+    <Version>0.0.89</Version>
     <AssemblyName>VRMGalgame</AssemblyName>
     <ApplicationTitle>公民文艺生产综合自动化系统</ApplicationTitle>
     <AssemblyTitle>公民文艺生产综合自动化系统</AssemblyTitle>

@@ -17,7 +17,7 @@ function componentManifest(){return {name:'approved-commercial-components',gener
   }
   this.emitFile({type:'asset',fileName:'third-party-components.json',source:JSON.stringify({version:'0.0.70',components:[...used.values()].sort((a,b)=>a.name.localeCompare(b.name)),embedded:[{name:'fflate',version:'0.8.2',license:'MIT',via:'three/examples/jsm/libs/fflate.module.js'}]},null,2)});
 }};}
-export default defineConfig({base:'./',publicDir:false,server:{watch:{ignored:['**/Desktop/**','**/AgentHost/**','**/tools/**','**/publish/**']}},plugins:[editorLanguagePlugin(),componentManifest()],
+export default defineConfig({base:'./',publicDir:false,server:{watch:{ignored:['**/Desktop/**','**/AgentHost/**','**/tools/**','**/publish/**','**/bin/**','**/obj/**','**/work/**']}},plugins:[editorLanguagePlugin(),componentManifest()],
   resolve:{alias:[{find:'@noname0310/mmd-parser',replacement:fileURLToPath(new URL('./src/mmd-parser-compat.js',import.meta.url))},
     {find:/^ammojs-typed$/,replacement:fileURLToPath(new URL('./src/ammo-wasm-compat.js',import.meta.url))}]},
   build:{rollupOptions:{input:{index:'index.html',player:'player.html',environment:'environment.html',aircraft:'aircraft.html',firepower:'firepower.html'}}}});

@@ -1,6 +1,8 @@
 // Source-authored UI only. Interpolated project values are never looked up.
 import {parseAst} from 'rollup/parseAst';
 import {readFileSync} from 'node:fs';
+import {dirname,relative} from 'node:path';
+import {fileURLToPath} from 'node:url';
 const chinese=/[\u3400-\u9fff]/;
 const htmlStart=/^\s*<\/?[a-z][\s\S]*>/i;
 export function editorLanguagePlugin(){return {name:'editor-language',enforce:'pre',generateBundle(){this.emitFile({type:'asset',fileName:'editor-languages.json',source:readFileSync(new URL('../src/editor-languages.json',import.meta.url),'utf8')});},transform(source,id){
@@ -29,7 +31,9 @@ export function editorLanguagePlugin(){return {name:'editor-language',enforce:'p
  }
  walk(parseAst(source));if(!used)return;
  for(const [at,text,end]of edits.sort((a,b)=>b[0]-a[0]))source=source.slice(0,at)+text+source.slice(end??at);
- return {code:`import {editorHtml as __editorHtml,editorText as __editorText,editorMessage as __editorMessage,editorLabel as __editorLabel,setEditorText as __setEditorText} from './editor-language.js';\n`+source,map:null};
+ let languageModule=relative(dirname(id),fileURLToPath(new URL('../src/editor-language.js',import.meta.url))).replaceAll('\\','/');
+ if(!languageModule.startsWith('.'))languageModule='./'+languageModule;
+ return {code:`import {editorHtml as __editorHtml,editorText as __editorText,editorMessage as __editorMessage,editorLabel as __editorLabel,setEditorText as __setEditorText} from '${languageModule}';\n`+source,map:null};
 }};}
 function uiContext(parents){
  for(let i=parents.length-1;i>=0;i--){const n=parents[i];

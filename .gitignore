@@ -1,4 +1,6 @@
 node_modules/
+**/bin/
+**/obj/
 dist/
 publish/
 smoke-*/

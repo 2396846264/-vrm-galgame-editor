@@ -1,3 +1,4 @@
+import {createWebViewClient} from './platform/webview-client.js';
 import {airEditor,airInput,airAction,selectAirPart} from './aircombat-editor.js';
 import {normalizeCombat,partKit,sockets,createPart,validateAircraft,partFamily} from './aircombat-schema.js';
 import {createAirCombat} from './aircombat-runtime.js';
@@ -6,11 +7,11 @@ import {mergeEditorProject} from './editor-project-merge.js';
 import './aircombat.css';
 import './aircraft-editor-page.css';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let project,baseline,revision=0,actId='',role='aircraft',dirty=false,saving=false,sequence=0,queued=null;
-const pending=new Map(),roleNames={aircraft:'玩家飞机',allyAircraft:'友军飞机',enemyAircraft:'敌军飞机'};
+let project,baseline,revision=0,actId='',role='aircraft',dirty=false,saving=false,queued=null;
+const roleNames={aircraft:'玩家飞机',allyAircraft:'友军飞机',enemyAircraft:'敌军飞机'};
 const history=createEditorHistory({project:()=>project,selection:()=>({actId,role}),changed:()=>status()});
-function bridge(action,payload={}){return new Promise((resolve,reject)=>{if(!window.chrome?.webview)return reject(Error('请从编辑器打开飞机组装窗口'));const id=String(++sequence);pending.set(id,{resolve,reject});window.chrome.webview.postMessage({id,action,payload});});}
-window.chrome?.webview?.addEventListener('message',e=>{const m=e.data;if(m.editorModuleRefresh){refresh(m.editorModuleRefresh);return;}if(m.aircraftSelection){selectView(m.aircraftSelection);return;}if(typeof m.modulePreviewActive==='boolean'){window.__moduleActive=m.modulePreviewActive;return;}const task=pending.get(m.id);if(task){pending.delete(m.id);m.ok?task.resolve(m.data):task.reject(Error(m.error));}});
+const {request:bridge}=createWebViewClient({missingMessage:"请从编辑器打开飞机组装窗口",receive(m){if(m.editorModuleRefresh){refresh(m.editorModuleRefresh);return true;}if(m.aircraftSelection){selectView(m.aircraftSelection);return true;}if(typeof m.modulePreviewActive==='boolean'){window.__moduleActive=m.modulePreviewActive;return true;}return false;}});
+
 const node=()=>project?.acts.find(a=>a.id===actId&&a.event?.type==='aircombat');
 const ctx={escape:esc,project:()=>project,aircraftEditing:()=>true,aircraftRole:()=>role,paused:()=>saving||Boolean(window.editorClosePending),player:()=>false,volume:()=>.6,finish:()=>{},audio:()=>{},cleanAudio:()=>{}};
 const air=createAirCombat(ctx);

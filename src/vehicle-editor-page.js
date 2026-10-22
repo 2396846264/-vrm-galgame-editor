@@ -1,3 +1,4 @@
+import {createWebViewClient} from './platform/webview-client.js';
 import {vehiclePortrait,validPortrait} from './vehicle-portrait.js';
 import {historicalShips,historicalWarship} from './historical-warships.js';
 import {configureShipFlags,animateShipFlags} from './ship-flag.js';
@@ -32,12 +33,12 @@ import './aircombat.css';
 import './vehicle-editor-page.css';
 const isShip=new URLSearchParams(location.search).get('module')==='warship',unitName=isShip?'战舰':'飞机',editorName=isShip?'战舰编辑器':'飞机编辑器',gridSize=isShip?2:.125,blocksForEditor=isShip?navalBlocks:Object.fromEntries(Object.entries(blockKit).filter(([k])=>!k.startsWith('ship_'))),normalizeVehicle=isShip?normalizeWarship:normalizeAircraft,validateVehicle=isShip?validateWarship:validateAircraft;let activeFirepowerId='';let catalogCategory='all',coreView=false;
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let project,baseline,currentId='',dirty=false,saving=false,queued=null,seq=0,selected=null,tool=isShip?'ship_hull':'hull',blockShape='cube',blockRotation=[0,0,0],paint='#71836a',mirror=false,model=null,spec=null,battle=false;
-let clearanceHelper=null;let gearDemo=false,gearDemoDeployment=1;const tasks=new Map(),keys=new Set(),recentKey=()=>`vehicle-recent:${project.id}`;
+let project,baseline,currentId='',dirty=false,saving=false,queued=null,selected=null,tool=isShip?'ship_hull':'hull',blockShape='cube',blockRotation=[0,0,0],paint='#71836a',mirror=false,model=null,spec=null,battle=false;
+let clearanceHelper=null;let gearDemo=false,gearDemoDeployment=1;const keys=new Set(),recentKey=()=>`vehicle-recent:${project.id}`;
 const history=createEditorHistory({project:()=>project,selection:()=>({currentId,selected}),changed:()=>status()});
 const air=createAirCombat({escape:esc,project:()=>project,paused:()=>saving||Boolean(window.editorClosePending),player:()=>false,volume:()=>.6,asset:id=>project.assets.find(a=>a.id===id),assetUrl:a=>`https://project.galgame/${a.path.split('/').map(encodeURIComponent).join('/')}`,returnToEditor:()=>{air.cancel();battle=false;$('#viewport').classList.remove('battle');},finish:()=>{},audio:()=>{},cleanAudio:()=>{}});
-function bridge(action,payload={}){return new Promise((resolve,reject)=>{if(!window.chrome?.webview)return reject(Error('请从主界面打开载具编辑器'));const id=String(++seq);tasks.set(id,{resolve,reject});window.chrome.webview.postMessage({id,action,payload});});}
-window.chrome?.webview?.addEventListener('message',e=>{const m=e.data;if(m.editorModuleRefresh){refresh(m.editorModuleRefresh);return;}if(m.aircraftSelection){selectView(m.aircraftSelection).catch(error=>notice(error.message));return;}if(typeof m.modulePreviewActive==='boolean'){window.__moduleActive=m.modulePreviewActive;return;}const t=tasks.get(m.id);if(t){tasks.delete(m.id);m.ok?t.resolve(m.data):t.reject(Error(m.error));}});
+const {request:bridge}=createWebViewClient({missingMessage:"请从主界面打开载具编辑器",receive(m){if(m.editorModuleRefresh){refresh(m.editorModuleRefresh);return true;}if(m.aircraftSelection){selectView(m.aircraftSelection).catch(error=>notice(error.message));return true;}if(typeof m.modulePreviewActive==='boolean'){window.__moduleActive=m.modulePreviewActive;return true;}return false;}});
+
 const doc=()=>project?.vehicles.find(v=>v.id===currentId),vehicle=()=>doc()?.blueprint;
 function notice(text,error=false){setEditorText($('#notice'),text);$('#notice').className=error?'error':'';}
 function status(){if(!project||!$('#saved'))return;$('#saved').textContent=saving?'正在保存…':dirty?'● 未保存':'✓ 已保存';document.title=`${doc()?.name||unitName} · ${editorName}`;$('#undo').disabled=saving||!history.status().canUndo;$('#redo').disabled=saving||!history.status().canRedo;}

@@ -1,3 +1,4 @@
+import {carrier89Smoke} from './carrier89-smoke.js';
 import {sea88Smoke} from './sea88-smoke.js';
 import {firepower87Smoke} from './firepower87-smoke.js';
 import {EnvironmentRuntime} from './environment-runtime.js';
@@ -21,6 +22,7 @@ let review;
 export async function naval80Smoke(phase,c){
  const assert=(v,m)=>{if(!v)throw Error(m);},host=document.querySelector('.stage-frame');
  c.stage().renderSuspended=true;
+ if(['carrier89','composition89','export89'].includes(phase))return carrier89Smoke(review,c,assert,phase);
  if(['sea88','map88','export88','composition88'].includes(phase))return sea88Smoke(review,c,assert,phase);
  if(phase==='custom-fire87')return firepower87Smoke(review,c,assert);
  if(phase==='export-fire87'){const p=c.project();assert(p.firepowers?.some(d=>d.blueprint.housing==='dome'&&d.blueprint.capacity===4),'Export lost firepower library');for(const kind of ['warship','aircraft'])assert(p.vehicles.some(v=>v.vehicleType===kind&&v.blueprint.parts.some(p=>p.firepower&&p.firepowerId)),'Export lost mounted '+kind);return{ok:true,library:true,aircraftSnapshot:true,shipSnapshot:true};}

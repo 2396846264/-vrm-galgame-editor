@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>独立 UI 编辑器验证</title><div id="app"></div><script type="module">
+const seed={version:1,id:'ui57-review',name:'UI 排版验证',ui:{},title:{actors:[],logoImageId:'__none__'},renderPresets:[],renderPresetSchema:1,render:{},assets:[],characters:[],acts:[],items:[],knowledgeBooks:[],environments:[],assetFolders:[]};
+const bus=new EventTarget();let current=JSON.parse(localStorage.getItem('ui57-review-project')||'null')||seed;window.chrome||={};window.chrome.webview={addEventListener:(...args)=>bus.addEventListener(...args),postMessage:async m=>{try{let data={};if(m.action==='init')data={mode:'editor',editorModule:'ui',project:structuredClone(current),directory:'UI 排版验证（本地测试）'};else if(m.action==='organizeDialogueVoices')data={assets:[],warnings:[]};else if(m.action==='saveModule'){current=structuredClone(m.payload.project);localStorage.setItem('ui57-review-project',JSON.stringify(current));data={project:current,revision:1};}queueMicrotask(()=>bus.dispatchEvent(new MessageEvent('message',{data:{id:m.id,ok:true,data}})));}catch(e){bus.dispatchEvent(new MessageEvent('message',{data:{id:m.id,ok:false,error:e.message}}));}}};try{await import('./src/main.js');}catch(error){document.body.innerHTML='<pre id=ui57-check-results>'+JSON.stringify({ok:false,error:error.message,stack:error.stack})+'</pre>';throw error;}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));for(let i=0;i<200&&!document.querySelector('#game-ui-picker');i++)await wait(20);
+try{
+ const root=document.querySelector('#game-ui-picker');if(!root)throw Error(document.body.innerText);
+ const results=[];const set=(q,v)=>{const e=root.querySelector(q);if(e.type==='radio')e.checked=true;else e.value=v;e.dispatchEvent(new Event('change',{bubbles:true}));};
+ const params=new URLSearchParams(location.search);
+ if(params.has('check')){
+ for(const theme of ['tactical','ark','heian','noir']){
+ set('[name=game-ui-preset][value='+theme+']','');
+ for(const layout of ['auto','left','right','top','bottom']){
+ set('[name=ui-layout]',layout);set('[name=ui-preview-page]','title');await wait(20);
+ const view=root.querySelector('.ui-live-preview .player'),frame=view.getBoundingClientRect(),buttons=[...view.querySelectorAll('.title-bottom-menu button')];
+ const outside=buttons.filter(b=>{const r=b.getBoundingClientRect();return r.left<frame.left-1||r.right>frame.right+1||r.top<frame.top-1||r.bottom>frame.bottom+1}).map(b=>b.textContent);
+ const library=view.querySelector('.knowledge-title-button'),lr=library.getBoundingClientRect(),logo=view.querySelector('.title-logo-region').getBoundingClientRect();
+ const overlaps=(a,b)=>Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1;
+ const libraryOk=lr.width>0&&lr.left>=frame.left-1&&lr.right<=frame.right+1&&lr.top>=frame.top-1&&lr.bottom<=frame.bottom+1&&!buttons.some(b=>overlaps(lr,b.getBoundingClientRect()))&&!overlaps(lr,logo);
+ results.push({theme,layout,buttons:buttons.length,outside,libraryOk});
+ }
+ }
+ set('[name=game-ui-preset][value=heian]','');set('[name=ui-layout]','auto');set('[name=loading-style][value=petals]','');set('[name=loading-speed]','1.5');
+ document.querySelector('[data-action=apply-game-ui]').click();await wait(200);
+ const saved=JSON.parse(localStorage.getItem('ui57-review-project'));if(saved.ui.gameTheme!=='heian'||saved.ui.loading.style!=='petals'||saved.ui.loading.speed!==1.5)throw Error('保存设置丢失');
+ const report={ok:results.every(x=>x.buttons===8&&!x.outside.length&&x.libraryOk),checks:results,saved:saved.ui,noWebglCanvas:!document.querySelector('canvas')};
+ const e=document.createElement('pre');e.id='ui57-check-results';e.textContent=JSON.stringify(report);document.body.append(e);
+ }else{
+ set('[name=game-ui-preset][value='+(params.get('theme')||'tactical')+']','');set('[name=ui-preview-page]',params.get('page')||'title');set('[name=ui-layout]',params.get('layout')||'auto');
+ }
+}catch(error){const e=document.createElement('pre');e.id='ui57-check-results';e.textContent=JSON.stringify({ok:false,error:error.message,stack:error.stack});document.body.append(e);}
+
+</script></html>

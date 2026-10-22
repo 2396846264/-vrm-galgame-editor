@@ -1,3 +1,10 @@
+import {captureCharacterPortrait} from './rendering/portrait-capture.js';
+export {captureCharacterPortrait} from './rendering/portrait-capture.js';
+import {motionFrameInfo,boundedMotionOffset,motionSegment} from './rendering/motion-clips.js';
+export {motionFrameInfo,boundedMotionOffset} from './rendering/motion-clips.js';
+import {retargetMixamoMotion} from './rendering/mixamo-motion.js';
+import {assetUrl} from './platform/asset-url.js';
+export {assetUrl} from './platform/asset-url.js';
 import {BindingView} from './binding-view.js';
 import {installMotionFit,motionFitProfile,secondaryCollisionProfile} from './motion-fit.js';
 import {motionPlayback,motionFeetLocked,loopMotionClip,rootTravel,updateMotionRoot,motionFinishTarget} from './character-motion.js';
@@ -11,7 +18,7 @@ import {CharacterSceneLighting,environmentAmbient} from './character-scene-light
 import {LivePortrait} from './live-portrait.js';
 import {capturePortraitBodyFrame} from './portrait-body-frame.js';
 import {loadMmdActor,loadVmdMotion,createVmdMotion} from './mmd-loader.js';
-import {setShoulderPortraitCamera} from './portrait-camera.js';
+
 import {createFbxActor, retargetFbxClip} from './fbx-character.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import {CompatibleFBXLoader as FBXLoader} from './fbx-loader.js';
@@ -31,13 +38,7 @@ import { createAutoGaze } from './auto-gaze.js';
 import { createNaturalActivity } from './natural-activity.js';
 import {installVrmSecondaryMotion,installFbxSecondaryMotion} from './secondary-motion.js';
 
-const boneNames = {
-  Hips:'hips',Spine:'spine',Spine1:'chest',Spine2:'upperChest',Neck:'neck',Head:'head',
-  LeftShoulder:'leftShoulder',LeftArm:'leftUpperArm',LeftForeArm:'leftLowerArm',LeftHand:'leftHand',
-  RightShoulder:'rightShoulder',RightArm:'rightUpperArm',RightForeArm:'rightLowerArm',RightHand:'rightHand',
-  LeftUpLeg:'leftUpperLeg',LeftLeg:'leftLowerLeg',LeftFoot:'leftFoot',LeftToeBase:'leftToes',
-  RightUpLeg:'rightUpperLeg',RightLeg:'rightLowerLeg',RightFoot:'rightFoot',RightToeBase:'rightToes'
-};
+
 const isIdleMotion = asset => !asset || /idle|待机|静立|原地站立|呼吸/i.test(`${asset.id || ''} ${asset.name || ''} ${asset.path || ''}`);
 const isPlantedMotion = asset => {
   if (isIdleMotion(asset)) return true;
@@ -45,158 +46,18 @@ const isPlantedMotion = asset => {
   return !/坐姿|坐着|坐下|起身|躺|爬行|翻滚/i.test(name) &&
     /说话|说笑|闲聊|交谈|低头发消息|\btalk(?:ing)?\b|\bchat(?:ting)?\b|\bconversation\b/i.test(name);
 };
-export function motionFrameInfo(clip) {
-  if (!clip) return { fps: 30, frames: 0 };
-  const intervals = [];
-  for (const track of clip.tracks) {
-    const times = track.times;
-    for (let index = 1; index < Math.min(times.length, 12); index++) {
-      const interval = times[index] - times[index - 1];
-      if (interval > 0.001 && interval < 0.2) intervals.push(interval);
-    }
-    if (intervals.length > 100) break;
-  }
-  intervals.sort((a, b) => a - b);
-  const measured = intervals.length ? Math.round(1 / intervals[Math.floor(intervals.length / 2)]) : 30;
-  const fps = measured >= 12 && measured <= 120 ? measured : 30;
-  return { fps, frames: Math.max(1, Math.round(clip.duration * fps) + 1) };
-}
+
 function playbackSettings(value = {}) {
   return motionPlayback(value);
 }
-export function boundedMotionOffset(x, z, radius = 0.45) {
-  const distance = Math.hypot(x, z);
-  if (!Number.isFinite(distance) || distance <= radius) return [0, 0];
-  const correction = 1 - radius / distance;
-  return [-x * correction, -z * correction];
-}
-function motionSegment(clip, settings, cache) {
-  const { fps, frames } = motionFrameInfo(clip);
-  const start = Math.min(settings.startFrame, frames);
-  const end = Math.max(start, Math.min(settings.endFrame || frames, frames));
-  if (start === 1 && end === frames) return { clip, start, end, fps, frames };
-  const key = `${clip.uuid}:${start}:${end}:${fps}`;
-  if (cache.has(key)) return { clip: cache.get(key), start, end, fps, frames };
-  const startTime = Math.min(clip.duration, (start - 1) / fps);
-  const singleFrame = start === end;
-  const endTime = singleFrame ? startTime : Math.min(clip.duration, (end - 1) / fps);
-  const duration = singleFrame ? 1 / fps : Math.max(1 / fps, endTime - startTime);
-  const tracks = clip.tracks.map(track => {
-    const size = track.getValueSize();
-    const interpolant = track.createInterpolant();
-    const times = [0];
-    const values = Array.from(interpolant.evaluate(startTime));
-    for (let index = 0; index < track.times.length; index++) {
-      const time = track.times[index];
-      if (singleFrame || time <= startTime + 1e-7 || time >= endTime - 1e-7) continue;
-      times.push(time - startTime);
-      for (let component = 0; component < size; component++)
-        values.push(track.values[index * size + component]);
-    }
-    times.push(duration);
-    values.push(...interpolant.evaluate(endTime));
-    const part = track.clone();
-    part.times = new track.times.constructor(times);
-    part.values = new track.values.constructor(values);
-    return part;
-  });
-  const segment = new THREE.AnimationClip(`${clip.name} ${start}-${end}`, duration, tracks);
-  cache.set(key, segment);
-  return { clip: segment, start, end, fps, frames };
-}
-for (const side of ['Left','Right']) {
-  for (const finger of ['Thumb','Index','Middle','Ring','Pinky']) {
-    for (let index = 1; index <= 3; index++) {
-      const suffix = finger === 'Thumb'
-        ? ['Metacarpal','Proximal','Distal'][index - 1]
-        : ['Proximal','Intermediate','Distal'][index - 1];
-      boneNames[`${side}Hand${finger}${index}`] = `${side.toLowerCase()}${finger === 'Pinky' ? 'Little' : finger}${suffix}`;
-    }
-  }
-}
 
-export const assetUrl = asset => asset ? `https://project.galgame/${asset.path.split('/').map(encodeURIComponent).join('/')}${asset.revision ? `?v=${encodeURIComponent(asset.revision)}` : ''}` : '';
+
+
+
+
 
 // Render a separate, transparent bust portrait without moving the stage actor.
-export async function captureCharacterPortrait(modelAsset, motionAsset = null, poseFrame = 1, legacySeconds = null, fileThumbnail = false) {
-  if(!['vrm','fbxCharacter','mmdCharacter'].includes(modelAsset?.type))throw Error('自动头像需要人物模型');
-  const loader = new GLTFLoader();
-  loader.register(parser => new VRMLoaderPlugin(parser));
-  loader.register(parser => new VRMAnimationLoaderPlugin(parser));
-  const fbxBlobs=new Set(),fbxManager=new THREE.LoadingManager();
-  fbxManager.addHandler(/\.tga$/i,new TGALoader());
-  fbxManager.setURLModifier(url=>{if(url.startsWith('blob:'))fbxBlobs.add(url);return url;});
-  let texturesReady=new Promise(resolve=>fbxManager.onLoad=resolve),gltf,vrm;
-  let renderer;
-  let motionScene;
-  let mixer;
-  let actualFrame = 1;
-  try {
-    if(modelAsset.type==='fbxCharacter'){
-      const root=await new FBXLoader(fbxManager).loadAsync(assetUrl(modelAsset));gltf={scene:root};await texturesReady;vrm=createFbxActor(root);
-    }else if(modelAsset.type==='mmdCharacter'){vrm=await loadMmdActor(modelAsset,assetUrl,{physics:false});gltf={scene:vrm.scene};}
-    else{gltf=await loader.loadAsync(assetUrl(modelAsset));vrm=gltf.userData.vrm;}
-    if(!vrm)throw Error('文件里没有找到人物模型');
-    const scene = new THREE.Scene();
-    scene.add(vrm.scene);
-    if(vrm.isFbx){mixer=new THREE.AnimationMixer(vrm.scene);mixer.clipAction(vrm.idleClip).play();mixer.update(0);}
-    const bounds = new THREE.Box3().setFromObject(vrm.scene,vrm.isFbx===true);
-    const size = bounds.getSize(new THREE.Vector3());
-    if (size.y > 0) vrm.scene.scale.multiplyScalar(1.8 / size.y);
-    vrm.scene.updateMatrixWorld(true);
-    vrm.scene.position.y -= new THREE.Box3().setFromObject(vrm.scene,vrm.isFbx===true).min.y;
-    vrm.scene.updateMatrixWorld(true);
-    if (motionAsset) {
-      let clip;
-      if (motionAsset.path.toLowerCase().endsWith('.vrma')) {
-        if(vrm.isFbx)throw Error('FBX 人物头像请选 Mixamo FBX 动作或保持站立');
-        const motion = await loader.loadAsync(assetUrl(motionAsset));
-        motionScene = motion.scene;
-        const animation = motion.userData.vrmAnimations?.[0];
-        if (!animation) throw new Error('VRMA 文件里没有动作');
-        clip = createVRMAnimationClip(animation, vrm);
-      } else {
-        motionScene = await new FBXLoader().loadAsync(assetUrl(motionAsset));
-        clip = vrm.isFbx?retargetFbxClip(motionScene,vrm):VRMStage.loadMixamo(motionScene, vrm);
-      }
-      vrm.humanoid.resetNormalizedPose();
-      mixer?.stopAllAction();mixer?.uncacheRoot(vrm.scene);mixer = new THREE.AnimationMixer(vrm.scene);
-      mixer.clipAction(clip).setLoop(THREE.LoopRepeat, Infinity).play();
-      const { fps, frames } = motionFrameInfo(clip);
-      const requestedFrame = legacySeconds === null ? poseFrame : Math.round(legacySeconds * fps) + 1;
-      actualFrame = Math.max(1, Math.min(frames, Math.floor(Number(requestedFrame) || 1)));
-      mixer.setTime(Math.max(0, Math.min(clip.duration - 0.00001, (actualFrame - 1) / fps)));
-    } else if(!vrm.isFbx) {
-      const leftArm = vrm.humanoid.getNormalizedBoneNode('leftUpperArm');
-      const rightArm = vrm.humanoid.getNormalizedBoneNode('rightUpperArm');
-      if (leftArm) leftArm.rotation.z = -1.05;
-      if (rightArm) rightArm.rotation.z = 1.05;
-    }
-    vrm.update(0);
-    vrm.scene.updateMatrixWorld(true);
-    const head = vrm.humanoid.getNormalizedBoneNode('head');
-    const target = head?.getWorldPosition(new THREE.Vector3()) || new THREE.Vector3(0, 1.55, 0);
-    const camera = new THREE.OrthographicCamera(-0.20, 0.20, 0.20, -0.20, 0.01, 20);
-    setShoulderPortraitCamera(camera,target);
-    if(fileThumbnail){const top=new THREE.Box3().setFromObject(vrm.scene,true).max.y;camera.top=Math.min(.55,Math.max(.25,top-target.y+.07));camera.bottom=-.24;const width=(camera.top-camera.bottom)/2;camera.left=-width;camera.right=width;camera.updateProjectionMatrix();}
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x8497b0, 2));
-    const key = new THREE.DirectionalLight(0xffffff, 2.1);
-    key.position.set(-2, 4, 5);
-    scene.add(key);
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true });
-    renderer.setSize(512, 512, false);
-    renderer.setPixelRatio(1);
-    renderer.setClearColor(0x000000, 0);
-    renderer.render(scene, camera);
-    return { dataUrl: renderer.domElement.toDataURL('image/png'), frame: actualFrame,framing:{cameraOffset:camera.position.clone().sub(target).toArray(),halfHeight:camera.top,size:512},staticImage:true };
-  } finally {
-    renderer?.dispose();
-    renderer?.forceContextLoss();mixer?.stopAllAction();if(vrm)mixer?.uncacheRoot(vrm.scene);
-    if (motionScene) VRMUtils.deepDispose(motionScene);
-    vrm?.dispose?.();if(gltf)VRMUtils.deepDispose(gltf.scene);
-    for(const url of fbxBlobs)URL.revokeObjectURL(url);
-  }
-}
+
 export const captureVrmPortrait=captureCharacterPortrait;
 
 export class VRMStage {
@@ -1075,89 +936,6 @@ export class VRMStage {
     this.currentModelId = null;
     this.currentMotionId = undefined;
   }
-  static loadMixamo(asset, vrm) {
-    const clip = asset.animations[0];
-    if (!clip) throw new Error('FBX 文件里没有动作');
-    asset.updateMatrixWorld(true);
-    const hips = asset.getObjectByName('mixamorigHips') || asset.getObjectByName('mixamorig:Hips');
-    if (!hips) throw new Error('不是标准 Mixamo 骨骼。请导入从 Mixamo 直接下载的 FBX 动作。');
-    const modelHips = vrm.humanoid.normalizedRestPose.hips.position[1];
-    const scale = Math.abs(hips.position.y) > 0.001 ? modelHips / hips.position.y : 1;
-    const tracks = [];
-    const hipsNode = vrm.humanoid.getNormalizedBoneNode('hips');
-    const sourceTracks = new Map(clip.tracks.map(track => [track.name, track]));
-    const sourceAncestors = [];
-    for (let parent = hips.parent; parent && parent !== asset; parent = parent.parent)
-      sourceAncestors.unshift(parent);
-    const movingNodes = [...sourceAncestors, hips].map(object => ({
-      object,
-      rotation: sourceTracks.get(`${object.name}.quaternion`),
-      position: sourceTracks.get(`${object.name}.position`)
-    }));
-    const sample = (track, time, fallback) => track
-      ? track.createInterpolant().evaluate(time) : fallback;
-    for (const track of clip.tracks) {
-      const dot = track.name.lastIndexOf('.');
-      if (dot < 0) continue;
-      const sourceName = track.name.slice(0, dot).replace(/^mixamorig:?/, '');
-      const bone = boneNames[sourceName];
-      const node = bone && vrm.humanoid.getNormalizedBoneNode(bone);
-      const source = asset.getObjectByName(track.name.slice(0, dot));
-      if (!node || !source) continue;
-      const property = track.name.slice(dot + 1);
-      if (bone === 'hips') continue;
-      if (track instanceof THREE.QuaternionKeyframeTrack) {
-        const inverse = source.getWorldQuaternion(new THREE.Quaternion()).invert();
-        const parentRotation = source.parent.getWorldQuaternion(new THREE.Quaternion());
-        const values = Array.from(track.values);
-        for (let i = 0; i < values.length; i += 4) {
-          const quaternion = new THREE.Quaternion().fromArray(values, i);
-          quaternion.premultiply(parentRotation).multiply(inverse);
-          quaternion.toArray(values, i);
-        }
-        if (vrm.meta?.metaVersion === '0')
-          for (let i = 0; i < values.length; i++) if (i % 2 === 0) values[i] *= -1;
-        tracks.push(new THREE.QuaternionKeyframeTrack(`${node.name}.${property}`, track.times, values));
-      }
-    }
-    if (hipsNode) {
-      const keyTimes = [...new Set([0, clip.duration, ...movingNodes.flatMap(({ rotation, position }) =>
-        [...(rotation?.times || []), ...(position?.times || [])])])].sort((a, b) => a - b);
-      const sourceRestInverse = hips.getWorldQuaternion(new THREE.Quaternion()).invert();
-      const rootRotation = asset.getWorldQuaternion(new THREE.Quaternion());
-      const restPosition = vrm.humanoid.normalizedRestPose.hips.position;
-      const quaternionValues = [];
-      const positionValues = [];
-      for (const time of keyTimes) {
-        const worldRotation = rootRotation.clone();
-        const movement = new THREE.Vector3();
-        for (const { object, rotation, position } of movingNodes) {
-          worldRotation.multiply(new THREE.Quaternion().fromArray(sample(rotation, time, object.quaternion.toArray())));
-          if (position) {
-            const current = sample(position, time, object.position.toArray());
-            const start = sample(position, 0, object.position.toArray());
-            // Preserve an initial crouch/sit height; only horizontal motion is
-            // recentered at the first frame. Root ancestors retain their offset.
-            const baseY = object === hips ? object.position.y : start[1];
-            movement.add(new THREE.Vector3(current[0] - start[0], current[1] - baseY, current[2] - start[2]));
-          }
-        }
-        const targetRotation = worldRotation.multiply(sourceRestInverse);
-        const q = targetRotation.toArray();
-        const p = [restPosition[0] + movement.x * scale,
-          restPosition[1] + movement.y * scale, restPosition[2] + movement.z * scale];
-        if (vrm.meta?.metaVersion === '0') {
-          q[0] *= -1; q[2] *= -1;
-          p[0] *= -1; p[2] *= -1;
-        }
-        quaternionValues.push(...q);
-        positionValues.push(...p);
-      }
-      tracks.push(new THREE.QuaternionKeyframeTrack(`${hipsNode.name}.quaternion`, keyTimes, quaternionValues));
-      tracks.push(new THREE.VectorKeyframeTrack(`${hipsNode.name}.position`, keyTimes, positionValues));
-    }
-    if (!tracks.length) throw new Error('没有找到可用于此 VRM 的 Mixamo 骨骼动作');
-    return new THREE.AnimationClip(clip.name || 'Mixamo', clip.duration, tracks);
-  }
+  static loadMixamo(asset, vrm) { return retargetMixamoMotion(asset, vrm); }
 }
 

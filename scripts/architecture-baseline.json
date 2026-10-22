@@ -1,0 +1,25 @@
+{
+  "files": {
+    "src/environment-editor.js": {
+      "bytes": 59772,
+      "lines": 215
+    },
+    "src/main.js": {
+      "bytes": 312320,
+      "lines": 4450
+    },
+    "src/renderer.js": {
+      "bytes": 59238,
+      "lines": 942
+    },
+    "src/vehicle-editor-page.js": {
+      "bytes": 64526,
+      "lines": 139
+    }
+  },
+  "editorWindowPartialFiles": 54,
+  "desktopFiles": {
+    "Desktop/EditorWindow.cs": 69790,
+    "Desktop/Program.cs": 4096
+  }
+}
