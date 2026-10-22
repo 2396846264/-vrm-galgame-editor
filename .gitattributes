@@ -1,0 +1,4 @@
+# Keep JavaScript formatting stable on Windows and Unix checkouts.
+*.js text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
